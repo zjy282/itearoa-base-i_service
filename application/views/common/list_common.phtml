@@ -1,0 +1,42 @@
+<script id="listNoData_tpl" type="text/html">
+    <tr>
+        <td colspan='{{colCount}}'>没有数据</td>
+    </tr>
+</script>
+<script id="listLoading_tpl" type="text/html">
+    <tr>
+        <td colspan='{{colCount}}'><img src="<?php echo $webConfig['imgDomain'];?>img/loading.gif" style="width: 20px;" /></td>
+    </tr>
+</script>
+<script id="listPage_tpl" type="text/html">
+    <div class="pagination-cont clearfix"> 
+        <div class="pagination pagination-small pagination-right pull-right">
+            <!-- 当前页的input -->
+            <input type="hidden" name="page" value={{page}} />
+          <span>共{{rowNum}}条 共{{pageNum}}页 第{{page}}页</span>
+          <ul>
+            <li {{if page <= 1}}class="disabled"{{/if}}>
+                {{if page <= 1}}
+                    <a href="javascript:;">上一页</a>
+                {{else}}
+                    <a href="javascript:;" op="prevPage">上一页</a>
+                {{/if}}
+            </li>
+            <li {{if page >= pageNum}}class="disabled"{{/if}}>
+                {{if page >= pageNum}}
+                    <a href="javascript:;">下一页</a>
+                {{else}}
+                    <a href="javascript:;" op="nextPage">下一页</a>
+                {{/if}}
+            </li>
+            <li {{if pageNum <= 1}}class="disabled"{{/if}}>
+                <input type="text" op="jumpPage" value="{{page}}" style="float: left;padding: 4px 8px;line-height: 20px;border-radius:0px;border: 1px solid #ddd;border-left-width: 0;width:27px;height:16px;"/>
+            </li>
+            <li {{if pageNum <= 1}}class="disabled"{{/if}}>
+                <a href="javascript:;" op="jumpTo">转到</a>
+            </li>
+                
+          </ul> 
+        </div>
+    </div>
+</script>

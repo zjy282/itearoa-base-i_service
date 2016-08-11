@@ -1,0 +1,19 @@
+<script id="recordEdit_tpl" type="text/html">
+{{adminName}}修改了{{modelName}}{{each editValue as edit i}}{{if i != 0}},{{/if}}{{edit.title}}从[{{edit.from}}]改为了[{{edit.to}}]{{/each}}
+</script>
+<script id="recordCreate_tpl" type="text/html">
+{{adminName}}增加了{{modelName}}：{{createValue}}
+</script>
+<script id="recordDelete_tpl" type="text/html">
+{{adminName}}删除了{{modelName}}：{{deleteValue}}
+</script>
+<script type="text/javascript">
+    var YP_RECORD_VARS = {
+        'isChange' : 0,
+        //'adminName':'<?php echo $headerInfo['userName'];?>',
+        'recordPostVar' : '<?php echo Enum_Record::RECORD_POST_VAR;?>',
+        'recordPostId' : '<?php echo Enum_Record::RECORD_POST_ID;?>'
+    };
+</script>
+<script src="<?php echo $webConfig['imgDomain'];?>js/lib/art.js" type="text/javascript"></script>
+<script src="<?php echo $webConfig['imgDomain'];?>js/common/yp_record.js" type="text/javascript"></script>

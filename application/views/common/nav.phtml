@@ -1,0 +1,56 @@
+<div class="span2">
+    <div class="well side-nav">
+        <?php foreach($menuList as $v1):?>
+        <?php if($v1['checked']):?>
+        <ul class="nav nav-list" id="navList">
+            <li class="nav-header"><span class="nav-header-open"> <i class="icon-plus icon-plus-opacity pull-right"></i><?php echo $v1['title'];?>
+                </span>
+                <ul class="nav nav-list nav-li-list hide">
+                    <?php foreach($v1['list'] as $v2):?>
+                    <?php if($v2['checked']):?>
+                    <li><a href="<?php echo $v2['url'];?>"><?php echo $v2['title'];?></a></li>
+                    <?php endif;?>
+                    <?php endforeach;?>
+                </ul></li>
+        </ul>
+        <?php endif;?>
+        <?php endforeach;?>
+    </div>
+</div>
+<script type="text/javascript">
+var log = console.log.bind(console) || alert;
+$(function() {
+    var pathname = window.location.pathname;
+    var defaultSelected = 0;
+    if ( ! pathname) {
+        defaultSelected = 1;
+    }
+    
+    $('.nav-li-list a').each(function(i, item) {
+        var item = $(item);
+        if (defaultSelected) {
+            if (i == 0) {
+                item.parent().addClass('active').parent('ul').removeClass('hide');
+                return;
+            }
+        } else {
+            if (item.attr('href') == pathname) {
+                item.parent().addClass('active').parent('ul').removeClass('hide').prev().children('i').removeClass('icon-plus').addClass('icon-minus');
+                return;
+            }
+        }
+    });
+
+	$('.nav-header-open').on('click', function() {
+		var T = $(this);
+		var flag = T.next('.nav-li-list').toggle().css('display');
+		if (flag == 'block') {
+			T.find('i').removeClass('icon-plus').addClass('icon-minus');
+			var item = T.parents('ul').siblings().find('.nav-li-list').hide();
+		} else {
+			T.find('i').removeClass('icon-minus').addClass('icon-plus');
+		}
+        T.parents('ul').siblings().find('i').removeClass('icon-minus').addClass('icon-plus');
+	})
+});
+</script>

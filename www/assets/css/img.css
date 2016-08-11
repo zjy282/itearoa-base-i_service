@@ -1,0 +1,59 @@
+@CHARSET "UTF-8";
+.box01 {
+    position: relative;
+	margin-left:0;
+}
+
+.box01 li {
+    float: left;
+    width: 180px;
+    text-align: center;
+    padding-right: 10px;
+    margin-right: 10px;
+    height: 120px;
+    cursor: pointer;
+    z-index: 0;
+    position: relative;
+}
+
+.box01 li img {
+    height: 120px;
+    margin: 0 auto;
+}
+
+.box01 li .in {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 180px;
+}
+
+.box01 li .in p {
+    display: none;
+    text-align: left;
+}
+
+.box01 li.on {
+    z-index: 99;
+}
+
+.box01 li.on .in {
+    padding: 5px;
+    border: 1px solid #ccc;
+    position: absolute;
+    z-index: 100;
+    width: auto;
+    text-align: center;
+    top: -40px;
+    background: #fff;
+}
+
+.box01 li.on .in p {
+    position: relative;
+    display: block;
+}
+
+.box01 li.on img {
+    height: auto;
+    margin-bottom: 8px;
+}

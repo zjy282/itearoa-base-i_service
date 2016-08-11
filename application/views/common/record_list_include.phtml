@@ -1,0 +1,22 @@
+<div class="pop-list-footer" id="recordListDom">
+    <div class="hd">
+        <strong>操作日志</strong>
+    </div>
+    <div class="modal-body bd" style="height: 50px; border: 1px solid #e3e3e3; overflow: auto;" id="recordList">
+        <div id="recordListContent"></div>
+        <div id="loading" style="text-align: center; display: none;">
+            <img id="loadingImage" src="<?php echo $webConfig['imgDomain'];?>img/loading.gif" style="width: 20px;" />
+        </div>
+        <input type="hidden" id="nextPage" />
+    </div>
+</div>
+<script id="recordList_tpl" type="text/html">
+    {{each list as record}}
+    {{record.time}}：{{record.admin}}{{record.msg}} {{if record.miscinfo.result}}结果：{{record.miscinfo.result}}{{/if}}<br/>
+    {{/each}}
+</script>
+<script src="<?php echo $webConfig['imgDomain'];?>js/common/yp_ajax.js"></script>
+<script src="<?php echo $webConfig['imgDomain'];?>js/common/yp_pullLoad.js"></script>
+<script src="<?php echo $webConfig['imgDomain'];?>js/lib/art.js"></script>
+<script src="<?php echo $webConfig['imgDomain'];?>js/lib/waypoints.min.js"></script>
+<script src="<?php echo $webConfig['imgDomain'];?>js/common/yp_recordList.js"></script>
