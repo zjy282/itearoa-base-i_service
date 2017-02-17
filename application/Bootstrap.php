@@ -14,34 +14,11 @@ class Bootstrap extends Yaf_Bootstrap_Abstract {
         // 把配置保存起来
         $arrConfig = Yaf_Application::app()->getConfig();
         Yaf_Registry::set('sysConfig', $arrConfig);
-	
-	$loginInfo = array();
-        $sId = Util_Http::getCookie(Enum_Login::LOGIN_INFO_COOKIE_KEY_SID);
-        $aId = Util_Http::getCookie(Enum_Login::LOGIN_INFO_COOKIE_KEY_AID);
-        if ($sId && $aId) {
-            $memKey = Auth_Login::genLoginMemKey($sId, $aId);
-            $cacheOb = Cache_MemoryCache::getInstance();
-            $tmpJson = $cacheOb->get($memKey);
-            if ($tmpJson) {
-                $tmp = json_decode($tmpJson, true);
-                if (is_array($tmp) && count($tmp) > 0) {
-                    $loginInfo = $tmp;
-                    $cacheOb->replace($memKey, $tmpJson, Enum_Login::LOGIN_TIMEOUT);
-                    $cookieTime = time() + Enum_Login::LOGIN_TIMEOUT;
-                    Util_Http::setCookie(Enum_Login::LOGIN_INFO_COOKIE_KEY_AID, $aId, $cookieTime);
-                    Util_Http::setCookie(Enum_Login::LOGIN_INFO_COOKIE_KEY_SID, $sId, $cookieTime);
-                }
-            }
-        }
-        Yaf_Registry::set('loginInfo', $loginInfo);
-        Enum_Record::setRecordData('adminId', $loginInfo['id']);
     }
 
     public function _initPlugin(Yaf_Dispatcher $dispatcher) {
         // 注册一个插件
         $dispatcher->registerPlugin(new ErrorPlugin());
-        $dispatcher->registerPlugin(new LoginPlugin());
-        $dispatcher->registerPlugin(new RecordPlugin());
     }
 
     public function _initRoute(Yaf_Dispatcher $dispatcher) {

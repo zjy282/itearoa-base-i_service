@@ -7,6 +7,7 @@ class IndexController extends \BaseController {
     }
 
     public function indexAction() {
-        $this->_view->display('index/index.phtml');
+        $array = array('code' => 1,'data' => array ('name' => 'lihe','value'=>'liheinfo'));
+        $this->echoJson($array);
     }
 }
