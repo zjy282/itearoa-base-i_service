@@ -1,14 +1,9 @@
 <?php
 
-class BaseController extends \Yaf_Controller_Abstract {
-
-    protected $userInfo;
+abstract class BaseController extends \Yaf_Controller_Abstract {
 
     public function init() {
         $this->setPageWebConfig();
-        $this->userInfo = Yaf_Registry::get('loginInfo');
-        $this->setPageHeaderInfo($this->userInfo);
-        $this->setPageMenuList($this->userInfo);
     }
 
     private function setPageWebConfig() {
@@ -21,19 +16,6 @@ class BaseController extends \Yaf_Controller_Abstract {
         $this->getView()->assign('webConfig', $webConfig);
     }
 
-    private function setPageHeaderInfo($loginInfo) {
-        $headerInfo['userName'] = $loginInfo['realName'] ? $loginInfo['realName'] : $loginInfo['userName'];
-        $headerInfo['partnerName'] = $loginInfo['partnerName'];
-        $this->getView()->assign('headerInfo', $headerInfo);
-    }
-
-    private function setPageMenuList($loginInfo) {
-        $loginModel = new LoginModel();
-        $paramList['id'] = $loginInfo['id'];
-        $menuList = $loginModel->getRuleList($paramList);
-        $this->_view->assign('menuList', $menuList['data']);
-    }
-
     /**
      * 输出json
      *
@@ -43,6 +25,81 @@ class BaseController extends \Yaf_Controller_Abstract {
         $response = $this->getResponse();
         $response->setHeader('Content-type', 'application/json');
         $response->setBody(json_encode($data));
+    }
+
+    /**
+     * 接口访问成功
+     *
+     * @param array $data
+     *            成功返回的数据
+     * @return string
+     */
+    public function echoSuccessData($data = array()) {
+        if (! is_array($data) && ! is_object($data)) {
+            $data = array(
+                    $data
+                    );
+        }
+        $this->echoAndExit(0, "success", $data);
+    }
+
+    public function echoAndExit($code, $msg, $data, $debugInfo = null) {
+        @header("Content-type:application/json");
+
+        $data = $this->clearNullNew($data);
+        if (is_null($data) && ! is_numeric($data)) {
+            $data = array();
+        }
+
+        $echoList = array(
+                'code' => $code,
+                'msg' => $msg,
+                'data' => $data
+                );
+        $sysConfig = Yaf_Registry::get('sysConfig');
+        if ($sysConfig->api->debug) {
+            $echoList['debugInfo'] = is_null($debugInfo) ? (object) array() : $debugInfo;
+        }
+        $this->getResponse()->setBody(json_encode($echoList));
+    }
+
+    public function clearNullNew($data) {
+        foreach ($data as $key => $value) {
+            $keyTemp = lcfirst($key);
+            if ($keyTemp != $key) {
+                unset($data[$key]);
+                $data[$keyTemp] = $value;
+                $key = $keyTemp;
+            }
+
+            if (is_array($value) || is_object($value)) {
+                if (is_object($data)) {
+                    $data->$key = $this->clearNullNew($value);
+                } else {
+                    $data[$key] = $this->clearNullNew($value);
+                }
+            } else {
+                if (is_null($value) && ! is_numeric($value)) {
+                    $value = "";
+                }
+                if (is_numeric($value)) {
+                    $value = strval($value);
+                }
+                $data[$key] = $value;
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * 抛出异常
+     *
+     * @param string $code
+     * @param string $msg
+     * @throws Exception
+     */
+    protected function throwException($code, $msg) {
+        throw new Exception($msg, $code);
     }
 
     /**
