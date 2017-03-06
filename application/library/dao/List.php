@@ -1,11 +1,16 @@
 <?php
-class Dao_Group extends Dao_Base {
-
+class Dao_List extends Dao_Base{
+    
     public function __construct(){
         parent::__construct();
     }
-
-    public function getGroupList(array $param):array{
+    
+    /**
+     * 查询group_list列表
+     * @param array 入参
+     * @return array
+     */
+    public function getListList(array $param):array {
         $limit = $param['limit']?intval($param['limit']):0;
         $page = $this->getStart($param['page'],$limit);
         $sql = "select * from group_list limit {$page},{$limit}";
@@ -13,7 +18,12 @@ class Dao_Group extends Dao_Base {
         return is_array($result)?$result:array();
     }
 
-    public function getGroupDetail (int $id):array{
+    /**
+     * 根据id查询group_list详情
+     * @param int id 
+     * @return array
+     */
+    public function getListDetail (int $id):array{
         $result = array ();
         
         if ($id){
@@ -24,7 +34,13 @@ class Dao_Group extends Dao_Base {
         return $result;
     }
 
-    public function updateGroupById(array $info,int $id){
+    /**
+     * 根据id更新group_list
+     * @param array 需要更新的数据
+     * @param int id 
+     * @return array
+     */
+    public function updateListById(array $info,int $id){
         $result = false;
 
         if ($id){
@@ -34,9 +50,13 @@ class Dao_Group extends Dao_Base {
         return $result;
     }
 
-    public function addGroup(array $info){
+    /**
+     * 单条增加group_list数据
+     * @param array
+     * @return int id
+     */
+    public function addList(array $info){
         $this->db->insert('group_list', $info);
         return $this->db->lastInsertId();
     }
 }
-

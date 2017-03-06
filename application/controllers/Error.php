@@ -10,10 +10,10 @@ class ErrorController extends BaseController {
     
     // 从2.1开始, errorAction支持直接通过参数获取异常
     public function errorAction($exception) {
+        var_dump($exception);
     }
 
     public function denyAccessAction() {
         Yaf_Dispatcher::getInstance()->autoRender(false);
-        $this->_view->display('error/403.phtml');
     }
 }
