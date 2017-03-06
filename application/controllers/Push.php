@@ -18,7 +18,7 @@ class PushController extends \BaseController {
      */
     public function getPushListAction () {
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->getPushList($param);
         $data = $this->convertor->getPushListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class PushController extends \BaseController {
      * @return Json
      */
     public function getPushDetailAction () {
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $data = $this->model->getPushDetail($id);
             $data = $this->convertor->getPushDetail($data);
@@ -48,10 +48,10 @@ class PushController extends \BaseController {
      * @return Json
      */
     public function updatePushByIdAction(){
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->_request('name'));
+            $param['name'] = trim($this->getRequest()->getParam('name'));
             $data = $this->model->updatePushById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class PushController extends \BaseController {
      */
     public function addPushAction(){
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->addPush($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

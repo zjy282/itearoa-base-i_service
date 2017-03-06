@@ -18,7 +18,7 @@ class FeedbackController extends \BaseController {
      */
     public function getFeedbackListAction () {
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->getFeedbackList($param);
         $data = $this->convertor->getFeedbackListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class FeedbackController extends \BaseController {
      * @return Json
      */
     public function getFeedbackDetailAction () {
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $data = $this->model->getFeedbackDetail($id);
             $data = $this->convertor->getFeedbackDetail($data);
@@ -48,10 +48,10 @@ class FeedbackController extends \BaseController {
      * @return Json
      */
     public function updateFeedbackByIdAction(){
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->_request('name'));
+            $param['name'] = trim($this->getRequest()->getParam('name'));
             $data = $this->model->updateFeedbackById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class FeedbackController extends \BaseController {
      */
     public function addFeedbackAction(){
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->addFeedback($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

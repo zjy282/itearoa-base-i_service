@@ -18,7 +18,7 @@ class RoomResPicController extends \BaseController {
      */
     public function getRoomResPicListAction () {
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->getRoomResPicList($param);
         $data = $this->convertor->getRoomResPicListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class RoomResPicController extends \BaseController {
      * @return Json
      */
     public function getRoomResPicDetailAction () {
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $data = $this->model->getRoomResPicDetail($id);
             $data = $this->convertor->getRoomResPicDetail($data);
@@ -48,10 +48,10 @@ class RoomResPicController extends \BaseController {
      * @return Json
      */
     public function updateRoomResPicByIdAction(){
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->_request('name'));
+            $param['name'] = trim($this->getRequest()->getParam('name'));
             $data = $this->model->updateRoomResPicById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class RoomResPicController extends \BaseController {
      */
     public function addRoomResPicAction(){
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->addRoomResPic($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

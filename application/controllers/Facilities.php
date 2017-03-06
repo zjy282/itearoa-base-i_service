@@ -18,7 +18,7 @@ class FacilitiesController extends \BaseController {
      */
     public function getFacilitiesListAction () {
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->getFacilitiesList($param);
         $data = $this->convertor->getFacilitiesListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class FacilitiesController extends \BaseController {
      * @return Json
      */
     public function getFacilitiesDetailAction () {
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $data = $this->model->getFacilitiesDetail($id);
             $data = $this->convertor->getFacilitiesDetail($data);
@@ -48,10 +48,10 @@ class FacilitiesController extends \BaseController {
      * @return Json
      */
     public function updateFacilitiesByIdAction(){
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->_request('name'));
+            $param['name'] = trim($this->getRequest()->getParam('name'));
             $data = $this->model->updateFacilitiesById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class FacilitiesController extends \BaseController {
      */
     public function addFacilitiesAction(){
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->addFacilities($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

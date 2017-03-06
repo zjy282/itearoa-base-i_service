@@ -18,7 +18,7 @@ class PoiTypeController extends \BaseController {
      */
     public function getPoiTypeListAction () {
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->getPoiTypeList($param);
         $data = $this->convertor->getPoiTypeListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class PoiTypeController extends \BaseController {
      * @return Json
      */
     public function getPoiTypeDetailAction () {
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $data = $this->model->getPoiTypeDetail($id);
             $data = $this->convertor->getPoiTypeDetail($data);
@@ -48,10 +48,10 @@ class PoiTypeController extends \BaseController {
      * @return Json
      */
     public function updatePoiTypeByIdAction(){
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->_request('name'));
+            $param['name'] = trim($this->getRequest()->getParam('name'));
             $data = $this->model->updatePoiTypeById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class PoiTypeController extends \BaseController {
      */
     public function addPoiTypeAction(){
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->addPoiType($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

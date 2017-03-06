@@ -18,7 +18,7 @@ class IserviceAdministratorController extends \BaseController {
      */
     public function getIserviceAdministratorListAction () {
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->getIserviceAdministratorList($param);
         $data = $this->convertor->getIserviceAdministratorListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class IserviceAdministratorController extends \BaseController {
      * @return Json
      */
     public function getIserviceAdministratorDetailAction () {
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $data = $this->model->getIserviceAdministratorDetail($id);
             $data = $this->convertor->getIserviceAdministratorDetail($data);
@@ -48,10 +48,10 @@ class IserviceAdministratorController extends \BaseController {
      * @return Json
      */
     public function updateIserviceAdministratorByIdAction(){
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->_request('name'));
+            $param['name'] = trim($this->getRequest()->getParam('name'));
             $data = $this->model->updateIserviceAdministratorById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class IserviceAdministratorController extends \BaseController {
      */
     public function addIserviceAdministratorAction(){
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->addIserviceAdministrator($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

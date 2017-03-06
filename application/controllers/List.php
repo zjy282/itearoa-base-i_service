@@ -18,7 +18,7 @@ class ListController extends \BaseController {
      */
     public function getListListAction () {
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->getListList($param);
         $data = $this->convertor->getListListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class ListController extends \BaseController {
      * @return Json
      */
     public function getListDetailAction () {
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $data = $this->model->getListDetail($id);
             $data = $this->convertor->getListDetail($data);
@@ -48,10 +48,10 @@ class ListController extends \BaseController {
      * @return Json
      */
     public function updateListByIdAction(){
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->_request('name'));
+            $param['name'] = trim($this->getRequest()->getParam('name'));
             $data = $this->model->updateListById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class ListController extends \BaseController {
      */
     public function addListAction(){
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->addList($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

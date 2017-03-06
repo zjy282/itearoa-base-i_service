@@ -18,7 +18,7 @@ class RoomtypeController extends \BaseController {
      */
     public function getRoomtypeListAction () {
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->getRoomtypeList($param);
         $data = $this->convertor->getRoomtypeListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class RoomtypeController extends \BaseController {
      * @return Json
      */
     public function getRoomtypeDetailAction () {
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $data = $this->model->getRoomtypeDetail($id);
             $data = $this->convertor->getRoomtypeDetail($data);
@@ -48,10 +48,10 @@ class RoomtypeController extends \BaseController {
      * @return Json
      */
     public function updateRoomtypeByIdAction(){
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->_request('name'));
+            $param['name'] = trim($this->getRequest()->getParam('name'));
             $data = $this->model->updateRoomtypeById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class RoomtypeController extends \BaseController {
      */
     public function addRoomtypeAction(){
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->addRoomtype($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

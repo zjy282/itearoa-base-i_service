@@ -18,7 +18,7 @@ class ShareIconController extends \BaseController {
      */
     public function getShareIconListAction () {
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->getShareIconList($param);
         $data = $this->convertor->getShareIconListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class ShareIconController extends \BaseController {
      * @return Json
      */
     public function getShareIconDetailAction () {
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $data = $this->model->getShareIconDetail($id);
             $data = $this->convertor->getShareIconDetail($data);
@@ -48,10 +48,10 @@ class ShareIconController extends \BaseController {
      * @return Json
      */
     public function updateShareIconByIdAction(){
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->_request('name'));
+            $param['name'] = trim($this->getRequest()->getParam('name'));
             $data = $this->model->updateShareIconById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class ShareIconController extends \BaseController {
      */
     public function addShareIconAction(){
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->addShareIcon($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

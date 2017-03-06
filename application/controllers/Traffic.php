@@ -18,7 +18,7 @@ class TrafficController extends \BaseController {
      */
     public function getTrafficListAction () {
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->getTrafficList($param);
         $data = $this->convertor->getTrafficListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class TrafficController extends \BaseController {
      * @return Json
      */
     public function getTrafficDetailAction () {
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $data = $this->model->getTrafficDetail($id);
             $data = $this->convertor->getTrafficDetail($data);
@@ -48,10 +48,10 @@ class TrafficController extends \BaseController {
      * @return Json
      */
     public function updateTrafficByIdAction(){
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->_request('name'));
+            $param['name'] = trim($this->getRequest()->getParam('name'));
             $data = $this->model->updateTrafficById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class TrafficController extends \BaseController {
      */
     public function addTrafficAction(){
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->addTraffic($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

@@ -18,7 +18,7 @@ class ShortcutIconController extends \BaseController {
      */
     public function getShortcutIconListAction () {
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->getShortcutIconList($param);
         $data = $this->convertor->getShortcutIconListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class ShortcutIconController extends \BaseController {
      * @return Json
      */
     public function getShortcutIconDetailAction () {
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $data = $this->model->getShortcutIconDetail($id);
             $data = $this->convertor->getShortcutIconDetail($data);
@@ -48,10 +48,10 @@ class ShortcutIconController extends \BaseController {
      * @return Json
      */
     public function updateShortcutIconByIdAction(){
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->_request('name'));
+            $param['name'] = trim($this->getRequest()->getParam('name'));
             $data = $this->model->updateShortcutIconById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class ShortcutIconController extends \BaseController {
      */
     public function addShortcutIconAction(){
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->addShortcutIcon($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

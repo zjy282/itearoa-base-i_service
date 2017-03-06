@@ -18,7 +18,7 @@ class FloorController extends \BaseController {
      */
     public function getFloorListAction () {
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->getFloorList($param);
         $data = $this->convertor->getFloorListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class FloorController extends \BaseController {
      * @return Json
      */
     public function getFloorDetailAction () {
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $data = $this->model->getFloorDetail($id);
             $data = $this->convertor->getFloorDetail($data);
@@ -48,10 +48,10 @@ class FloorController extends \BaseController {
      * @return Json
      */
     public function updateFloorByIdAction(){
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->_request('name'));
+            $param['name'] = trim($this->getRequest()->getParam('name'));
             $data = $this->model->updateFloorById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class FloorController extends \BaseController {
      */
     public function addFloorAction(){
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->addFloor($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

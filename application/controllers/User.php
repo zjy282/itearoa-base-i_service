@@ -18,7 +18,7 @@ class UserController extends \BaseController {
      */
     public function getUserListAction () {
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->getUserList($param);
         $data = $this->convertor->getUserListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class UserController extends \BaseController {
      * @return Json
      */
     public function getUserDetailAction () {
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $data = $this->model->getUserDetail($id);
             $data = $this->convertor->getUserDetail($data);
@@ -48,10 +48,10 @@ class UserController extends \BaseController {
      * @return Json
      */
     public function updateUserByIdAction(){
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->_request('name'));
+            $param['name'] = trim($this->getRequest()->getParam('name'));
             $data = $this->model->updateUserById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class UserController extends \BaseController {
      */
     public function addUserAction(){
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->addUser($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

@@ -18,7 +18,7 @@ class CityController extends \BaseController {
      */
     public function getCityListAction () {
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->getCityList($param);
         $data = $this->convertor->getCityListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class CityController extends \BaseController {
      * @return Json
      */
     public function getCityDetailAction () {
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $data = $this->model->getCityDetail($id);
             $data = $this->convertor->getCityDetail($data);
@@ -48,10 +48,10 @@ class CityController extends \BaseController {
      * @return Json
      */
     public function updateCityByIdAction(){
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->_request('name'));
+            $param['name'] = trim($this->getRequest()->getParam('name'));
             $data = $this->model->updateCityById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class CityController extends \BaseController {
      */
     public function addCityAction(){
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->addCity($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

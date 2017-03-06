@@ -18,7 +18,7 @@ class AppVersionController extends \BaseController {
      */
     public function getAppVersionListAction () {
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->getAppVersionList($param);
         $data = $this->convertor->getAppVersionListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class AppVersionController extends \BaseController {
      * @return Json
      */
     public function getAppVersionDetailAction () {
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $data = $this->model->getAppVersionDetail($id);
             $data = $this->convertor->getAppVersionDetail($data);
@@ -48,10 +48,10 @@ class AppVersionController extends \BaseController {
      * @return Json
      */
     public function updateAppVersionByIdAction(){
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->_request('name'));
+            $param['name'] = trim($this->getRequest()->getParam('name'));
             $data = $this->model->updateAppVersionById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,10 +68,19 @@ class AppVersionController extends \BaseController {
      */
     public function addAppVersionAction(){
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->addAppVersion($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);
+    }
+    
+    /**
+     * 根据设备获取APP最新的版本信息
+     */
+    public function getLatestAppVersionByPlatformAction(){
+        $param = array();
+        $param['platform'] = intval($this->getRequest()->getParam('platform'));
+        var_dump($param);
     }
 
 }

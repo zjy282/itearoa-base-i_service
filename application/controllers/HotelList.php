@@ -18,7 +18,7 @@ class HotelListController extends \BaseController {
      */
     public function getHotelListListAction () {
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->getHotelListList($param);
         $data = $this->convertor->getHotelListListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class HotelListController extends \BaseController {
      * @return Json
      */
     public function getHotelListDetailAction () {
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $data = $this->model->getHotelListDetail($id);
             $data = $this->convertor->getHotelListDetail($data);
@@ -48,10 +48,10 @@ class HotelListController extends \BaseController {
      * @return Json
      */
     public function updateHotelListByIdAction(){
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->_request('name'));
+            $param['name'] = trim($this->getRequest()->getParam('name'));
             $data = $this->model->updateHotelListById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class HotelListController extends \BaseController {
      */
     public function addHotelListAction(){
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->addHotelList($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

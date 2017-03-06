@@ -18,7 +18,7 @@ class NewsController extends \BaseController {
      */
     public function getNewsListAction () {
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->getNewsList($param);
         $data = $this->convertor->getNewsListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class NewsController extends \BaseController {
      * @return Json
      */
     public function getNewsDetailAction () {
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $data = $this->model->getNewsDetail($id);
             $data = $this->convertor->getNewsDetail($data);
@@ -48,10 +48,10 @@ class NewsController extends \BaseController {
      * @return Json
      */
     public function updateNewsByIdAction(){
-        $id = intval($this->_request('id'));
+        $id = intval($this->getRequest()->getParam('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->_request('name'));
+            $param['name'] = trim($this->getRequest()->getParam('name'));
             $data = $this->model->updateNewsById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class NewsController extends \BaseController {
      */
     public function addNewsAction(){
         $param = array ();
-        $param['name'] = trim($this->_request('name'));
+        $param['name'] = trim($this->getRequest()->getParam('name'));
         $data = $this->model->addNews($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);
