@@ -58,7 +58,11 @@ class Auth_Login {
     public static function genSign($paramList) {
         $sysConfig = Yaf_Registry::get('sysConfig');
         ksort($paramList);
-        $sign = md5($sysConfig->api->sign . md5(implode("", $paramList) . $sysConfig->api->sign));
+        $paramStr = '';
+        foreach ($paramList as $key => $value) {
+            $paramStr .= $key . $value;
+        }
+        $sign = md5($paramStr . $sysConfig->api->sign);
         return $sign;
     }
 }

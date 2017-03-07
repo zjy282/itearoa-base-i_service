@@ -15,14 +15,7 @@ abstract class BaseController extends \Yaf_Controller_Abstract {
      * @return array|string
      */
     public function getParamList($paramKey, $defualt = '') {
-        $paramList = array();
-        $request = $this->getRequest();
-        if ($request->isGet()) {
-            $paramList = $request->getQuery();
-        }
-        if ($request->isPost()) {
-            $paramList = $request->getPost();
-        }
+        $paramList = $this->getRequest()->getParam('paramList', array());
         if ($paramKey) {
             return $paramList[$paramKey] ? $paramList[$paramKey] : $defualt;
         }
