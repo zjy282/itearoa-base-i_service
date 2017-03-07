@@ -15,12 +15,14 @@ class Convertor_AppVersion extends Convertor_Base {
      */
     public function lastAppVersionConvertor(array $result) {
         $data = array();
-        $data['platform'] = $result['platform'];
-        $data['platformName'] = Enum_Platform::getPlatformNameList()[$result['platform']];
-        $data['forced'] = $result['forced'];
-        $data['version'] = $result['version'];
-        $data['description'] = $result['description'];
-        $data['createtime'] = $result['createtime'];
+        if ($result) {
+            $data['platform'] = $result['platform'];
+            $data['platformName'] = Enum_Platform::getPlatformNameList()[$result['platform']];
+            $data['forced'] = $result['forced'];
+            $data['version'] = $result['version'];
+            $data['description'] = $result['description'];
+            $data['createtime'] = $result['createtime'];
+        }
         return $data;
     }
 }

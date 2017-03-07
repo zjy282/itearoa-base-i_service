@@ -4,17 +4,19 @@ class AppImgModel extends \BaseModel {
 
     private $dao;
 
-    public function __construct(){
+    public function __construct() {
         parent::__construct();
         $this->dao = new Dao_AppImg();
     }
-    
+
     /**
      * 获取AppImg列表信息
-     * @param array param 查询条件
+     *
+     * @param
+     *            array param 查询条件
      * @return array
      */
-    public function getAppImgList(array $param){
+    public function getAppImgList(array $param) {
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getAppImgList($paramList);
@@ -22,12 +24,14 @@ class AppImgModel extends \BaseModel {
 
     /**
      * 根据id查询AppImg信息
-     * @param int id 查询的主键
+     *
+     * @param
+     *            int id 查询的主键
      * @return array
      */
-    public function getAppImgDetail($id){
+    public function getAppImgDetail($id) {
         $result = array();
-        if ($id){
+        if ($id) {
             $result = $this->dao->getAppImgDetail($id);
         }
         return $result;
@@ -35,28 +39,43 @@ class AppImgModel extends \BaseModel {
 
     /**
      * 根据id更新AppImg信息
-     * @param array param 需要更新的信息
-     * @param int id 主键
+     *
+     * @param
+     *            array param 需要更新的信息
+     * @param
+     *            int id 主键
      * @return array
      */
-    public function updateAppImgById($param,$id){
+    public function updateAppImgById($param, $id) {
         $result = false;
-        //自行添加要更新的字段,以下是age字段是样例
-        if ($id){
+        // 自行添加要更新的字段,以下是age字段是样例
+        if ($id) {
             $info['age'] = intval($param['age']);
-            $result = $this->dao->updateAppImgById($info,$id);
+            $result = $this->dao->updateAppImgById($info, $id);
         }
         return $result;
     }
 
     /**
      * AppImg新增信息
-     * @param array param 需要增加的信息
+     *
+     * @param
+     *            array param 需要增加的信息
      * @return array
      */
-    public function addAppImg($param){
-        //自行添加要添加的字段,以下是age字段是样例
+    public function addAppImg($param) {
+        // 自行添加要添加的字段,以下是age字段是样例
         $info['age'] = intval($param['age']);
         return $this->dao->addAppImg($info);
+    }
+
+    /**
+     * 获取最新可用的启动图
+     *
+     * @return array
+     */
+    public function getAvailableAppImg() {
+        $result = $this->dao->getAvailableAppImg();
+        return $result ? $result : array();
     }
 }

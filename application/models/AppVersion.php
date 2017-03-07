@@ -82,7 +82,10 @@ class AppVersionModel extends \BaseModel {
         if (! array_key_exists($platform, Enum_Platform::getPlatformNameList())) {
             $this->throwException('设备类型参数错误', 2);
         }
-        
-        return $this->dao->getLatestAppVersionByPlatform($platform);
+        $result = $this->dao->getLatestAppVersionByPlatform($platform);
+        if (! $result) {
+            $this->throwException('设备没有可用版本', 3);
+        }
+        return $result;
     }
 }
