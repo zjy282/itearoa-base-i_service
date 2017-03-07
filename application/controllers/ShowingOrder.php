@@ -18,7 +18,7 @@ class ShowingOrderController extends \BaseController {
      */
     public function getShowingOrderListAction () {
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->getShowingOrderList($param);
         $data = $this->convertor->getShowingOrderListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class ShowingOrderController extends \BaseController {
      * @return Json
      */
     public function getShowingOrderDetailAction () {
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $data = $this->model->getShowingOrderDetail($id);
             $data = $this->convertor->getShowingOrderDetail($data);
@@ -48,10 +48,10 @@ class ShowingOrderController extends \BaseController {
      * @return Json
      */
     public function updateShowingOrderByIdAction(){
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->getRequest()->getParam('name'));
+            $param['name'] = trim($this->getParamList('name'));
             $data = $this->model->updateShowingOrderById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class ShowingOrderController extends \BaseController {
      */
     public function addShowingOrderAction(){
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->addShowingOrder($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

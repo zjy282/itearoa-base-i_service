@@ -18,7 +18,7 @@ class AppstartPicController extends \BaseController {
      */
     public function getAppstartPicListAction () {
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->getAppstartPicList($param);
         $data = $this->convertor->getAppstartPicListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class AppstartPicController extends \BaseController {
      * @return Json
      */
     public function getAppstartPicDetailAction () {
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $data = $this->model->getAppstartPicDetail($id);
             $data = $this->convertor->getAppstartPicDetail($data);
@@ -48,10 +48,10 @@ class AppstartPicController extends \BaseController {
      * @return Json
      */
     public function updateAppstartPicByIdAction(){
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->getRequest()->getParam('name'));
+            $param['name'] = trim($this->getParamList('name'));
             $data = $this->model->updateAppstartPicById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class AppstartPicController extends \BaseController {
      */
     public function addAppstartPicAction(){
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->addAppstartPic($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

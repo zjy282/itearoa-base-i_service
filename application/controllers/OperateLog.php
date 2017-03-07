@@ -18,7 +18,7 @@ class OperateLogController extends \BaseController {
      */
     public function getOperateLogListAction () {
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->getOperateLogList($param);
         $data = $this->convertor->getOperateLogListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class OperateLogController extends \BaseController {
      * @return Json
      */
     public function getOperateLogDetailAction () {
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $data = $this->model->getOperateLogDetail($id);
             $data = $this->convertor->getOperateLogDetail($data);
@@ -48,10 +48,10 @@ class OperateLogController extends \BaseController {
      * @return Json
      */
     public function updateOperateLogByIdAction(){
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->getRequest()->getParam('name'));
+            $param['name'] = trim($this->getParamList('name'));
             $data = $this->model->updateOperateLogById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class OperateLogController extends \BaseController {
      */
     public function addOperateLogAction(){
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->addOperateLog($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

@@ -18,7 +18,7 @@ class ShoppingController extends \BaseController {
      */
     public function getShoppingListAction () {
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->getShoppingList($param);
         $data = $this->convertor->getShoppingListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class ShoppingController extends \BaseController {
      * @return Json
      */
     public function getShoppingDetailAction () {
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $data = $this->model->getShoppingDetail($id);
             $data = $this->convertor->getShoppingDetail($data);
@@ -48,10 +48,10 @@ class ShoppingController extends \BaseController {
      * @return Json
      */
     public function updateShoppingByIdAction(){
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->getRequest()->getParam('name'));
+            $param['name'] = trim($this->getParamList('name'));
             $data = $this->model->updateShoppingById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class ShoppingController extends \BaseController {
      */
     public function addShoppingAction(){
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->addShopping($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

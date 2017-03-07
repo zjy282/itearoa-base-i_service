@@ -3,17 +3,30 @@
 abstract class BaseController extends \Yaf_Controller_Abstract {
 
     public function init() {
-        $this->setPageWebConfig();
     }
 
-    private function setPageWebConfig() {
-        $sysConfig = Yaf_Registry::get('sysConfig');
-        $webConfig['layoutPath'] = $sysConfig->application->layout_path;
-        $webConfig['domain'] = $sysConfig->web->domain;
-        $webConfig['imgDomain'] = $sysConfig->web->img_domain;
-        $webConfig['assertPath'] = $sysConfig->web->assert_path;
-        $webConfig['defaultIcon'] = $sysConfig->web->img_domain . 'img/temp/noImageIcon.jpg';
-        $this->getView()->assign('webConfig', $webConfig);
+    /**
+     * 获取参数信息
+     *
+     * @param string $paramKey
+     *            获取参数的key
+     * @param string $defualt
+     *            如果参数不存在的默认值
+     * @return array|string
+     */
+    public function getParamList($paramKey, $defualt = '') {
+        $paramList = array();
+        $request = $this->getRequest();
+        if ($request->isGet()) {
+            $paramList = $request->getQuery();
+        }
+        if ($request->isPost()) {
+            $paramList = $request->getPost();
+        }
+        if ($paramKey) {
+            return $paramList[$paramKey] ? $paramList[$paramKey] : $defualt;
+        }
+        return $paramList;
     }
 
     /**
@@ -37,25 +50,25 @@ abstract class BaseController extends \Yaf_Controller_Abstract {
     public function echoSuccessData($data = array()) {
         if (! is_array($data) && ! is_object($data)) {
             $data = array(
-                    $data
-                    );
+                $data
+            );
         }
         $this->echoAndExit(0, "success", $data);
     }
 
     public function echoAndExit($code, $msg, $data, $debugInfo = null) {
         @header("Content-type:application/json");
-
+        
         $data = $this->clearNullNew($data);
         if (is_null($data) && ! is_numeric($data)) {
             $data = array();
         }
-
+        
         $echoList = array(
-                'code' => $code,
-                'msg' => $msg,
-                'data' => $data
-                );
+            'code' => $code,
+            'msg' => $msg,
+            'data' => $data
+        );
         $sysConfig = Yaf_Registry::get('sysConfig');
         if ($sysConfig->api->debug) {
             $echoList['debugInfo'] = is_null($debugInfo) ? (object) array() : $debugInfo;
@@ -71,7 +84,7 @@ abstract class BaseController extends \Yaf_Controller_Abstract {
                 $data[$keyTemp] = $value;
                 $key = $keyTemp;
             }
-
+            
             if (is_array($value) || is_object($value)) {
                 if (is_object($data)) {
                     $data->$key = $this->clearNullNew($value);
@@ -94,8 +107,8 @@ abstract class BaseController extends \Yaf_Controller_Abstract {
     /**
      * 抛出异常
      *
-     * @param string $code
-     * @param string $msg
+     * @param string $code            
+     * @param string $msg            
      * @throws Exception
      */
     protected function throwException($code, $msg) {
@@ -109,8 +122,8 @@ abstract class BaseController extends \Yaf_Controller_Abstract {
      *            传入引用
      */
     public function getPageParam(&$paramList) {
-        $page = $this->getRequest()->getParam->getPost('page');
-        $limit = $this->getRequest()->getParam->getPost('limit');
+        $page = $this->getParamList->getPost('page');
+        $limit = $this->getParamList->getPost('limit');
         $paramList['page'] = empty($page) ? 1 : $page;
         $paramList['limit'] = empty($limit) ? 5 : $limit;
     }

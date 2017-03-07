@@ -18,7 +18,7 @@ class TelController extends \BaseController {
      */
     public function getTelListAction () {
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->getTelList($param);
         $data = $this->convertor->getTelListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class TelController extends \BaseController {
      * @return Json
      */
     public function getTelDetailAction () {
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $data = $this->model->getTelDetail($id);
             $data = $this->convertor->getTelDetail($data);
@@ -48,10 +48,10 @@ class TelController extends \BaseController {
      * @return Json
      */
     public function updateTelByIdAction(){
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->getRequest()->getParam('name'));
+            $param['name'] = trim($this->getParamList('name'));
             $data = $this->model->updateTelById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class TelController extends \BaseController {
      */
     public function addTelAction(){
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->addTel($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

@@ -18,7 +18,7 @@ class PromotionController extends \BaseController {
      */
     public function getPromotionListAction () {
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->getPromotionList($param);
         $data = $this->convertor->getPromotionListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class PromotionController extends \BaseController {
      * @return Json
      */
     public function getPromotionDetailAction () {
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $data = $this->model->getPromotionDetail($id);
             $data = $this->convertor->getPromotionDetail($data);
@@ -48,10 +48,10 @@ class PromotionController extends \BaseController {
      * @return Json
      */
     public function updatePromotionByIdAction(){
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->getRequest()->getParam('name'));
+            $param['name'] = trim($this->getParamList('name'));
             $data = $this->model->updatePromotionById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class PromotionController extends \BaseController {
      */
     public function addPromotionAction(){
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->addPromotion($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

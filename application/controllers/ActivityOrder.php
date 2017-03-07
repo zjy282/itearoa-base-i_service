@@ -18,7 +18,7 @@ class ActivityOrderController extends \BaseController {
      */
     public function getActivityOrderListAction () {
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->getActivityOrderList($param);
         $data = $this->convertor->getActivityOrderListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class ActivityOrderController extends \BaseController {
      * @return Json
      */
     public function getActivityOrderDetailAction () {
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $data = $this->model->getActivityOrderDetail($id);
             $data = $this->convertor->getActivityOrderDetail($data);
@@ -48,10 +48,10 @@ class ActivityOrderController extends \BaseController {
      * @return Json
      */
     public function updateActivityOrderByIdAction(){
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->getRequest()->getParam('name'));
+            $param['name'] = trim($this->getParamList('name'));
             $data = $this->model->updateActivityOrderById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class ActivityOrderController extends \BaseController {
      */
     public function addActivityOrderAction(){
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->addActivityOrder($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

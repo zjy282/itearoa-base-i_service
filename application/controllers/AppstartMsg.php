@@ -18,7 +18,7 @@ class AppstartMsgController extends \BaseController {
      */
     public function getAppstartMsgListAction () {
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->getAppstartMsgList($param);
         $data = $this->convertor->getAppstartMsgListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class AppstartMsgController extends \BaseController {
      * @return Json
      */
     public function getAppstartMsgDetailAction () {
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $data = $this->model->getAppstartMsgDetail($id);
             $data = $this->convertor->getAppstartMsgDetail($data);
@@ -48,10 +48,10 @@ class AppstartMsgController extends \BaseController {
      * @return Json
      */
     public function updateAppstartMsgByIdAction(){
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->getRequest()->getParam('name'));
+            $param['name'] = trim($this->getParamList('name'));
             $data = $this->model->updateAppstartMsgById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class AppstartMsgController extends \BaseController {
      */
     public function addAppstartMsgAction(){
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->addAppstartMsg($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

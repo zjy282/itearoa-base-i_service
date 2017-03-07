@@ -18,7 +18,7 @@ class AppstartMsgLogController extends \BaseController {
      */
     public function getAppstartMsgLogListAction () {
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->getAppstartMsgLogList($param);
         $data = $this->convertor->getAppstartMsgLogListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class AppstartMsgLogController extends \BaseController {
      * @return Json
      */
     public function getAppstartMsgLogDetailAction () {
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $data = $this->model->getAppstartMsgLogDetail($id);
             $data = $this->convertor->getAppstartMsgLogDetail($data);
@@ -48,10 +48,10 @@ class AppstartMsgLogController extends \BaseController {
      * @return Json
      */
     public function updateAppstartMsgLogByIdAction(){
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->getRequest()->getParam('name'));
+            $param['name'] = trim($this->getParamList('name'));
             $data = $this->model->updateAppstartMsgLogById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class AppstartMsgLogController extends \BaseController {
      */
     public function addAppstartMsgLogAction(){
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->addAppstartMsgLog($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

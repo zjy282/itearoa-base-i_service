@@ -18,7 +18,7 @@ class GroupController extends \BaseController {
      */
     public function getGroupListAction () {
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->getGroupList($param);
         $data = $this->convertor->getGroupListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class GroupController extends \BaseController {
      * @return Json
      */
     public function getGroupDetailAction () {
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $data = $this->model->getGroupDetail($id);
             $data = $this->convertor->getGroupDetail($data);
@@ -48,10 +48,10 @@ class GroupController extends \BaseController {
      * @return Json
      */
     public function updateGroupbyIdAction(){
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->getRequest()->getParam('name'));
+            $param['name'] = trim($this->getParamList('name'));
             $data = $this->model->updateGroupById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class GroupController extends \BaseController {
      */
     public function addGroupAction(){
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->addGroup($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

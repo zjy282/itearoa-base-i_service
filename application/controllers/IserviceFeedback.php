@@ -18,7 +18,7 @@ class IserviceFeedbackController extends \BaseController {
      */
     public function getIserviceFeedbackListAction () {
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->getIserviceFeedbackList($param);
         $data = $this->convertor->getIserviceFeedbackListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class IserviceFeedbackController extends \BaseController {
      * @return Json
      */
     public function getIserviceFeedbackDetailAction () {
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $data = $this->model->getIserviceFeedbackDetail($id);
             $data = $this->convertor->getIserviceFeedbackDetail($data);
@@ -48,10 +48,10 @@ class IserviceFeedbackController extends \BaseController {
      * @return Json
      */
     public function updateIserviceFeedbackByIdAction(){
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->getRequest()->getParam('name'));
+            $param['name'] = trim($this->getParamList('name'));
             $data = $this->model->updateIserviceFeedbackById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class IserviceFeedbackController extends \BaseController {
      */
     public function addIserviceFeedbackAction(){
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->addIserviceFeedback($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

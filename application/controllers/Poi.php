@@ -18,7 +18,7 @@ class PoiController extends \BaseController {
      */
     public function getPoiListAction () {
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->getPoiList($param);
         $data = $this->convertor->getPoiListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class PoiController extends \BaseController {
      * @return Json
      */
     public function getPoiDetailAction () {
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $data = $this->model->getPoiDetail($id);
             $data = $this->convertor->getPoiDetail($data);
@@ -48,10 +48,10 @@ class PoiController extends \BaseController {
      * @return Json
      */
     public function updatePoiByIdAction(){
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->getRequest()->getParam('name'));
+            $param['name'] = trim($this->getParamList('name'));
             $data = $this->model->updatePoiById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class PoiController extends \BaseController {
      */
     public function addPoiAction(){
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->addPoi($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

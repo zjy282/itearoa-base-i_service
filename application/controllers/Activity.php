@@ -18,7 +18,7 @@ class ActivityController extends \BaseController {
      */
     public function getActivityListAction () {
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->getActivityList($param);
         $data = $this->convertor->getActivityListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class ActivityController extends \BaseController {
      * @return Json
      */
     public function getActivityDetailAction () {
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $data = $this->model->getActivityDetail($id);
             $data = $this->convertor->getActivityDetail($data);
@@ -48,10 +48,10 @@ class ActivityController extends \BaseController {
      * @return Json
      */
     public function updateActivityByIdAction(){
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->getRequest()->getParam('name'));
+            $param['name'] = trim($this->getParamList('name'));
             $data = $this->model->updateActivityById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class ActivityController extends \BaseController {
      */
     public function addActivityAction(){
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->addActivity($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

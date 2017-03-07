@@ -18,7 +18,7 @@ class AppImgController extends \BaseController {
      */
     public function getAppImgListAction () {
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->getAppImgList($param);
         $data = $this->convertor->getAppImgListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class AppImgController extends \BaseController {
      * @return Json
      */
     public function getAppImgDetailAction () {
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $data = $this->model->getAppImgDetail($id);
             $data = $this->convertor->getAppImgDetail($data);
@@ -48,10 +48,10 @@ class AppImgController extends \BaseController {
      * @return Json
      */
     public function updateAppImgByIdAction(){
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->getRequest()->getParam('name'));
+            $param['name'] = trim($this->getParamList('name'));
             $data = $this->model->updateAppImgById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class AppImgController extends \BaseController {
      */
     public function addAppImgAction(){
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->addAppImg($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

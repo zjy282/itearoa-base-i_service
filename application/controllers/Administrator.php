@@ -18,7 +18,7 @@ class AdministratorController extends \BaseController {
      */
     public function getAdministratorListAction () {
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->getAdministratorList($param);
         $data = $this->convertor->getAdministratorListConvertor($data);
         $this->echoJson($data);
@@ -31,7 +31,7 @@ class AdministratorController extends \BaseController {
      * @return Json
      */
     public function getAdministratorDetailAction () {
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $data = $this->model->getAdministratorDetail($id);
             $data = $this->convertor->getAdministratorDetail($data);
@@ -48,10 +48,10 @@ class AdministratorController extends \BaseController {
      * @return Json
      */
     public function updateAdministratorByIdAction(){
-        $id = intval($this->getRequest()->getParam('id'));
+        $id = intval($this->getParamList('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->getRequest()->getParam('name'));
+            $param['name'] = trim($this->getParamList('name'));
             $data = $this->model->updateAdministratorById($param,$id); 
             $data = 
             $this->convertor->commonConvertor($data);
@@ -68,7 +68,7 @@ class AdministratorController extends \BaseController {
      */
     public function addAdministratorAction(){
         $param = array ();
-        $param['name'] = trim($this->getRequest()->getParam('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->addAdministrator($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);
