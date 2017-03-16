@@ -12,21 +12,22 @@ class GroupController extends \BaseController {
     }
 
     /**
-     * 获取<class_name>列表
+     * 获取group列表
      * 
      * @return Json
      */
     public function getGroupListAction () {
         $param = array ();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['page'] = intval($this->getParamList('page'));
+        $param['limit'] = intval($this->getParamList('limit',5));
         $data = $this->model->getGroupList($param);
         $data = $this->convertor->getGroupListConvertor($data);
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
 
     /**
-     * 根据id获取<class_name>详情
+     * 根据id获取group详情
      * @param int id 获取详情信息的id
      * @return Json
      */
@@ -34,44 +35,48 @@ class GroupController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id){
             $data = $this->model->getGroupDetail($id);
-            $data = $this->convertor->getGroupDetail($data);
+            $data = $this->convertor->getGroupDetailConvertor($data);
         } else {
             $this->throwException(1,'查询条件错误，id不能为空');
         }
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
     /**
-     * 根据id修改<class_name>信息
+     * 根据id修改group信息
      * @param int id 获取详情信息的id
      * @param array param 需要更新的字段
      * @return Json
      */
     public function updateGroupbyIdAction(){
-        $id = intval($this->getParamList('id'));
+        $paramList = $this->getParamList(false);
+        $id = intval($paramList['id']);
         if ($id){
             $param = array();
-            $param['name'] = trim($this->getParamList('name'));
+            isset($paramList['name']) ? $param['name'] = trim($paramList['name']) : false;
+            isset($paramList['enname']) ? $param['enName'] = trim($paramList['enname']) : false;
+            isset($paramList['porturl']) ? $param['portUrl'] = trim($paramList['porturl']) : false;
             $data = $this->model->updateGroupById($param,$id); 
-            $data = 
-            $this->convertor->commonConvertor($data);
+            $data = $this->convertor->statusConvertor($data);
         } else {
             $this->throwException(1,'id不能为空');
         }
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
     
     /**
-     * 添加<class_name>信息
+     * 添加group信息
      * @param array param 需要新增的信息
      * @return Json
      */
     public function addGroupAction(){
         $param = array ();
         $param['name'] = trim($this->getParamList('name'));
+        $param['enName'] = trim($this->getParamList('enname'));
+        $param['portUrl'] = trim($this->getParamList('porturl'));
         $data = $this->model->addGroup($param);
-        $data = $this->convertor->commonConvertor($data);
-        $this->echoJson($data);
+        $data = $this->convertor->statusConvertor(array ('id'=>$data));
+        $this->echoSuccessData($data);
     }
 
 }

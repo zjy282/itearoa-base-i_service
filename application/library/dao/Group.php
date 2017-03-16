@@ -26,9 +26,8 @@ class Dao_Group extends Dao_Base {
 
     public function updateGroupById(array $info,int $id){
         $result = false;
-
         if ($id){
-            $result = $this->db->update('group_list',$info,$id);
+            $result = $this->db->update('group_list',$info,array('id' => $id));
         }
 
         return $result;
