@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 集团管理员控制器类
+ */
 class AdministratorController extends \BaseController {
 
     private $model;
@@ -53,8 +55,7 @@ class AdministratorController extends \BaseController {
             $param = array();
             $param['name'] = trim($this->getParamList('name'));
             $data = $this->model->updateAdministratorById($param,$id); 
-            $data = 
-            $this->convertor->commonConvertor($data);
+            $data = $this->convertor->statusConvertor($data);
         } else {
             $this->throwException(1,'id不能为空');
         }
@@ -70,7 +71,7 @@ class AdministratorController extends \BaseController {
         $param = array ();
         $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->addAdministrator($param);
-        $data = $this->convertor->commonConvertor($data);
+        $data = $this->convertor->statusConvertor($data);
         $this->echoJson($data);
     }
 

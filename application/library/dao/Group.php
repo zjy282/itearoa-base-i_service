@@ -1,4 +1,7 @@
 <?php
+/**
+ * 集团信息DAO类
+ */
 class Dao_Group extends Dao_Base {
 
     public function __construct(){

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 集团信息业务类
+ */
 class GroupModel extends \BaseModel {
 
     private $dao;
@@ -41,7 +43,7 @@ class GroupModel extends \BaseModel {
      */
     public function updateGroupById($param,$id){
         $result = false;
-        //自行添加要更新的字段,以下是age字段是样例
+        
         if ($id){
             isset($param['name']) ?$info['name'] = $param['name'] : false;
             isset($param['enName']) ?$info['enname'] = $param['enName'] : false;
@@ -57,7 +59,6 @@ class GroupModel extends \BaseModel {
      * @return array
      */
     public function addGroup($param){
-        //自行添加要添加的字段,以下是age字段是样例
         isset($param['name']) ?$info['name'] = $param['name'] : false;
         isset($param['enName']) ?$info['enname'] = $param['enName'] : false;
         isset($param['portUrl']) ?$info['port_url'] = $param['portUrl'] : false;

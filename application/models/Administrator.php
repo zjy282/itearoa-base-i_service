@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 集团管理员类
+ */
 class AdministratorModel extends \BaseModel {
 
     private $dao;
@@ -41,9 +43,18 @@ class AdministratorModel extends \BaseModel {
      */
     public function updateAdministratorById($param,$id){
         $result = false;
-        //自行添加要更新的字段,以下是age字段是样例
+        
         if ($id){
-            $info['age'] = intval($param['age']);
+            isset($param['id']) ?$info['id'] = $param['id'] : false;
+            isset($param['userName']) ?$info['username'] = $param['userName'] : false;
+            isset($param['realName']) ?$info['realname'] = $param['realName'] : false;
+            isset($param['remark']) ?$info['remark'] = $param['remark'] : false;
+            isset($param['status']) ?$info['status'] = intval($param['status']) : false;
+            isset($param['lastLoginTime']) ?$info['lastlogintime'] = $param['lastLoginTime'] : false;
+            isset($param['lastLoginIp']) ?$info['lastloginip'] = $param['lastLoginIp'] : false;
+            isset($param['createTime']) ?$info['createtime'] = $param['createTime'] : false;
+            isset($param['createAdmin']) ?$info['createadmin'] = $param['createAdmin'] : false;
+            isset($param['groupId']) ?$info['groupid'] = $param['groupId'] : false;
             $result = $this->dao->updateAdministratorById($info,$id);
         }
         return $result;
@@ -55,8 +66,16 @@ class AdministratorModel extends \BaseModel {
      * @return array
      */
     public function addAdministrator($param){
-        //自行添加要添加的字段,以下是age字段是样例
-        $info['age'] = intval($param['age']);
+        isset($param['id']) ?$info['id'] = $param['id'] : false;
+        isset($param['userName']) ?$info['username'] = $param['userName'] : false;
+        isset($param['realName']) ?$info['realname'] = $param['realName'] : false;
+        isset($param['remark']) ?$info['remark'] = $param['remark'] : false;
+        isset($param['status']) ?$info['status'] = intval($param['status']) : false;
+        isset($param['lastLoginTime']) ?$info['lastlogintime'] = $param['lastLoginTime'] : false;
+        isset($param['lastLoginIp']) ?$info['lastloginip'] = $param['lastLoginIp'] : false;
+        isset($param['createTime']) ?$info['createtime'] = $param['createTime'] : false;
+        isset($param['createAdmin']) ?$info['createadmin'] = $param['createAdmin'] : false;
+        isset($param['groupId']) ?$info['groupid'] = $param['groupId'] : false;
         return $this->dao->addAdministrator($info);
     }
 }

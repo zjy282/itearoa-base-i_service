@@ -1,4 +1,7 @@
 <?php
+/**
+ * 集团管理员DAO类
+ */
 class Dao_Administrator extends Dao_Base{
     
     public function __construct(){

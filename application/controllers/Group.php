@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 集团信息控制器类
+ */
 class GroupController extends \BaseController {
 
     private $model;
