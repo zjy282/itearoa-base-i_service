@@ -13,8 +13,20 @@ class Dao_ShareIcon extends Dao_Base{
     public function getShareIconList(array $param):array {
         $limit = $param['limit']?intval($param['limit']):0;
         $page = $this->getStart($param['page'],$limit);
-        $sql = "select * from hotel_share_icon limit {$page},{$limit}";
-        $result = $this->db->fetchAll($sql, array());
+        
+        $whereSql = array();
+        $whereCase = array();
+        if (isset($param['hotelid'])) {
+            $whereSql[] = 'hotelid = ?';
+            $whereCase[] = $param['hotelid'];
+        }
+        $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
+        
+        $sql = "select * from hotel_share_icon {$whereSql} order by sort desc";
+        if ($limit) {
+            $sql .= " limit {$page},{$limit}";
+        }
+        $result = $this->db->fetchAll($sql, $whereCase);
         return is_array($result)?$result:array();
     }
 

@@ -3,75 +3,111 @@
 class HotelListController extends \BaseController {
 
     private $model;
+
     private $convertor;
 
     public function init() {
-	    parent::init();
+        parent::init();
         $this->model = new HotelListModel();
         $this->convertor = new Convertor_HotelList();
     }
 
     /**
      * 获取HotelList列表
-     * 
+     *
      * @return Json
      */
-    public function getHotelListListAction () {
-        $param = array ();
+    public function getHotelListListAction() {
+        $param = array();
         $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->getHotelListList($param);
         $data = $this->convertor->getHotelListListConvertor($data);
         $this->echoJson($data);
     }
 
-
     /**
      * 根据id获取HotelList详情
-     * @param int id 获取详情信息的id
+     *
+     * @param
+     *            int id 获取详情信息的id
      * @return Json
      */
-    public function getHotelListDetailAction () {
-        $id = intval($this->getParamList('id'));
-        if ($id){
-            $data = $this->model->getHotelListDetail($id);
-            $data = $this->convertor->getHotelListDetail($data);
+    public function getHotelListDetailAction() {
+        $id = intval($this->getParamList('hotelid'));
+        
+        if ($id) {
+            $hotelInfo = $this->model->getHotelListDetail($id);
+            empty($hotelInfo) ? $this->throwException(2, '物业信息不错在') : false;
+            $shareIconModel = new ShareIconModel();
+            $hotelShareIcon = $shareIconModel->getShareIconList(array(
+                'hotelid' => $id
+            ));
+            $shortCutIconModel = new ShortcutIconModel();
+            $hotelShortCutIcon = $shortCutIconModel->getShortcutIconList(array(
+                'hotelid' => $id
+            ));
+            $data = $this->convertor->getHotelListDetailConvertor($hotelInfo, $hotelShareIcon, $hotelShortCutIcon);
         } else {
-            $this->throwException(1,'查询条件错误，id不能为空');
+            $this->throwException(1, '查询条件错误，id不能为空');
         }
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
     /**
      * 根据id修改HotelList信息
-     * @param int id 获取详情信息的id
-     * @param array param 需要更新的字段
+     *
+     * @param
+     *            int id 获取详情信息的id
+     * @param
+     *            array param 需要更新的字段
      * @return Json
      */
-    public function updateHotelListByIdAction(){
+    public function updateHotelListByIdAction() {
         $id = intval($this->getParamList('id'));
-        if ($id){
+        if ($id) {
             $param = array();
             $param['name'] = trim($this->getParamList('name'));
-            $data = $this->model->updateHotelListById($param,$id); 
-            $data = 
-            $this->convertor->commonConvertor($data);
+            $data = $this->model->updateHotelListById($param, $id);
+            $data = $this->convertor->commonConvertor($data);
         } else {
-            $this->throwException(1,'id不能为空');
+            $this->throwException(1, 'id不能为空');
         }
         $this->echoJson($data);
     }
-    
+
     /**
      * 添加HotelList信息
-     * @param array param 需要新增的信息
+     *
+     * @param
+     *            array param 需要新增的信息
      * @return Json
      */
-    public function addHotelListAction(){
-        $param = array ();
+    public function addHotelListAction() {
+        $param = array();
         $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->addHotelList($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);
     }
 
+    /**
+     * 获取当前可用的物业列表
+     *
+     * @param
+     *            int groupid 集团id
+     * @return Json
+     */
+    public function getEffectiveHotelListAction() {
+        $param = array();
+        $param['groupid'] = intval($this->getParamList('groupid'));
+        $param['status'] = 1;
+        
+        if (empty($param['groupid'])) {
+            $this->throwException(2, '集团ID不能为空');
+        }
+        
+        $hotelList = $this->model->getHotelListList($param);
+        $hotelList = $this->convertor->getEffectiveHotelListConvertor($hotelList);
+        $this->echoSuccessData($hotelList);
+    }
 }

@@ -80,6 +80,11 @@ class AppstartMsgController extends \BaseController {
         $this->echoJson($data);
     }
 
+    /**
+     * 获取当前可用的APP启动消息
+     * @param array param 需要新增的信息
+     * @return Json
+     */
     public function getEffectiveAppStartMsgAction() {
         $param = array();
         $groupId = intval($this->getParamList('groupid'));

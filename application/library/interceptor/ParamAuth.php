@@ -39,6 +39,8 @@ class Interceptor_ParamAuth extends \Interceptor_Base {
             }
         }
         unset($paramList['timestamp']);
+        
+        $this->getHotelLangInfo($paramList);
         $request->setParam("paramList", $paramList);
     }
 
@@ -46,6 +48,34 @@ class Interceptor_ParamAuth extends \Interceptor_Base {
      * (non-PHPdoc) @see Interceptor_Base::after()
      */
     public function after(Yaf_Request_Abstract $request, Yaf_Response_Abstract $response) {
+    }
+
+    /**
+     * 获取酒店当前语言信息
+     *
+     * @param unknown $paramList            
+     */
+    private function getHotelLangInfo($paramList) {
+        $lang = $paramList['lang'];
+        $hotelId = intval($paramList['hotelid']);
+        if ($lang && $hotelId) {
+            $cache = Cache_Redis::getInstance();
+            $cacheKey = Enum_Lang::getHotelLangListCacheKey($hotelId);
+            $hotelLang = $cache->get($cacheKey);
+            if (! $hotelLang) {
+                $hotelListModel = new HotelListModel();
+                $hotelLang = $hotelListModel->getHotelListDetail($hotelId)['lang_list'];
+                if ($hotelLang) {
+                    $cache->set($cacheKey, $hotelLang, 86400);
+                }
+            }
+            $hotelLang = explode(",", $hotelLang);
+            Yaf_Registry::set('hotelLangInfo', array(
+                'langList' => $hotelLang,
+                'lang' => $lang,
+                'langIndex' => array_search($lang, $hotelLang) + 1
+            ));
+        }
     }
 
     private function getUserAgent() {
