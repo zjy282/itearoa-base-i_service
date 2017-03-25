@@ -18,7 +18,8 @@ class IserviceFeedbackController extends \BaseController {
      */
     public function getIserviceFeedbackListAction () {
         $param = array ();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['page'] = intval($this->getParamList('page',1));
+        $param['limit'] = intval($this->getParamList('limit',5));
         $data = $this->model->getIserviceFeedbackList($param);
         $data = $this->convertor->getIserviceFeedbackListConvertor($data);
         $this->echoJson($data);
@@ -48,13 +49,14 @@ class IserviceFeedbackController extends \BaseController {
      * @return Json
      */
     public function updateIserviceFeedbackByIdAction(){
+        $paramList = $this->getParamList(false);
         $id = intval($this->getParamList('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->getParamList('name'));
+            isset($paramList['email']) ? $param['email'] = trim($paramList['email']) : false;
+            isset($paramList['content']) ? $param['content'] = trim($paramList['content']) : false;
             $data = $this->model->updateIserviceFeedbackById($param,$id); 
-            $data = 
-            $this->convertor->commonConvertor($data);
+            $data = $this->convertor->statusConvertor($data);
         } else {
             $this->throwException(1,'id不能为空');
         }
@@ -68,7 +70,9 @@ class IserviceFeedbackController extends \BaseController {
      */
     public function addIserviceFeedbackAction(){
         $param = array ();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['email'] = trim($this->getParamList('email'));
+        $param['content'] = trim($this->getParamList('content'));
+        $param['createtime'] = time();
         $data = $this->model->addIserviceFeedback($param);
         $data = $this->convertor->commonConvertor($data);
         $this->echoJson($data);

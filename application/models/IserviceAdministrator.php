@@ -41,9 +41,12 @@ class IserviceAdministratorModel extends \BaseModel {
      */
     public function updateIserviceAdministratorById($param,$id){
         $result = false;
-        //自行添加要更新的字段,以下是age字段是样例
         if ($id){
-            $info['age'] = intval($param['age']);
+            isset($param['userName']) ?$info['username'] = $param['userName'] : false;
+            isset($param['password']) ?$info['password'] = $param['password'] : false;
+            isset($param['realName']) ?$info['realname'] = $param['realName'] : false;
+            isset($param['remark']) ?$info['remark'] = $param['remark'] : false;
+            isset($param['status']) ?$info['status'] = $param['status'] : false;
             $result = $this->dao->updateIserviceAdministratorById($info,$id);
         }
         return $result;
@@ -55,8 +58,12 @@ class IserviceAdministratorModel extends \BaseModel {
      * @return array
      */
     public function addIserviceAdministrator($param){
-        //自行添加要添加的字段,以下是age字段是样例
-        $info['age'] = intval($param['age']);
+        isset($param['userName']) ?$info['username'] = $param['userName'] : false;
+        isset($param['password']) ?$info['password'] = $param['password'] : false;
+        isset($param['realName']) ?$info['realname'] = $param['realName'] : false;
+        isset($param['remark']) ?$info['remark'] = $param['remark'] : false;
+        isset($param['status']) ?$info['status'] = $param['status'] : false;
+        $info['createtime'] = $param['createTime']
         return $this->dao->addIserviceAdministrator($info);
     }
 }

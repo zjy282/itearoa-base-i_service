@@ -18,10 +18,11 @@ class IserviceAdministratorController extends \BaseController {
      */
     public function getIserviceAdministratorListAction () {
         $param = array ();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['page'] = intval($this->getParamList('page'));
+        $param['limit'] = intval($this->getParamList('limit',5));
         $data = $this->model->getIserviceAdministratorList($param);
         $data = $this->convertor->getIserviceAdministratorListConvertor($data);
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
 
@@ -38,7 +39,7 @@ class IserviceAdministratorController extends \BaseController {
         } else {
             $this->throwException(1,'查询条件错误，id不能为空');
         }
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -51,14 +52,17 @@ class IserviceAdministratorController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->getParamList('name'));
+            isset($paramList['username']) ? $param['userName'] = trim($paramList['username']) : false;
+            isset($paramList['password']) ? $param['password'] = md5(trim($paramList['password'])) : false;
+            isset($paramList['realname']) ? $param['realName'] = trim($paramList['realname']) : false;
+            isset($paramList['remark']) ? $param['remark'] = trim($paramList['remark']) : false;
+            isset($paramList['status']) ? $param['status'] = intval($paramList['status']) : false;
             $data = $this->model->updateIserviceAdministratorById($param,$id); 
-            $data = 
-            $this->convertor->commonConvertor($data);
+            $data = $this->convertor->statusConvertor($data);
         } else {
             $this->throwException(1,'id不能为空');
         }
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
     
     /**
@@ -67,11 +71,15 @@ class IserviceAdministratorController extends \BaseController {
      * @return Json
      */
     public function addIserviceAdministratorAction(){
-        $param = array ();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['userName'] = trim($this->getParamList('username'));
+        $param['password'] = md5(trim($this->getParamList('password')));
+        $param['realName'] = trim($this->getParamList('realname'));
+        $param['remark'] = trim($this->getParamList('remark'));
+        $param['status'] = intval($this->getParamList('status'));
+        $param['createTime'] = time();
         $data = $this->model->addIserviceAdministrator($param);
-        $data = $this->convertor->commonConvertor($data);
-        $this->echoJson($data);
+        $data = $this->convertor->statusConvertor(array('id'=>$data));
+        $this->echoSuccessData($data);
     }
 
 }

@@ -41,9 +41,9 @@ class IserviceFeedbackModel extends \BaseModel {
      */
     public function updateIserviceFeedbackById($param,$id){
         $result = false;
-        //自行添加要更新的字段,以下是age字段是样例
         if ($id){
-            $info['age'] = intval($param['age']);
+            isset($param['email'])?$info['email'] = $param['email'] : false;
+            isset($param['content'])?$info['content'] = $param['content'] : false;
             $result = $this->dao->updateIserviceFeedbackById($info,$id);
         }
         return $result;
@@ -55,8 +55,9 @@ class IserviceFeedbackModel extends \BaseModel {
      * @return array
      */
     public function addIserviceFeedback($param){
-        //自行添加要添加的字段,以下是age字段是样例
-        $info['age'] = intval($param['age']);
+        isset($param['email'])?$info['email'] = $param['email'] : false;
+        isset($param['content'])?$info['content'] = $param['content'] : false;
+        isset($param['createTime'])?$info['createtime'] = $param['createtTime'] : false;
         return $this->dao->addIserviceFeedback($info);
     }
 }
