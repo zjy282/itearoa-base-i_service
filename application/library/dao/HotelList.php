@@ -53,8 +53,7 @@ class Dao_HotelList extends Dao_Base {
                 $id
             ));
         }
-        
-        return $result;
+        return is_array($result) ? $result : array();
     }
 
     /**

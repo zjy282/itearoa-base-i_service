@@ -110,4 +110,59 @@ class HotelListController extends \BaseController {
         $hotelList = $this->convertor->getEffectiveHotelListConvertor($hotelList);
         $this->echoSuccessData($hotelList);
     }
+
+    /**
+     * 获取物业详情页
+     *
+     * @param
+     *            int hotelid 酒店ID
+     * @return Json
+     */
+    public function getHotelDetailAction() {
+        $param = array();
+        $param['hotelid'] = intval($this->getParamList('hotelid'));
+        $param['status'] = 1;
+        
+        if(empty($param['hotelid'])){
+            $this->throwException(2, '物业信息不错在');
+        }
+        // 获取物业信息
+        $hotelInfo = $this->model->getHotelListDetail($param['hotelid']);
+        empty($hotelInfo) ? $this->throwException(2, '物业信息不错在') : false;
+        
+        // 获取物业图片信息
+        $hotelPicModel = new HotelPicModel();
+        $picList = $hotelPicModel->getHotelPicList($param);
+        
+        // 获取物业房型信息
+        $roomTypeModel = new RoomtypeModel();
+        $roomTypeList = $roomTypeModel->getRoomtypeList($param);
+        
+        // 获取物业设施信息
+        $facilitiesModel = new FacilitiesModel();
+        $facilitiesList = $facilitiesModel->getFacilitiesList($param);
+        
+        // 获取物业楼层信息
+        $hotelFloorModel = new FloorModel();
+        $floorList = $hotelFloorModel->getFloorList($param);
+        
+        // 获取物业交通信息
+        $trafficModel = new TrafficModel();
+        $trafficList = $trafficModel->getTrafficList($param);
+        
+        // 获取物业全景信息
+        $panoramicModel = new PanoramicModel();
+        $panoramicList = $panoramicModel->getPanoramicList($param);
+        
+        $result = $this->convertor->hotelDetailConvertor(array(
+            'hotelInfo' => $hotelInfo,
+            'picList' => $picList,
+            'roomTypeList' => $roomTypeList,
+            'facilitiesList' => $facilitiesList,
+            'floorList' => $floorList,
+            'trafficList' => $trafficList,
+            'panoramicList' => $panoramicList
+        ));
+        $this->echoSuccessData($result);
+    }
 }

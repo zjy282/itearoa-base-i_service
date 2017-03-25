@@ -125,8 +125,8 @@ abstract class BaseController extends \Yaf_Controller_Abstract {
      *            传入引用
      */
     public function getPageParam(&$paramList) {
-        $page = $this->getParamList->getPost('page');
-        $limit = $this->getParamList->getPost('limit');
+        $page = intval($this->getParamList('page'));
+        $limit = intval($this->getParamList('limit'));
         $paramList['page'] = empty($page) ? 1 : $page;
         $paramList['limit'] = empty($limit) ? 5 : $limit;
     }

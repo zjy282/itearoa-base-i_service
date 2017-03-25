@@ -4,17 +4,23 @@ class ShowingOrderModel extends \BaseModel {
 
     private $dao;
 
-    public function __construct(){
+    public function __construct() {
         parent::__construct();
         $this->dao = new Dao_ShowingOrder();
     }
-    
+
     /**
      * 获取ShowingOrder列表信息
-     * @param array param 查询条件
+     *
+     * @param
+     *            array param 查询条件
      * @return array
      */
-    public function getShowingOrderList(array $param){
+    public function getShowingOrderList(array $param) {
+        isset($param['contact_name']) ? $paramList['contact_name'] = strval($param['contact_name']) : false;
+        isset($param['contact_mobile']) ? $paramList['contact_mobile'] = strval($param['contact_mobile']) : false;
+        isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        isset($param['status']) ? $paramList['status'] = $param['status'] : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getShowingOrderList($paramList);
@@ -22,12 +28,14 @@ class ShowingOrderModel extends \BaseModel {
 
     /**
      * 根据id查询ShowingOrder信息
-     * @param int id 查询的主键
+     *
+     * @param
+     *            int id 查询的主键
      * @return array
      */
-    public function getShowingOrderDetail($id){
+    public function getShowingOrderDetail($id) {
         $result = array();
-        if ($id){
+        if ($id) {
             $result = $this->dao->getShowingOrderDetail($id);
         }
         return $result;
@@ -35,28 +43,37 @@ class ShowingOrderModel extends \BaseModel {
 
     /**
      * 根据id更新ShowingOrder信息
-     * @param array param 需要更新的信息
-     * @param int id 主键
+     *
+     * @param
+     *            array param 需要更新的信息
+     * @param
+     *            int id 主键
      * @return array
      */
-    public function updateShowingOrderById($param,$id){
+    public function updateShowingOrderById($param, $id) {
         $result = false;
-        //自行添加要更新的字段,以下是age字段是样例
-        if ($id){
+        // 自行添加要更新的字段,以下是age字段是样例
+        if ($id) {
             $info['age'] = intval($param['age']);
-            $result = $this->dao->updateShowingOrderById($info,$id);
+            $result = $this->dao->updateShowingOrderById($info, $id);
         }
         return $result;
     }
 
     /**
      * ShowingOrder新增信息
-     * @param array param 需要增加的信息
+     *
+     * @param
+     *            array param 需要增加的信息
      * @return array
      */
-    public function addShowingOrder($param){
-        //自行添加要添加的字段,以下是age字段是样例
-        $info['age'] = intval($param['age']);
+    public function addShowingOrder($param) {
+        $info['contact_name'] = $param['contact_name'];
+        $info['contact_mobile'] = $param['contact_mobile'];
+        $info['hotelid'] = intval($param['hotelid']);
+        $info['userid'] = intval($param['userid']);
+        $info['createtime'] = time();
+        $info['status'] = Enum_ShowingOrder::ORDER_STATUS_WAIT;
         return $this->dao->addShowingOrder($info);
     }
 }
