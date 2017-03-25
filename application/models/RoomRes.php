@@ -15,6 +15,9 @@ class RoomResModel extends \BaseModel {
      * @return array
      */
     public function getRoomResList(array $param){
+        isset($param['id']) ? $paramList['id'] = $param['id'] : false;
+        isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
+        isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getRoomResList($paramList);

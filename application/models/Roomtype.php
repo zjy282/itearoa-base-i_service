@@ -15,6 +15,7 @@ class RoomtypeModel extends \BaseModel {
      * @return array
      */
     public function getRoomtypeList(array $param){
+        isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getRoomtypeList($paramList);

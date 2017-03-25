@@ -82,4 +82,66 @@ class Convertor_HotelList extends Convertor_Base {
         
         return $data;
     }
+
+    public function hotelDetailConvertor($hotel) {
+        $data = array();
+        $hotelInfo = $hotel['hotelInfo'];
+        $data['id'] = $hotelInfo['id'];
+        $data['groupid'] = $hotelInfo['groupid'];
+        $data['propertyinterfid'] = $hotelInfo['propertyinterfid'];
+        $data['lng'] = $hotelInfo['lng'];
+        $data['lat'] = $hotelInfo['lat'];
+        $data['tel'] = $hotelInfo['tel'];
+        $data['name'] = $this->handlerMultiLang('name', $hotelInfo);
+        $data['website'] = $hotelInfo['website'];
+        $data['bookurl'] = $hotelInfo['bookurl'];
+        $data['introduction'] = $this->handlerMultiLang('introduction', $hotelInfo);
+        $data['pic'] = array();
+        foreach ($hotel['picList'] as $pic) {
+            $data['pic'][] = Enum_Img::getPathByKeyAndType($pic['pic']);
+        }
+        $data['roomTypeList'] = array();
+        foreach ($hotel['roomTypeList'] as $roomType) {
+            $roomTypeTemp = array();
+            $roomTypeTemp['title'] = $this->handlerMultiLang('title', $roomType);
+            $roomTypeTemp['size'] = $roomType['size'];
+            $roomTypeTemp['detail'] = $this->handlerMultiLang('detail', $roomType);
+            $roomTypeTemp['panoramic'] = $roomType['panoramic'];
+            $roomTypeTemp['bedtype'] = $this->handlerMultiLang('bedtype', $roomType);
+            $data['roomTypeList'][] = $roomTypeTemp;
+        }
+        $data['facilitiesList'] = array();
+        foreach ($hotel['facilitiesList'] as $facilities) {
+            $facilitiesTemp = array();
+            $facilitiesTemp['name'] = $this->handlerMultiLang('name', $facilities);
+            $facilitiesTemp['detail'] = $this->handlerMultiLang('detail', $facilities);
+            $facilitiesTemp['introduct'] = $this->handlerMultiLang('introduct', $facilities);
+            $data['facilitiesList'][] = $facilitiesTemp;
+        }
+        $data['floorList'] = array();
+        foreach ($hotel['floorList'] as $floor) {
+            $floorTemp = array();
+            $floorTemp['floor'] = $floor['floor'];
+            $floorTemp['detail'] = $this->handlerMultiLang('detail', $floor);
+            $floorTemp['pic'] = Enum_Img::getPathByKeyAndType($floor['pic']);
+            $data['floorList'][] = $floorTemp;
+        }
+        $data['trafficList'] = array();
+        foreach ($hotel['trafficList'] as $traffic) {
+            $trafficTemp = array();
+            $trafficTemp['introduct'] = $this->handlerMultiLang('introduct', $traffic);
+            $trafficTemp['detail'] = $this->handlerMultiLang('detail', $traffic);
+            $data['trafficList'][] = $trafficTemp;
+        }
+        $data['panoramicList'] = array();
+        foreach ($hotel['panoramicList'] as $panoramic) {
+            $panoramicTemp = array();
+            $panoramicTemp['panoramic'] = $panoramic['panoramic'];
+            $panoramicTemp['pic'] = Enum_Img::getPathByKeyAndType($panoramic['pic']);
+            $panoramicTemp['title'] = $this->handlerMultiLang('title', $panoramic);
+            $data['panoramicList'][] = $panoramicTemp;
+        }
+        
+        return $data;
+    }
 }

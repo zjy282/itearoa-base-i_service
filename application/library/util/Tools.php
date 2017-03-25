@@ -426,6 +426,64 @@ class Util_Tools {
         $idList = $idList ? $idList : array();
         return array_unique(array_filter($idList, "intval"));
     }
+
+    /**
+     * ip转为int
+     *
+     * @param string $ip            
+     * @return number
+     */
+    public static function ipton($ip) {
+        $ip_arr = explode('.', $ip);
+        foreach ($ip_arr as $value) {
+            $iphex = dechex($value);
+            if (strlen($iphex) < 2) {
+                $iphex = '0' . $iphex;
+            }
+            $ipstr .= $iphex;
+        }
+        return hexdec($ipstr);
+    }
+
+    /**
+     * 还原ip
+     *
+     * @param int $n            
+     * @return string
+     */
+    public static function ntoip($n) {
+        $iphex = dechex($n);
+        $len = strlen($iphex);
+        if (strlen($iphex) < 8) {
+            $iphex = '0' . $iphex;
+            $len = strlen($iphex);
+        }
+        for ($i = 0, $j = 0; $j < $len; $i = $i + 1, $j = $j + 2) {
+            $ippart = substr($iphex, $j, 2);
+            $fipart = substr($ippart, 0, 1);
+            if ($fipart == '0') {
+                $ippart = substr($ippart, 1, 1);
+            }
+            $ip[] = hexdec($ippart);
+        }
+        return implode('.', $ip);
+    }
+
+    /**
+     * 获取下一页的页码
+     *
+     * @param int $page            
+     * @param int $limit            
+     * @param int $totalCount            
+     * @return number
+     */
+    public static function getNextPage($page, $limit, $totalCount) {
+        $nextPage = $page + 1;
+        if ($page * $limit >= $totalCount) {
+            $nextPage = - 1;
+        }
+        return $nextPage;
+    }
 }
 
 ?>
