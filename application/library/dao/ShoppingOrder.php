@@ -8,7 +8,7 @@ class Dao_ShoppingOrder extends Dao_Base {
 
     /**
      * 查询hotel_shopping_order列表
-     * 
+     *
      * @param
      *            array 入参
      * @return array
@@ -17,6 +17,30 @@ class Dao_ShoppingOrder extends Dao_Base {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
         
+        $paramSql = $this->handlerShoppingOrderListParams($param);
+        $sql = "select * from hotel_shopping_order {$paramSql['sql']}";
+        if ($limit) {
+            $sql .= " limit {$page},{$limit}";
+        }
+        $result = $this->db->fetchAll($sql, $paramSql['case']);
+        return is_array($result) ? $result : array();
+    }
+
+    /**
+     * 查询hotel_shopping_order数量
+     *
+     * @param
+     *            array 入参
+     * @return array
+     */
+    public function getShoppingOrderCount(array $param): int {
+        $paramSql = $this->handlerShoppingOrderListParams($param);
+        $sql = "select count(1) as count from hotel_shopping_order {$paramSql['sql']}";
+        $result = $this->db->fetchAssoc($sql, $paramSql['case']);
+        return intval($result['count']);
+    }
+
+    private function handlerShoppingOrderListParams() {
         $whereSql = array();
         $whereCase = array();
         if (isset($param['shoppingid'])) {
@@ -40,18 +64,15 @@ class Dao_ShoppingOrder extends Dao_Base {
             }
         }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
-        
-        $sql = "select * from hotel_shopping_order {$whereSql}";
-        if ($limit) {
-            $sql .= " limit {$page},{$limit}";
-        }
-        $result = $this->db->fetchAll($sql, $whereCase);
-        return is_array($result) ? $result : array();
+        return array(
+            'sql' => $whereSql,
+            'case' => $whereCase
+        );
     }
 
     /**
      * 根据id查询hotel_shopping_order详情
-     * 
+     *
      * @param
      *            int id
      * @return array
@@ -71,7 +92,7 @@ class Dao_ShoppingOrder extends Dao_Base {
 
     /**
      * 根据id更新hotel_shopping_order
-     * 
+     *
      * @param
      *            array 需要更新的数据
      * @param
@@ -82,7 +103,9 @@ class Dao_ShoppingOrder extends Dao_Base {
         $result = false;
         
         if ($id) {
-            $result = $this->db->update('hotel_shopping_order', $info, $id);
+            $result = $this->db->update('hotel_shopping_order', $info, array(
+                'id' => $id
+            ));
         }
         
         return $result;
@@ -90,7 +113,7 @@ class Dao_ShoppingOrder extends Dao_Base {
 
     /**
      * 单条增加hotel_shopping_order数据
-     * 
+     *
      * @param
      *            array
      * @return int id

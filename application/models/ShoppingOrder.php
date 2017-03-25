@@ -27,6 +27,21 @@ class ShoppingOrderModel extends \BaseModel {
     }
 
     /**
+     * 获取ShoppingOrder数量
+     *
+     * @param
+     *            array param 查询条件
+     * @return array
+     */
+    public function getShoppingOrderCount(array $param) {
+        isset($param['shoppingid']) ? $paramList['shoppingid'] = strval($param['shoppingid']) : false;
+        isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        isset($param['userid']) ? $paramList['userid'] = intval($param['userid']) : false;
+        isset($param['status']) ? $paramList['status'] = $param['status'] : false;
+        return $this->dao->getShoppingOrderCount($paramList);
+    }
+
+    /**
      * 根据id查询ShoppingOrder信息
      *
      * @param
@@ -52,9 +67,9 @@ class ShoppingOrderModel extends \BaseModel {
      */
     public function updateShoppingOrderById($param, $id) {
         $result = false;
-        // 自行添加要更新的字段,以下是age字段是样例
         if ($id) {
-            $info['age'] = intval($param['age']);
+            $info['status'] = intval($param['status']);
+            $info['adminid'] = intval($param['adminid']);
             $result = $this->dao->updateShoppingOrderById($info, $id);
         }
         return $result;

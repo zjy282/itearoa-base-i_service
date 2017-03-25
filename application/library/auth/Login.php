@@ -72,15 +72,16 @@ class Auth_Login {
      * @param int $memberId            
      * @return boolean|string
      */
-    public static function makeToken($memberId) {
+    public static function makeToken($memberId, $type = 1) {
         $resultToken = false;
         if ($memberId) {
             $sysConfig = Yaf_Registry::get('sysConfig');
-            $loginToken = self::makeLoginToken($memberId);
+            $loginToken = self::makeLoginToken($memberId, $type);
             $resultToken = md5($loginToken . time());
             $loginInfo = json_encode(array(
                 'memberId' => $memberId,
-                'token' => $resultToken
+                'token' => $resultToken,
+                'type' => $type
             ));
             
             $redis = Cache_Redis::getInstance();
@@ -96,9 +97,9 @@ class Auth_Login {
      * @param unknown $memberId            
      * @return string
      */
-    private static function makeLoginToken($memberId, $package = '') {
+    private static function makeLoginToken($memberId, $type = 1) {
         $sysConfig = Yaf_Registry::get('sysConfig');
-        $loginToken = md5("{$sysConfig->auth->prefix}_{$memberId}");
+        $loginToken = md5("{$sysConfig->auth->prefix}_{$memberId}_" . $type);
         return $loginToken;
     }
 
@@ -108,7 +109,7 @@ class Auth_Login {
      * @param string $resultToken            
      * @return Ambigous <对应key的数据, mixed>
      */
-    public static function getToken($resultToken) {
+    public static function getToken($resultToken, $type = 1) {
         $memberId = 0;
         if (! empty($resultToken)) {
             $redis = Cache_Redis::getInstance();
@@ -117,7 +118,7 @@ class Auth_Login {
                 $loginInfo = $redis->get($loginToken);
                 if ($loginInfo) {
                     $loginInfo = json_decode($loginInfo, true);
-                    if ($loginInfo['token'] == $resultToken) {
+                    if ($loginInfo['token'] == $resultToken && $loginInfo['type'] == $type) {
                         $memberId = $loginInfo['memberId'];
                     }
                 }
