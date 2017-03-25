@@ -20,10 +20,11 @@ class AdministratorController extends \BaseController {
      */
     public function getAdministratorListAction () {
         $param = array ();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['page'] = intval($this->getParamList('page'));
+        $param['limit'] = intval($this->getParamList('limit',5));
         $data = $this->model->getAdministratorList($param);
         $data = $this->convertor->getAdministratorListConvertor($data);
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
 
@@ -40,7 +41,7 @@ class AdministratorController extends \BaseController {
         } else {
             $this->throwException(1,'查询条件错误，id不能为空');
         }
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -53,13 +54,18 @@ class AdministratorController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id){
             $param = array();
-            $param['name'] = trim($this->getParamList('name'));
+            isset($paramList['username']) ? $param['userName'] = trim($paramList['username']) : false;
+            isset($paramList['password']) ? $param['password'] = md5(trim($paramList['password'])) : false;
+            isset($paramList['realname']) ? $param['realName'] = trim($paramList['realname']) : false;
+            isset($paramList['remark']) ? $param['remark'] = trim($paramList['remark']) : false;
+            isset($paramList['status']) ? $param['status'] = intval($paramList['status']) : false;
+            isset($paramList['groupid']) ? $param['groupId'] = trim($paramList['groupid']) : false;
             $data = $this->model->updateAdministratorById($param,$id); 
             $data = $this->convertor->statusConvertor($data);
         } else {
             $this->throwException(1,'id不能为空');
         }
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
     
     /**
@@ -72,7 +78,7 @@ class AdministratorController extends \BaseController {
         $param['name'] = trim($this->getParamList('name'));
         $data = $this->model->addAdministrator($param);
         $data = $this->convertor->statusConvertor($data);
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
 }
