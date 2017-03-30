@@ -19,10 +19,20 @@ class ShowingOrderController extends \BaseController {
      */
     public function getShowingOrderListAction() {
         $param = array();
-        $param['name'] = trim($this->getParamList('name'));
-        $data = $this->model->getShowingOrderList($param);
-        $data = $this->convertor->getShowingOrderListConvertor($data);
-        $this->echoJson($data);
+        
+        $param['hotelid'] = intval($this->getParamList('hotelid'));
+        $adminId = Auth_Login::getToken($this->getParamList('token'), 2);
+        if (empty($adminId)) {
+            $this->throwException(3, 'token验证失败');
+        }
+        if (empty($param['hotelid'])) {
+            $this->throwException(2, '物业Id错误');
+        }
+        $this->getPageParam($param);
+        $list = $this->model->getShowingOrderList($param);
+        $count = $this->model->getShowingOrderCount($param);
+        $data = $this->convertor->getShowingOrderListConvertor($list, $count, $param);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -105,5 +115,43 @@ class ShowingOrderController extends \BaseController {
         $this->echoSuccessData(array(
             'orderId' => $data
         ));
+    }
+
+    /**
+     * 修改订单状态
+     */
+    public function changeOrderStatusAction() {
+        $param = array();
+        $param['id'] = intval($this->getParamList('orderid'));
+        $param['status'] = intval($this->getParamList('status'));
+        $param['userid'] = Auth_Login::getToken($this->getParamList('token'), 2);
+        if (empty($param['id'])) {
+            $this->throwException(2, '订单ID错误');
+        }
+        if (empty($param['userid'])) {
+            $this->throwException(3, 'token验证失败');
+        }
+        if (! Enum_ShowingOrder::getStatusNameList()[$param['status']]) {
+            $this->throwException(2, '订单状态错误');
+        }
+        
+        // 验证订单信息
+        $orderInfo = $this->model->getShowingOrderDetail($param['id']);
+        if (empty($orderInfo['id'])) {
+            $this->throwException(4, '订单信息错误');
+        }
+        if ($orderInfo['status'] >= $param['status']) {
+            $this->throwException(6, '订单状态不可改变');
+        }
+        $result = $this->model->updateShowingOrderById(array(
+            'status' => $param['status'],
+            'adminid' => $param['userid']
+        ), $param['id']);
+        if (! $result) {
+            $this->throwException(5, '修改失败');
+        }
+        $orderInfo['status'] = $param['status'];
+        $orderInfo['adminid'] = $param['userid'];
+        $this->echoSuccessData($orderInfo);
     }
 }

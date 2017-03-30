@@ -57,7 +57,7 @@ class IserviceFeedbackModel extends \BaseModel {
     public function addIserviceFeedback($param){
         isset($param['email'])?$info['email'] = $param['email'] : false;
         isset($param['content'])?$info['content'] = $param['content'] : false;
-        isset($param['createTime'])?$info['createtime'] = $param['createtTime'] : false;
+        isset($param['createtime'])?$info['createtime'] = $param['createtime'] : false;
         return $this->dao->addIserviceFeedback($info);
     }
 }

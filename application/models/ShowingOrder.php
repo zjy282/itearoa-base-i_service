@@ -19,11 +19,26 @@ class ShowingOrderModel extends \BaseModel {
     public function getShowingOrderList(array $param) {
         isset($param['contact_name']) ? $paramList['contact_name'] = strval($param['contact_name']) : false;
         isset($param['contact_mobile']) ? $paramList['contact_mobile'] = strval($param['contact_mobile']) : false;
+        isset($param['userid']) ? $paramList['userid'] = intval($param['userid']) : false;
         isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
         isset($param['status']) ? $paramList['status'] = $param['status'] : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getShowingOrderList($paramList);
+    }
+
+    /**
+     * 获取ShowingOrder数量
+     *
+     * @param
+     *            array param 查询条件
+     * @return array
+     */
+    public function getShowingOrderCount(array $param) {
+        isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        isset($param['userid']) ? $paramList['userid'] = intval($param['userid']) : false;
+        isset($param['status']) ? $paramList['status'] = $param['status'] : false;
+        return $this->dao->getShowingOrderCount($paramList);
     }
 
     /**
@@ -52,9 +67,9 @@ class ShowingOrderModel extends \BaseModel {
      */
     public function updateShowingOrderById($param, $id) {
         $result = false;
-        // 自行添加要更新的字段,以下是age字段是样例
         if ($id) {
-            $info['age'] = intval($param['age']);
+            $info['status'] = intval($param['status']);
+            $info['adminid'] = intval($param['adminid']);
             $result = $this->dao->updateShowingOrderById($info, $id);
         }
         return $result;

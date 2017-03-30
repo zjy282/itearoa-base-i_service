@@ -17,6 +17,30 @@ class Dao_ShowingOrder extends Dao_Base {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
         
+        $paramSql = $this->handlerShowingOrderListParams($param);
+        $sql = "select * from hotel_showing_order {$paramSql['sql']}";
+        if ($limit) {
+            $sql .= " limit {$page},{$limit}";
+        }
+        $result = $this->db->fetchAll($sql, $paramSql['case']);
+        return is_array($result) ? $result : array();
+    }
+
+    /**
+     * 查询hotel_showing_order数量
+     *
+     * @param
+     *            array 入参
+     * @return array
+     */
+    public function getShowingOrderCount(array $param): int {
+        $paramSql = $this->handlerShowingOrderListParams($param);
+        $sql = "select count(1) as count from hotel_showing_order {$paramSql['sql']}";
+        $result = $this->db->fetchAssoc($sql, $paramSql['case']);
+        return intval($result['count']);
+    }
+
+    private function handlerShowingOrderListParams() {
         $whereSql = array();
         $whereCase = array();
         if (isset($param['contact_name'])) {
@@ -40,13 +64,10 @@ class Dao_ShowingOrder extends Dao_Base {
             }
         }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
-        
-        $sql = "select * from hotel_showing_order {$whereSql}";
-        if ($limit) {
-            $sql .= " limit {$page},{$limit}";
-        }
-        $result = $this->db->fetchAll($sql, $whereCase);
-        return is_array($result) ? $result : array();
+        return array(
+            'sql' => $whereSql,
+            'case' => $whereCase
+        );
     }
 
     /**
@@ -82,7 +103,9 @@ class Dao_ShowingOrder extends Dao_Base {
         $result = false;
         
         if ($id) {
-            $result = $this->db->update('hotel_showing_order', $info, $id);
+            $result = $this->db->update('hotel_showing_order', $info, array(
+                'id' => $id
+            ));
         }
         
         return $result;

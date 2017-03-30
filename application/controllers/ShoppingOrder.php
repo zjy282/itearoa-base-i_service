@@ -20,8 +20,8 @@ class ShoppingOrderController extends \BaseController {
     public function getShoppingOrderListAction() {
         $param = array();
         $param['hotelid'] = intval($this->getParamList('hotelid'));
-        $param['userid'] = Auth_Login::getToken($this->getParamList('token'), 2);
-        if (empty($param['userid'])) {
+        $adminId = Auth_Login::getToken($this->getParamList('token'), 2);
+        if (empty($adminId)) {
             $this->throwException(3, 'token验证失败');
         }
         if (empty($param['hotelid'])) {
