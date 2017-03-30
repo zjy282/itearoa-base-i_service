@@ -15,6 +15,8 @@ class FeedbackModel extends \BaseModel {
      * @return array
      */
     public function getFeedbackList(array $param){
+        isset($param['hotelid']) ? $paramList['hotelid'] = $param['hotelid'] : false;
+        isset($param['status']) ? $paramList['status'] = $param['status'] : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getFeedbackList($paramList);
