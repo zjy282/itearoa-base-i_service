@@ -55,8 +55,16 @@ class OperateLogModel extends \BaseModel {
      * @return array
      */
     public function addOperateLog($param){
-        //自行添加要添加的字段,以下是age字段是样例
-        $info['age'] = intval($param['age']);
+        $info['operatorid'] = intval($param['operatorid']);
+        $info['dataid'] = trim($param['dataid']);
+        $info['code'] = intval($param['code']);
+        $info['msg'] = trim($param['msg']);
+        $info['module'] = intval($param['module']);
+        $info['action'] = intval($param['action']);
+        $info['ip'] = Util_Tools::ipton($param['ip']);
+        $info['miscinfo'] = trim($param['miscinfo']);
+        $info['admintype'] = intval($param['admintype']);
+        $info['addtime'] = time();
         return $this->dao->addOperateLog($info);
     }
 }
