@@ -10,8 +10,6 @@ class ErrorController extends BaseController {
     
     // 从2.1开始, errorAction支持直接通过参数获取异常
     public function errorAction($exception) {
-        // var_dump($exception);exit;
-        // controller不存在时返回正确code，防止暴力破解controller名称
         if ($exception->getCode() == YAF_ERR_NOTFOUND_CONTROLLER) {
             $errorCode = 0;
             $errorMsg = "success";
