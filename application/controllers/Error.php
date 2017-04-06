@@ -10,8 +10,8 @@ class ErrorController extends BaseController {
     
     // 从2.1开始, errorAction支持直接通过参数获取异常
     public function errorAction($exception) {
-        var_dump($exception);exit;
-        //controller不存在时返回正确code，防止暴力破解controller名称
+        // var_dump($exception);exit;
+        // controller不存在时返回正确code，防止暴力破解controller名称
         if ($exception->getCode() == YAF_ERR_NOTFOUND_CONTROLLER) {
             $errorCode = 0;
             $errorMsg = "success";
@@ -20,7 +20,7 @@ class ErrorController extends BaseController {
                 "code" => $exception->getCode()
             );
         } elseif ($exception->getCode() > 1000 || ! is_numeric($exception->getCode())) {
-            //错误code大于1000时统一抛出给前段错误为系统错误，debug信息可看到具体错误消息
+            // 错误code大于1000时统一抛出给前段错误为系统错误，debug信息可看到具体错误消息
             $errorCode = 1;
             $errorMsg = "系统错误";
             $debugInfo = array(

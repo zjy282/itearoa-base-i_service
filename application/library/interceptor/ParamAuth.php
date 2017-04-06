@@ -27,7 +27,7 @@ class Interceptor_ParamAuth extends \Interceptor_Base {
         unset($paramList['sign'], $paramList[trim($request->getRequestUri(), '/')]);
         $sign = Auth_Login::genSign($paramList);
         
-        if ($sysConfig->api->checkToke) {
+        if ($sysConfig->api->checkToke && ! $this->isInWhiteList($request)) {
             if (empty($timestamp)) {
                 throw new Exception("未检测到时间戳", 10001);
             }
@@ -114,6 +114,27 @@ class Interceptor_ParamAuth extends \Interceptor_Base {
         }
         
         return false;
+    }
+    
+    // 有些外部回调可能未知agent 所以加禁用白名单
+    private function isInWhiteList(Yaf_Request_Abstract $request) {
+        $controllerName = strtolower($request->getControllerName());
+        $actionName = strtolower($request->getActionName());
+        
+        // 多了放配置文件
+        // 一定要小写
+        $whiteList = array( // 方法名都小写
+            'system' => array(
+                'gettime'
+            )
+        );
+        
+        $flag = false;
+        if (isset($whiteList[$controllerName]) && in_array($actionName, $whiteList[$controllerName])) {
+            $flag = true;
+        }
+        
+        return $flag;
     }
 }
 
