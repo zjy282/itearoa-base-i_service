@@ -21,8 +21,15 @@ class IserviceAdministratorController extends \BaseController {
         $param = array();
         $param['page'] = intval($this->getParamList('page'));
         $param['limit'] = intval($this->getParamList('limit', 5));
+        $param['id'] = intval($this->getParamList('id'));
+        $param['username'] = trim($this->getParamList('username'));
+        $param['status'] = $this->getParamList('status');
+        if (is_null($param['status'])) {
+            unset($param['status']);
+        }
         $data = $this->model->getIserviceAdministratorList($param);
-        $data = $this->convertor->getIserviceAdministratorListConvertor($data);
+        $count = $this->model->getIserviceAdministratorCount($param);
+        $data = $this->convertor->getIserviceAdministratorListConvertor($data, $count, $param);
         $this->echoSuccessData($data);
     }
 
@@ -56,6 +63,7 @@ class IserviceAdministratorController extends \BaseController {
     public function updateIserviceAdministratorByIdAction() {
         $id = intval($this->getParamList('id'));
         if ($id) {
+            $paramList = $this->getParamList();
             $param = array();
             isset($paramList['username']) ? $param['userName'] = trim($paramList['username']) : false;
             isset($paramList['password']) ? $param['password'] = md5(trim($paramList['password'])) : false;
@@ -103,10 +111,31 @@ class IserviceAdministratorController extends \BaseController {
     public function loginAction() {
         $param['username'] = trim($this->getParamList('username'));
         $param['password'] = trim($this->getParamList('password'));
+        $param['ip'] = trim($this->getParamList('ip'));
         
         $userInfo = $this->model->login($param);
         $userInfo = $this->convertor->getIserviceAdministratorDetailConvertor($userInfo);
         
+        $this->echoSuccessData($userInfo);
+    }
+
+    /**
+     * 修改登录密码
+     *
+     * @param int $userid
+     *            用户ID
+     * @param string $oldpass
+     *            原密码
+     * @param string $newpass
+     *            新密码
+     */
+    public function changePassAction() {
+        $param['userid'] = intval($this->getParamList('userid'));
+        $param['oldpass'] = trim($this->getParamList('oldpass'));
+        $param['newpass'] = trim($this->getParamList('newpass'));
+        
+        $userInfo = $this->model->changePass($param);
+        $userInfo = $this->convertor->getIserviceAdministratorDetailConvertor($userInfo);
         $this->echoSuccessData($userInfo);
     }
 }

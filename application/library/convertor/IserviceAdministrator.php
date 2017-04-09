@@ -8,29 +8,37 @@ class Convertor_IserviceAdministrator extends Convertor_Base {
 
     /**
      * iservice administrator列表数据转换器
-     * 
+     *
      * @param array $list            
      * @return array
      */
-    public function getIserviceAdministratorListConvertor($list) {
-        $data = array();
+    public function getIserviceAdministratorListConvertor($list, $count, $param) {
+        $data = array(
+            'list' => array()
+        );
         
         foreach ($list as $key => $value) {
-            $data[$key]['id'] = $value['id'];
-            $data[$key]['userName'] = $value['username'];
-            $data[$key]['realName'] = $value['realname'];
-            $data[$key]['status'] = $value['status'];
-            $data[$key]['remark'] = $value['remark'];
-            $data[$key]['lastLoginTime'] = $value['lastlogintime'];
-            $data[$key]['lastLoginIp'] = $value['lastloginip'];
+            $oneTemp = array();
+            $oneTemp['id'] = $value['id'];
+            $oneTemp['userName'] = $value['username'];
+            $oneTemp['realName'] = $value['realname'];
+            $oneTemp['status'] = $value['status'];
+            $oneTemp['remark'] = $value['remark'];
+            $oneTemp['lastLoginTime'] = $value['lastlogintime'];
+            $oneTemp['lastLoginIp'] = $value['lastloginip'];
+            $oneTemp['createTime'] = $value['createtime'];
+            $data['list'][] = $oneTemp;
         }
-        
+        $data['total'] = $count;
+        $data['page'] = $param['page'];
+        $data['limit'] = $param['limit'];
+        $data['nextPage'] = Util_Tools::getNextPage($data['page'], $data['limit'], $data['total']);
         return $data;
     }
 
     /**
      * administrator 详情数据转换器
-     * 
+     *
      * @param array $result            
      * @return array
      */

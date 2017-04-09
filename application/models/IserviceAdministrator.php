@@ -17,9 +17,28 @@ class IserviceAdministratorModel extends \BaseModel {
      * @return array
      */
     public function getIserviceAdministratorList(array $param) {
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
+        $param['username'] ? $paramList['username'] = $param['username'] : false;
+        isset($param['status']) ? $paramList['status'] = $param['status'] : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getIserviceAdministratorList($paramList);
+    }
+
+    /**
+     * 获取IserviceAdministrator数量
+     *
+     * @param
+     *            array param 查询条件
+     * @return array
+     */
+    public function getIserviceAdministratorCount(array $param) {
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
+        $param['username'] ? $paramList['username'] = $param['username'] : false;
+        isset($param['status']) ? $paramList['status'] = $param['status'] : false;
+        return $this->dao->getIserviceAdministratorCount($paramList);
     }
 
     /**
@@ -76,9 +95,15 @@ class IserviceAdministratorModel extends \BaseModel {
         return $this->dao->addIserviceAdministrator($info);
     }
 
+    /**
+     * 登录
+     *
+     * @param array $param            
+     */
     public function login($param) {
         $username = trim($param['username']);
         $password = trim($param['password']);
+        $ip = Util_Tools::ipton($param['ip'] ? $param['ip'] : Util_Http::getIP());
         
         if (! $username || ! $password) {
             $this->throwException('用户名或密码不能为空！', 3);
@@ -91,6 +116,36 @@ class IserviceAdministratorModel extends \BaseModel {
         if ($userInfo['status'] != 1) {
             $this->throwException('该用户已经被禁用!', 5);
         }
+        
+        $updateParam = array();
+        $userInfo['lastloginip'] = $updateParam['lastloginip'] = $ip;
+        $userInfo['lastlogintime'] = $updateParam['lastlogintime'] = time();
+        $this->dao->updateIserviceAdministratorById($updateParam, $userInfo['id']);
+        
         return $userInfo;
+    }
+
+    public function changePass($param) {
+        $userid = intval($param['userid']);
+        $oldpass = trim($param['oldpass']);
+        $newpass = trim($param['newpass']);
+        
+        if (! $userid || ! $oldpass || ! $newpass) {
+            $this->throwException('参数错误！', 3);
+        }
+        $userInfo = $this->dao->getIserviceAdministratorDetail($userid);
+        if (empty($userInfo)) {
+            $this->throwException('用户不存在', 4);
+        }
+        if ($userInfo['password'] != $oldpass) {
+            $this->throwException('原密码错误！', 5);
+        }
+        if ($this->dao->updateIserviceAdministratorById(array(
+            'password' => $newpass
+        ), $userid)) {
+            return $userInfo;
+        } else {
+            $this->throwException('修改失败', 6);
+        }
     }
 }

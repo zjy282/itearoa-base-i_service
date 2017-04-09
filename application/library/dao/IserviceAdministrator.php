@@ -8,7 +8,7 @@ class Dao_IserviceAdministrator extends Dao_Base {
 
     /**
      * 查询iservice_administrator列表
-     * 
+     *
      * @param
      *            array 入参
      * @return array
@@ -16,14 +16,55 @@ class Dao_IserviceAdministrator extends Dao_Base {
     public function getIserviceAdministratorList(array $param): array {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
-        $sql = "select * from iservice_administrator limit {$page},{$limit}";
-        $result = $this->db->fetchAll($sql, array());
+        
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select * from iservice_administrator {$paramSql['sql']}";
+        if ($limit) {
+            $sql .= " limit {$page},{$limit}";
+        }
+        $result = $this->db->fetchAll($sql, $paramSql['case']);
         return is_array($result) ? $result : array();
     }
 
     /**
+     * 查询iservice_administrator数量
+     *
+     * @param
+     *            array 入参
+     * @return array
+     */
+    public function getIserviceAdministratorCount(array $param): int {
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select count(1) as count from iservice_administrator {$paramSql['sql']}";
+        $result = $this->db->fetchAssoc($sql, $paramSql['case']);
+        return intval($result['count']);
+    }
+
+    private function handlerListParams($param) {
+        $whereSql = array();
+        $whereCase = array();
+        if (isset($param['id'])) {
+            $whereSql[] = 'id = ?';
+            $whereCase[] = $param['id'];
+        }
+        if (isset($param['username'])) {
+            $whereSql[] = 'username = ?';
+            $whereCase[] = $param['username'];
+        }
+        if (isset($param['status'])) {
+            $whereSql[] = 'status = ?';
+            $whereCase[] = $param['status'];
+        }
+        $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
+        return array(
+            'sql' => $whereSql,
+            'case' => $whereCase
+        );
+    }
+
+    /**
      * 根据username查询iservice_administrator详情
-     * 
+     *
      * @param
      *            string username
      * @return array
@@ -63,7 +104,7 @@ class Dao_IserviceAdministrator extends Dao_Base {
 
     /**
      * 根据id更新iservice_administrator
-     * 
+     *
      * @param
      *            array 需要更新的数据
      * @param
@@ -74,7 +115,9 @@ class Dao_IserviceAdministrator extends Dao_Base {
         $result = false;
         
         if ($id) {
-            $result = $this->db->update('iservice_administrator', $info, $id);
+            $result = $this->db->update('iservice_administrator', $info, array(
+                'id' => $id
+            ));
         }
         
         return $result;
@@ -82,7 +125,7 @@ class Dao_IserviceAdministrator extends Dao_Base {
 
     /**
      * 单条增加iservice_administrator数据
-     * 
+     *
      * @param
      *            array
      * @return int id

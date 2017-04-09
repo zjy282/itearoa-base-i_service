@@ -14,19 +14,19 @@ abstract class BaseController extends \Yaf_Controller_Abstract {
      *            如果参数不存在的默认值
      * @return array|string
      */
-    public function getParamList($paramKey, $defualt = '') {
+    public function getParamList($paramKey = '', $defualt = null) {
         $request = $this->getRequest();
         if ($request->isGet()) {
             if ($paramKey) {
                 $paramValue = $request->getQuery($paramKey);
-                return $paramValue ? $paramValue : $defualt;
+                return ! is_null($paramValue) ? $paramValue : $defualt;
             }
             return $request->getQuery();
         }
         if ($request->isPost()) {
             if ($paramKey) {
                 $paramValue = $request->getPost($paramKey);
-                return $paramValue ? $paramValue : $defualt;
+                return ! is_null($paramValue) ? $paramValue : $defualt;
             }
             return $request->getPost();
         }
