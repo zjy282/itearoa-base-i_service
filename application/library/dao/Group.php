@@ -11,9 +11,48 @@ class Dao_Group extends Dao_Base {
     public function getGroupList(array $param):array{
         $limit = $param['limit']?intval($param['limit']):0;
         $page = $this->getStart($param['page'],$limit);
-        $sql = "select * from group_list limit {$page},{$limit}";
-        $result = $this->db->fetchAll($sql, array());
+
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select * from group_list {$paramSql['sql']}";
+        if ($limit) {
+            $sql .= " limit {$page},{$limit}";
+        }
+        $result = $this->db->fetchAll($sql, $paramSql['case']);
         return is_array($result)?$result:array();
+    }
+
+    /**
+     * 查询group_list数量
+     *
+     * @param
+     *            array 入参
+     * @return array
+     */
+    public function getGroupCount(array $param): int {
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select count(1) as count from group_list {$paramSql['sql']}";
+        $result = $this->db->fetchAssoc($sql, $paramSql['case']);
+        return intval($result['count']);
+    }
+
+    private function handlerListParams($param) {
+        $whereSql = array();
+        $whereCase = array();
+        if ($param['id']) {
+            if (is_array($param['id'])) {
+                $whereSql[] = 'id in (' . implode(',', $param['id']) . ')';
+            } else {
+                $whereSql[] = 'id = ?';
+                $whereCase[] = $param['id'];
+            }
+        }
+
+
+        $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
+        return array(
+            'sql' => $whereSql,
+            'case' => $whereCase
+        );
     }
 
     public function getGroupDetail (int $id):array{

@@ -1,6 +1,7 @@
 <?php
+
 class Convertor_Administrator extends Convertor_Base {
-    public function __construct(){
+    public function __construct() {
         parent::__construct();
     }
 
@@ -9,34 +10,47 @@ class Convertor_Administrator extends Convertor_Base {
      * @param array $list
      * @return array
      */
-    public function getAdministratorListConvertor($list){
-        $data = array ();
+    public function getAdministratorListConvertor($list, $count, $param) {
+        $data = array(
+            'list' => array()
+        );
 
-        foreach ($list as $key => $value){
-            $data [$key]['id'] = $value['id'];
-            $data [$key]['userName'] = $value['username'];
-            $data [$key]['realName'] = $value['realname'];
-            $data [$key]['remark'] = $value['remark'];
-            $data [$key]['status'] = $value['status'];
-            $data [$key]['lastLoginTime'] = $value['lastlogintime'];
-            $data [$key]['lastLoginIp'] = $value['lastloginip'];
-            $data [$key]['createTime'] = $value['createtime'];
-            $data [$key]['createAdmin'] = $value['createadmin'];
-            $data [$key]['groupId'] = $value['groupid'];
+        $groupIdList = array_column($list, 'groupid');
+        $groupModel = new GroupModel();
+        $groupInfoList = $groupModel->getGroupList(array('id' => $groupIdList));
+        $groupNameList = array_column($groupInfoList, 'name', 'id');
+
+        foreach ($list as $key => $value) {
+            $oneTemp = array();
+            $oneTemp['id'] = $value['id'];
+            $oneTemp['userName'] = $value['username'];
+            $oneTemp['realName'] = $value['realname'];
+            $oneTemp['status'] = $value['status'];
+            $oneTemp['remark'] = $value['remark'];
+            $oneTemp['lastLoginTime'] = $value['lastlogintime'];
+            $oneTemp['lastLoginIp'] = $value['lastloginip'];
+            $oneTemp['createTime'] = $value['createtime'];
+            $oneTemp['createAdmin'] = $value['createAdmin'];
+            $oneTemp['groupId'] = $value['groupid'];
+            $oneTemp['groupName'] = $groupNameList[$value['groupid']];
+            $data['list'][] = $oneTemp;
         }
-
+        $data['total'] = $count;
+        $data['page'] = $param['page'];
+        $data['limit'] = $param['limit'];
+        $data['nextPage'] = Util_Tools::getNextPage($data['page'], $data['limit'], $data['total']);
         return $data;
     }
-    
+
     /**
      * 集团管理员详情数据转换器
      * @param array $result
      * @return array
      */
-    public function getAdministratorDetailConvertor ($result){
-        $data = array ();
+    public function getAdministratorDetailConvertor($result) {
+        $data = array();
 
-        if (is_array($result) && count($result) > 0){
+        if (is_array($result) && count($result) > 0) {
             $data ['id'] = $result['id'];
             $data ['userName'] = $result['username'];
             $data ['realName'] = $result['realname'];

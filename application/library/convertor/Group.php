@@ -9,16 +9,23 @@ class Convertor_Group extends Convertor_Base {
      * @param array $list
      * @return array
      */
-    public function getGroupListConvertor($list){
-        $data = array ();
+    public function getGroupListConvertor($list, $count, $param) {
+        $data = array(
+            'list' => array()
+        );
 
-        foreach ($list as $key => $value){
-            $data [$key]['id'] = $value['id'];
-            $data [$key]['name'] = $value['name'];
-            $data [$key]['enName'] = $value['enname'];
-            $data [$key]['portUrl'] = $value['port_url'];
+        foreach ($list as $key => $value) {
+            $oneTemp = array();
+            $oneTemp['id'] = $value['id'];
+            $oneTemp['name'] = $value['name'];
+            $oneTemp['enname'] = $value['enname'];
+            $oneTemp['port_url'] = $value['port_url'];
+            $data['list'][] = $oneTemp;
         }
-
+        $data['total'] = $count;
+        $data['page'] = $param['page'];
+        $data['limit'] = $param['limit'];
+        $data['nextPage'] = Util_Tools::getNextPage($data['page'], $data['limit'], $data['total']);
         return $data;
     }
 
