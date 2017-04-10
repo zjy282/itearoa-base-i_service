@@ -112,10 +112,10 @@ class IserviceAdministratorController extends \BaseController {
         $param['username'] = trim($this->getParamList('username'));
         $param['password'] = trim($this->getParamList('password'));
         $param['ip'] = trim($this->getParamList('ip'));
-        
+
         $userInfo = $this->model->login($param);
         $userInfo = $this->convertor->getIserviceAdministratorDetailConvertor($userInfo);
-        
+
         $this->echoSuccessData($userInfo);
     }
 
@@ -133,7 +133,7 @@ class IserviceAdministratorController extends \BaseController {
         $param['userid'] = intval($this->getParamList('userid'));
         $param['oldpass'] = trim($this->getParamList('oldpass'));
         $param['newpass'] = trim($this->getParamList('newpass'));
-        
+
         $userInfo = $this->model->changePass($param);
         $userInfo = $this->convertor->getIserviceAdministratorDetailConvertor($userInfo);
         $this->echoSuccessData($userInfo);
