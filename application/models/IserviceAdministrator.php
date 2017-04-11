@@ -91,6 +91,7 @@ class IserviceAdministratorModel extends \BaseModel {
         isset($param['realName']) ? $info['realname'] = $param['realName'] : false;
         isset($param['remark']) ? $info['remark'] = $param['remark'] : false;
         isset($param['status']) ? $info['status'] = $param['status'] : false;
+        isset($param['createAdmin']) ? $info['createadmin'] = $param['createAdmin'] : false;
         $info['createtime'] = $param['createTime'];
         return $this->dao->addIserviceAdministrator($info);
     }

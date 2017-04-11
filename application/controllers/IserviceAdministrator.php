@@ -91,6 +91,7 @@ class IserviceAdministratorController extends \BaseController {
         $param['realName'] = trim($this->getParamList('realname'));
         $param['remark'] = trim($this->getParamList('remark'));
         $param['status'] = intval($this->getParamList('status'));
+        $param['createAdmin'] = intval($this->getParamList('createadmin'));
         $param['createTime'] = time();
         $data = $this->model->addIserviceAdministrator($param);
         $data = $this->convertor->statusConvertor(array(

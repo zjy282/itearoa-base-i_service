@@ -93,7 +93,7 @@ class Dao_Administrator extends Dao_Base {
         $result = false;
 
         if ($id) {
-            $result = $this->db->update('group_administrator', $info, $id);
+            $result = $this->db->update('group_administrator', $info, array('id' => $id));
         }
 
         return $result;

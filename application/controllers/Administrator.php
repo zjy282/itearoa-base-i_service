@@ -62,6 +62,7 @@ class AdministratorController extends \BaseController {
     public function updateAdministratorByIdAction() {
         $id = intval($this->getParamList('id'));
         if ($id) {
+            $paramList = $this->getParamList();
             $param = array();
             isset($paramList['username']) ? $param['userName'] = trim($paramList['username']) : false;
             isset($paramList['password']) ? $param['password'] = md5(trim($paramList['password'])) : false;
@@ -84,9 +85,18 @@ class AdministratorController extends \BaseController {
      */
     public function addAdministratorAction() {
         $param = array();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['userName'] = trim($this->getParamList('username'));
+        $param['password'] = md5(trim($this->getParamList('password')));
+        $param['realName'] = trim($this->getParamList('realname'));
+        $param['remark'] = trim($this->getParamList('remark'));
+        $param['status'] = intval($this->getParamList('status'));
+        $param['groupId'] = intval($this->getParamList('groupid'));
+        $param['createAdmin'] = intval($this->getParamList('createadmin'));
+        $param['createTime'] = time();
         $data = $this->model->addAdministrator($param);
-        $data = $this->convertor->statusConvertor($data);
+        $data = $this->convertor->statusConvertor(array(
+            'id' => $data
+        ));
         $this->echoSuccessData($data);
     }
 
