@@ -16,9 +16,37 @@ class Dao_HotelList extends Dao_Base {
     public function getHotelListList(array $param): array {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
-        
+
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select * from hotel_list {$paramSql['sql']}";
+        if ($limit) {
+            $sql .= " limit {$page},{$limit}";
+        }
+        $result = $this->db->fetchAll($sql, $paramSql['case']);
+        return is_array($result) ? $result : array();
+    }
+
+    /**
+     * 查询hotel_list数量
+     *
+     * @param
+     *            array 入参
+     * @return array
+     */
+    public function getHotelListCount(array $param): int {
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select count(1) as count from hotel_list {$paramSql['sql']}";
+        $result = $this->db->fetchAssoc($sql, $paramSql['case']);
+        return intval($result['count']);
+    }
+
+    private function handlerListParams($param) {
         $whereSql = array();
         $whereCase = array();
+        if (isset($param['id'])) {
+            $whereSql[] = 'id = ?';
+            $whereCase[] = $param['id'];
+        }
         if (isset($param['groupid'])) {
             $whereSql[] = 'groupid = ?';
             $whereCase[] = $param['groupid'];
@@ -27,14 +55,17 @@ class Dao_HotelList extends Dao_Base {
             $whereSql[] = 'status = ?';
             $whereCase[] = $param['status'];
         }
-        $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
-        
-        $sql = "select * from hotel_list {$whereSql}";
-        if ($limit) {
-            $sql .= " limit {$page},{$limit}";
+        if (isset($param['name'])) {
+            $whereSql[] = '(name_lang1 = ? or name_lang2 = ? or name_lang3 = ?)';
+            $whereCase[] = $param['name'];
+            $whereCase[] = $param['name'];
+            $whereCase[] = $param['name'];
         }
-        $result = $this->db->fetchAll($sql, $whereCase);
-        return is_array($result) ? $result : array();
+        $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
+        return array(
+            'sql' => $whereSql,
+            'case' => $whereCase
+        );
     }
 
     /**

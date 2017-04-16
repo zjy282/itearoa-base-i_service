@@ -10,6 +10,65 @@ class Convertor_HotelList extends Convertor_Base {
         parent::__construct();
     }
 
+    /**
+     * iservice hotelList列表数据转换器
+     *
+     * @param array $list
+     * @return array
+     */
+    public function getHotelListListConvertor($list, $count, $param) {
+        $data = array(
+            'list' => array()
+        );
+
+        $groupIdList = array_column($list, 'groupid');
+        $groupModel = new GroupModel();
+        $groupInfoList = $groupModel->getGroupList(array('id' => $groupIdList));
+        $groupNameList = array_column($groupInfoList, 'name', 'id');
+
+        $cityIdList = array_column($list, 'cityid');
+        $cityModel = new CityModel();
+        $cityInfoList = $cityModel->getCityList(array('id' => $cityIdList));
+        $cityNameList = array_column($cityInfoList, 'name', 'id');
+
+        foreach ($list as $key => $value) {
+            $oneTemp = array();
+            $oneTemp['id'] = $value['id'];
+            $oneTemp['groupid'] = $value['groupid'];
+            $oneTemp['groupName'] = $groupNameList[$value['groupid']];
+            $oneTemp['propertyinterfid'] = $value['propertyinterfid'];
+            $oneTemp['lng'] = $value['lng'];
+            $oneTemp['lat'] = $value['lat'];
+            $oneTemp['cityid'] = $value['cityid'];
+            $oneTemp['cityName'] = $cityNameList[$value['cityid']];
+            $oneTemp['tel'] = $value['tel'];
+            $oneTemp['name_lang1'] = $value['name_lang1'];
+            $oneTemp['name_lang2'] = $value['name_lang2'];
+            $oneTemp['name_lang3'] = $value['name_lang3'];
+            $oneTemp['website'] = $value['website'];
+            $oneTemp['logo'] = $value['logo'];
+            $oneTemp['index_background'] = $value['index_background'];
+            $oneTemp['voice_lang1'] = $value['voice_lang1'];
+            $oneTemp['voice_lang2'] = $value['voice_lang2'];
+            $oneTemp['voice_lang3'] = $value['voice_lang3'];
+            $oneTemp['address_lang1'] = $value['address_lang1'];
+            $oneTemp['address_lang2'] = $value['address_lang2'];
+            $oneTemp['address_lang3'] = $value['address_lang3'];
+            $oneTemp['introduction_lang1'] = $value['introduction_lang1'];
+            $oneTemp['introduction_lang2'] = $value['introduction_lang2'];
+            $oneTemp['introduction_lang3'] = $value['introduction_lang3'];
+            $oneTemp['status'] = $value['status'];
+            $oneTemp['lang_list'] = $value['lang_list'];
+            $oneTemp['bookurl'] = $value['bookurl'];
+            $data['list'][] = $oneTemp;
+        }
+        $data['total'] = $count;
+        $data['page'] = $param['page'];
+        $data['limit'] = $param['limit'];
+        $data['nextPage'] = Util_Tools::getNextPage($data['page'], $data['limit'], $data['total']);
+        return $data;
+    }
+
     public function getEffectiveHotelListConvertor($list) {
         $data = array(
             'list' => array()
@@ -43,7 +102,7 @@ class Convertor_HotelList extends Convertor_Base {
         $langNameList = Enum_Lang::getLangNameList();
         $wetherModel = new WetherModel();
         $wetherInfo = $wetherModel->getWeatherFromYahoo($cityInfo['enname'] . ',' . $cityInfo['countryenname']);
-        
+
         $data = array();
         $data['hotelId'] = $hotelInfo['id'];
         $data['groupId'] = $hotelInfo['groupid'];
@@ -79,7 +138,7 @@ class Convertor_HotelList extends Convertor_Base {
                 'title' => $this->handlerMultiLang('title', $shortCut)
             );
         }
-        
+
         return $data;
     }
 
@@ -141,7 +200,7 @@ class Convertor_HotelList extends Convertor_Base {
             $panoramicTemp['title'] = $this->handlerMultiLang('title', $panoramic);
             $data['panoramicList'][] = $panoramicTemp;
         }
-        
+
         return $data;
     }
 }

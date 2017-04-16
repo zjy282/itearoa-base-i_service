@@ -16,10 +16,34 @@ class Dao_City extends Dao_Base {
     public function getCityList(array $param): array {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
-        
+
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select * from iservice_city {$paramSql['sql']}";
+        if ($limit) {
+            $sql .= " limit {$page},{$limit}";
+        }
+        $result = $this->db->fetchAll($sql, $paramSql['case']);
+        return is_array($result) ? $result : array();
+    }
+
+    /**
+     * 查询iservice_city数量
+     *
+     * @param
+     *            array 入参
+     * @return array
+     */
+    public function getCityCount(array $param): int {
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select count(1) as count from iservice_city {$paramSql['sql']}";
+        $result = $this->db->fetchAssoc($sql, $paramSql['case']);
+        return intval($result['count']);
+    }
+
+    private function handlerListParams($param) {
         $whereSql = array();
         $whereCase = array();
-        if ($param['id']) {
+        if (isset($param['id'])) {
             if (is_array($param['id'])) {
                 $whereSql[] = 'id in (' . implode(',', $param['id']) . ')';
             } else {
@@ -28,14 +52,10 @@ class Dao_City extends Dao_Base {
             }
         }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
-        
-        $sql = "select * from iservice_city {$whereSql}";
-        if ($limit) {
-            $sql .= " limit {$page},{$limit}";
-        }
-        
-        $result = $this->db->fetchAll($sql, $whereCase);
-        return is_array($result) ? $result : array();
+        return array(
+            'sql' => $whereSql,
+            'case' => $whereCase
+        );
     }
 
     /**
@@ -47,14 +67,14 @@ class Dao_City extends Dao_Base {
      */
     public function getCityDetail(int $id): array {
         $result = array();
-        
+
         if ($id) {
             $sql = "select * from iservice_city where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
         }
-        
+
         return $result;
     }
 
@@ -69,11 +89,11 @@ class Dao_City extends Dao_Base {
      */
     public function updateCityById(array $info, int $id) {
         $result = false;
-        
+
         if ($id) {
             $result = $this->db->update('iservice_city', $info, $id);
         }
-        
+
         return $result;
     }
 

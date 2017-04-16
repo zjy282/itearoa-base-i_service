@@ -251,8 +251,8 @@ class Enum_Img {
             $filePath = $filePath ? $filePath . '/' : '';
             if (count($tmp) > 1) {
                 $rand = md5(time() . mt_rand(1111, 9999));
-                $data['fileName'] = 'yp/' . $filePath . date('Ym') . '/' . date('d') . '/' . $rand . '.' . end($tmp);
-                $data['key'] = 'yp_' . $fileKey . date('Ym') . '_' . date('d') . '_' . $rand . '.' . end($tmp);
+                $data['fileName'] = 'is/' . $filePath . date('Ym') . '/' . date('d') . '/' . $rand . '.' . end($tmp);
+                $data['key'] = 'is_' . $fileKey . date('Ym') . '_' . date('d') . '_' . $rand . '.' . end($tmp);
             }
         }
         return $data;

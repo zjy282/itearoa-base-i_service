@@ -17,11 +17,29 @@ class HotelListModel extends \BaseModel {
      * @return array
      */
     public function getHotelListList(array $param) {
-        isset($param['groupid']) ? $paramList['groupid'] = intval($param['groupid']) : false;
+        $param['id'] ? $paramList['id'] = intval($param['id']) : false;
+        $param['name'] ? $paramList['name'] = intval($param['name']) : false;
+        $param['groupid'] ? $paramList['groupid'] = intval($param['groupid']) : false;
         isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getHotelListList($paramList);
+    }
+
+    /**
+     * 获取HotelList数量
+     *
+     * @param
+     *            array param 查询条件
+     * @return array
+     */
+    public function getHotelListCount(array $param) {
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = intval($param['id']) : false;
+        $param['name'] ? $paramList['name'] = intval($param['name']) : false;
+        $param['groupid'] ? $paramList['groupid'] = intval($param['groupid']) : false;
+        isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
+        return $this->dao->getHotelListCount($paramList);
     }
 
     /**

@@ -11,21 +11,34 @@ class CityModel extends \BaseModel {
 
     /**
      * 获取City列表信息
-     * 
+     *
      * @param
      *            array param 查询条件
      * @return array
      */
     public function getCityList(array $param) {
-        isset($param['id']) ? $paramList['id'] = intval($param['id']) : false;
+        $param['id'] ? $paramList['id'] = intval($param['id']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getCityList($paramList);
     }
 
     /**
+     * 获取City数量
+     *
+     * @param
+     *            array param 查询条件
+     * @return array
+     */
+    public function getCityCount(array $param) {
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = intval($param['id']) : false;
+        return $this->dao->getCityCount($paramList);
+    }
+
+    /**
      * 根据id查询City信息
-     * 
+     *
      * @param
      *            int id 查询的主键
      * @return array
@@ -40,7 +53,7 @@ class CityModel extends \BaseModel {
 
     /**
      * 根据id更新City信息
-     * 
+     *
      * @param
      *            array param 需要更新的信息
      * @param
@@ -59,7 +72,7 @@ class CityModel extends \BaseModel {
 
     /**
      * City新增信息
-     * 
+     *
      * @param
      *            array param 需要增加的信息
      * @return array
