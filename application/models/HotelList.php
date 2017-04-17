@@ -70,7 +70,30 @@ class HotelListModel extends \BaseModel {
         $result = false;
         // 自行添加要更新的字段,以下是age字段是样例
         if ($id) {
-            $info['age'] = intval($param['age']);
+            !is_null($param['groupid']) ? $info['groupid'] = $param['groupid'] : false;
+            !is_null($param['propertyinterfid']) ? $info['propertyinterfid'] = $param['propertyinterfid'] : false;
+            !is_null($param['lng']) ? $info['lng'] = $param['lng'] : false;
+            !is_null($param['lat']) ? $info['lat'] = $param['lat'] : false;
+            !is_null($param['cityid']) ? $info['cityid'] = $param['cityid'] : false;
+            !is_null($param['tel']) ? $info['tel'] = $param['tel'] : false;
+            !is_null($param['name_lang1']) ? $info['name_lang1'] = $param['name_lang1'] : false;
+            !is_null($param['name_lang2']) ? $info['name_lang2'] = $param['name_lang2'] : false;
+            !is_null($param['name_lang3']) ? $info['name_lang3'] = $param['name_lang3'] : false;
+            !is_null($param['website']) ? $info['website'] = $param['website'] : false;
+            !is_null($param['logo']) ? $info['logo'] = $param['logo'] : false;
+            !is_null($param['index_background']) ? $info['index_background'] = $param['index_background'] : false;
+            !is_null($param['voice_lang1']) ? $info['voice_lang1'] = $param['voice_lang1'] : false;
+            !is_null($param['voice_lang2']) ? $info['voice_lang2'] = $param['voice_lang2'] : false;
+            !is_null($param['voice_lang3']) ? $info['voice_lang3'] = $param['voice_lang3'] : false;
+            !is_null($param['address_lang1']) ? $info['address_lang1'] = $param['address_lang1'] : false;
+            !is_null($param['address_lang2']) ? $info['address_lang2'] = $param['address_lang2'] : false;
+            !is_null($param['address_lang3']) ? $info['address_lang3'] = $param['address_lang3'] : false;
+            !is_null($param['introduction_lang1']) ? $info['introduction_lang1'] = $param['introduction_lang1'] : false;
+            !is_null($param['introduction_lang2']) ? $info['introduction_lang2'] = $param['introduction_lang2'] : false;
+            !is_null($param['introduction_lang3']) ? $info['introduction_lang3'] = $param['introduction_lang3'] : false;
+            !is_null($param['status']) ? $info['status'] = $param['status'] : false;
+            !is_null($param['lang_list']) ? $info['lang_list'] = $param['lang_list'] : false;
+            !is_null($param['bookurl']) ? $info['bookurl'] = $param['bookurl'] : false;
             $result = $this->dao->updateHotelListById($info, $id);
         }
         return $result;
@@ -84,8 +107,30 @@ class HotelListModel extends \BaseModel {
      * @return array
      */
     public function addHotelList($param) {
-        // 自行添加要添加的字段,以下是age字段是样例
-        $info['age'] = intval($param['age']);
+        !is_null($param['groupid']) ? $info['groupid'] = $param['groupid'] : false;
+        !is_null($param['propertyinterfid']) ? $info['propertyinterfid'] = $param['propertyinterfid'] : false;
+        !is_null($param['lng']) ? $info['lng'] = $param['lng'] : false;
+        !is_null($param['lat']) ? $info['lat'] = $param['lat'] : false;
+        !is_null($param['cityid']) ? $info['cityid'] = $param['cityid'] : false;
+        !is_null($param['tel']) ? $info['tel'] = $param['tel'] : false;
+        !is_null($param['name_lang1']) ? $info['name_lang1'] = $param['name_lang1'] : false;
+        !is_null($param['name_lang2']) ? $info['name_lang2'] = $param['name_lang2'] : false;
+        !is_null($param['name_lang3']) ? $info['name_lang3'] = $param['name_lang3'] : false;
+        !is_null($param['website']) ? $info['website'] = $param['website'] : false;
+        !is_null($param['logo']) ? $info['logo'] = $param['logo'] : false;
+        !is_null($param['index_background']) ? $info['index_background'] = $param['index_background'] : false;
+        !is_null($param['voice_lang1']) ? $info['voice_lang1'] = $param['voice_lang1'] : false;
+        !is_null($param['voice_lang2']) ? $info['voice_lang2'] = $param['voice_lang2'] : false;
+        !is_null($param['voice_lang3']) ? $info['voice_lang3'] = $param['voice_lang3'] : false;
+        !is_null($param['address_lang1']) ? $info['address_lang1'] = $param['address_lang1'] : false;
+        !is_null($param['address_lang2']) ? $info['address_lang2'] = $param['address_lang2'] : false;
+        !is_null($param['address_lang3']) ? $info['address_lang3'] = $param['address_lang3'] : false;
+        !is_null($param['introduction_lang1']) ? $info['introduction_lang1'] = $param['introduction_lang1'] : false;
+        !is_null($param['introduction_lang2']) ? $info['introduction_lang2'] = $param['introduction_lang2'] : false;
+        !is_null($param['introduction_lang3']) ? $info['introduction_lang3'] = $param['introduction_lang3'] : false;
+        !is_null($param['status']) ? $info['status'] = $param['status'] : false;
+        !is_null($param['lang_list']) ? $info['lang_list'] = $param['lang_list'] : false;
+        !is_null($param['bookurl']) ? $info['bookurl'] = $param['bookurl'] : false;
         return $this->dao->addHotelList($info);
     }
 }

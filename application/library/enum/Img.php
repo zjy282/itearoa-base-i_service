@@ -1,7 +1,7 @@
 <?php
 
 class Enum_Img {
-    
+
     // 阿里云图片服务地址
     const OSS_IMGURL = 'https://ypimg1.youpu.cn';
 
@@ -139,7 +139,7 @@ class Enum_Img {
     /**
      * 根据Enum_Img key获取
      *
-     * @param string $key            
+     * @param string $key
      * @param
      *            int addLogo 1代表添加，0代表不添加
      * @return multitype:multitype:string
@@ -161,11 +161,11 @@ class Enum_Img {
                 self::issetImgData($w, $data, $size, 'w');
                 self::issetImgData($h, $data, $size, 'h');
             }
-            
+
             if (isset($data['w']) && $w) {
                 $data['w'] = $w . 'w';
             }
-            
+
             if (isset($data['h']) && $h) {
                 $data['h'] = $h . 'h';
             }
@@ -213,14 +213,14 @@ class Enum_Img {
     /**
      * 根据key和类型获取图片路径
      *
-     * @param string $picId            
+     * @param string $picId
      * @param
      *            int addLogo 1代表添加，0代表不添加
      * @return string|multitype:string
      */
     public static function getPathByKeyAndType($picId, $imgType = "", $addLogo = 0) {
         $url = '';
-        if (! empty($picId)) {
+        if (!empty($picId)) {
             $picId = str_replace(array(
                 "_",
                 "//"
@@ -251,119 +251,12 @@ class Enum_Img {
             $filePath = $filePath ? $filePath . '/' : '';
             if (count($tmp) > 1) {
                 $rand = md5(time() . mt_rand(1111, 9999));
-                $data['fileName'] = 'is/' . $filePath . date('Ym') . '/' . date('d') . '/' . $rand . '.' . end($tmp);
-                $data['key'] = 'is_' . $fileKey . date('Ym') . '_' . date('d') . '_' . $rand . '.' . end($tmp);
+                $data['fileName'] = 'iservicev2/' . $filePath . date('Ym') . '/' . $rand . '.' . end($tmp);
+                $data['key'] = 'iservicev2_' . $fileKey . date('Ym') . '_' . $rand . '.' . end($tmp);
             }
         }
         return $data;
     }
 
-    public static function allowExtension() {
-        return array(
-            'image/bmp' => 'bmp',
-            'image/gif' => 'gif',
-            'image/jpeg' => 'jpg',
-            'image/png' => 'png'
-        );
-    }
 
-    /**
-     * 获取图片全路径
-     *
-     * @author 张振宇
-     * @param string $key
-     *            图片key
-     * @param number $isStorage
-     *            0：旧的图片地址；1：阿里云图片服务地址
-     * @param string $path
-     *            数据库图片有带/和不带/两种
-     * @param int $type
-     *            是否使用OSS图片域名
-     * @param int $size
-     *            0原图，1首页长方形640*430，2大方图600*600，3列表小图300*300，4列表小图160*160
-     *            
-     * @return string 图片全路径
-     */
-    public static function getPathByKey($key, $isStorage = 0, $virgule = '', $size = 1, $type = 0) {
-        $path = '';
-        if ($key) {
-            if ($isStorage) {
-                $path = self::OSS_IMGURL . '/' . str_replace('_', '/', $key);
-            } else {
-                if ($type == 0) {
-                    $key = str_replace("//", "/", $key);
-                    $path = self::OSS_IMGURL . '/' . str_replace('_', '/', $key);
-                } else {
-                    $path = self::YP_IMGURL . $virgule . $key;
-                }
-            }
-        }
-        return $path;
-    }
-
-    /**
-     * 图片列表-所有
-     */
-    const PIC_LIST = "pic_list_all";
-
-    /**
-     * 图片列表-后台上传
-     */
-    const PIC_LIST_OFFICIAL = "pic_list_official";
-
-    /**
-     * 图片列表-shine图被标识录用
-     */
-    const PIC_LIST_SHINE = "pic_list_shine";
-
-    /**
-     * 图片单张-后台推荐
-     */
-    const PIC_ONE_RECOMMEND = "pic_one_recommend";
-
-    /**
-     * 图片单张-后台推荐
-     */
-    const PIC_ONE_RECOMMEND_OFFICIAL = "pic_one_recommend_official";
-
-    /**
-     * 列表默认获取的图片数量
-     */
-    const PIC_DEFAULT_COUNT = 10;
-
-    /**
-     * 获取poi图片的配置
-     *
-     * @param string $type            
-     * @return multitype:boolean string number
-     */
-    public static function getPicConfig($configId, $count = 10) {
-        $count = empty($count) ? self::PIC_DEFAULT_COUNT : $count;
-        $config = array(
-            "count" => $count, // 获取几张
-            "recommend" => false, // 是否获取推荐
-            "showOfficial" => true, // 是从yp_pic表获取
-            "showShine" => true, // 是否从晒图获取
-            'sort' => 'update'
-        ); // 按照更新时间排序
-        
-        switch ($configId) {
-            case self::PIC_LIST_OFFICIAL:
-                $config['showShine'] = false;
-                break;
-            case self::PIC_LIST_SHINE:
-                $config['showOfficial'] = false;
-                break;
-            case self::PIC_ONE_RECOMMEND:
-                $config['count'] = 1;
-                $config['recommend'] = true;
-                break;
-            case self::PIC_ONE_RECOMMEND_OFFICIAL:
-                $config['count'] = 1;
-                $config['recommend'] = true;
-                $config['showShine'] = false;
-                break;
-        }
-        return $config;
-    }
 }

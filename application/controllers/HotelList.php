@@ -97,13 +97,36 @@ class HotelListController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
-            $param['name'] = trim($this->getParamList('name'));
+            $param['groupid'] = $this->getParamList('groupid');
+            $param['propertyinterfid'] = $this->getParamList('propertyinterfid');
+            $param['lng'] = $this->getParamList('lng');
+            $param['lat'] = $this->getParamList('lat');
+            $param['cityid'] = $this->getParamList('cityid');
+            $param['tel'] = $this->getParamList('tel');
+            $param['name_lang1'] = $this->getParamList('name_lang1');
+            $param['name_lang2'] = $this->getParamList('name_lang2');
+            $param['name_lang3'] = $this->getParamList('name_lang3');
+            $param['website'] = $this->getParamList('website');
+            $param['logo'] = $this->getParamList('logo');
+            $param['index_background'] = $this->getParamList('index_background');
+            $param['voice_lang1'] = $this->getParamList('voice_lang1');
+            $param['voice_lang2'] = $this->getParamList('voice_lang2');
+            $param['voice_lang3'] = $this->getParamList('voice_lang3');
+            $param['address_lang1'] = $this->getParamList('address_lang1');
+            $param['address_lang2'] = $this->getParamList('address_lang2');
+            $param['address_lang3'] = $this->getParamList('address_lang3');
+            $param['introduction_lang1'] = $this->getParamList('introduction_lang1');
+            $param['introduction_lang2'] = $this->getParamList('introduction_lang2');
+            $param['introduction_lang3'] = $this->getParamList('introduction_lang3');
+            $param['status'] = $this->getParamList('status');
+            $param['lang_list'] = $this->getParamList('lang_list');
+            $param['bookurl'] = $this->getParamList('bookurl');
             $data = $this->model->updateHotelListById($param, $id);
-            $data = $this->convertor->commonConvertor($data);
+            $data = $this->convertor->statusConvertor(array('id' => $data));
         } else {
             $this->throwException(1, 'id不能为空');
         }
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -115,10 +138,33 @@ class HotelListController extends \BaseController {
      */
     public function addHotelListAction() {
         $param = array();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['groupid'] = intval($this->getParamList('groupid'));
+        $param['propertyinterfid'] = $this->getParamList('propertyinterfid');
+        $param['lng'] = $this->getParamList('lng');
+        $param['lat'] = $this->getParamList('lat');
+        $param['cityid'] = intval($this->getParamList('cityid'));
+        $param['tel'] = $this->getParamList('tel');
+        $param['name_lang1'] = $this->getParamList('name_lang1');
+        $param['name_lang2'] = $this->getParamList('name_lang2');
+        $param['name_lang3'] = $this->getParamList('name_lang3');
+        $param['website'] = $this->getParamList('website');
+        $param['logo'] = $this->getParamList('logo');
+        $param['index_background'] = $this->getParamList('index_background');
+        $param['voice_lang1'] = $this->getParamList('voice_lang1');
+        $param['voice_lang2'] = $this->getParamList('voice_lang2');
+        $param['voice_lang3'] = $this->getParamList('voice_lang3');
+        $param['address_lang1'] = $this->getParamList('address_lang1');
+        $param['address_lang2'] = $this->getParamList('address_lang2');
+        $param['address_lang3'] = $this->getParamList('address_lang3');
+        $param['introduction_lang1'] = $this->getParamList('introduction_lang1');
+        $param['introduction_lang2'] = $this->getParamList('introduction_lang2');
+        $param['introduction_lang3'] = $this->getParamList('introduction_lang3');
+        $param['status'] = intval($this->getParamList('status'));
+        $param['lang_list'] = $this->getParamList('lang_list');
+        $param['bookurl'] = $this->getParamList('bookurl');
         $data = $this->model->addHotelList($param);
-        $data = $this->convertor->commonConvertor($data);
-        $this->echoJson($data);
+        $data = $this->convertor->statusConvertor(array('id' => $data));
+        $this->echoSuccessData($data);
     }
 
     /**

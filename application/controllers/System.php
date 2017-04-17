@@ -23,9 +23,11 @@ class SystemController extends \BaseController {
     }
 
     public function uploadToOssAction() {
-        $uploadFile = $_FILES['uploadfile'];
+        $param = array();
+        $param['type'] = trim($this->getParamList('type'));
+        $param['uploadfile'] = $_FILES['uploadfile'];
         $ossModel = new OssModel();
-        $result = $ossModel->uploadToOss($uploadFile);
+        $result = $ossModel->uploadToOss($param);
         $this->echoSuccessData($result);
     }
 }

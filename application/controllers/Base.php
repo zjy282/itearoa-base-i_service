@@ -18,15 +18,15 @@ abstract class BaseController extends \Yaf_Controller_Abstract {
         $request = $this->getRequest();
         if ($request->isGet()) {
             if ($paramKey) {
-                $paramValue = $request->getQuery($paramKey);
-                return ! is_null($paramValue) ? $paramValue : $defualt;
+                $paramValue = $request->getQuery($paramKey, null);
+                return !is_null($paramValue) ? $paramValue : $defualt;
             }
             return $request->getQuery();
         }
         if ($request->isPost()) {
             if ($paramKey) {
-                $paramValue = $request->getPost($paramKey);
-                return ! is_null($paramValue) ? $paramValue : $defualt;
+                $paramValue = $request->getPost($paramKey, null);
+                return !is_null($paramValue) ? $paramValue : $defualt;
             }
             return $request->getPost();
         }
@@ -35,7 +35,7 @@ abstract class BaseController extends \Yaf_Controller_Abstract {
     /**
      * 输出json
      *
-     * @param array $data            
+     * @param array $data
      */
     public function echoJson($data) {
         $response = $this->getResponse();
@@ -51,7 +51,7 @@ abstract class BaseController extends \Yaf_Controller_Abstract {
      * @return string
      */
     public function echoSuccessData($data = array()) {
-        if (! is_array($data) && ! is_object($data)) {
+        if (!is_array($data) && !is_object($data)) {
             $data = array(
                 $data
             );
@@ -61,12 +61,12 @@ abstract class BaseController extends \Yaf_Controller_Abstract {
 
     public function echoAndExit($code, $msg, $data, $debugInfo = null) {
         @header("Content-type:application/json");
-        
+
         $data = $this->clearNullNew($data);
-        if (is_null($data) && ! is_numeric($data)) {
+        if (is_null($data) && !is_numeric($data)) {
             $data = array();
         }
-        
+
         $echoList = array(
             'code' => $code,
             'msg' => $msg,
@@ -74,7 +74,7 @@ abstract class BaseController extends \Yaf_Controller_Abstract {
         );
         $sysConfig = Yaf_Registry::get('sysConfig');
         if ($sysConfig->api->debug) {
-            $echoList['debugInfo'] = is_null($debugInfo) ? (object) array() : $debugInfo;
+            $echoList['debugInfo'] = is_null($debugInfo) ? (object)array() : $debugInfo;
         }
         $this->getResponse()->setBody(json_encode($echoList));
     }
@@ -87,7 +87,7 @@ abstract class BaseController extends \Yaf_Controller_Abstract {
                 $data[$keyTemp] = $value;
                 $key = $keyTemp;
             }
-            
+
             if (is_array($value) || is_object($value)) {
                 if (is_object($data)) {
                     $data->$key = $this->clearNullNew($value);
@@ -95,7 +95,7 @@ abstract class BaseController extends \Yaf_Controller_Abstract {
                     $data[$key] = $this->clearNullNew($value);
                 }
             } else {
-                if (is_null($value) && ! is_numeric($value)) {
+                if (is_null($value) && !is_numeric($value)) {
                     $value = "";
                 }
                 if (is_numeric($value)) {
@@ -110,8 +110,8 @@ abstract class BaseController extends \Yaf_Controller_Abstract {
     /**
      * 抛出异常
      *
-     * @param string $code            
-     * @param string $msg            
+     * @param string $code
+     * @param string $msg
      * @throws Exception
      */
     protected function throwException($code, $msg) {

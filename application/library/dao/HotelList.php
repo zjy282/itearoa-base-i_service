@@ -8,7 +8,7 @@ class Dao_HotelList extends Dao_Base {
 
     /**
      * 查询hotel_list列表
-     * 
+     *
      * @param
      *            array 入参
      * @return array
@@ -70,14 +70,14 @@ class Dao_HotelList extends Dao_Base {
 
     /**
      * 根据id查询hotel_list详情
-     * 
+     *
      * @param
      *            int id
      * @return array
      */
     public function getHotelListDetail(int $id): array {
         $result = array();
-        
+
         if ($id) {
             $sql = "select * from hotel_list where id=?";
             $result = $this->db->fetchAssoc($sql, array(
@@ -89,7 +89,7 @@ class Dao_HotelList extends Dao_Base {
 
     /**
      * 根据id更新hotel_list
-     * 
+     *
      * @param
      *            array 需要更新的数据
      * @param
@@ -98,17 +98,17 @@ class Dao_HotelList extends Dao_Base {
      */
     public function updateHotelListById(array $info, int $id) {
         $result = false;
-        
+
         if ($id) {
-            $result = $this->db->update('hotel_list', $info, $id);
+            $result = $this->db->update('hotel_list', $info, array('id' => $id));
         }
-        
+
         return $result;
     }
 
     /**
      * 单条增加hotel_list数据
-     * 
+     *
      * @param
      *            array
      * @return int id

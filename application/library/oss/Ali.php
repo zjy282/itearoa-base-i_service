@@ -41,7 +41,7 @@ class Oss_Ali{
     /**
      * OSS服务地址
      */
-    const DEFAULT_OSS_HOST = 'iservice.oss-cn-beijing.aliyuncs.com';
+    const DEFAULT_OSS_HOST = 'oss-cn-beijing.aliyuncs.com';
     /**
      * 软件名称
      */
