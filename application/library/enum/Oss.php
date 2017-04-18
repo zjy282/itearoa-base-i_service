@@ -19,6 +19,12 @@ class Enum_Oss {
                     'image/png' => 'png'
                 );
                 break;
+            case self::OSS_PATH_VOICE:
+                $allowList = array(
+                    'audio/mpeg' => 'mp3',
+                    'audio/x-wav' => 'wav',
+                );
+                break;
         }
         return $allowList;
     }
