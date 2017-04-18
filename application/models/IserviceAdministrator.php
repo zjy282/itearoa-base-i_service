@@ -103,7 +103,7 @@ class IserviceAdministratorModel extends \BaseModel {
      */
     public function login($param) {
         $username = trim($param['username']);
-        $password = trim($param['password']);
+        $password = md5(trim($param['password']));
         $ip = Util_Tools::ipton($param['ip'] ? $param['ip'] : Util_Http::getIP());
         
         if (! $username || ! $password) {

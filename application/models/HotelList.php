@@ -17,7 +17,7 @@ class HotelListModel extends \BaseModel {
      * @return array
      */
     public function getHotelListList(array $param) {
-        $param['id'] ? $paramList['id'] = intval($param['id']) : false;
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
         $param['name'] ? $paramList['name'] = intval($param['name']) : false;
         $param['groupid'] ? $paramList['groupid'] = intval($param['groupid']) : false;
         isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;

@@ -2,8 +2,14 @@
 
 class IserviceAdministratorController extends \BaseController {
 
+    /**
+     * @var IserviceAdministratorModel
+     */
     private $model;
 
+    /**
+     * @var Convertor_IserviceAdministrator
+     */
     private $convertor;
 
     public function init() {
@@ -66,7 +72,7 @@ class IserviceAdministratorController extends \BaseController {
             $paramList = $this->getParamList();
             $param = array();
             isset($paramList['username']) ? $param['userName'] = trim($paramList['username']) : false;
-            isset($paramList['password']) ? $param['password'] = md5(trim($paramList['password'])) : false;
+            $paramList['password'] ? $param['password'] = md5(trim($paramList['password'])) : false;
             isset($paramList['realname']) ? $param['realName'] = trim($paramList['realname']) : false;
             isset($paramList['remark']) ? $param['remark'] = trim($paramList['remark']) : false;
             isset($paramList['status']) ? $param['status'] = intval($paramList['status']) : false;
