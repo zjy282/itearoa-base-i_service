@@ -2,6 +2,12 @@
 
 class Enum_Push {
 
+    const PUSH_TYPE_USER = 1;
+    const PUSH_TYPE_STAFF = 2;
+    const PUSH_TYPE_ALL = 3;
+    const PUSH_TYPE_HOTEL = 4;
+    const PUSH_TYPE_GROUP = 5;
+
     /**
      * 推送机型定义
      */
@@ -38,9 +44,9 @@ class Enum_Push {
     /**
      * 按平台 系统获取对应的配置
      *
-     * @param $platform string            
+     * @param $platform string
      * @param $system string
-     *            @reutrn array
+     * @reutrn array
      */
     public static function getConfig($platform, $system = '') {
         $platform = strtolower($platform);

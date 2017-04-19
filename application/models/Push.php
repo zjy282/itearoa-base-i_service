@@ -17,9 +17,27 @@ class PushModel extends \BaseModel {
      * @return array
      */
     public function getPushList(array $param) {
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
+        $param['type'] ? $paramList['type'] = $param['type'] : false;
+        isset($param['result']) ? $paramList['result'] = intval($param['result']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getPushList($paramList);
+    }
+
+    /**
+     * 获取Push数量
+     *
+     * @param
+     *            array param 查询条件
+     * @return array
+     */
+    public function getPushCount(array $param) {
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
+        $param['type'] ? $paramList['type'] = $param['type'] : false;
+        isset($param['result']) ? $paramList['result'] = intval($param['result']) : false;
+        return $this->dao->getPushCount($paramList);
     }
 
     /**
@@ -65,17 +83,18 @@ class PushModel extends \BaseModel {
      */
     public function addPush($param) {
         // 判断参数错误
-        $dataId = array_unique(array_filter(explode(",", $param['dataid'])));
-        if (empty($dataId)) {
-            $this->throwException('推送数据ID错误', 2);
-        }
-        $info['dataid'] = implode(',', $dataId);
-        
         $info['type'] = intval($param['type']);
         if (empty($info['type'])) {
             $this->throwException('推送类型错误', 3);
         }
-        
+        if ($info['type'] != Enum_Push::PUSH_TYPE_ALL) {
+            $dataId = array_unique(array_filter(explode(",", $param['dataid'])));
+            if (empty($dataId)) {
+                $this->throwException('推送数据ID错误', 2);
+            }
+            $info['dataid'] = implode(',', $dataId);
+        }
+
         $info['cn_title'] = $param['cn_title'];
         $info['cn_value'] = $param['cn_value'];
         $info['en_title'] = $param['en_title'];
@@ -83,15 +102,16 @@ class PushModel extends \BaseModel {
         if (empty($info['cn_value']) && empty($info['en_value'])) {
             $this->throwException('推送内容错误', 4);
         }
-        
+
         $info['url'] = $param['url'];
         if (empty($info['url'])) {
             $this->throwException('推送URL错误', 5);
         }
-        
-        $info['result'] = intval($var);
+
+        //@TODO 需要接入推送并保存推送结果状态
+        $info['result'] = intval($pushResult);
         $info['createtime'] = time();
-        
+
         return $this->dao->addPush($info);
     }
 

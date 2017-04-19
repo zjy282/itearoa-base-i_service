@@ -2,8 +2,13 @@
 
 class PushController extends \BaseController {
 
+    /**
+     * @var PushModel
+     */
     private $model;
-
+    /**
+     * @var Convertor_Push
+     */
     private $convertor;
 
     public function init() {
@@ -19,10 +24,18 @@ class PushController extends \BaseController {
      */
     public function getPushListAction() {
         $param = array();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['page'] = intval($this->getParamList('page'));
+        $param['limit'] = intval($this->getParamList('limit', 5));
+        $param['id'] = intval($this->getParamList('id'));
+        $param['type'] = intval($this->getParamList('type'));
+        $param['result'] = $this->getParamList('result');
+        if (is_null($param['result'])) {
+            unset($param['result']);
+        }
         $data = $this->model->getPushList($param);
-        $data = $this->convertor->getPushListConvertor($data);
-        $this->echoJson($data);
+        $count = $this->model->getPushCount($param);
+        $data = $this->convertor->getPushListConvertor($data, $count, $param);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -74,10 +87,16 @@ class PushController extends \BaseController {
      */
     public function addPushAction() {
         $param = array();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['type'] = intval($this->getParamList('type'));
+        $param['dataid'] = $this->getParamList('dataid');
+        $param['cn_title'] = $this->getParamList('cn_title');
+        $param['cn_value'] = $this->getParamList('cn_value');
+        $param['en_title'] = $this->getParamList('en_title');
+        $param['en_value'] = $this->getParamList('en_value');
+        $param['url'] = $this->getParamList('url');
         $data = $this->model->addPush($param);
-        $data = $this->convertor->commonConvertor($data);
-        $this->echoJson($data);
+        $data = $this->convertor->statusConvertor(array('id' => $data));
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -85,7 +104,7 @@ class PushController extends \BaseController {
      *
      * @param
      *            array param 需要新增的信息
-     *            
+     *
      * @return Json
      */
     public function gsmPushMsgAction() {
@@ -102,9 +121,9 @@ class PushController extends \BaseController {
         }
         //@TODO 需要接入GSM接口根据urlCode获取推送的跳转地址
         $param['url'] = 'http://www.baidu.com';
-        
+
         // $result = $this->model->pushMsg($param);
-        
+
         $data = $this->model->addPush($param);
         $data = $this->convertor->gsmPushMsgConvertor($data);
         $this->echoSuccessData($data);

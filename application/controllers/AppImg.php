@@ -69,10 +69,22 @@ class AppImgController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
-            $param['pickey'] = $this->getParamList('pickey');
+            $param['pic'] = $this->getParamList('pic');
             $param['status'] = $this->getParamList('status');
             $data = $this->model->updateAppImgById($param, $id);
             $data = $this->convertor->statusConvertor(array('id' => $data));
+        } else {
+            $this->throwException(1, 'id不能为空');
+        }
+        $this->echoSuccessData($data);
+
+
+        $id = intval($this->getParamList('id'));
+        if ($id) {
+            $param = array();
+            $param['name'] = trim($this->getParamList('name'));
+            $data = $this->model->updateAppImgById($param, $id);
+            $data = $this->convertor->commonConvertor($data);
         } else {
             $this->throwException(1, 'id不能为空');
         }
