@@ -11,14 +11,15 @@ class AppstartMsgModel extends \BaseModel {
 
     /**
      * 获取AppstartMsg列表信息
-     * 
+     *
      * @param
      *            array param 查询条件
      * @return array
      */
     public function getAppstartMsgList(array $param) {
-        isset($param['type']) ? $paramList['type'] = intval($param['type']) : false;
-        isset($param['dataid']) ? $paramList['dataid'] = intval($param['dataid']) : false;
+        $param['id'] ? $paramList['id'] = intval($param['id']) : false;
+        $param['type'] ? $paramList['type'] = intval($param['type']) : false;
+        $param['dataid'] ? $paramList['dataid'] = intval($param['dataid']) : false;
         isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
@@ -26,8 +27,24 @@ class AppstartMsgModel extends \BaseModel {
     }
 
     /**
+     * 获取AppstartMsg数量
+     *
+     * @param
+     *            array param 查询条件
+     * @return array
+     */
+    public function getAppstartMsgCount(array $param) {
+        $paramList = array();
+        isset($param['id']) ? $paramList['id'] = intval($param['id']) : false;
+        isset($param['type']) ? $paramList['type'] = intval($param['type']) : false;
+        isset($param['dataid']) ? $paramList['dataid'] = intval($param['dataid']) : false;
+        isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
+        return $this->dao->getAppstartMsgCount($paramList);
+    }
+
+    /**
      * 根据id查询AppstartMsg信息
-     * 
+     *
      * @param
      *            int id 查询的主键
      * @return array
@@ -42,7 +59,7 @@ class AppstartMsgModel extends \BaseModel {
 
     /**
      * 根据id更新AppstartMsg信息
-     * 
+     *
      * @param
      *            array param 需要更新的信息
      * @param
@@ -51,9 +68,13 @@ class AppstartMsgModel extends \BaseModel {
      */
     public function updateAppstartMsgById($param, $id) {
         $result = false;
-        // 自行添加要更新的字段,以下是age字段是样例
         if ($id) {
-            $info['age'] = intval($param['age']);
+            !is_null($param['type']) ? $info['type'] = $param['type'] : false;
+            !is_null($param['dataid']) ? $info['dataid'] = $param['dataid'] : false;
+            !is_null($param['pic']) ? $info['pic'] = $param['pic'] : false;
+            !is_null($param['msg']) ? $info['msg'] = $param['msg'] : false;
+            !is_null($param['url']) ? $info['url'] = $param['url'] : false;
+            !is_null($param['status']) ? $info['status'] = $param['status'] : false;
             $result = $this->dao->updateAppstartMsgById($info, $id);
         }
         return $result;
@@ -61,14 +82,18 @@ class AppstartMsgModel extends \BaseModel {
 
     /**
      * AppstartMsg新增信息
-     * 
+     *
      * @param
      *            array param 需要增加的信息
      * @return array
      */
     public function addAppstartMsg($param) {
-        // 自行添加要添加的字段,以下是age字段是样例
-        $info['age'] = intval($param['age']);
+        !is_null($param['type']) ? $info['type'] = $param['type'] : false;
+        !is_null($param['dataid']) ? $info['dataid'] = $param['dataid'] : false;
+        !is_null($param['pic']) ? $info['pic'] = $param['pic'] : false;
+        !is_null($param['msg']) ? $info['msg'] = $param['msg'] : false;
+        !is_null($param['url']) ? $info['url'] = $param['url'] : false;
+        !is_null($param['status']) ? $info['status'] = $param['status'] : false;
         return $this->dao->addAppstartMsg($info);
     }
 }

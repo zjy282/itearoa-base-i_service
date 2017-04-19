@@ -2,8 +2,13 @@
 
 class AppstartMsgController extends \BaseController {
 
+    /**
+     * @var AppstartMsgModel
+     */
     private $model;
-
+    /**
+     * @var Convertor_AppstartMsg
+     */
     private $convertor;
 
     public function init() {
@@ -19,10 +24,19 @@ class AppstartMsgController extends \BaseController {
      */
     public function getAppstartMsgListAction() {
         $param = array();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['page'] = intval($this->getParamList('page'));
+        $param['limit'] = intval($this->getParamList('limit', 5));
+        $param['id'] = intval($this->getParamList('id'));
+        $param['type'] = intval($this->getParamList('type'));
+        $param['dataid'] = intval($this->getParamList('dataid'));
+        $param['status'] = $this->getParamList('status');
+        if (is_null($param['status'])) {
+            unset($param['status']);
+        }
         $data = $this->model->getAppstartMsgList($param);
-        $data = $this->convertor->getAppstartMsgListConvertor($data);
-        $this->echoJson($data);
+        $count = $this->model->getAppstartMsgCount($param);
+        $data = $this->convertor->getAppstartMsgListConvertor($data, $count, $param);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -56,13 +70,18 @@ class AppstartMsgController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
-            $param['name'] = trim($this->getParamList('name'));
+            $param['type'] = $this->getParamList('type');
+            $param['dataid'] = $this->getParamList('dataid');
+            $param['pic'] = $this->getParamList('pic');
+            $param['msg'] = $this->getParamList('msg');
+            $param['url'] = $this->getParamList('url');
+            $param['status'] = $this->getParamList('status');
             $data = $this->model->updateAppstartMsgById($param, $id);
-            $data = $this->convertor->commonConvertor($data);
+            $data = $this->convertor->statusConvertor(array('id' => $data));
         } else {
             $this->throwException(1, 'id不能为空');
         }
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -74,10 +93,15 @@ class AppstartMsgController extends \BaseController {
      */
     public function addAppstartMsgAction() {
         $param = array();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['type'] = intval($this->getParamList('type'));
+        $param['dataid'] = intval($this->getParamList('dataid'));
+        $param['pic'] = $this->getParamList('pic');
+        $param['msg'] = $this->getParamList('msg');
+        $param['url'] = $this->getParamList('url');
+        $param['status'] = intval($this->getParamList('status'));
         $data = $this->model->addAppstartMsg($param);
-        $data = $this->convertor->commonConvertor($data);
-        $this->echoJson($data);
+        $data = $this->convertor->statusConvertor(array('id' => $data));
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -91,11 +115,11 @@ class AppstartMsgController extends \BaseController {
         $hotelId = intval($this->getParamList('hotelid'));
         $platform = intval($this->getParamList('platform'));
         $identity = strval($this->getParamList('identity'));
-        
+
         if (empty($groupId) || empty($hotelId) || empty($platform) || empty($identity)) {
             $this->throwException(2, '参数错误');
         }
-        
+
         // 获取物业可用信息
         $hotelMsg = $this->model->getAppstartMsgList(array(
             'status' => 1,
@@ -112,7 +136,7 @@ class AppstartMsgController extends \BaseController {
         ));
         $msgList = array_merge($hotelMsg, $groupMsg);
         $megIdList = array_column($msgList, 'id');
-        
+
         // 检查设备是否已经接收过广告
         $appStartMsgLogModel = new AppstartMsgLogModel();
         $msgLogHistory = $appStartMsgLogModel->getAppstartMsgLogList(array(

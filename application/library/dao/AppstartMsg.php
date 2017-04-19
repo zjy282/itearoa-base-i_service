@@ -16,9 +16,45 @@ class Dao_AppstartMsg extends Dao_Base {
     public function getAppstartMsgList(array $param): array {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
-        
+
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select * from iservice_appstart_msg {$paramSql['sql']}";
+        if ($limit) {
+            $sql .= " limit {$page},{$limit}";
+        }
+        $result = $this->db->fetchAll($sql, $paramSql['case']);
+        return is_array($result) ? $result : array();
+    }
+
+    /**
+     * 查询iservice_appstart_msg数量
+     *
+     * @param
+     *            array 入参
+     * @return array
+     */
+    public function getAppstartMsgCount(array $param): int {
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select count(1) as count from iservice_appstart_msg {$paramSql['sql']}";
+        $result = $this->db->fetchAssoc($sql, $paramSql['case']);
+        return intval($result['count']);
+    }
+
+    private function handlerListParams($param) {
         $whereSql = array();
         $whereCase = array();
+        if (isset($param['id'])) {
+            if (is_array($param['id'])) {
+                $whereSql[] = 'id in (' . implode(',', $param['id']) . ')';
+            } else {
+                $whereSql[] = 'id = ?';
+                $whereCase[] = $param['id'];
+            }
+        }
+        if (isset($param['status'])) {
+            $whereSql[] = 'status = ?';
+            $whereCase[] = $param['status'];
+        }
         if (isset($param['type'])) {
             $whereSql[] = 'type = ?';
             $whereCase[] = $param['type'];
@@ -27,18 +63,11 @@ class Dao_AppstartMsg extends Dao_Base {
             $whereSql[] = 'dataid = ?';
             $whereCase[] = $param['dataid'];
         }
-        if (isset($param['status'])) {
-            $whereSql[] = 'status = ?';
-            $whereCase[] = $param['status'];
-        }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
-        
-        $sql = "select * from iservice_appstart_msg {$whereSql}";
-        if ($limit) {
-            $sql .= " limit {$page},{$limit}";
-        }
-        $result = $this->db->fetchAll($sql, $whereCase);
-        return is_array($result) ? $result : array();
+        return array(
+            'sql' => $whereSql,
+            'case' => $whereCase
+        );
     }
 
     /**
@@ -50,14 +79,14 @@ class Dao_AppstartMsg extends Dao_Base {
      */
     public function getAppstartMsgDetail(int $id): array {
         $result = array();
-        
+
         if ($id) {
             $sql = "select * from iservice_appstart_msg where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
         }
-        
+
         return $result;
     }
 
@@ -72,11 +101,11 @@ class Dao_AppstartMsg extends Dao_Base {
      */
     public function updateAppstartMsgById(array $info, int $id) {
         $result = false;
-        
+
         if ($id) {
-            $result = $this->db->update('iservice_appstart_msg', $info, $id);
+            $result = $this->db->update('iservice_appstart_msg', $info, array('id' => $id));
         }
-        
+
         return $result;
     }
 
