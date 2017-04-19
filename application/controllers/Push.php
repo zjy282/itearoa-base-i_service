@@ -24,7 +24,7 @@ class PushController extends \BaseController {
      */
     public function getPushListAction() {
         $param = array();
-        $param['page'] = intval($this->getParamList('page'));
+        $param['page'] = intval($this->getParamList('page', 1));
         $param['limit'] = intval($this->getParamList('limit', 5));
         $param['id'] = intval($this->getParamList('id'));
         $param['type'] = intval($this->getParamList('type'));
