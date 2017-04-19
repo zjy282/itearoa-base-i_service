@@ -2,8 +2,14 @@
 
 class AppImgController extends \BaseController {
 
+    /**
+     * @var AppImgModel
+     */
     private $model;
 
+    /**
+     * @var Convertor_AppImg
+     */
     private $convertor;
 
     public function init() {
@@ -19,10 +25,17 @@ class AppImgController extends \BaseController {
      */
     public function getAppImgListAction() {
         $param = array();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['page'] = intval($this->getParamList('page'));
+        $param['limit'] = intval($this->getParamList('limit', 5));
+        $param['id'] = intval($this->getParamList('id'));
+        $param['status'] = $this->getParamList('status');
+        if (is_null($param['status'])) {
+            unset($param['status']);
+        }
         $data = $this->model->getAppImgList($param);
-        $data = $this->convertor->getAppImgListConvertor($data);
-        $this->echoJson($data);
+        $count = $this->model->getAppImgCount($param);
+        $data = $this->convertor->getAppImgListConvertor($data, $count, $param);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -56,13 +69,14 @@ class AppImgController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
-            $param['name'] = trim($this->getParamList('name'));
+            $param['pickey'] = $this->getParamList('pickey');
+            $param['status'] = $this->getParamList('status');
             $data = $this->model->updateAppImgById($param, $id);
-            $data = $this->convertor->commonConvertor($data);
+            $data = $this->convertor->statusConvertor(array('id' => $data));
         } else {
             $this->throwException(1, 'id不能为空');
         }
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -74,10 +88,11 @@ class AppImgController extends \BaseController {
      */
     public function addAppImgAction() {
         $param = array();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['pickey'] = $this->getParamList('pickey');
+        $param['status'] = intval($this->getParamList('status'));
         $data = $this->model->addAppImg($param);
-        $data = $this->convertor->commonConvertor($data);
-        $this->echoJson($data);
+        $data = $this->convertor->statusConvertor(array('id' => $data));
+        $this->echoSuccessData($data);
     }
 
     /**

@@ -27,4 +27,24 @@ class Convertor_AppstartPic extends Convertor_Base {
         }
         return $data;
     }
+
+    public function getAppstartPicListConvertor($list, $count, $param) {
+        $data = array(
+            'list' => array()
+        );
+
+        foreach ($list as $key => $value) {
+            $oneTemp = array();
+            $oneTemp['id'] = $value['id'];
+            $oneTemp['pic'] = $value['pic'];
+            $oneTemp['link'] = $value['link'];
+            $oneTemp['status'] = $value['status'];
+            $data['list'][] = $oneTemp;
+        }
+        $data['total'] = $count;
+        $data['page'] = $param['page'];
+        $data['limit'] = $param['limit'];
+        $data['nextPage'] = Util_Tools::getNextPage($data['page'], $data['limit'], $data['total']);
+        return $data;
+    }
 }

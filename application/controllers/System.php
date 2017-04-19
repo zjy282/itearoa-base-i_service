@@ -42,4 +42,11 @@ class SystemController extends \BaseController {
         $type = trim($this->getParamList('type'));
         $this->echoSuccessData(array('list' => Enum_Oss::allowExtension($type)));
     }
+
+    /**
+     * 获取设备列表
+     */
+    public function getPlatformListAction() {
+        $this->echoSuccessData(array('list' => Enum_Platform::getPlatformNameList()));
+    }
 }

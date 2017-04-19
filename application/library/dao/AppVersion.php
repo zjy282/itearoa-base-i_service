@@ -16,10 +16,60 @@ class Dao_AppVersion extends Dao_Base {
     public function getAppVersionList(array $param): array {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
-        $sql = "select * from iservice_app_version limit {$page},{$limit}";
-        $result = $this->db->fetchAll($sql, array());
+
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select * from iservice_app_version {$paramSql['sql']}";
+        if ($limit) {
+            $sql .= " limit {$page},{$limit}";
+        }
+        $result = $this->db->fetchAll($sql, $paramSql['case']);
         return is_array($result) ? $result : array();
     }
+
+    /**
+     * 查询iservice_app_version数量
+     *
+     * @param
+     *            array 入参
+     * @return array
+     */
+    public function getAppVersionCount(array $param): int {
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select count(1) as count from iservice_app_version {$paramSql['sql']}";
+        $result = $this->db->fetchAssoc($sql, $paramSql['case']);
+        return intval($result['count']);
+    }
+
+    private function handlerListParams($param) {
+        $whereSql = array();
+        $whereCase = array();
+        if (isset($param['id'])) {
+            if (is_array($param['id'])) {
+                $whereSql[] = 'id in (' . implode(',', $param['id']) . ')';
+            } else {
+                $whereSql[] = 'id = ?';
+                $whereCase[] = $param['id'];
+            }
+        }
+        if (isset($param['platform'])) {
+            $whereSql[] = 'platform = ?';
+            $whereCase[] = $param['platform'];
+        }
+        if (isset($param['forced'])) {
+            $whereSql[] = 'forced = ?';
+            $whereCase[] = $param['forced'];
+        }
+        if (isset($param['latest'])) {
+            $whereSql[] = 'latest = ?';
+            $whereCase[] = $param['latest'];
+        }
+        $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
+        return array(
+            'sql' => $whereSql,
+            'case' => $whereCase
+        );
+    }
+
 
     /**
      * 根据id查询iservice_app_version详情
@@ -30,14 +80,14 @@ class Dao_AppVersion extends Dao_Base {
      */
     public function getAppVersionDetail(int $id): array {
         $result = array();
-        
+
         if ($id) {
             $sql = "select * from iservice_app_version where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
         }
-        
+
         return $result;
     }
 
@@ -52,11 +102,11 @@ class Dao_AppVersion extends Dao_Base {
      */
     public function updateAppVersionById(array $info, int $id) {
         $result = false;
-        
+
         if ($id) {
-            $result = $this->db->update('iservice_app_version', $info, $id);
+            $result = $this->db->update('iservice_app_version', $info, array('id' => $id));
         }
-        
+
         return $result;
     }
 

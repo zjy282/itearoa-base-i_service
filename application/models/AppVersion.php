@@ -17,9 +17,29 @@ class AppVersionModel extends \BaseModel {
      * @return array
      */
     public function getAppVersionList(array $param) {
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
+        $param['platform'] ? $paramList['platform'] = $param['platform'] : false;
+        isset($param['forced']) ? $paramList['forced'] = intval($param['forced']) : false;
+        isset($param['latest']) ? $paramList['latest'] = intval($param['latest']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getAppVersionList($paramList);
+    }
+
+    /**
+     * 获取AppVersion数量
+     *
+     * @param
+     *            array param 查询条件
+     * @return array
+     */
+    public function getAppVersionCount(array $param) {
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
+        $param['platform'] ? $paramList['platform'] = $param['platform'] : false;
+        isset($param['forced']) ? $paramList['forced'] = intval($param['forced']) : false;
+        isset($param['latest']) ? $paramList['latest'] = intval($param['latest']) : false;
+        return $this->dao->getAppVersionCount($paramList);
     }
 
     /**
@@ -48,9 +68,12 @@ class AppVersionModel extends \BaseModel {
      */
     public function updateAppVersionById($param, $id) {
         $result = false;
-        // 自行添加要更新的字段,以下是age字段是样例
         if ($id) {
-            $info['age'] = intval($param['age']);
+            !is_null($param['platform']) ? $info['platform'] = $param['platform'] : false;
+            !is_null($param['forced']) ? $info['forced'] = $param['forced'] : false;
+            !is_null($param['version']) ? $info['version'] = $param['version'] : false;
+            !is_null($param['description']) ? $info['description'] = $param['description'] : false;
+            !is_null($param['latest']) ? $info['latest'] = $param['latest'] : false;
             $result = $this->dao->updateAppVersionById($info, $id);
         }
         return $result;
@@ -64,8 +87,12 @@ class AppVersionModel extends \BaseModel {
      * @return array
      */
     public function addAppVersion($param) {
-        // 自行添加要添加的字段,以下是age字段是样例
-        $info['age'] = intval($param['age']);
+        !is_null($param['platform']) ? $info['platform'] = $param['platform'] : false;
+        !is_null($param['forced']) ? $info['forced'] = $param['forced'] : false;
+        !is_null($param['version']) ? $info['version'] = $param['version'] : false;
+        !is_null($param['description']) ? $info['description'] = $param['description'] : false;
+        !is_null($param['latest']) ? $info['latest'] = $param['latest'] : false;
+        $info['createtime'] = time();
         return $this->dao->addAppVersion($info);
     }
 
@@ -78,12 +105,12 @@ class AppVersionModel extends \BaseModel {
      */
     public function getLatestAppVersionByPlatform($param) {
         $platform = intval($param['platform']);
-        
-        if (! array_key_exists($platform, Enum_Platform::getPlatformNameList())) {
+
+        if (!array_key_exists($platform, Enum_Platform::getPlatformNameList())) {
             $this->throwException('设备类型参数错误', 2);
         }
         $result = $this->dao->getLatestAppVersionByPlatform($platform);
-        if (! $result) {
+        if (!$result) {
             $this->throwException('设备没有可用版本', 3);
         }
         return $result;

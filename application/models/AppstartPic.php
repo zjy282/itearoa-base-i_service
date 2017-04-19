@@ -17,10 +17,25 @@ class AppstartPicModel extends \BaseModel {
      * @return array
      */
     public function getAppstartPicList(array $param) {
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
         isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getAppstartPicList($paramList);
+    }
+
+    /**
+     * 获取AppstartPic数量
+     *
+     * @param
+     *            array param 查询条件
+     * @return array
+     */
+    public function getAppstartPicCount(array $param) {
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
+        isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
+        return $this->dao->getAppstartPicCount($paramList);
     }
 
     /**
@@ -51,7 +66,9 @@ class AppstartPicModel extends \BaseModel {
         $result = false;
         // 自行添加要更新的字段,以下是age字段是样例
         if ($id) {
-            $info['age'] = intval($param['age']);
+            !is_null($param['pic']) ? $info['pic'] = $param['pic'] : false;
+            !is_null($param['status']) ? $info['status'] = $param['status'] : false;
+            !is_null($param['link']) ? $info['link'] = $param['link'] : false;
             $result = $this->dao->updateAppstartPicById($info, $id);
         }
         return $result;
@@ -65,8 +82,9 @@ class AppstartPicModel extends \BaseModel {
      * @return array
      */
     public function addAppstartPic($param) {
-        // 自行添加要添加的字段,以下是age字段是样例
-        $info['age'] = intval($param['age']);
+        !is_null($param['pic']) ? $info['pic'] = $param['pic'] : false;
+        !is_null($param['status']) ? $info['status'] = $param['status'] : false;
+        !is_null($param['link']) ? $info['link'] = $param['link'] : false;
         return $this->dao->addAppstartPic($info);
     }
 }

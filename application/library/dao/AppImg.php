@@ -16,9 +16,50 @@ class Dao_AppImg extends Dao_Base {
     public function getAppImgList(array $param): array {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
-        $sql = "select * from iservice_app_img limit {$page},{$limit}";
-        $result = $this->db->fetchAll($sql, array());
+
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select * from iservice_app_img {$paramSql['sql']}";
+        if ($limit) {
+            $sql .= " limit {$page},{$limit}";
+        }
+        $result = $this->db->fetchAll($sql, $paramSql['case']);
         return is_array($result) ? $result : array();
+    }
+
+    /**
+     * 查询iservice_app_img数量
+     *
+     * @param
+     *            array 入参
+     * @return array
+     */
+    public function getAppImgCount(array $param): int {
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select count(1) as count from iservice_app_img {$paramSql['sql']}";
+        $result = $this->db->fetchAssoc($sql, $paramSql['case']);
+        return intval($result['count']);
+    }
+
+    private function handlerListParams($param) {
+        $whereSql = array();
+        $whereCase = array();
+        if (isset($param['id'])) {
+            if (is_array($param['id'])) {
+                $whereSql[] = 'id in (' . implode(',', $param['id']) . ')';
+            } else {
+                $whereSql[] = 'id = ?';
+                $whereCase[] = $param['id'];
+            }
+        }
+        if (isset($param['status'])) {
+            $whereSql[] = 'status = ?';
+            $whereCase[] = $param['status'];
+        }
+        $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
+        return array(
+            'sql' => $whereSql,
+            'case' => $whereCase
+        );
     }
 
     /**
@@ -30,14 +71,14 @@ class Dao_AppImg extends Dao_Base {
      */
     public function getAppImgDetail(int $id): array {
         $result = array();
-        
+
         if ($id) {
             $sql = "select * from iservice_app_img where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
         }
-        
+
         return $result;
     }
 
@@ -52,11 +93,11 @@ class Dao_AppImg extends Dao_Base {
      */
     public function updateAppImgById(array $info, int $id) {
         $result = false;
-        
+
         if ($id) {
-            $result = $this->db->update('iservice_app_img', $info, $id);
+            $result = $this->db->update('iservice_app_img', $info, array('id' => $id));
         }
-        
+
         return $result;
     }
 

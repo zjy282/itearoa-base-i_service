@@ -17,9 +17,25 @@ class AppImgModel extends \BaseModel {
      * @return array
      */
     public function getAppImgList(array $param) {
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
+        isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getAppImgList($paramList);
+    }
+
+    /**
+     * 获取AppImg数量
+     *
+     * @param
+     *            array param 查询条件
+     * @return array
+     */
+    public function getAppImgCount(array $param) {
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
+        isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
+        return $this->dao->getAppImgCount($paramList);
     }
 
     /**
@@ -48,9 +64,9 @@ class AppImgModel extends \BaseModel {
      */
     public function updateAppImgById($param, $id) {
         $result = false;
-        // 自行添加要更新的字段,以下是age字段是样例
         if ($id) {
-            $info['age'] = intval($param['age']);
+            !is_null($param['pickey']) ? $info['pickey'] = $param['pickey'] : false;
+            !is_null($param['status']) ? $info['status'] = $param['status'] : false;
             $result = $this->dao->updateAppImgById($info, $id);
         }
         return $result;
@@ -64,8 +80,9 @@ class AppImgModel extends \BaseModel {
      * @return array
      */
     public function addAppImg($param) {
-        // 自行添加要添加的字段,以下是age字段是样例
-        $info['age'] = intval($param['age']);
+        !is_null($param['pickey']) ? $info['pickey'] = $param['pickey'] : false;
+        !is_null($param['status']) ? $info['status'] = $param['status'] : false;
+        $info['createtime'] = time();
         return $this->dao->addAppImg($info);
     }
 

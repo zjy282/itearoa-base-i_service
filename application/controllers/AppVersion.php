@@ -2,8 +2,13 @@
 
 class AppVersionController extends \BaseController {
 
+    /**
+     * @var AppVersionModel
+     */
     private $model;
-
+    /**
+     * @var Convertor_AppVersion
+     */
     private $convertor;
 
     public function init() {
@@ -19,10 +24,17 @@ class AppVersionController extends \BaseController {
      */
     public function getAppVersionListAction() {
         $param = array();
-        $param['name'] = trim($this->getParamList('name'));
+
+        $param['page'] = intval($this->getParamList('page'));
+        $param['limit'] = intval($this->getParamList('limit', 5));
+        $param['id'] = intval($this->getParamList('id'));
+        $param['platform'] = $this->getParamList('platform');
+        $param['forced'] = $this->getParamList('forced');
+        $param['latest'] = $this->getParamList('latest');
         $data = $this->model->getAppVersionList($param);
-        $data = $this->convertor->getAppVersionListConvertor($data);
-        $this->echoJson($data);
+        $count = $this->model->getAppVersionCount($param);
+        $data = $this->convertor->getAppVersionListConvertor($data, $count, $param);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -56,13 +68,17 @@ class AppVersionController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
-            $param['name'] = trim($this->getParamList('name'));
+            $param['platform'] = intval($this->getParamList('platform'));
+            $param['forced'] = intval($this->getParamList('forced'));
+            $param['version'] = $this->getParamList('version');
+            $param['description'] = $this->getParamList('description');
+            $param['latest'] = intval($this->getParamList('latest'));
             $data = $this->model->updateAppVersionById($param, $id);
-            $data = $this->convertor->commonConvertor($data);
+            $data = $this->convertor->statusConvertor(array('id' => $data));
         } else {
             $this->throwException(1, 'id不能为空');
         }
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -74,10 +90,14 @@ class AppVersionController extends \BaseController {
      */
     public function addAppVersionAction() {
         $param = array();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['platform'] = intval($this->getParamList('platform'));
+        $param['forced'] = intval($this->getParamList('forced'));
+        $param['version'] = $this->getParamList('version');
+        $param['description'] = $this->getParamList('description');
+        $param['latest'] = intval($this->getParamList('latest'));
         $data = $this->model->addAppVersion($param);
-        $data = $this->convertor->commonConvertor($data);
-        $this->echoJson($data);
+        $data = $this->convertor->statusConvertor(array('id' => $data));
+        $this->echoSuccessData($data);
     }
 
     /**

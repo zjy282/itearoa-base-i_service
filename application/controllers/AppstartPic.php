@@ -2,8 +2,13 @@
 
 class AppstartPicController extends \BaseController {
 
+    /**
+     * @var AppstartPicModel
+     */
     private $model;
-
+    /**
+     * @var Convertor_AppstartPic
+     */
     private $convertor;
 
     public function init() {
@@ -19,10 +24,17 @@ class AppstartPicController extends \BaseController {
      */
     public function getAppstartPicListAction() {
         $param = array();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['page'] = intval($this->getParamList('page'));
+        $param['limit'] = intval($this->getParamList('limit', 5));
+        $param['id'] = intval($this->getParamList('id'));
+        $param['status'] = $this->getParamList('status');
+        if (is_null($param['status'])) {
+            unset($param['status']);
+        }
         $data = $this->model->getAppstartPicList($param);
-        $data = $this->convertor->getAppstartPicListConvertor($data);
-        $this->echoJson($data);
+        $count = $this->model->getAppstartPicCount($param);
+        $data = $this->convertor->getAppstartPicListConvertor($data, $count, $param);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -56,13 +68,15 @@ class AppstartPicController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
-            $param['name'] = trim($this->getParamList('name'));
+            $param['pic'] = $this->getParamList('pic');
+            $param['status'] = $this->getParamList('status');
+            $param['link'] = $this->getParamList('link');
             $data = $this->model->updateAppstartPicById($param, $id);
-            $data = $this->convertor->commonConvertor($data);
+            $data = $this->convertor->statusConvertor(array('id' => $data));
         } else {
             $this->throwException(1, 'id不能为空');
         }
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -74,15 +88,17 @@ class AppstartPicController extends \BaseController {
      */
     public function addAppstartPicAction() {
         $param = array();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['pic'] = $this->getParamList('pic');
+        $param['status'] = intval($this->getParamList('status'));
+        $param['link'] = $this->getParamList('link');
         $data = $this->model->addAppstartPic($param);
-        $data = $this->convertor->commonConvertor($data);
-        $this->echoJson($data);
+        $data = $this->convertor->statusConvertor(array('id' => $data));
+        $this->echoSuccessData($data);
     }
 
     /**
      * 获取当前可用的APP广告图
-     * 
+     *
      * @return Json
      */
     public function getEffectiveAppStartPicAction() {
