@@ -2,8 +2,14 @@
 
 class IserviceFeedbackController extends \BaseController {
 
+    /**
+     * @var IserviceFeedbackModel
+     */
     private $model;
 
+    /**
+     * @var Convertor_IserviceFeedback
+     */
     private $convertor;
 
     public function init() {
@@ -21,14 +27,17 @@ class IserviceFeedbackController extends \BaseController {
         $param = array();
         $param['page'] = intval($this->getParamList('page', 1));
         $param['limit'] = intval($this->getParamList('limit', 5));
+        $param['id'] = intval($this->getParamList('id'));
+        $param['email'] = intval($this->getParamList('email'));
         $data = $this->model->getIserviceFeedbackList($param);
-        $data = $this->convertor->getIserviceFeedbackListConvertor($data);
-        $this->echoJson($data);
+        $count = $this->model->getIserviceFeedbackCount($param);
+        $data = $this->convertor->getIserviceFeedbackListConvertor($data, $count, $param);
+        $this->echoSuccessData($data);
     }
 
     /**
      * 根据id获取IserviceFeedback详情
-     * 
+     *
      * @param
      *            int id 获取详情信息的id
      * @return Json
@@ -46,7 +55,7 @@ class IserviceFeedbackController extends \BaseController {
 
     /**
      * 根据id修改IserviceFeedback信息
-     * 
+     *
      * @param
      *            int id 获取详情信息的id
      * @param
@@ -70,7 +79,7 @@ class IserviceFeedbackController extends \BaseController {
 
     /**
      * 添加IserviceFeedback信息
-     * 
+     *
      * @param
      *            array param 需要新增的信息
      * @return Json
@@ -82,7 +91,7 @@ class IserviceFeedbackController extends \BaseController {
         if (empty($param['email'])) {
             $this->throwException(2, '联系邮箱不能为空');
         }
-        
+
         if (empty($param['content'])) {
             $this->throwException(2, '反馈信息不能为空');
         }
