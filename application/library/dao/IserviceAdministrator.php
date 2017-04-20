@@ -16,7 +16,7 @@ class Dao_IserviceAdministrator extends Dao_Base {
     public function getIserviceAdministratorList(array $param): array {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
-        
+
         $paramSql = $this->handlerListParams($param);
         $sql = "select * from iservice_administrator {$paramSql['sql']}";
         if ($limit) {
@@ -44,8 +44,12 @@ class Dao_IserviceAdministrator extends Dao_Base {
         $whereSql = array();
         $whereCase = array();
         if (isset($param['id'])) {
-            $whereSql[] = 'id = ?';
-            $whereCase[] = $param['id'];
+            if (is_array($param['id'])) {
+                $whereSql[] = 'id in (' . implode(',', $param['id']) . ')';
+            } else {
+                $whereSql[] = 'id = ?';
+                $whereCase[] = $param['id'];
+            }
         }
         if (isset($param['username'])) {
             $whereSql[] = 'username = ?';
@@ -71,14 +75,14 @@ class Dao_IserviceAdministrator extends Dao_Base {
      */
     public function getIserviceAdministratorDetailByUsername(string $username): array {
         $result = array();
-        
+
         if ($username) {
             $sql = "select * from iservice_administrator where username=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $username
             ));
         }
-        
+
         return $result;
     }
 
@@ -91,14 +95,14 @@ class Dao_IserviceAdministrator extends Dao_Base {
      */
     public function getIserviceAdministratorDetail(int $id): array {
         $result = array();
-        
+
         if ($id) {
             $sql = "select * from iservice_administrator where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
         }
-        
+
         return $result;
     }
 
@@ -113,13 +117,13 @@ class Dao_IserviceAdministrator extends Dao_Base {
      */
     public function updateIserviceAdministratorById(array $info, int $id) {
         $result = false;
-        
+
         if ($id) {
             $result = $this->db->update('iservice_administrator', $info, array(
                 'id' => $id
             ));
         }
-        
+
         return $result;
     }
 

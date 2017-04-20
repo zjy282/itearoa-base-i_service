@@ -45,8 +45,12 @@ class Dao_HotelAdministrator extends Dao_Base {
         $whereSql = array();
         $whereCase = array();
         if (isset($param['id'])) {
-            $whereSql[] = 'id = ?';
-            $whereCase[] = $param['id'];
+            if (is_array($param['id'])) {
+                $whereSql[] = 'id in (' . implode(',', $param['id']) . ')';
+            } else {
+                $whereSql[] = 'id = ?';
+                $whereCase[] = $param['id'];
+            }
         }
         if (isset($param['hotelid'])) {
             $whereSql[] = 'hotelid = ?';

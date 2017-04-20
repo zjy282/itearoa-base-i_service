@@ -2,8 +2,14 @@
 
 class OperateLogController extends \BaseController {
 
+    /**
+     * @var OperateLogModel
+     */
     private $model;
 
+    /**
+     * @var Convertor_OperateLog
+     */
     private $convertor;
 
     public function init() {
@@ -19,10 +25,17 @@ class OperateLogController extends \BaseController {
      */
     public function getOperateLogListAction() {
         $param = array();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['page'] = intval($this->getParamList('page', 1));
+        $param['limit'] = intval($this->getParamList('limit', 5));
+        $param['operatorid'] = intval($this->getParamList('operatorid'));
+        $param['module'] = intval($this->getParamList('module'));
+        $param['code'] = $this->getParamList('code');
+        $param['admintype'] = intval($this->getParamList('admintype'));
+        $param['admintypeid'] = intval($this->getParamList('admintypeid'));
         $data = $this->model->getOperateLogList($param);
-        $data = $this->convertor->getOperateLogListConvertor($data);
-        $this->echoJson($data);
+        $count = $this->model->getOperateLogCount($param);
+        $data = $this->convertor->getOperateLogListConvertor($data, $count, $param);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -83,6 +96,7 @@ class OperateLogController extends \BaseController {
         $param['ip'] = trim($this->getParamList('ip'));
         $param['miscinfo'] = trim($this->getParamList('miscinfo'));
         $param['admintype'] = intval($this->getParamList('admintype'));
+        $param['admintypeid'] = intval($this->getParamList('admintypeid'));
         $insertId = $this->model->addOperateLog($param);
         $this->echoSuccessData(array(
             'dataId' => $insertId
