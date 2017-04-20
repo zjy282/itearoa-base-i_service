@@ -16,21 +16,66 @@ class Dao_User extends Dao_Base {
     public function getUserList(array $param): array {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
-        
+
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select * from hotel_user {$paramSql['sql']}";
+        if ($limit) {
+            $sql .= " limit {$page},{$limit}";
+        }
+        $result = $this->db->fetchAll($sql, $paramSql['case']);
+        return is_array($result) ? $result : array();
+    }
+
+    /**
+     * 查询hotel_user数量
+     *
+     * @param
+     *            array 入参
+     * @return array
+     */
+    public function getUserCount(array $param): int {
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select count(1) as count from hotel_user {$paramSql['sql']}";
+        $result = $this->db->fetchAssoc($sql, $paramSql['case']);
+        return intval($result['count']);
+    }
+
+    private function handlerListParams($param) {
         $whereSql = array();
         $whereCase = array();
+        if (isset($param['id'])) {
+            if (is_array($param['id'])) {
+                $whereSql[] = 'id in (' . implode(',', $param['id']) . ')';
+            } else {
+                $whereSql[] = 'id = ?';
+                $whereCase[] = $param['id'];
+            }
+        }
         if (isset($param['oid'])) {
             $whereSql[] = 'oid = ?';
             $whereCase[] = $param['oid'];
         }
-        $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
-        
-        $sql = "select * from hotel_user {$whereSql}";
-        if ($limit) {
-            $sql .= " limit {$page},{$limit}";
+        if ($param['room_no']) {
+            $whereSql[] = 'room_no = ?';
+            $whereCase[] = $param['room_no'];
         }
-        $result = $this->db->fetchAll($sql, $whereCase);
-        return is_array($result) ? $result : array();
+        if ($param['fullname']) {
+            $whereSql[] = 'fullname = ?';
+            $whereCase[] = $param['fullname'];
+        }
+        if ($param['hotelid']) {
+            $whereSql[] = 'hotelid = ?';
+            $whereCase[] = $param['hotelid'];
+        }
+        if ($param['groupid']) {
+            $whereSql[] = 'groupid = ?';
+            $whereCase[] = $param['groupid'];
+        }
+        $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
+        return array(
+            'sql' => $whereSql,
+            'case' => $whereCase
+        );
     }
 
     /**
@@ -42,14 +87,14 @@ class Dao_User extends Dao_Base {
      */
     public function getUserDetail(int $id): array {
         $result = array();
-        
+
         if ($id) {
             $sql = "select * from hotel_user where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
         }
-        
+
         return $result;
     }
 
@@ -62,14 +107,14 @@ class Dao_User extends Dao_Base {
      */
     public function getUserDetailByOId($oId) {
         $result = array();
-        
+
         if ($oId) {
             $sql = "select * from hotel_user where oid=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $oId
             ));
         }
-        
+
         return $result;
     }
 
@@ -84,7 +129,7 @@ class Dao_User extends Dao_Base {
      */
     public function updateUserById(array $info, int $id) {
         $result = false;
-        
+
         if ($id) {
             $result = $this->db->update('hotel_user', $info, array(
                 'id' => $id

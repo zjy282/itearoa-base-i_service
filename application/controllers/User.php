@@ -2,8 +2,14 @@
 
 class UserController extends \BaseController {
 
+    /**
+     * @var UserModel
+     */
     private $model;
 
+    /**
+     * @var Convertor_User
+     */
     private $convertor;
 
     public function init() {
@@ -19,10 +25,19 @@ class UserController extends \BaseController {
      */
     public function getUserListAction() {
         $param = array();
-        $param['name'] = trim($this->getParamList('name'));
+
+        $param['page'] = intval($this->getParamList('page'));
+        $param['limit'] = intval($this->getParamList('limit', 5));
+        $param['id'] = intval($this->getParamList('id'));
+        $param['room_no'] = $this->getParamList('room_no');
+        $param['fullname'] = $this->getParamList('fullname');
+        $param['hotelid'] = intval($this->getParamList('hotelid'));
+        $param['groupid'] = intval($this->getParamList('groupid'));
+        $param['oid'] = $this->getParamList('oid');
         $data = $this->model->getUserList($param);
-        $data = $this->convertor->getUserListConvertor($data);
-        $this->echoJson($data);
+        $count = $this->model->getUserCount($param);
+        $data = $this->convertor->getUserListConvertor($data, $count, $param);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -108,7 +123,7 @@ class UserController extends \BaseController {
         $param['platform'] = intval($this->getParamList('platform'));
         $param['identity'] = trim($this->getParamList('identity'));
         $param['lang'] = trim($this->getParamList('lang'));
-        
+
         $result = $this->model->loginAction($param);
         $result = $this->convertor->userInfoConvertor($result);
         $this->echoSuccessData($result);
@@ -135,7 +150,7 @@ class UserController extends \BaseController {
 
     /**
      * 更新用户语言，切换语言的时候调用
-     * 
+     *
      * @param
      *            string token
      * @param
@@ -156,17 +171,17 @@ class UserController extends \BaseController {
         $param['platform'] = intval($this->getParamList('platform'));
         $param['identity'] = trim($this->getParamList('identity'));
         $param['language'] = trim($this->getParamList('lang'));
-        
+
         if (empty($param['platform']) || empty($param['identity']) || empty($param['language'])) {
             $this->throwException(3, '入参错误');
         }
         $langNameList = Enum_Lang::getLangNameList();
-        if (! $langNameList[$param['language']]) {
+        if (!$langNameList[$param['language']]) {
             $this->throwException(5, '暂不支持该语言');
         }
-        
+
         $result = $this->model->updateUserById($param, $userId);
-        if (! $result) {
+        if (!$result) {
             $this->throwException(4, '更新失败');
         }
         $userInfo = $this->model->getUserDetail($userId);

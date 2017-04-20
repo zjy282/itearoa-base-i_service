@@ -18,9 +18,32 @@ class UserModel extends \BaseModel {
      */
     public function getUserList(array $param) {
         isset($param['oid']) ? $paramList['oid'] = trim($param['oid']) : false;
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
+        $param['room_no'] ? $paramList['room_no'] = $param['room_no'] : false;
+        $param['fullname'] ? $paramList['fullname'] = $param['fullname'] : false;
+        $param['hotelid'] ? $paramList['hotelid'] = $param['hotelid'] : false;
+        $param['groupid'] ? $paramList['groupid'] = $param['groupid'] : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getUserList($paramList);
+    }
+
+    /**
+     * 获取User数量
+     *
+     * @param
+     *            array param 查询条件
+     * @return array
+     */
+    public function getUserCount(array $param) {
+        $paramList = array();
+        isset($param['oid']) ? $paramList['oid'] = trim($param['oid']) : false;
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
+        $param['room_no'] ? $paramList['room_no'] = $param['room_no'] : false;
+        $param['fullname'] ? $paramList['fullname'] = $param['fullname'] : false;
+        $param['hotelid'] ? $paramList['hotelid'] = $param['hotelid'] : false;
+        $param['groupid'] ? $paramList['groupid'] = $param['groupid'] : false;
+        return $this->dao->getUserCount($paramList);
     }
 
     /**
@@ -118,7 +141,7 @@ class UserModel extends \BaseModel {
     /**
      * 登录
      *
-     * @param array $param            
+     * @param array $param
      * @return array
      */
     public function loginAction($param) {
@@ -128,24 +151,24 @@ class UserModel extends \BaseModel {
         if (empty($param['hotelid']) || empty($param['groupid'])) {
             $this->throwException('酒店集团信息不正确', 3);
         }
-        
+
         if ($param['lang']) {
             $langNameList = Enum_Lang::getLangNameList();
-            if (! $langNameList[$param['lang']]) {
+            if (!$langNameList[$param['lang']]) {
                 $this->throwException('暂不支持该语言', 6);
             }
         }
-        
+
         // 获取Oid
         $oIdInfo = $this->getOIdInfo($param);
         if (empty($oIdInfo['oId'])) {
             $this->throwException('房间号和名称错误，登录失败', 4);
         }
-        
+
         // 获取用户信息
         $getUserInfo = $this->getUserDetailByOId($oIdInfo['oId']);
         $userId = $getUserInfo['id'];
-        
+
         $newUserInfo = array(
             'hotelid' => $param['hotelid'],
             'groupid' => $param['groupid'],
@@ -155,7 +178,7 @@ class UserModel extends \BaseModel {
             'identity' => trim($param['identity']),
             'language' => trim($param['lang'])
         );
-        
+
         // 入住记录数据
         $userHistoryModel = new UserHistoryModel();
         $historyInfo = array(
@@ -164,7 +187,7 @@ class UserModel extends \BaseModel {
         );
         if ($userId) {
             // 更新用户数据
-            if (! $this->updateUserById($newUserInfo, $userId)) {
+            if (!$this->updateUserById($newUserInfo, $userId)) {
                 $this->throwException('登录失败，请重试', 5);
             }
             if ($param['hotelid'] != $getUserInfo['hotelid']) {
@@ -175,7 +198,7 @@ class UserModel extends \BaseModel {
             // 新建用户
             $newUserInfo['oid'] = $oIdInfo['oId'];
             $userId = $this->addUser($newUserInfo);
-            if (! $userId) {
+            if (!$userId) {
                 $this->throwException('登录失败，请重试', 5);
             }
             $historyInfo['userid'] = $userId;
