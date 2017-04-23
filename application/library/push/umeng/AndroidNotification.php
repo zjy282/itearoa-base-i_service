@@ -1,7 +1,5 @@
 <?php
-require_once ('UmengNotification.php');
-
-abstract class AndroidNotification extends UmengNotification {
+abstract class Push_Umeng_AndroidNotification extends Push_Umeng_UmengNotification {
     // The array for payload, please see API doc for more information
     protected $androidPayload = array(
         "display_type" => "notification",

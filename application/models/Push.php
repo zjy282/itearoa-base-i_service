@@ -87,12 +87,17 @@ class PushModel extends \BaseModel {
         if (empty($info['type'])) {
             $this->throwException('推送类型错误', 3);
         }
-        if ($info['type'] != Enum_Push::PUSH_TYPE_ALL) {
+
+        if ($info['type'] == Enum_Push::PUSH_TYPE_ALL) {
+
+        } else if (){ //用户别名
             $dataId = array_unique(array_filter(explode(",", $param['dataid'])));
             if (empty($dataId)) {
                 $this->throwException('推送数据ID错误', 2);
             }
             $info['dataid'] = implode(',', $dataId);
+        } else if (){ //tag推送
+            
         }
 
         $info['cn_title'] = $param['cn_title'];
@@ -109,6 +114,7 @@ class PushModel extends \BaseModel {
         }
 
         //@TODO 需要接入推送并保存推送结果状态
+
         $info['result'] = intval($pushResult);
         $info['createtime'] = time();
 

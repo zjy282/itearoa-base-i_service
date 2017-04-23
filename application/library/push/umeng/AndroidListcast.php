@@ -1,7 +1,6 @@
 <?php
-require_once (dirname(__FILE__) . '/../AndroidNotification.php');
 
-class AndroidListcast extends AndroidNotification {
+class Push_Umeng_AndroidListcast extends Push_Umeng_AndroidNotification {
 
     function __construct() {
         parent::__construct();

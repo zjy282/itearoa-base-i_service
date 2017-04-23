@@ -1,6 +1,6 @@
 <?php
 
-abstract class UmengNotification {
+abstract class Push_Umeng_UmengNotification {
     // The host
     protected $host = "http://msg.umeng.com";
     

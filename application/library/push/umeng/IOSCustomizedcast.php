@@ -1,15 +1,20 @@
 <?php
-require_once (dirname(__FILE__) . '/../AndroidNotification.php');
 
-class AndroidFilecast extends AndroidNotification {
+class Push_Umeng_IOSCustomizedcast extends Push_Umeng_IOSNotification {
 
     function __construct() {
         parent::__construct();
-        $this->data["type"] = "filecast";
-        $this->data["file_id"] = NULL;
+        $this->data["type"] = "customizedcast";
+        $this->data["alias_type"] = NULL;
+    }
+
+    function isComplete() {
+        parent::isComplete();
+        if (! array_key_exists("alias", $this->data) && ! array_key_exists("file_id", $this->data))
+            throw new Exception("You need to set alias or upload file for customizedcast!");
     }
     
-    // return file_id if SUCCESS, else throw Exception with details.
+    // Upload file with device_tokens or alias to Umeng
     function uploadContents($content) {
         if ($this->data["appkey"] == NULL)
             throw new Exception("appkey should not be NULL!");

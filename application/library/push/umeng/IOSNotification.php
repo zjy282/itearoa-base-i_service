@@ -1,7 +1,5 @@
 <?php
-require_once ('UmengNotification.php');
-
-abstract class IOSNotification extends UmengNotification {
+abstract class Push_Umeng_IOSNotification extends Push_Umeng_UmengNotification {
     // The array for payload, please see API doc for more information
     protected $iosPayload = array(
         "aps" => array(

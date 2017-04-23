@@ -1,7 +1,6 @@
 <?php
-require_once (dirname(__FILE__) . '/../IOSNotification.php');
 
-class IOSBroadcast extends IOSNotification {
+class Push_Umeng_AndroidBroadcast extends Push_Umeng_AndroidNotification {
 
     function __construct() {
         parent::__construct();
