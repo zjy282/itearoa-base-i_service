@@ -17,7 +17,9 @@ class ActivityModel extends \BaseModel {
      * @return array
      */
     public function getActivityList(array $param) {
-        isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $param['id'] ? $paramList['id'] = intval($param['id']) : false;
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $param['groupid'] ? $paramList['groupid'] = intval($param['groupid']) : false;
         $param['tagid'] ? $paramList['tagid'] = intval($param['tagid']) : false;
         isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
         $paramList['limit'] = $param['limit'];
@@ -33,7 +35,10 @@ class ActivityModel extends \BaseModel {
      * @return array
      */
     public function getActivityCount(array $param) {
-        isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = intval($param['id']) : false;
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $param['groupid'] ? $paramList['groupid'] = intval($param['groupid']) : false;
         $param['tagid'] ? $paramList['tagid'] = intval($param['tagid']) : false;
         isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
         return $this->dao->getActivityCount($paramList);

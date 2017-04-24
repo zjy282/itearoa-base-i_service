@@ -19,6 +19,7 @@ class PushModel extends \BaseModel {
     public function getPushList(array $param) {
         $param['id'] ? $paramList['id'] = $param['id'] : false;
         $param['type'] ? $paramList['type'] = $param['type'] : false;
+        $param['dataid'] ? $paramList['dataid'] = $param['dataid'] : false;
         isset($param['result']) ? $paramList['result'] = intval($param['result']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
@@ -36,6 +37,7 @@ class PushModel extends \BaseModel {
         $paramList = array();
         $param['id'] ? $paramList['id'] = $param['id'] : false;
         $param['type'] ? $paramList['type'] = $param['type'] : false;
+        $param['dataid'] ? $paramList['dataid'] = $param['dataid'] : false;
         isset($param['result']) ? $paramList['result'] = intval($param['result']) : false;
         return $this->dao->getPushCount($paramList);
     }
@@ -89,17 +91,17 @@ class PushModel extends \BaseModel {
         }
         $config = Enum_Push::getConfig('umeng');
         $push = new Push_Push(
-                array(
-                    'android'=>$config['android']['appKey'],
-                    'ios'=>$config['ios']['appKey'],
-                    ),
-                array(
-                    'android'=>$config['android']['secretKey'],
-                    'ios'=>$config['ios']['secretKey'],
-                    )
-                );
+            array(
+                'android' => $config['android']['appKey'],
+                'ios' => $config['ios']['appKey'],
+            ),
+            array(
+                'android' => $config['android']['secretKey'],
+                'ios' => $config['ios']['secretKey'],
+            )
+        );
 
-        switch ($info['type']){
+        switch ($info['type']) {
             case Enum_Push::PUSH_TYPE_ALL :
                 $info['tag'] == Enum_Push::PUSH_TAG_LANG_CN;
                 $info['title'] = $param['cnTitle'];
@@ -126,12 +128,12 @@ class PushModel extends \BaseModel {
                 break;
             case Enum_Push::PUSH_TYPE_TAG : //tag推送
                 $dataId = array_unique(array_filter(explode(",", $param['dataid'])));
-                if (count($dataId) > 0){
+                if (count($dataId) > 0) {
                     $info['alias'] = implode(',', $dataId);
                     $info['alias_type'] = 'customizedcast';
                 }
-                $param['hotelId'] ? $info['tag'][] = Enum_Push::PUSH_TAG_HOTEL_PREFIX.$param['hotelId'] : false;
-                $param['groupId'] ? $info['tag'][] = Enum_Push::PUSH_TAG_GROUP_PREFIX.$param['groupId'] : false;
+                $param['hotelId'] ? $info['tag'][] = Enum_Push::PUSH_TAG_HOTEL_PREFIX . $param['hotelId'] : false;
+                $param['groupId'] ? $info['tag'][] = Enum_Push::PUSH_TAG_GROUP_PREFIX . $param['groupId'] : false;
                 $info['title'] = $param['cnTitle'];
                 $info['value'] = $param['cnValue'];
                 $info['url'] = $param['url'];
@@ -150,6 +152,8 @@ class PushModel extends \BaseModel {
 
         $info['result'] = intval($pushResult);
         $info['createtime'] = time();
+        var_dump($param);
+        exit;
 
         return $this->dao->addPush($info);
     }

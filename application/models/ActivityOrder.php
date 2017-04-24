@@ -17,13 +17,33 @@ class ActivityOrderModel extends \BaseModel {
      * @return array
      */
     public function getActivityOrderList(array $param) {
-        isset($param['name']) ? $paramList['name'] = strval($param['name']) : false;
-        isset($param['phone']) ? $paramList['phone'] = strval($param['phone']) : false;
-        isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
-        isset($param['activityid']) ? $paramList['activityid'] = intval($param['activityid']) : false;
+        $param['id'] ? $paramList['id'] = strval($param['id']) : false;
+        $param['name'] ? $paramList['name'] = strval($param['name']) : false;
+        $param['phone'] ? $paramList['phone'] = strval($param['phone']) : false;
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $param['groupid'] ? $paramList['groupid'] = intval($param['groupid']) : false;
+        $param['activityid'] ? $paramList['activityid'] = intval($param['activityid']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getActivityOrderList($paramList);
+    }
+
+    /**
+     * 获取ActivityOrder数量
+     *
+     * @param
+     *            array param 查询条件
+     * @return array
+     */
+    public function getActivityOrderCount(array $param) {
+        $paramList = array();
+        isset($param['id']) ? $paramList['id'] = strval($param['id']) : false;
+        isset($param['name']) ? $paramList['name'] = strval($param['name']) : false;
+        isset($param['phone']) ? $paramList['phone'] = strval($param['phone']) : false;
+        isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        isset($param['groupid']) ? $paramList['groupid'] = intval($param['groupid']) : false;
+        isset($param['activityid']) ? $paramList['activityid'] = intval($param['activityid']) : false;
+        return $this->dao->getActivityOrderCount($paramList);
     }
 
     /**
@@ -73,6 +93,7 @@ class ActivityOrderModel extends \BaseModel {
         $info['hotelid'] = intval($param['hotelid']);
         $info['activityid'] = intval($param['activityid']);
         $info['userid'] = intval($param['userid']);
+        $info['groupid'] = intval($param['groupid']);
         $info['creattime'] = time();
         return $this->dao->addActivityOrder($info);
     }

@@ -88,6 +88,27 @@ class Dao_Administrator extends Dao_Base {
     }
 
     /**
+     * 根据username查询group_administrator详情
+     *
+     * @param
+     *            string username
+     * @return array
+     */
+    public function getAdministratorDetailByUsername(string $username): array {
+        $result = array();
+
+        if ($username) {
+            $sql = "select * from group_administrator where username=?";
+            $result = $this->db->fetchAssoc($sql, array(
+                $username
+            ));
+            $result = $result ? $result : array();
+        }
+
+        return $result;
+    }
+
+    /**
      * 根据id更新group_administrator
      * @param array 需要更新的数据
      * @param int id

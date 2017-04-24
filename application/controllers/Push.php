@@ -28,6 +28,7 @@ class PushController extends \BaseController {
         $param['limit'] = intval($this->getParamList('limit', 5));
         $param['id'] = intval($this->getParamList('id'));
         $param['type'] = intval($this->getParamList('type'));
+        $param['dataid'] = $this->getParamList('dataid');
         $param['result'] = $this->getParamList('result');
         if (is_null($param['result'])) {
             unset($param['result']);

@@ -16,7 +16,7 @@ class Dao_Activity extends Dao_Base {
     public function getActivityList(array $param): array {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
-        
+
         $paramSql = $this->handlerActivityListParams($param);
         $sql = "select * from hotel_activity {$paramSql['sql']}";
         if ($limit) {
@@ -43,6 +43,14 @@ class Dao_Activity extends Dao_Base {
     private function handlerActivityListParams($param) {
         $whereSql = array();
         $whereCase = array();
+        if (isset($param['id'])) {
+            if (is_array($param['id'])) {
+                $whereSql[] = 'id in (' . implode(',', $param['id']) . ')';
+            } else {
+                $whereSql[] = 'id = ?';
+                $whereCase[] = $param['id'];
+            }
+        }
         if (isset($param['hotelid'])) {
             $whereSql[] = 'hotelid = ?';
             $whereCase[] = $param['hotelid'];
@@ -71,14 +79,14 @@ class Dao_Activity extends Dao_Base {
      */
     public function getActivityDetail(int $id): array {
         $result = array();
-        
+
         if ($id) {
             $sql = "select * from hotel_activity where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
         }
-        
+
         return $result;
     }
 
@@ -93,11 +101,11 @@ class Dao_Activity extends Dao_Base {
      */
     public function updateActivityById(array $info, int $id) {
         $result = false;
-        
+
         if ($id) {
             $result = $this->db->update('hotel_activity', $info, $id);
         }
-        
+
         return $result;
     }
 

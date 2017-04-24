@@ -93,23 +93,27 @@ class IserviceAdministratorModel extends \BaseModel {
         isset($param['status']) ? $info['status'] = $param['status'] : false;
         isset($param['createAdmin']) ? $info['createadmin'] = $param['createAdmin'] : false;
         $info['createtime'] = $param['createTime'];
+        $userInfo = $this->dao->getIserviceAdministratorDetailByUsername($info['username']);
+        if ($userInfo) {
+            $this->throwException('用户名已经存在', 2);
+        }
         return $this->dao->addIserviceAdministrator($info);
     }
 
     /**
      * 登录
      *
-     * @param array $param            
+     * @param array $param
      */
     public function login($param) {
         $username = trim($param['username']);
         $password = md5(trim($param['password']));
         $ip = Util_Tools::ipton($param['ip'] ? $param['ip'] : Util_Http::getIP());
-        
-        if (! $username || ! $password) {
+
+        if (!$username || !$password) {
             $this->throwException('用户名或密码不能为空！', 3);
         }
-        
+
         $userInfo = $this->dao->getIserviceAdministratorDetailByUsername($username);
         if ($userInfo['password'] != $password) {
             $this->throwException('用户名或密码错误！', 4);
@@ -117,12 +121,12 @@ class IserviceAdministratorModel extends \BaseModel {
         if ($userInfo['status'] != 1) {
             $this->throwException('该用户已经被禁用!', 5);
         }
-        
+
         $updateParam = array();
         $userInfo['lastloginip'] = $updateParam['lastloginip'] = $ip;
         $userInfo['lastlogintime'] = $updateParam['lastlogintime'] = time();
         $this->dao->updateIserviceAdministratorById($updateParam, $userInfo['id']);
-        
+
         return $userInfo;
     }
 
@@ -130,8 +134,8 @@ class IserviceAdministratorModel extends \BaseModel {
         $userid = intval($param['userid']);
         $oldpass = trim($param['oldpass']);
         $newpass = trim($param['newpass']);
-        
-        if (! $userid || ! $oldpass || ! $newpass) {
+
+        if (!$userid || !$oldpass || !$newpass) {
             $this->throwException('参数错误！', 3);
         }
         $userInfo = $this->dao->getIserviceAdministratorDetail($userid);
@@ -143,7 +147,8 @@ class IserviceAdministratorModel extends \BaseModel {
         }
         if ($this->dao->updateIserviceAdministratorById(array(
             'password' => $newpass
-        ), $userid)) {
+        ), $userid)
+        ) {
             return $userInfo;
         } else {
             $this->throwException('修改失败', 6);

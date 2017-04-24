@@ -2,14 +2,39 @@
 
 class ActivityController extends \BaseController {
 
+    /**
+     * @var ActivityModel
+     */
     private $model;
-
+    /**
+     * @var Convertor_Activity
+     */
     private $convertor;
 
     public function init() {
         parent::init();
         $this->model = new ActivityModel();
         $this->convertor = new Convertor_Activity();
+    }
+
+    /**
+     * 获取可用Activity列表
+     *
+     * @return Json
+     */
+    public function getEffectiveActivityListAction() {
+        $param = array();
+        $param['hotelid'] = intval($this->getParamList('hotelid'));
+        $param['groupid'] = intval($this->getParamList('groupid'));
+        $param['tagid'] = intval($this->getParamList('tagid'));
+        $param['status'] = 1;
+        $this->getPageParam($param);
+        $activityList = $this->model->getActivityList($param);
+        $activityCount = $this->model->getActivityCount($param);
+        $activityTagModel = new ActivityTagModel();
+        $tagList = $activityTagModel->getActivityTagList($param);
+        $data = $this->convertor->getEffectiveActivityListConvertor($activityList, $tagList, $activityCount, $param);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -20,14 +45,16 @@ class ActivityController extends \BaseController {
     public function getActivityListAction() {
         $param = array();
         $param['hotelid'] = intval($this->getParamList('hotelid'));
+        $param['groupid'] = intval($this->getParamList('groupid'));
         $param['tagid'] = intval($this->getParamList('tagid'));
-        $param['status'] = 1;
+        $param['status'] = $this->getParamList('status');
+        if (is_null($param['status'])) {
+            unset($param['status']);
+        }
         $this->getPageParam($param);
         $activityList = $this->model->getActivityList($param);
         $activityCount = $this->model->getActivityCount($param);
-        $activityTagModel = new ActivityTagModel();
-        $tagList = $activityTagModel->getActivityTagList($param);
-        $data = $this->convertor->getActivityListConvertor($activityList, $tagList, $activityCount, $param);
+        $data = $this->convertor->getActivityListConvertor($activityList, $activityCount, $param);
         $this->echoSuccessData($data);
     }
 

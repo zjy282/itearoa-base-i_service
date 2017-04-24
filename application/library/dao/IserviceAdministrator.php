@@ -81,6 +81,7 @@ class Dao_IserviceAdministrator extends Dao_Base {
             $result = $this->db->fetchAssoc($sql, array(
                 $username
             ));
+            $result = $result ? $result : array();
         }
 
         return $result;

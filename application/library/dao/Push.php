@@ -49,6 +49,14 @@ class Dao_Push extends Dao_Base {
                 $whereCase[] = $param['id'];
             }
         }
+        if (isset($param['dataid'])) {
+            if (is_array($param['dataid'])) {
+                $whereSql[] = 'dataid in (' . implode(',', $param['dataid']) . ')';
+            } else {
+                $whereSql[] = 'dataid = ?';
+                $whereCase[] = $param['dataid'];
+            }
+        }
         if (isset($param['type'])) {
             $whereSql[] = 'type = ?';
             $whereCase[] = $param['type'];

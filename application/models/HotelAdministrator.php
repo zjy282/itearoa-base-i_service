@@ -92,6 +92,7 @@ class HotelAdministratorModel extends \BaseModel {
         isset($param['id']) ? $info['id'] = $param['id'] : false;
         isset($param['userName']) ? $info['username'] = $param['userName'] : false;
         isset($param['realName']) ? $info['realname'] = $param['realName'] : false;
+        isset($param['password']) ? $info['password'] = $param['password'] : false;
         isset($param['remark']) ? $info['remark'] = $param['remark'] : false;
         isset($param['status']) ? $info['status'] = intval($param['status']) : false;
         isset($param['lastLoginTime']) ? $info['lastlogintime'] = $param['lastLoginTime'] : false;

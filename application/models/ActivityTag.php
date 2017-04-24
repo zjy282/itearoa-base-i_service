@@ -17,7 +17,8 @@ class ActivityTagModel extends \BaseModel {
      * @return array
      */
     public function getActivityTagList(array $param) {
-        isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $param['id'] ? $paramList['id'] = intval($param['id']) : false;
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
         return $this->dao->getActivityTagList($paramList);
     }
 

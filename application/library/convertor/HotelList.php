@@ -30,6 +30,7 @@ class Convertor_HotelList extends Convertor_Base {
         $cityModel = new CityModel();
         $cityInfoList = $cityModel->getCityList(array('id' => $cityIdList));
         $cityNameList = array_column($cityInfoList, 'name', 'id');
+        $cityEnNameList = array_column($cityInfoList, 'enname', 'id');
 
         foreach ($list as $key => $value) {
             $oneTemp = array();
@@ -41,6 +42,7 @@ class Convertor_HotelList extends Convertor_Base {
             $oneTemp['lat'] = $value['lat'];
             $oneTemp['cityid'] = $value['cityid'];
             $oneTemp['cityName'] = $cityNameList[$value['cityid']];
+            $oneTemp['cityEnName'] = $cityEnNameList[$value['cityid']];
             $oneTemp['tel'] = $value['tel'];
             $oneTemp['name_lang1'] = $value['name_lang1'];
             $oneTemp['name_lang2'] = $value['name_lang2'];

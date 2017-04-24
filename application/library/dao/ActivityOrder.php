@@ -16,9 +16,41 @@ class Dao_ActivityOrder extends Dao_Base {
     public function getActivityOrderList(array $param): array {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
-        
+
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select * from hotel_activity_order {$paramSql['sql']}";
+        if ($limit) {
+            $sql .= " limit {$page},{$limit}";
+        }
+        $result = $this->db->fetchAll($sql, $paramSql['case']);
+        return is_array($result) ? $result : array();
+    }
+
+    /**
+     * 查询hotel_activity_order数量
+     *
+     * @param
+     *            array 入参
+     * @return array
+     */
+    public function getActivityOrderCount(array $param): int {
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select count(1) as count from hotel_activity_order {$paramSql['sql']}";
+        $result = $this->db->fetchAssoc($sql, $paramSql['case']);
+        return intval($result['count']);
+    }
+
+    private function handlerListParams($param) {
         $whereSql = array();
         $whereCase = array();
+        if (isset($param['id'])) {
+            if (is_array($param['id'])) {
+                $whereSql[] = 'id in (' . implode(',', $param['id']) . ')';
+            } else {
+                $whereSql[] = 'id = ?';
+                $whereCase[] = $param['id'];
+            }
+        }
         if (isset($param['name'])) {
             $whereSql[] = 'name = ?';
             $whereCase[] = $param['name'];
@@ -35,14 +67,15 @@ class Dao_ActivityOrder extends Dao_Base {
             $whereSql[] = 'hotelid = ?';
             $whereCase[] = $param['hotelid'];
         }
-        $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
-        
-        $sql = "select * from hotel_activity_order {$whereSql}";
-        if ($limit) {
-            $sql .= " limit {$page},{$limit}";
+        if (isset($param['groupid'])) {
+            $whereSql[] = 'groupid = ?';
+            $whereCase[] = $param['groupid'];
         }
-        $result = $this->db->fetchAll($sql, $whereCase);
-        return is_array($result) ? $result : array();
+        $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
+        return array(
+            'sql' => $whereSql,
+            'case' => $whereCase
+        );
     }
 
     /**
@@ -54,14 +87,14 @@ class Dao_ActivityOrder extends Dao_Base {
      */
     public function getActivityOrderDetail(int $id): array {
         $result = array();
-        
+
         if ($id) {
             $sql = "select * from hotel_activity_order where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
         }
-        
+
         return $result;
     }
 
@@ -76,11 +109,11 @@ class Dao_ActivityOrder extends Dao_Base {
      */
     public function updateActivityOrderById(array $info, int $id) {
         $result = false;
-        
+
         if ($id) {
             $result = $this->db->update('hotel_activity_order', $info, $id);
         }
-        
+
         return $result;
     }
 
