@@ -7,7 +7,16 @@ class Enum_Push {
     const PUSH_TYPE_ALL = 3;
     const PUSH_TYPE_HOTEL = 4;
     const PUSH_TYPE_GROUP = 5;
+    const PUSH_TYPE_ALIAS = 10;
+    const PUSH_TYPE_TAG = 20;
 
+    const PHONE_TYPE_ANDROID = 2;
+    const PHONE_TYPE_IOS = 1;
+
+    const PUSH_TAG_LANG_EN = 'en'; //英文语言
+    const PUSH_TAG_LANG_CN = 'cn'; //中文语言
+    const PUSH_TAG_HOTEL_PREFIX = 'hotel_';//酒店标签前缀
+    const PUSH_TAG_GROUP_PREFIX = 'group_';//物业标签前缀
     /**
      * 推送机型定义
      */

@@ -1,121 +1,192 @@
 <?php
-class Push {
+class Push_Push {
 
-    protected $appkey = NULL;
+    protected $androidKey = NULL;
+    protected $iosKey = NULL;
 
-    protected $appMasterSecret = NULL;
+    protected $androidMasterSecret = NULL;
+    protected $iosMasterSecret = NULL;
 
     protected $timestamp = NULL;
 
     protected $validation_token = NULL;
 
     function __construct($key, $secret) {
-        $this->appkey = $key;
-        $this->appMasterSecret = $secret;
+        $this->androidKey = $key['android'];
+        $this->iosKey = $key['ios'];
+        $this->androidMasterSecret = $secret['android'];
+        $this->iosMasterSecret = $secret['ios'];
         $this->timestamp = strval(time());
     }
 
+    /**
+     * 根据设备id进行推送
+     * @param array $data 
+     *                   $data['title'] 推送title
+     *                   $data['value'] 推送文本内容
+     * @return bool
+     */
     public function pushSignel ($data){
-            if ($data['phoneType'] == 2){
-                $unicast = new Push_Umeng_AndroidUnicast();
-                $unicast->setPredefinedKeyValue("ticker", $data['title']);//通知栏提示文字
-                $unicast->setPredefinedKeyValue("title", $data['title']);
-                $unicast->setPredefinedKeyValue("text", $data['value']);
+        if ($data['phoneType'] == Enum_Push::PHTONE_TYPE_ANDROID){
+            $unicast = new Push_Umeng_AndroidUnicast();
+            $unicast->setPredefinedKeyValue("ticker", $data['title']);//通知栏提示文字
+            $unicast->setPredefinedKeyValue("title", $data['title']);
+            $unicast->setPredefinedKeyValue("text", $data['value']);
+            $unicast->setAppMasterSecret($this->androidMasterSecret);
+            $unicast->setPredefinedKeyValue("appkey", $this->androidKey);
+            if ($data['url']){
+                $unicast->setPredefinedKeyValue("url", $data['url']);
+                $unicast->setPredefinedKeyValue("after_open", "go_url");
+            } else {
                 $unicast->setPredefinedKeyValue("after_open", "go_app");
-            } else {
-                $unicast = new Push_Umeng_IOSUnicast();
-                $unicast->setPredefinedKeyValue("alert", $data['title']);
-                $unicast->setPredefinedKeyValue("badge", 0);
-                $unicast->setPredefinedKeyValue("sound", "chime");
             }
-            $unicast->setAppMasterSecret($this->appMasterSecret);
-            $unicast->setPredefinedKeyValue("appkey", $this->appkey);
-            $unicast->setPredefinedKeyValue("timestamp", $this->timestamp);
-            $unicast->setPredefinedKeyValue("device_tokens", $data['dataid']);
-            $unicast->setPredefinedKeyValue("production_mode", "true");
-            $unicast->send();
+        } else {
+            $unicast = new Push_Umeng_IOSUnicast();
+            $unicast->setPredefinedKeyValue("alert", $data['title']);
+            $unicast->setPredefinedKeyValue("badge", 0);
+            $unicast->setPredefinedKeyValue("sound", "chime");
+            $unicast->setAppMasterSecret($this->iosMasterSecret);
+            $unicast->setPredefinedKeyValue("appkey", $this->iosKey);
+        }
+        $unicast->setPredefinedKeyValue("timestamp", $this->timestamp);
+        $unicast->setPredefinedKeyValue("device_tokens", $data['dataid']);
+        $unicast->setPredefinedKeyValue("production_mode", "true");
+        return $unicast->send();
     }
 
-    public function pushAlais ($data){
-            if ($data['phoneType'] == 2){
-                $customizedcast = new Push_Umeng_AndroidCustomizedcast();
-                $customizedcast->setPredefinedKeyValue("ticker", $data['title']);
-                $customizedcast->setPredefinedKeyValue("title", $data['title']);
-                $customizedcast->setPredefinedKeyValue("text", $data['value']);
+    /**
+     * 根据别名进行推送
+     * @param array $data 
+     *                   $data['title'] 推送title
+     *                   $data['value'] 推送文本内容
+     * @return bool
+     */
+    public function pushAlias ($data){
+        if ($data['phoneType'] == Enum_Push::PHTONE_TYPE_ANDROID){
+            $customizedcast = new Push_Umeng_AndroidCustomizedcast();
+            $customizedcast->setPredefinedKeyValue("ticker", $data['title']);
+            $customizedcast->setPredefinedKeyValue("title", $data['title']);
+            $customizedcast->setPredefinedKeyValue("text", $data['value']);
+            if ($data['url']){
+                $customizedcast->setPredefinedKeyValue("url", $data['url']);
+                $customizedcast->setPredefinedKeyValue("after_open", "go_url");
+            } else {
                 $customizedcast->setPredefinedKeyValue("after_open", "go_app");
-            } else {
-                $customizedcast = new Push_Umeng_IOSCustomizedcast();
-                $customizedcast->setPredefinedKeyValue("alert", $data['title']);
-                $customizedcast->setPredefinedKeyValue("badge", 0);
-                $customizedcast->setPredefinedKeyValue("sound", "chime");
             }
-            $customizedcast->setAppMasterSecret($this->appMasterSecret);
-            $customizedcast->setPredefinedKeyValue("appkey", $this->appkey);
-            $customizedcast->setPredefinedKeyValue("timestamp", $this->timestamp);
-            $customizedcast->setPredefinedKeyValue("alias", $data['alias']);
-            $customizedcast->setPredefinedKeyValue("alias_type", $data['alias_type']);
-            $customizedcast->setPredefinedKeyValue("production_mode", "false");
-            $customizedcast->send();
-        
+            $customizedcast->setAppMasterSecret($this->androidMasterSecret);
+            $customizedcast->setPredefinedKeyValue("appkey", $this->androidKey);
+        } else {
+            $customizedcast = new Push_Umeng_IOSCustomizedcast();
+            $customizedcast->setPredefinedKeyValue("alert", $data['title']);
+            $customizedcast->setPredefinedKeyValue("badge", 0);
+            $customizedcast->setPredefinedKeyValue("sound", "chime");
+            $customizedcast->setAppMasterSecret($this->iosMasterSecret);
+            $customizedcast->setPredefinedKeyValue("appkey", $this->iosKey);
+        }
+        $customizedcast->setPredefinedKeyValue("timestamp", $this->timestamp);
+        $customizedcast->setPredefinedKeyValue("alias", $data['alias']);
+        $customizedcast->setPredefinedKeyValue("alias_type", 'customizedcast');
+        $customizedcast->setPredefinedKeyValue("production_mode", "false");
+        return $customizedcast->send();
     }
 
+    /**
+     * 根据别名进行推送
+     * @param array $data 
+     *                   $data['title'] 推送title
+     *                   $data['value'] 推送文本内容
+     *                   $data['tag'] 推送group名称
+     * @return bool
+     */
     public function pushTag($data){
-            $filter = array(
+        
+        if ($data['tag']) {
+            if(is_array($data['tag'])){
+                foreach ($data['tag'] as $tagValue){
+                    $tagList[] = array ("tag" => $tagValue);
+                }
+            } else {
+                $tagList[] = array("tag" => $data['tag']);
+            }
+        } else {
+            return false;
+        }
+        $filter = array(
+                "where" => array(
+                    "and" => $tagList
+                    )
+                );
+        if ($data['phoneType'] == Enum_Push::PHTONE_TYPE_ANDROID){
+            $customizedcast = new Push_Umeng_AndroidGroupcast();
+            $customizedcast->setPredefinedKeyValue("ticker", $data['title']);
+            $customizedcast->setPredefinedKeyValue("title", $data['title']);
+            $customizedcast->setPredefinedKeyValue("text", $data['value']);
+            if ($data['url']){
+                $customizedcast->setPredefinedKeyValue("url", $data['url']);
+                $customizedcast->setPredefinedKeyValue("after_open", "go_url");
+            } else {
+                $customizedcast->setPredefinedKeyValue("after_open", "go_app");
+            }
+            $customizedcast->setAppMasterSecret($this->androidMasterSecret);
+            $customizedcast->setPredefinedKeyValue("appkey", $this->androidKey);
+        } else {
+            $customizedcast = new Push_Umeng_IOSGroupcast();
+            $customizedcast->setPredefinedKeyValue("alert", $data['title']);
+            $customizedcast->setPredefinedKeyValue("badge", 0);
+            $customizedcast->setPredefinedKeyValue("sound", "chime");
+            $customizedcast->setAppMasterSecret($this->iosMasterSecret);
+            $customizedcast->setPredefinedKeyValue("appkey", $this->iosKey);
+        }
+        $customizedcast->setPredefinedKeyValue("filter", $filter);
+        $customizedcast->setPredefinedKeyValue("timestamp", $this->timestamp);
+        $customizedcast->setPredefinedKeyValue("alias", $data['alias']);
+        $customizedcast->setPredefinedKeyValue("alias_type", $data['alias_type']);
+        $customizedcast->setPredefinedKeyValue("production_mode", "false");
+        return $customizedcast->send();
+
+    }
+
+    /**
+     * 所有设备进行推送
+     * @param array $data 
+     *                   $data['title'] 推送title
+     *                   $data['value'] 推送文本内容
+     * @return bool
+     */
+    public function pushAll ($data){
+        $filter = array(
                 "where" => array(
                     "and" => array(
                         array(
                             "tag" => $data['tag']
-                        ),
+                            ),
+                        )
                     )
-                )
-            );
-            if ($data['phoneType'] == 2){
-                $customizedcast = new Push_Umeng_AndroidGroupcast();
-                $customizedcast->setPredefinedKeyValue("ticker", $data['title']);
-                $customizedcast->setPredefinedKeyValue("title", $data['title']);
-                $customizedcast->setPredefinedKeyValue("text", $data['value']);
-                $customizedcast->setPredefinedKeyValue("after_open", "go_app");
+                );
+        if ($data['phoneType'] == Enum_Push::PHTONE_TYPE_ANDROID){
+            $brocast = new Push_Umeng_AndroidBroadcast();
+            $brocast->setPredefinedKeyValue("ticker", $data['title']);
+            $brocast->setPredefinedKeyValue("title", $data['title']);
+            $brocast->setPredefinedKeyValue("text", $data['value']);
+            if ($data['url']){
+                $brocast->setPredefinedKeyValue("url", $data['url']);
+                $brocast->setPredefinedKeyValue("after_open", "go_url");
             } else {
-                $customizedcast = new Push_Umeng_IOSGroupcast();
-                $customizedcast->setPredefinedKeyValue("alert", $data['title']);
-                $customizedcast->setPredefinedKeyValue("badge", 0);
-                $customizedcast->setPredefinedKeyValue("sound", "chime");
+                $brocast->setPredefinedKeyValue("after_open", "go_app");
             }
-            $customizedcast->setPredefinedKeyValue("filter", $filter);
-            $customizedcast->setAppMasterSecret($this->appMasterSecret);
-            $customizedcast->setPredefinedKeyValue("appkey", $this->appkey);
-            $customizedcast->setPredefinedKeyValue("timestamp", $this->timestamp);
-            $customizedcast->setPredefinedKeyValue("alias", $data['alias']);
-            $customizedcast->setPredefinedKeyValue("alias_type", $data['alias_type']);
-            $customizedcast->setPredefinedKeyValue("production_mode", "false");
-            $customizedcast->send();
-        
-    }
-    
-    public function pushAll ($data){
-        
-    }
-
-    public function sendIOSBroadcast() {
-        try {
-            $brocast = new IOSBroadcast();
-            $brocast->setAppMasterSecret($this->appMasterSecret);
-            $brocast->setPredefinedKeyValue("appkey", $this->appkey);
-            $brocast->setPredefinedKeyValue("timestamp", $this->timestamp);
-            
-            $brocast->setPredefinedKeyValue("alert", "IOS 广播测试");
+            $brocast->setAppMasterSecret($this->androidMasterSecret);
+            $brocast->setPredefinedKeyValue("appkey", $this->androidKey);
+        } else {
+            $brocast = new Push_Umeng_IOSBroadcast();
+            $brocast->setPredefinedKeyValue("alert", $data['title']);
             $brocast->setPredefinedKeyValue("badge", 0);
             $brocast->setPredefinedKeyValue("sound", "chime");
-            // Set 'production_mode' to 'true' if your app is under production mode
-            $brocast->setPredefinedKeyValue("production_mode", "false");
-            // Set customized fields
-            $brocast->setCustomizedField("test", "helloworld");
-            print("Sending broadcast notification, please wait...\r\n");
-            $brocast->send();
-            print("Sent SUCCESS\r\n");
-        } catch (Exception $e) {
-            print("Caught exception: " . $e->getMessage());
+            $brocast->setAppMasterSecret($this->iosMasterSecret);
+            $brocast->setPredefinedKeyValue("appkey", $this->iosKey);
         }
+        $brocast->setPredefinedKeyValue("filter", $filter);
+        $brocast->setPredefinedKeyValue("timestamp", $this->timestamp);
+        return $brocast->send();
     }
 }
 
