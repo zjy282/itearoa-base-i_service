@@ -21,6 +21,7 @@ class PushModel extends \BaseModel {
         $param['type'] ? $paramList['type'] = $param['type'] : false;
         $param['dataid'] ? $paramList['dataid'] = $param['dataid'] : false;
         isset($param['result']) ? $paramList['result'] = intval($param['result']) : false;
+        isset($param['platform']) ? $paramList['platform'] = intval($param['platform']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getPushList($paramList);
@@ -39,6 +40,7 @@ class PushModel extends \BaseModel {
         $param['type'] ? $paramList['type'] = $param['type'] : false;
         $param['dataid'] ? $paramList['dataid'] = $param['dataid'] : false;
         isset($param['result']) ? $paramList['result'] = intval($param['result']) : false;
+        isset($param['platform']) ? $paramList['platform'] = intval($param['platform']) : false;
         return $this->dao->getPushCount($paramList);
     }
 
@@ -89,6 +91,89 @@ class PushModel extends \BaseModel {
         if (empty($info['type'])) {
             $this->throwException('推送类型错误', 3);
         }
+        $info['dataid'] = $param['dataid'] ? $param['dataid'] : '';
+        $info['platform'] = $param['platform'];
+        $info['cn_title'] = $param['cn_title'];
+        $info['cn_value'] = $param['cn_value'];
+        $info['en_title'] = $param['en_title'];
+        $info['en_value'] = $param['en_value'];
+        if (empty($info['cn_value']) && empty($info['en_value'])) {
+            $this->throwException('推送内容错误', 4);
+        }
+
+        $info['url'] = $param['url'];
+        if (empty($info['url'])) {
+            $this->throwException('推送URL错误', 5);
+        }
+
+        $pushParams = array();
+        $pushParams['url'] = $info['url'];
+        switch ($param['type']) {
+            case Enum_Push::PUSH_TYPE_ALL :
+                $pushParams['phoneType'] = $info['platform'];
+                $pushParams['type'] = Enum_Push::PUSH_TYPE_ALL;
+                $pushParams['cnTitle'] = $info['cn_title'];
+                $pushParams['cnValue'] = $info['cn_value'];
+                $pushParams['enTitle'] = $info['en_title'];
+                $pushParams['enValue'] = $info['en_value'];
+                $pushResult = $this->pushMsg($pushParams);
+                break;
+            case Enum_Push::PUSH_TYPE_USER :
+                $pushParams['type'] = Enum_Push::PUSH_TYPE_ALIAS;
+                $userIdList = explode($info['dataid']);
+                $aliasIdList = array();
+                foreach ($userIdList as $userId) {
+                    $aliasIdList[] = Enum_Push::PUSH_ALIAS_USER_PREFIX . $userId;
+                }
+                $pushParams['dataid'] = implode($aliasIdList);
+                $pushParams['title'] = $info['cn_title'];
+                $pushParams['value'] = $info['cn_value'];
+                break;
+            case Enum_Push::PUSH_TYPE_STAFF :
+                $pushParams['type'] = Enum_Push::PUSH_TYPE_ALIAS;
+                $staffIdList = explode($info['dataid']);
+                $aliasIdList = array();
+                foreach ($staffIdList as $staffId) {
+                    $aliasIdList[] = Enum_Push::PUSH_ALIAS_STAFF_PREFIX . $staffId;
+                }
+                $pushParams['dataid'] = implode($aliasIdList);
+                $pushParams['title'] = $info['cn_title'];
+                $pushParams['value'] = $info['cn_value'];
+                break;
+            case Enum_Push::PUSH_TYPE_HOTEL :
+                $pushParams['phoneType'] = $info['platform'];
+                $pushParams['cnTitle'] = $info['cn_title'];
+                $pushParams['cnValue'] = $info['cn_value'];
+                $pushParams['enTitle'] = $info['en_title'];
+                $pushParams['enValue'] = $info['en_value'];
+                $pushParams['hotelId'] = $info['dataid'];
+                $pushParams['type'] = Enum_Push::PUSH_TYPE_TAG;
+                break;
+            case Enum_Push::PUSH_TYPE_GROUP :
+                $pushParams['phoneType'] = $info['platform'];
+                $pushParams['cnTitle'] = $info['cn_title'];
+                $pushParams['cnValue'] = $info['cn_value'];
+                $pushParams['enTitle'] = $info['en_title'];
+                $pushParams['enValue'] = $info['en_value'];
+                $pushParams['groupId'] = $info['dataid'];
+                $pushParams['type'] = Enum_Push::PUSH_TYPE_TAG;
+                break;
+        }
+
+        $info['result'] = intval($pushResult);
+        $info['createtime'] = time();
+
+        return $this->dao->addPush($info);
+    }
+
+    /**
+     * 推送消息
+     *
+     * @param
+     *            array param 推送消息信息
+     *            $return boolean
+     */
+    public function pushMsg($param) {
         $config = Enum_Push::getConfig('umeng');
         $push = new Push_Push(
             array(
@@ -101,18 +186,20 @@ class PushModel extends \BaseModel {
             )
         );
 
-        switch ($info['type']) {
+        $info = array();
+        $pushResult = false;
+        switch ($param['type']) {
             case Enum_Push::PUSH_TYPE_ALL :
                 $info['tag'] == Enum_Push::PUSH_TAG_LANG_CN;
                 $info['title'] = $param['cnTitle'];
                 $info['value'] = $param['cnValue'];
                 $info['phoneType'] = $param['phoneType'];
                 $info['url'] = $param['url'];
-                $push->pushAll($info); //推送中文标签全量
+                $pushResult = $push->pushAll($info); //推送中文标签全量
                 $info['tag'] == Enum_Push::PUSH_TAG_LANG_EN;
                 $info['title'] = $param['enTitle'];
                 $info['value'] = $param['enValue'];
-                $push->pushAll($info);//推送英文标签全量
+                $pushResult = $push->pushAll($info);//推送英文标签全量
                 break;
             case Enum_Push::PUSH_TYPE_ALIAS :
                 $dataId = array_unique(array_filter(explode(",", $param['dataid'])));
@@ -124,7 +211,7 @@ class PushModel extends \BaseModel {
                 $info['url'] = $param['url'];
                 $info['value'] = $param['value'];
                 $info['phoneType'] = $param['phoneType'];
-                $push->pushAlias($info);
+                $pushResult = $push->pushAlias($info);
                 break;
             case Enum_Push::PUSH_TYPE_TAG : //tag推送
                 $dataId = array_unique(array_filter(explode(",", $param['dataid'])));
@@ -139,33 +226,14 @@ class PushModel extends \BaseModel {
                 $info['url'] = $param['url'];
                 $info['phoneType'] = $param['phoneType'];
                 $info['tag'][] = Enum_Push::PUSH_TAG_LANG_CN;
-                $push->pushTag($info);
+                $pushResult = $push->pushTag($info);
                 $info['title'] = $param['enTitle'];
                 $info['value'] = $param['enValue'];
                 array_pop($info['tag']);
                 $info['tag'][] = Enum_Push::PUSH_TAG_LANG_EN;
-                $push->pushTag($info);
+                $pushResult = $push->pushTag($info);
                 break;
         }
-
-        //@TODO 需要接入推送并保存推送结果状态
-
-        $info['result'] = intval($pushResult);
-        $info['createtime'] = time();
-        var_dump($param);
-        exit;
-
-        return $this->dao->addPush($info);
-    }
-
-    /**
-     * 推送消息
-     *
-     * @param
-     *            array param 推送消息信息
-     *            $return boolean
-     */
-    public function pushMsg() {
-        $pushResult = Push_Umeng::pushAccountList($type, $msg, $accountList);
+        return $pushResult;
     }
 }

@@ -30,6 +30,7 @@ class PushController extends \BaseController {
         $param['type'] = intval($this->getParamList('type'));
         $param['dataid'] = $this->getParamList('dataid');
         $param['result'] = $this->getParamList('result');
+        $param['platform'] = $this->getParamList('platform');
         if (is_null($param['result'])) {
             unset($param['result']);
         }
@@ -89,6 +90,7 @@ class PushController extends \BaseController {
     public function addPushAction() {
         $param = array();
         $param['type'] = intval($this->getParamList('type'));
+        $param['platform'] = intval($this->getParamList('platform'));
         $param['dataid'] = $this->getParamList('dataid');
         $param['cn_title'] = $this->getParamList('cn_title');
         $param['cn_value'] = $this->getParamList('cn_value');

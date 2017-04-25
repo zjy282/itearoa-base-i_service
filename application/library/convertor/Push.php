@@ -30,6 +30,7 @@ class Convertor_Push extends Convertor_Base {
             $oneTemp['en_title'] = $value['en_title'];
             $oneTemp['url'] = $value['url'];
             $oneTemp['result'] = $value['result'];
+            $oneTemp['platform'] = $value['platform'];
             $oneTemp['createtime'] = $value['createtime'];
             $data['list'][] = $oneTemp;
         }

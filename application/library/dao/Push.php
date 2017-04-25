@@ -61,6 +61,10 @@ class Dao_Push extends Dao_Base {
             $whereSql[] = 'type = ?';
             $whereCase[] = $param['type'];
         }
+        if (isset($param['platform'])) {
+            $whereSql[] = 'platform = ?';
+            $whereCase[] = $param['platform'];
+        }
         if (isset($param['result'])) {
             if ($param['result'] > 0) {
                 $whereSql[] = 'result <> ?';

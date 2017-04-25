@@ -1,4 +1,5 @@
 <?php
+
 class Push_Push {
 
     protected $androidKey = NULL;
@@ -21,20 +22,20 @@ class Push_Push {
 
     /**
      * 根据设备id进行推送
-     * @param array $data 
+     * @param array $data
      *                   $data['title'] 推送title
      *                   $data['value'] 推送文本内容
      * @return bool
      */
-    public function pushSignel ($data){
-        if ($data['phoneType'] == Enum_Push::PHTONE_TYPE_ANDROID){
+    public function pushSignel($data) {
+        if ($data['phoneType'] == Enum_Platform::PLATFORM_ID_ANDROID) {
             $unicast = new Push_Umeng_AndroidUnicast();
             $unicast->setPredefinedKeyValue("ticker", $data['title']);//通知栏提示文字
             $unicast->setPredefinedKeyValue("title", $data['title']);
             $unicast->setPredefinedKeyValue("text", $data['value']);
             $unicast->setAppMasterSecret($this->androidMasterSecret);
             $unicast->setPredefinedKeyValue("appkey", $this->androidKey);
-            if ($data['url']){
+            if ($data['url']) {
                 $unicast->setPredefinedKeyValue("url", $data['url']);
                 $unicast->setPredefinedKeyValue("after_open", "go_url");
             } else {
@@ -56,18 +57,18 @@ class Push_Push {
 
     /**
      * 根据别名进行推送
-     * @param array $data 
+     * @param array $data
      *                   $data['title'] 推送title
      *                   $data['value'] 推送文本内容
      * @return bool
      */
-    public function pushAlias ($data){
-        if ($data['phoneType'] == Enum_Push::PHTONE_TYPE_ANDROID){
+    public function pushAlias($data) {
+        if ($data['phoneType'] == Enum_Platform::PLATFORM_ID_ANDROID) {
             $customizedcast = new Push_Umeng_AndroidCustomizedcast();
             $customizedcast->setPredefinedKeyValue("ticker", $data['title']);
             $customizedcast->setPredefinedKeyValue("title", $data['title']);
             $customizedcast->setPredefinedKeyValue("text", $data['value']);
-            if ($data['url']){
+            if ($data['url']) {
                 $customizedcast->setPredefinedKeyValue("url", $data['url']);
                 $customizedcast->setPredefinedKeyValue("after_open", "go_url");
             } else {
@@ -92,18 +93,18 @@ class Push_Push {
 
     /**
      * 根据别名进行推送
-     * @param array $data 
+     * @param array $data
      *                   $data['title'] 推送title
      *                   $data['value'] 推送文本内容
      *                   $data['tag'] 推送group名称
      * @return bool
      */
-    public function pushTag($data){
-        
+    public function pushTag($data) {
+
         if ($data['tag']) {
-            if(is_array($data['tag'])){
-                foreach ($data['tag'] as $tagValue){
-                    $tagList[] = array ("tag" => $tagValue);
+            if (is_array($data['tag'])) {
+                foreach ($data['tag'] as $tagValue) {
+                    $tagList[] = array("tag" => $tagValue);
                 }
             } else {
                 $tagList[] = array("tag" => $data['tag']);
@@ -112,16 +113,16 @@ class Push_Push {
             return false;
         }
         $filter = array(
-                "where" => array(
-                    "and" => $tagList
-                    )
-                );
-        if ($data['phoneType'] == Enum_Push::PHTONE_TYPE_ANDROID){
+            "where" => array(
+                "and" => $tagList
+            )
+        );
+        if ($data['phoneType'] == Enum_Platform::PLATFORM_ID_ANDROID) {
             $customizedcast = new Push_Umeng_AndroidGroupcast();
             $customizedcast->setPredefinedKeyValue("ticker", $data['title']);
             $customizedcast->setPredefinedKeyValue("title", $data['title']);
             $customizedcast->setPredefinedKeyValue("text", $data['value']);
-            if ($data['url']){
+            if ($data['url']) {
                 $customizedcast->setPredefinedKeyValue("url", $data['url']);
                 $customizedcast->setPredefinedKeyValue("after_open", "go_url");
             } else {
@@ -148,27 +149,27 @@ class Push_Push {
 
     /**
      * 所有设备进行推送
-     * @param array $data 
+     * @param array $data
      *                   $data['title'] 推送title
      *                   $data['value'] 推送文本内容
      * @return bool
      */
-    public function pushAll ($data){
+    public function pushAll($data) {
         $filter = array(
-                "where" => array(
-                    "and" => array(
-                        array(
-                            "tag" => $data['tag']
-                            ),
-                        )
-                    )
-                );
-        if ($data['phoneType'] == Enum_Push::PHTONE_TYPE_ANDROID){
+            "where" => array(
+                "and" => array(
+                    array(
+                        "tag" => $data['tag']
+                    ),
+                )
+            )
+        );
+        if ($data['phoneType'] == Enum_Platform::PLATFORM_ID_ANDROID) {
             $brocast = new Push_Umeng_AndroidBroadcast();
             $brocast->setPredefinedKeyValue("ticker", $data['title']);
             $brocast->setPredefinedKeyValue("title", $data['title']);
             $brocast->setPredefinedKeyValue("text", $data['value']);
-            if ($data['url']){
+            if ($data['url']) {
                 $brocast->setPredefinedKeyValue("url", $data['url']);
                 $brocast->setPredefinedKeyValue("after_open", "go_url");
             } else {
