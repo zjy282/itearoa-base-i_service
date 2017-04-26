@@ -78,6 +78,7 @@ class HotelAdministratorModel extends \BaseModel {
             isset($param['createTime']) ? $info['createtime'] = $param['createTime'] : false;
             isset($param['createAdmin']) ? $info['createadmin'] = $param['createAdmin'] : false;
             isset($param['hotelId']) ? $info['hotelid'] = $param['hotelId'] : false;
+            isset($param['permission']) ? $info['permission'] = $param['permission'] : false;
             $result = $this->dao->updateHotelAdministratorById($info, $id);
         }
         return $result;
@@ -101,5 +102,60 @@ class HotelAdministratorModel extends \BaseModel {
         isset($param['createAdmin']) ? $info['createadmin'] = $param['createAdmin'] : false;
         isset($param['hotelId']) ? $info['hotelid'] = $param['hotelId'] : false;
         return $this->dao->addHotelAdministrator($info);
+    }
+
+    /**
+     * 登录
+     *
+     * @param array $param
+     */
+    public function login($param) {
+        $username = trim($param['username']);
+        $password = md5(trim($param['password']));
+        $ip = Util_Tools::ipton($param['ip'] ? $param['ip'] : Util_Http::getIP());
+
+        if (!$username || !$password) {
+            $this->throwException('用户名或密码不能为空！', 3);
+        }
+
+        $userInfo = $this->dao->getHotelAdministratorDetailByUsername($username);
+        if ($userInfo['password'] != $password) {
+            $this->throwException('用户名或密码错误！', 4);
+        }
+        if ($userInfo['status'] != 1) {
+            $this->throwException('该用户已经被禁用!', 5);
+        }
+
+        $updateParam = array();
+        $userInfo['lastloginip'] = $updateParam['lastloginip'] = $ip;
+        $userInfo['lastlogintime'] = $updateParam['lastlogintime'] = time();
+        $this->dao->updateHotelAdministratorById($updateParam, $userInfo['id']);
+
+        return $userInfo;
+    }
+
+    public function changePass($param) {
+        $userid = intval($param['userid']);
+        $oldpass = trim($param['oldpass']);
+        $newpass = trim($param['newpass']);
+
+        if (!$userid || !$oldpass || !$newpass) {
+            $this->throwException('参数错误！', 3);
+        }
+        $userInfo = $this->dao->getHotelAdministratorDetail($userid);
+        if (empty($userInfo)) {
+            $this->throwException('用户不存在', 4);
+        }
+        if ($userInfo['password'] != $oldpass) {
+            $this->throwException('原密码错误！', 5);
+        }
+        if ($this->dao->updateHotelAdministratorById(array(
+            'password' => $newpass
+        ), $userid)
+        ) {
+            return $userInfo;
+        } else {
+            $this->throwException('修改失败', 6);
+        }
     }
 }

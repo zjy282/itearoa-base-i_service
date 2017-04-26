@@ -74,6 +74,7 @@ class HotelAdministratorController extends \BaseController {
             $paramList['password'] ? $param['password'] = md5(trim($paramList['password'])) : false;
             $paramList['realname'] ? $param['realName'] = trim($paramList['realname']) : false;
             $paramList['remark'] ? $param['remark'] = trim($paramList['remark']) : false;
+            $paramList['permission'] ? $param['permission'] = trim($paramList['permission']) : false;
             isset($paramList['status']) ? $param['status'] = intval($paramList['status']) : false;
             isset($paramList['hotelid']) ? $param['hotelId'] = trim($paramList['hotelid']) : false;
             $data = $this->model->updateHotelAdministratorById($param, $id);
@@ -104,6 +105,53 @@ class HotelAdministratorController extends \BaseController {
             'id' => $data
         ));
         $this->echoSuccessData($data);
+    }
+
+    /**
+     * 登陆控制器
+     * ---
+     *
+     * @param string $username
+     *            用户名
+     * @param string $password
+     *            密码
+     */
+    public function loginAction() {
+        $param['username'] = trim($this->getParamList('username'));
+        $param['password'] = trim($this->getParamList('password'));
+        $param['ip'] = trim($this->getParamList('ip'));
+
+        $userInfo = $this->model->login($param);
+        $userInfo = $this->convertor->getHotelAdministratorDetailConvertor($userInfo);
+
+        $this->echoSuccessData($userInfo);
+    }
+
+    /**
+     * 修改登录密码
+     *
+     * @param int $userid
+     *            用户ID
+     * @param string $oldpass
+     *            原密码
+     * @param string $newpass
+     *            新密码
+     */
+    public function changePassAction() {
+        $param['userid'] = intval($this->getParamList('userid'));
+        $param['oldpass'] = trim($this->getParamList('oldpass'));
+        $param['newpass'] = trim($this->getParamList('newpass'));
+
+        $userInfo = $this->model->changePass($param);
+        $userInfo = $this->convertor->getHotelAdministratorDetailConvertor($userInfo);
+        $this->echoSuccessData($userInfo);
+    }
+
+    /**
+     * 获取物业后台管理员帐号权限列表
+     */
+    public function getHotelPermissionAction() {
+        $this->echoSuccessData(array('list' => Enum_HotelAdministrator::getPermission()));
     }
 
 }

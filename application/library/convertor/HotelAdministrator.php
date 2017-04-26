@@ -36,6 +36,7 @@ class Convertor_HotelAdministrator extends Convertor_Base {
             $oneTemp['lastLoginIp'] = $value['lastloginip'];
             $oneTemp['createTime'] = $value['createtime'];
             $oneTemp['createAdmin'] = $value['createAdmin'];
+            $oneTemp['permission'] = $value['permission'];
             $oneTemp['hotelId'] = $value['hotelid'];
             $oneTemp['hotelName'] = $hotelNameList[$value['hotelid']];
             $oneTemp['groupId'] = $groupIdList[$value['hotelid']];
@@ -67,7 +68,7 @@ class Convertor_HotelAdministrator extends Convertor_Base {
             $data ['lastLoginIp'] = $result['lastloginip'];
             $data ['createTime'] = $result['createtime'];
             $data ['createAdmin'] = $result['createadmin'];
-            $data ['groupId'] = $result['groupid'];
+            $data ['hotelId'] = $result['hotelid'];
         }
 
         return $data;

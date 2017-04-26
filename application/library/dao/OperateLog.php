@@ -16,7 +16,7 @@ class Dao_OperateLog extends Dao_Base {
         $page = $this->getStart($param['page'], $limit);
 
         $paramSql = $this->handlerListParams($param);
-        $sql = "select * from iservice_operate_log {$paramSql['sql']}";
+        $sql = "select * from iservice_operate_log {$paramSql['sql']} order by addtime desc";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }
