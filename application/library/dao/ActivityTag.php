@@ -99,7 +99,7 @@ class Dao_ActivityTag extends Dao_Base {
         $result = false;
 
         if ($id) {
-            $result = $this->db->update('hotel_activity_tag', $info, $id);
+            $result = $this->db->update('hotel_activity_tag', $info, array('id' => $id));
         }
 
         return $result;

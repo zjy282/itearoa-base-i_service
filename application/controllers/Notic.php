@@ -22,11 +22,11 @@ class NoticController extends \BaseController {
         $param['hotelid'] = intval($this->getParamList('hotelid'));
         $param['tagid'] = intval($this->getParamList('tagid'));
         $this->getPageParam($param);
-        $newsList = $this->model->getNoticList($param);
-        $newsCount = $this->model->getNoticCount($param);
-        $newsTagModel = new NoticTagModel();
-        $tagList = $newsTagModel->getNoticTagList($param);
-        $data = $this->convertor->getNoticListConvertor($newsList, $tagList, $newsCount, $param);
+        $List = $this->model->getNoticList($param);
+        $count = $this->model->getNoticCount($param);
+        $tagModel = new NoticTagModel();
+        $tagList = $tagModel->getNoticTagList($param);
+        $data = $this->convertor->getNoticListConvertor($List, $tagList, $count, $param);
         $this->echoSuccessData($data);
     }
 

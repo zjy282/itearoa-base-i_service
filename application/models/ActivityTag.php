@@ -17,9 +17,26 @@ class ActivityTagModel extends \BaseModel {
      * @return array
      */
     public function getActivityTagList(array $param) {
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $paramList['limit'] = $param['limit'];
+        $paramList['page'] = $param['page'];
+        return $this->dao->getActivityTagList($paramList);
+    }
+
+    /**
+     * 获取ActivityTag数量
+     *
+     * @param
+     *            array param 查询条件
+     * @return array
+     */
+    public function getActivityTagCount(array $param) {
+        $paramList = array();
         $param['id'] ? $paramList['id'] = intval($param['id']) : false;
         $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
-        return $this->dao->getActivityTagList($paramList);
+        return $this->dao->getActivityTagCount($paramList);
     }
 
     /**
@@ -48,9 +65,10 @@ class ActivityTagModel extends \BaseModel {
      */
     public function updateActivityTagById($param, $id) {
         $result = false;
-        // 自行添加要更新的字段,以下是age字段是样例
         if ($id) {
-            $info['age'] = intval($param['age']);
+            $info['title_lang1'] = strval($param['title_lang1']);
+            $info['title_lang2'] = strval($param['title_lang2']);
+            $info['title_lang3'] = strval($param['title_lang3']);
             $result = $this->dao->updateActivityTagById($info, $id);
         }
         return $result;
@@ -64,8 +82,10 @@ class ActivityTagModel extends \BaseModel {
      * @return array
      */
     public function addActivityTag($param) {
-        // 自行添加要添加的字段,以下是age字段是样例
-        $info['age'] = intval($param['age']);
+        $info['hotelid'] = intval($param['hotelid']);
+        $info['title_lang1'] = strval($param['title_lang1']);
+        $info['title_lang2'] = strval($param['title_lang2']);
+        $info['title_lang3'] = strval($param['title_lang3']);
         return $this->dao->addActivityTag($info);
     }
 }

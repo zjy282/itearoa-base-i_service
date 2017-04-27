@@ -8,6 +8,8 @@ class Enum_Oss {
 
     const OSS_PATH_VOICE = 'voice';
 
+    const OSS_PATH_HTML = 'html';
+
     public static function allowExtension($type) {
         $allowList = array();
         switch ($type) {
@@ -23,6 +25,11 @@ class Enum_Oss {
                 $allowList = array(
                     'audio/mpeg' => 'mp3',
                     'audio/x-wav' => 'wav',
+                );
+                break;
+            case self::OSS_PATH_HTML:
+                $allowList = array(
+                    'text/html' => 'html',
                 );
                 break;
         }

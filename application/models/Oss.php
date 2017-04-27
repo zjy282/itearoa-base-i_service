@@ -7,6 +7,7 @@ class OssModel extends \BaseModel {
     }
 
     public function uploadToOss($paramList) {
+        $oldfilekey = $paramList['oldfilekey'];
         $uploadFile = $paramList['uploadfile'];
         $fileType = $paramList['type'];
         $uploadName = $uploadFile['name'];
@@ -26,7 +27,11 @@ class OssModel extends \BaseModel {
         }
 
         $ossDao = new Dao_Oss();
-        $imgData = Enum_Img::getPicNameAndKey($uploadName, $fileType);
+        if ($oldfilekey) {
+            $imgData = array('fileName' => str_replace('_', '/', $oldfilekey), 'key' => $oldfilekey);
+        } else {
+            $imgData = Enum_Img::getPicNameAndKey($uploadName, $fileType);
+        }
         if ($imgData['fileName'] && $filePath) {
             $picId = $ossDao->uploadImg(Enum_Oss::OBJ_NAME_SHINE, $imgData, $filePath);
         }

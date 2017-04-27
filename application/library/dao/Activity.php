@@ -63,6 +63,12 @@ class Dao_Activity extends Dao_Base {
             $whereSql[] = 'status = ?';
             $whereCase[] = $param['status'];
         }
+        if (isset($param['title'])) {
+            $whereSql[] = '(title_lang1 = ? or title_lang2 = ? or title_lang2 = ?)';
+            $whereCase[] = $param['title'];
+            $whereCase[] = $param['title'];
+            $whereCase[] = $param['title'];
+        }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
         return array(
             'sql' => $whereSql,
@@ -103,7 +109,7 @@ class Dao_Activity extends Dao_Base {
         $result = false;
 
         if ($id) {
-            $result = $this->db->update('hotel_activity', $info, $id);
+            $result = $this->db->update('hotel_activity', $info, array('id' => $id));
         }
 
         return $result;

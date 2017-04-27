@@ -47,6 +47,7 @@ class ActivityController extends \BaseController {
         $param['hotelid'] = intval($this->getParamList('hotelid'));
         $param['groupid'] = intval($this->getParamList('groupid'));
         $param['tagid'] = intval($this->getParamList('tagid'));
+        $param['title'] = trim($this->getParamList('title'));
         $param['status'] = $this->getParamList('status');
         if (is_null($param['status'])) {
             unset($param['status']);
@@ -89,13 +90,22 @@ class ActivityController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
-            $param['name'] = trim($this->getParamList('name'));
+            $param['hotelid'] = $this->getParamList('hotelid');
+            $param['groupid'] = $this->getParamList('groupid');
+            $param['tagid'] = $this->getParamList('tagid');
+            $param['status'] = $this->getParamList('status');
+            $param['title_lang1'] = $this->getParamList('title_lang1');
+            $param['title_lang2'] = $this->getParamList('title_lang2');
+            $param['title_lang3'] = $this->getParamList('title_lang3');
+            $param['article_lang1'] = $this->getParamList('article_lang1');
+            $param['article_lang2'] = $this->getParamList('article_lang2');
+            $param['article_lang3'] = $this->getParamList('article_lang3');
             $data = $this->model->updateActivityById($param, $id);
-            $data = $this->convertor->commonConvertor($data);
+            $data = $this->convertor->statusConvertor($data);
         } else {
             $this->throwException(1, 'id不能为空');
         }
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -107,9 +117,17 @@ class ActivityController extends \BaseController {
      */
     public function addActivityAction() {
         $param = array();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['hotelid'] = intval($this->getParamList('hotelid'));
+        $param['groupid'] = intval($this->getParamList('groupid'));
+        $param['tagid'] = intval($this->getParamList('tagid'));
+        $param['status'] = intval($this->getParamList('status'));
+        $param['title_lang1'] = trim($this->getParamList('title_lang1'));
+        $param['title_lang2'] = trim($this->getParamList('title_lang2'));
+        $param['title_lang3'] = trim($this->getParamList('title_lang3'));
         $data = $this->model->addActivity($param);
-        $data = $this->convertor->commonConvertor($data);
-        $this->echoJson($data);
+        $data = $this->convertor->statusConvertor(array(
+            'id' => $data
+        ));
+        $this->echoSuccessData($data);
     }
 }

@@ -69,6 +69,12 @@ class Convertor_HotelAdministrator extends Convertor_Base {
             $data ['createTime'] = $result['createtime'];
             $data ['createAdmin'] = $result['createadmin'];
             $data ['hotelId'] = $result['hotelid'];
+
+            $hotelListDao = new Dao_HotelList();
+            $hotelInfo = $hotelListDao->getHotelListDetail($data['hotelId']);
+            $data['groupid'] = $hotelInfo['groupid'];
+
+            $data ['permission'] = $result['permission'];
         }
 
         return $data;
