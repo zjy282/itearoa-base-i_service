@@ -17,11 +17,13 @@ class ShowingOrderModel extends \BaseModel {
      * @return array
      */
     public function getShowingOrderList(array $param) {
-        isset($param['contact_name']) ? $paramList['contact_name'] = strval($param['contact_name']) : false;
-        isset($param['contact_mobile']) ? $paramList['contact_mobile'] = strval($param['contact_mobile']) : false;
-        isset($param['userid']) ? $paramList['userid'] = intval($param['userid']) : false;
-        isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
-        isset($param['status']) ? $paramList['status'] = $param['status'] : false;
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = strval($param['id']) : false;
+        $param['contact_name'] ? $paramList['contact_name'] = strval($param['contact_name']) : false;
+        $param['contact_mobile'] ? $paramList['contact_mobile'] = strval($param['contact_mobile']) : false;
+        $param['userid'] ? $paramList['userid'] = intval($param['userid']) : false;
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $param['status'] ? $paramList['status'] = $param['status'] : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getShowingOrderList($paramList);
@@ -35,9 +37,13 @@ class ShowingOrderModel extends \BaseModel {
      * @return array
      */
     public function getShowingOrderCount(array $param) {
-        isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
-        isset($param['userid']) ? $paramList['userid'] = intval($param['userid']) : false;
-        isset($param['status']) ? $paramList['status'] = $param['status'] : false;
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = strval($param['id']) : false;
+        $param['contact_name'] ? $paramList['contact_name'] = strval($param['contact_name']) : false;
+        $param['contact_mobile'] ? $paramList['contact_mobile'] = strval($param['contact_mobile']) : false;
+        $param['userid'] ? $paramList['userid'] = intval($param['userid']) : false;
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $param['status'] ? $paramList['status'] = $param['status'] : false;
         return $this->dao->getShowingOrderCount($paramList);
     }
 

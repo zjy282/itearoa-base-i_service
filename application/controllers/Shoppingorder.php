@@ -45,8 +45,6 @@ class ShoppingOrderController extends \BaseController {
         $param['page'] = intval($this->getParamList('page'));
         $param['limit'] = intval($this->getParamList('limit', 5));
         $param['id'] = intval($this->getParamList('id'));
-        $param['name'] = trim($this->getParamList('name'));
-        $param['phone'] = trim($this->getParamList('phone'));
         $param['hotelid'] = intval($this->getParamList('hotelid'));
         $param['shoppingid'] = intval($this->getParamList('shoppingid'));
         $data = $this->model->getShoppingOrderList($param);

@@ -16,7 +16,7 @@ class Dao_ShowingOrder extends Dao_Base {
     public function getShowingOrderList(array $param): array {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
-        
+
         $paramSql = $this->handlerShowingOrderListParams($param);
         $sql = "select * from hotel_showing_order {$paramSql['sql']}";
         if ($limit) {
@@ -40,9 +40,17 @@ class Dao_ShowingOrder extends Dao_Base {
         return intval($result['count']);
     }
 
-    private function handlerShowingOrderListParams() {
+    private function handlerShowingOrderListParams($param) {
         $whereSql = array();
         $whereCase = array();
+        if (isset($param['id'])) {
+            if (is_array($param['id'])) {
+                $whereSql[] = 'id in (' . implode(',', $param['id']) . ')';
+            } else {
+                $whereSql[] = 'id = ?';
+                $whereCase[] = $param['id'];
+            }
+        }
         if (isset($param['contact_name'])) {
             $whereSql[] = 'contact_name = ?';
             $whereCase[] = $param['contact_name'];
@@ -79,14 +87,14 @@ class Dao_ShowingOrder extends Dao_Base {
      */
     public function getShowingOrderDetail(int $id): array {
         $result = array();
-        
+
         if ($id) {
             $sql = "select * from hotel_showing_order where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
         }
-        
+
         return $result;
     }
 
@@ -101,13 +109,13 @@ class Dao_ShowingOrder extends Dao_Base {
      */
     public function updateShowingOrderById(array $info, int $id) {
         $result = false;
-        
+
         if ($id) {
             $result = $this->db->update('hotel_showing_order', $info, array(
                 'id' => $id
             ));
         }
-        
+
         return $result;
     }
 
