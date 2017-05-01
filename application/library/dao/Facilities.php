@@ -8,7 +8,7 @@ class Dao_Facilities extends Dao_Base {
 
     /**
      * 查询hotel_facilities列表
-     * 
+     *
      * @param
      *            array 入参
      * @return array
@@ -16,50 +16,85 @@ class Dao_Facilities extends Dao_Base {
     public function getFacilitiesList(array $param): array {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
-        
+
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select * from hotel_facilities {$paramSql['sql']}";
+        if ($limit) {
+            $sql .= " limit {$page},{$limit}";
+        }
+        $result = $this->db->fetchAll($sql, $paramSql['case']);
+        return is_array($result) ? $result : array();
+    }
+
+    /**
+     * 查询hotel_facilities数量
+     *
+     * @param
+     *            array 入参
+     * @return array
+     */
+    public function getFacilitiesCount(array $param): int {
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select count(1) as count from hotel_facilities {$paramSql['sql']}";
+        $result = $this->db->fetchAssoc($sql, $paramSql['case']);
+        return intval($result['count']);
+    }
+
+    private function handlerListParams($param) {
         $whereSql = array();
         $whereCase = array();
+        if (isset($param['id'])) {
+            if (is_array($param['id'])) {
+                $whereSql[] = 'id in (' . implode(',', $param['id']) . ')';
+            } else {
+                $whereSql[] = 'id = ?';
+                $whereCase[] = $param['id'];
+            }
+        }
         if (isset($param['hotelid'])) {
             $whereSql[] = 'hotelid = ?';
             $whereCase[] = $param['hotelid'];
+        }
+        if (isset($param['name'])) {
+            $whereSql[] = '(name_lang1 = ? or name_lang2 = ? or name_lang3 = ?)';
+            $whereCase[] = $param['name'];
+            $whereCase[] = $param['name'];
+            $whereCase[] = $param['name'];
         }
         if (isset($param['status'])) {
             $whereSql[] = 'status = ?';
             $whereCase[] = $param['status'];
         }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
-        
-        $sql = "select * from hotel_facilities {$whereSql}";
-        if ($limit) {
-            $sql .= " limit {$page},{$limit}";
-        }
-        $result = $this->db->fetchAll($sql, $whereCase);
-        return is_array($result) ? $result : array();
+        return array(
+            'sql' => $whereSql,
+            'case' => $whereCase
+        );
     }
 
     /**
      * 根据id查询hotel_facilities详情
-     * 
+     *
      * @param
      *            int id
      * @return array
      */
     public function getFacilitiesDetail(int $id): array {
         $result = array();
-        
+
         if ($id) {
             $sql = "select * from hotel_facilities where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
         }
-        
+
         return $result;
     }
 
     /**
      * 根据id更新hotel_facilities
-     * 
+     *
      * @param
      *            array 需要更新的数据
      * @param
@@ -68,17 +103,17 @@ class Dao_Facilities extends Dao_Base {
      */
     public function updateFacilitiesById(array $info, int $id) {
         $result = false;
-        
+
         if ($id) {
-            $result = $this->db->update('hotel_facilities', $info, $id);
+            $result = $this->db->update('hotel_facilities', $info, array('id' => $id));
         }
-        
+
         return $result;
     }
 
     /**
      * 单条增加hotel_facilities数据
-     * 
+     *
      * @param
      *            array
      * @return int id

@@ -11,13 +11,16 @@ class FacilitiesModel extends \BaseModel {
 
     /**
      * 获取Facilities列表信息
-     * 
+     *
      * @param
      *            array param 查询条件
      * @return array
      */
     public function getFacilitiesList(array $param) {
-        isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = intval($param['id']) : false;
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $param['name'] ? $paramList['name'] = trim($param['name']) : false;
         isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
@@ -25,8 +28,24 @@ class FacilitiesModel extends \BaseModel {
     }
 
     /**
+     * 获取Facilities数量
+     *
+     * @param
+     *            array param 查询条件
+     * @return array
+     */
+    public function getFacilitiesCount(array $param) {
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = intval($param['id']) : false;
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $param['name'] ? $paramList['name'] = trim($param['name']) : false;
+        isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
+        return $this->dao->getFacilitiesCount($paramList);
+    }
+
+    /**
      * 根据id查询Facilities信息
-     * 
+     *
      * @param
      *            int id 查询的主键
      * @return array
@@ -41,7 +60,7 @@ class FacilitiesModel extends \BaseModel {
 
     /**
      * 根据id更新Facilities信息
-     * 
+     *
      * @param
      *            array param 需要更新的信息
      * @param
@@ -50,9 +69,18 @@ class FacilitiesModel extends \BaseModel {
      */
     public function updateFacilitiesById($param, $id) {
         $result = false;
-        // 自行添加要更新的字段,以下是age字段是样例
         if ($id) {
-            $info['age'] = intval($param['age']);
+            isset($param['hotelid']) ? $info['hotelid'] = $param['hotelid'] : false;
+            isset($param['status']) ? $info['status'] = $param['status'] : false;
+            isset($param['name_lang1']) ? $info['name_lang1'] = $param['name_lang1'] : false;
+            isset($param['name_lang2']) ? $info['name_lang2'] = $param['name_lang2'] : false;
+            isset($param['name_lang3']) ? $info['name_lang3'] = $param['name_lang3'] : false;
+            isset($param['introduct_lang1']) ? $info['introduct_lang1'] = $param['introduct_lang1'] : false;
+            isset($param['introduct_lang2']) ? $info['introduct_lang2'] = $param['introduct_lang2'] : false;
+            isset($param['introduct_lang3']) ? $info['introduct_lang3'] = $param['introduct_lang3'] : false;
+            isset($param['detail_lang1']) ? $info['detail_lang1'] = $param['detail_lang1'] : false;
+            isset($param['detail_lang2']) ? $info['detail_lang2'] = $param['detail_lang2'] : false;
+            isset($param['detail_lang3']) ? $info['detail_lang3'] = $param['detail_lang3'] : false;
             $result = $this->dao->updateFacilitiesById($info, $id);
         }
         return $result;
@@ -60,14 +88,21 @@ class FacilitiesModel extends \BaseModel {
 
     /**
      * Facilities新增信息
-     * 
+     *
      * @param
      *            array param 需要增加的信息
      * @return array
      */
     public function addFacilities($param) {
-        // 自行添加要添加的字段,以下是age字段是样例
-        $info['age'] = intval($param['age']);
+        isset($param['name_lang1']) ? $info['name_lang1'] = $param['name_lang1'] : false;
+        isset($param['name_lang2']) ? $info['name_lang2'] = $param['name_lang2'] : false;
+        isset($param['name_lang3']) ? $info['name_lang3'] = $param['name_lang3'] : false;
+        isset($param['hotelid']) ? $info['hotelid'] = $param['hotelid'] : false;
+        isset($param['status']) ? $info['status'] = $param['status'] : false;
+        isset($param['introduct_lang1']) ? $info['introduct_lang1'] = $param['introduct_lang1'] : false;
+        isset($param['introduct_lang2']) ? $info['introduct_lang2'] = $param['introduct_lang2'] : false;
+        isset($param['introduct_lang3']) ? $info['introduct_lang3'] = $param['introduct_lang3'] : false;
+        $info['createtime'] = time();
         return $this->dao->addFacilities($info);
     }
 }

@@ -17,10 +17,24 @@ class HotelPicModel extends \BaseModel {
      * @return array
      */
     public function getHotelPicList(array $param) {
-        isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $paramList = array();
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getHotelPicList($paramList);
+    }
+
+    /**
+     * 获取HotelPic数量
+     *
+     * @param
+     *            array param 查询条件
+     * @return array
+     */
+    public function getHotelPicCount(array $param) {
+        $paramList = array();
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        return $this->dao->getHotelPicCount($paramList);
     }
 
     /**
@@ -49,9 +63,10 @@ class HotelPicModel extends \BaseModel {
      */
     public function updateHotelPicById($param, $id) {
         $result = false;
-        // 自行添加要更新的字段,以下是age字段是样例
         if ($id) {
-            $info['age'] = intval($param['age']);
+            isset($param['hotelid']) ? $info['hotelid'] = $param['hotelid'] : false;
+            isset($param['sort']) ? $info['sort'] = $param['sort'] : false;
+            isset($param['pic']) ? $info['pic'] = $param['pic'] : false;
             $result = $this->dao->updateHotelPicById($info, $id);
         }
         return $result;
@@ -65,8 +80,9 @@ class HotelPicModel extends \BaseModel {
      * @return array
      */
     public function addHotelPic($param) {
-        // 自行添加要添加的字段,以下是age字段是样例
-        $info['age'] = intval($param['age']);
+        isset($param['hotelid']) ? $info['hotelid'] = $param['hotelid'] : false;
+        isset($param['sort']) ? $info['sort'] = $param['sort'] : false;
+        isset($param['pic']) ? $info['pic'] = $param['pic'] : false;
         return $this->dao->addHotelPic($info);
     }
 }

@@ -2,6 +2,9 @@
 
 class TrafficModel extends \BaseModel {
 
+    /**
+     * @var Dao_Traffic
+     */
     private $dao;
 
     public function __construct() {
@@ -11,21 +14,37 @@ class TrafficModel extends \BaseModel {
 
     /**
      * 获取Traffic列表信息
-     * 
+     *
      * @param
      *            array param 查询条件
      * @return array
      */
     public function getTrafficList(array $param) {
-        isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = intval($param['id']) : false;
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getTrafficList($paramList);
     }
 
     /**
+     * 获取Traffic数量
+     *
+     * @param
+     *            array param 查询条件
+     * @return array
+     */
+    public function getTrafficCount(array $param) {
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = intval($param['id']) : false;
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        return $this->dao->getTrafficCount($paramList);
+    }
+
+    /**
      * 根据id查询Traffic信息
-     * 
+     *
      * @param
      *            int id 查询的主键
      * @return array
@@ -40,7 +59,7 @@ class TrafficModel extends \BaseModel {
 
     /**
      * 根据id更新Traffic信息
-     * 
+     *
      * @param
      *            array param 需要更新的信息
      * @param
@@ -49,9 +68,14 @@ class TrafficModel extends \BaseModel {
      */
     public function updateTrafficById($param, $id) {
         $result = false;
-        // 自行添加要更新的字段,以下是age字段是样例
         if ($id) {
-            $info['age'] = intval($param['age']);
+            isset($param['hotelid']) ? $info['hotelid'] = $param['hotelid'] : false;
+            isset($param['introduct_lang1']) ? $info['introduct_lang1'] = $param['introduct_lang1'] : false;
+            isset($param['introduct_lang2']) ? $info['introduct_lang2'] = $param['introduct_lang2'] : false;
+            isset($param['introduct_lang3']) ? $info['introduct_lang3'] = $param['introduct_lang3'] : false;
+            isset($param['detail_lang1']) ? $info['detail_lang1'] = $param['detail_lang1'] : false;
+            isset($param['detail_lang2']) ? $info['detail_lang2'] = $param['detail_lang2'] : false;
+            isset($param['detail_lang3']) ? $info['detail_lang3'] = $param['detail_lang3'] : false;
             $result = $this->dao->updateTrafficById($info, $id);
         }
         return $result;
@@ -59,14 +83,16 @@ class TrafficModel extends \BaseModel {
 
     /**
      * Traffic新增信息
-     * 
+     *
      * @param
      *            array param 需要增加的信息
      * @return array
      */
     public function addTraffic($param) {
-        // 自行添加要添加的字段,以下是age字段是样例
-        $info['age'] = intval($param['age']);
+        isset($param['hotelid']) ? $info['hotelid'] = $param['hotelid'] : false;
+        isset($param['introduct_lang1']) ? $info['introduct_lang1'] = $param['introduct_lang1'] : false;
+        isset($param['introduct_lang2']) ? $info['introduct_lang2'] = $param['introduct_lang2'] : false;
+        isset($param['introduct_lang3']) ? $info['introduct_lang3'] = $param['introduct_lang3'] : false;
         return $this->dao->addTraffic($info);
     }
 }

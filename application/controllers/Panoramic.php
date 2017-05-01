@@ -1,55 +1,55 @@
 <?php
 
-class FloorController extends \BaseController {
+class PanoramicController extends \BaseController {
 
     /**
-     * @var FloorModel
+     * @var PanoramicModel
      */
     private $model;
     /**
-     * @var Convertor_Floor
+     * @var Convertor_Panoramic
      */
     private $convertor;
 
     public function init() {
         parent::init();
-        $this->model = new FloorModel();
-        $this->convertor = new Convertor_Floor();
+        $this->model = new PanoramicModel();
+        $this->convertor = new Convertor_Panoramic();
     }
 
     /**
-     * 获取Floor列表
+     * 获取Panoramic列表
      *
      * @return Json
      */
-    public function getFloorListAction() {
+    public function getPanoramicListAction() {
         $param = array();
         $param['page'] = intval($this->getParamList('page', 1));
         $param['limit'] = intval($this->getParamList('limit', 5));
         $param['id'] = intval($this->getParamList('id'));
         $param['hotelid'] = intval($this->getParamList('hotelid'));
-        $param['floor'] = trim($this->getParamList('floor'));
+        $param['title'] = trim($this->getParamList('title'));
         $param['status'] = $this->getParamList('status');
         if (is_null($param['status'])) {
             unset($param['status']);
         }
-        $data = $this->model->getFloorList($param);
-        $count = $this->model->getFloorCount($param);
-        $data = $this->convertor->getFloorListConvertor($data, $count, $param);
+        $data = $this->model->getPanoramicList($param);
+        $count = $this->model->getPanoramicCount($param);
+        $data = $this->convertor->getPanoramicListConvertor($data, $count, $param);
         $this->echoSuccessData($data);
     }
 
 
     /**
-     * 根据id获取Floor详情
+     * 根据id获取Panoramic详情
      * @param int id 获取详情信息的id
      * @return Json
      */
-    public function getFloorDetailAction() {
+    public function getPanoramicDetailAction() {
         $id = intval($this->getParamList('id'));
         if ($id) {
-            $data = $this->model->getFloorDetail($id);
-            $data = $this->convertor->getFloorDetail($data);
+            $data = $this->model->getPanoramicDetail($id);
+            $data = $this->convertor->getPanoramicDetail($data);
         } else {
             $this->throwException(1, '查询条件错误，id不能为空');
         }
@@ -57,23 +57,22 @@ class FloorController extends \BaseController {
     }
 
     /**
-     * 根据id修改Floor信息
+     * 根据id修改Panoramic信息
      * @param int id 获取详情信息的id
      * @param array param 需要更新的字段
      * @return Json
      */
-    public function updateFloorByIdAction() {
+    public function updatePanoramicByIdAction() {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
             $param['hotelid'] = $this->getParamList('hotelid');
-            $param['status'] = $this->getParamList('status');
-            $param['floor'] = $this->getParamList('floor');
+            $param['panoramic'] = $this->getParamList('panoramic');
             $param['pic'] = $this->getParamList('pic');
-            $param['detail_lang1'] = $this->getParamList('detail_lang1');
-            $param['detail_lang2'] = $this->getParamList('detail_lang2');
-            $param['detail_lang3'] = $this->getParamList('detail_lang3');
-            $data = $this->model->updateFloorById($param, $id);
+            $param['title_lang1'] = $this->getParamList('title_lang1');
+            $param['title_lang2'] = $this->getParamList('title_lang2');
+            $param['title_lang3'] = $this->getParamList('title_lang3');
+            $data = $this->model->updatePanoramicById($param, $id);
             $data = $this->convertor->statusConvertor($data);
         } else {
             $this->throwException(1, 'id不能为空');
@@ -82,20 +81,19 @@ class FloorController extends \BaseController {
     }
 
     /**
-     * 添加Floor信息
+     * 添加Panoramic信息
      * @param array param 需要新增的信息
      * @return Json
      */
-    public function addFloorAction() {
+    public function addPanoramicAction() {
         $param = array();
         $param['hotelid'] = intval($this->getParamList('hotelid'));
-        $param['status'] = intval($this->getParamList('status'));
-        $param['floor'] = trim($this->getParamList('floor'));
+        $param['panoramic'] = trim($this->getParamList('panoramic'));
         $param['pic'] = trim($this->getParamList('pic'));
-        $param['detail_lang1'] = trim($this->getParamList('detail_lang1'));
-        $param['detail_lang2'] = trim($this->getParamList('detail_lang2'));
-        $param['detail_lang3'] = trim($this->getParamList('detail_lang3'));
-        $data = $this->model->addFloor($param);
+        $param['title_lang1'] = trim($this->getParamList('title_lang1'));
+        $param['title_lang2'] = trim($this->getParamList('title_lang2'));
+        $param['title_lang3'] = trim($this->getParamList('title_lang3'));
+        $data = $this->model->addPanoramic($param);
         $data = $this->convertor->statusConvertor(array(
             'id' => $data
         ));
