@@ -17,9 +17,10 @@ class ShoppingOrderModel extends \BaseModel {
      * @return array
      */
     public function getShoppingOrderList(array $param) {
-        isset($param['shoppingid']) ? $paramList['shoppingid'] = strval($param['shoppingid']) : false;
-        isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
-        isset($param['userid']) ? $paramList['userid'] = intval($param['userid']) : false;
+        $paramList = array();
+        $param['shoppingid'] ? $paramList['shoppingid'] = strval($param['shoppingid']) : false;
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $param['userid'] ? $paramList['userid'] = intval($param['userid']) : false;
         isset($param['status']) ? $paramList['status'] = $param['status'] : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
@@ -34,9 +35,10 @@ class ShoppingOrderModel extends \BaseModel {
      * @return array
      */
     public function getShoppingOrderCount(array $param) {
-        isset($param['shoppingid']) ? $paramList['shoppingid'] = strval($param['shoppingid']) : false;
-        isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
-        isset($param['userid']) ? $paramList['userid'] = intval($param['userid']) : false;
+        $paramList = array();
+        $param['shoppingid'] ? $paramList['shoppingid'] = strval($param['shoppingid']) : false;
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $param['userid'] ? $paramList['userid'] = intval($param['userid']) : false;
         isset($param['status']) ? $paramList['status'] = $param['status'] : false;
         return $this->dao->getShoppingOrderCount($paramList);
     }

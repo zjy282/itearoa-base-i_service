@@ -3,29 +3,29 @@
 /**
  * 活动标签控制器类
  */
-class ActivityTagController extends \BaseController {
+class ShoppingTagController extends \BaseController {
 
     /**
-     * @var ActivityTagModel
+     * @var ShoppingTagModel
      */
     private $model;
     /**
-     * @var Convertor_ActivityTag
+     * @var Convertor_ShoppingTag
      */
     private $convertor;
 
     public function init() {
         parent::init();
-        $this->model = new ActivityTagModel();
-        $this->convertor = new Convertor_ActivityTag();
+        $this->model = new ShoppingTagModel();
+        $this->convertor = new Convertor_ShoppingTag();
     }
 
     /**
-     * 获取ActivityTag列表
+     * 获取ShoppingTag列表
      *
      * @return Json
      */
-    public function getActivityTagListAction() {
+    public function getShoppingTagListAction() {
         $param = array();
         $param['page'] = intval($this->getParamList('page', 1));
         $param['limit'] = intval($this->getParamList('limit', 5));
@@ -35,23 +35,23 @@ class ActivityTagController extends \BaseController {
         if (is_null($param['status'])) {
             unset($param['status']);
         }
-        $data = $this->model->getActivityTagList($param);
-        $count = $this->model->getActivityTagCount($param);
-        $data = $this->convertor->getActivityTagListConvertor($data, $count, $param);
+        $data = $this->model->getShoppingTagList($param);
+        $count = $this->model->getShoppingTagCount($param);
+        $data = $this->convertor->getShoppingTagListConvertor($data, $count, $param);
         $this->echoSuccessData($data);
     }
 
 
     /**
-     * 根据id获取ActivityTag详情
+     * 根据id获取ShoppingTag详情
      * @param int id 获取详情信息的id
      * @return Json
      */
-    public function getActivityTagDetailAction() {
+    public function getShoppingTagDetailAction() {
         $id = intval($this->getParamList('id'));
         if ($id) {
-            $data = $this->model->getActivityTagDetail($id);
-            $data = $this->convertor->getActivityTagDetail($data);
+            $data = $this->model->getShoppingTagDetail($id);
+            $data = $this->convertor->getShoppingTagDetail($data);
         } else {
             $this->throwException(1, '查询条件错误，id不能为空');
         }
@@ -59,19 +59,19 @@ class ActivityTagController extends \BaseController {
     }
 
     /**
-     * 根据id修改ActivityTag信息
+     * 根据id修改ShoppingTag信息
      * @param int id 获取详情信息的id
      * @param array param 需要更新的字段
      * @return Json
      */
-    public function updateActivityTagByIdAction() {
+    public function updateShoppingTagByIdAction() {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
             $param['title_lang1'] = trim($this->getParamList('title_lang1'));
             $param['title_lang2'] = trim($this->getParamList('title_lang2'));
             $param['title_lang3'] = trim($this->getParamList('title_lang3'));
-            $data = $this->model->updateActivityTagById($param, $id);
+            $data = $this->model->updateShoppingTagById($param, $id);
             $data = $this->convertor->statusConvertor($data);
         } else {
             $this->throwException(1, 'id不能为空');
@@ -80,17 +80,17 @@ class ActivityTagController extends \BaseController {
     }
 
     /**
-     * 添加ActivityTag信息
+     * 添加ShoppingTag信息
      * @param array param 需要新增的信息
      * @return Json
      */
-    public function addActivityTagAction() {
+    public function addShoppingTagAction() {
         $param = array();
         $param['hotelid'] = intval($this->getParamList('hotelid'));
         $param['title_lang1'] = trim($this->getParamList('title_lang1'));
         $param['title_lang2'] = trim($this->getParamList('title_lang2'));
         $param['title_lang3'] = trim($this->getParamList('title_lang3'));
-        $data = $this->model->addActivityTag($param);
+        $data = $this->model->addShoppingTag($param);
         $data = $this->convertor->statusConvertor(array(
             'id' => $data
         ));

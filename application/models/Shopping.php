@@ -17,8 +17,11 @@ class ShoppingModel extends \BaseModel {
      * @return array
      */
     public function getShoppingList(array $param) {
-        isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
         $param['tagid'] ? $paramList['tagid'] = intval($param['tagid']) : false;
+        $param['title'] ? $paramList['title'] = intval($param['title']) : false;
         isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
@@ -33,8 +36,11 @@ class ShoppingModel extends \BaseModel {
      * @return array
      */
     public function getShoppingCount(array $param) {
-        isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
         $param['tagid'] ? $paramList['tagid'] = intval($param['tagid']) : false;
+        $param['title'] ? $paramList['title'] = intval($param['title']) : false;
         isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
         return $this->dao->getShoppingCount($paramList);
     }
@@ -65,9 +71,20 @@ class ShoppingModel extends \BaseModel {
      */
     public function updateShoppingById($param, $id) {
         $result = false;
-        // 自行添加要更新的字段,以下是age字段是样例
         if ($id) {
-            $info['age'] = intval($param['age']);
+            isset($param['title_lang1']) ? $info['title_lang1'] = $param['title_lang1'] : false;
+            isset($param['title_lang2']) ? $info['title_lang2'] = $param['title_lang2'] : false;
+            isset($param['title_lang3']) ? $info['title_lang3'] = $param['title_lang3'] : false;
+            isset($param['introduct_lang1']) ? $info['introduct_lang1'] = $param['introduct_lang1'] : false;
+            isset($param['introduct_lang2']) ? $info['introduct_lang2'] = $param['introduct_lang2'] : false;
+            isset($param['introduct_lang3']) ? $info['introduct_lang3'] = $param['introduct_lang3'] : false;
+            isset($param['tagid']) ? $info['tagid'] = $param['tagid'] : false;
+            isset($param['pic']) ? $info['pic'] = $param['pic'] : false;
+            isset($param['detail_lang1']) ? $info['detail_lang1'] = $param['detail_lang1'] : false;
+            isset($param['detail_lang2']) ? $info['detail_lang2'] = $param['detail_lang2'] : false;
+            isset($param['detail_lang3']) ? $info['detail_lang3'] = $param['detail_lang3'] : false;
+            isset($param['hotelid']) ? $info['hotelid'] = $param['hotelid'] : false;
+
             $result = $this->dao->updateShoppingById($info, $id);
         }
         return $result;
@@ -81,8 +98,16 @@ class ShoppingModel extends \BaseModel {
      * @return array
      */
     public function addShopping($param) {
-        // 自行添加要添加的字段,以下是age字段是样例
-        $info['age'] = intval($param['age']);
+        isset($param['title_lang1']) ? $info['title_lang1'] = $param['title_lang1'] : false;
+        isset($param['title_lang2']) ? $info['title_lang2'] = $param['title_lang2'] : false;
+        isset($param['title_lang3']) ? $info['title_lang3'] = $param['title_lang3'] : false;
+        isset($param['introduct_lang1']) ? $info['introduct_lang1'] = $param['introduct_lang1'] : false;
+        isset($param['introduct_lang2']) ? $info['introduct_lang2'] = $param['introduct_lang2'] : false;
+        isset($param['introduct_lang3']) ? $info['introduct_lang3'] = $param['introduct_lang3'] : false;
+        isset($param['tagid']) ? $info['tagid'] = $param['tagid'] : false;
+        isset($param['pic']) ? $info['pic'] = $param['pic'] : false;
+        isset($param['hotelid']) ? $info['hotelid'] = $param['hotelid'] : false;
+        $info['createtime'] = time();
         return $this->dao->addShopping($info);
     }
 }

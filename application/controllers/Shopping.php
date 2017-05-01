@@ -2,8 +2,13 @@
 
 class ShoppingController extends \BaseController {
 
+    /**
+     * @var ShoppingModel
+     */
     private $model;
-
+    /**
+     * @var Convertor_Shopping
+     */
     private $convertor;
 
     public function init() {
@@ -26,7 +31,28 @@ class ShoppingController extends \BaseController {
         $shoppingCount = $this->model->getShoppingCount($param);
         $shoppingTagModel = new ShoppingTagModel();
         $tagList = $shoppingTagModel->getShoppingTagList($param);
-        $data = $this->convertor->getShoppingListConvertor($shoppingList, $tagList, $shoppingCount, $param);
+        $data = $this->convertor->getEffectiveShoppingListConvertor($shoppingList, $tagList, $shoppingCount, $param);
+        $this->echoSuccessData($data);
+    }
+
+    /**
+     * 获取Activity列表
+     *
+     * @return Json
+     */
+    public function getListAction() {
+        $param = array();
+        $param['hotelid'] = intval($this->getParamList('hotelid'));
+        $param['tagid'] = intval($this->getParamList('tagid'));
+        $param['title'] = trim($this->getParamList('title'));
+        $param['status'] = $this->getParamList('status');
+        if (is_null($param['status'])) {
+            unset($param['status']);
+        }
+        $this->getPageParam($param);
+        $activityList = $this->model->getShoppingList($param);
+        $activityCount = $this->model->getShoppingCount($param);
+        $data = $this->convertor->getShoppingListConvertor($activityList, $activityCount, $param);
         $this->echoSuccessData($data);
     }
 
@@ -61,13 +87,24 @@ class ShoppingController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
-            $param['name'] = trim($this->getParamList('name'));
+            $param['title_lang1'] = $this->getParamList('title_lang1');
+            $param['title_lang2'] = $this->getParamList('title_lang2');
+            $param['title_lang3'] = $this->getParamList('title_lang3');
+            $param['introduct_lang1'] = $this->getParamList('introduct_lang1');
+            $param['introduct_lang2'] = $this->getParamList('introduct_lang2');
+            $param['introduct_lang3'] = $this->getParamList('introduct_lang3');
+            $param['tagid'] = $this->getParamList('tagid');
+            $param['pic'] = $this->getParamList('pic');
+            $param['detail_lang1'] = $this->getParamList('detail_lang1');
+            $param['detail_lang2'] = $this->getParamList('detail_lang2');
+            $param['detail_lang3'] = $this->getParamList('detail_lang3');
+            $param['hotelid'] = $this->getParamList('hotelid');
             $data = $this->model->updateShoppingById($param, $id);
-            $data = $this->convertor->commonConvertor($data);
+            $data = $this->convertor->statusConvertor($data);
         } else {
             $this->throwException(1, 'id不能为空');
         }
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -79,9 +116,19 @@ class ShoppingController extends \BaseController {
      */
     public function addShoppingAction() {
         $param = array();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['title_lang1'] = trim($this->getParamList('title_lang1'));
+        $param['title_lang2'] = trim($this->getParamList('title_lang2'));
+        $param['title_lang3'] = trim($this->getParamList('title_lang3'));
+        $param['introduct_lang1'] = trim($this->getParamList('introduct_lang1'));
+        $param['introduct_lang2'] = trim($this->getParamList('introduct_lang2'));
+        $param['introduct_lang3'] = trim($this->getParamList('introduct_lang3'));
+        $param['tagid'] = intval($this->getParamList('tagid'));
+        $param['pic'] = trim($this->getParamList('pic'));
+        $param['hotelid'] = intval($this->getParamList('hotelid'));
         $data = $this->model->addShopping($param);
-        $data = $this->convertor->commonConvertor($data);
-        $this->echoJson($data);
+        $data = $this->convertor->statusConvertor(array(
+            'id' => $data
+        ));
+        $this->echoSuccessData($data);
     }
 }

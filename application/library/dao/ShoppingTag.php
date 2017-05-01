@@ -16,21 +16,50 @@ class Dao_ShoppingTag extends Dao_Base {
     public function getShoppingTagList(array $param): array {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
-        
+
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select * from hotel_shopping_tag {$paramSql['sql']}";
+        if ($limit) {
+            $sql .= " limit {$page},{$limit}";
+        }
+        $result = $this->db->fetchAll($sql, $paramSql['case']);
+        return is_array($result) ? $result : array();
+    }
+
+    /**
+     * 查询hotel_shopping_tag数量
+     *
+     * @param
+     *            array 入参
+     * @return array
+     */
+    public function getShoppingTagCount(array $param): int {
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select count(1) as count from hotel_shopping_tag {$paramSql['sql']}";
+        $result = $this->db->fetchAssoc($sql, $paramSql['case']);
+        return intval($result['count']);
+    }
+
+    private function handlerListParams($param) {
         $whereSql = array();
         $whereCase = array();
+        if (isset($param['id'])) {
+            if (is_array($param['id'])) {
+                $whereSql[] = 'id in (' . implode(',', $param['id']) . ')';
+            } else {
+                $whereSql[] = 'id = ?';
+                $whereCase[] = $param['id'];
+            }
+        }
         if (isset($param['hotelid'])) {
             $whereSql[] = 'hotelid = ?';
             $whereCase[] = $param['hotelid'];
         }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
-        
-        $sql = "select * from hotel_shopping_tag {$whereSql}";
-        if ($limit) {
-            $sql .= " limit {$page},{$limit}";
-        }
-        $result = $this->db->fetchAll($sql, $whereCase);
-        return is_array($result) ? $result : array();
+        return array(
+            'sql' => $whereSql,
+            'case' => $whereCase
+        );
     }
 
     /**
@@ -42,14 +71,14 @@ class Dao_ShoppingTag extends Dao_Base {
      */
     public function getShoppingTagDetail(int $id): array {
         $result = array();
-        
+
         if ($id) {
             $sql = "select * from hotel_shopping_tag where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
         }
-        
+
         return $result;
     }
 
@@ -64,11 +93,11 @@ class Dao_ShoppingTag extends Dao_Base {
      */
     public function updateShoppingTagById(array $info, int $id) {
         $result = false;
-        
+
         if ($id) {
-            $result = $this->db->update('hotel_shopping_tag', $info, $id);
+            $result = $this->db->update('hotel_shopping_tag', $info, array('id' => $id));
         }
-        
+
         return $result;
     }
 

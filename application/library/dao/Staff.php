@@ -16,15 +16,23 @@ class Dao_Staff extends Dao_Base {
     public function getStaffList(array $param): array {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
-        
+
         $whereSql = array();
         $whereCase = array();
+        if (isset($param['id'])) {
+            if (is_array($param['id'])) {
+                $whereSql[] = 'id in (' . implode(',', $param['id']) . ')';
+            } else {
+                $whereSql[] = 'id = ?';
+                $whereCase[] = $param['id'];
+            }
+        }
         if (isset($param['oid'])) {
             $whereSql[] = 'oid = ?';
             $whereCase[] = $param['oid'];
         }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
-        
+
         $sql = "select * from hotel_staff {$whereSql}";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
@@ -42,14 +50,14 @@ class Dao_Staff extends Dao_Base {
      */
     public function getStaffDetail(int $id): array {
         $result = array();
-        
+
         if ($id) {
             $sql = "select * from hotel_staff where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
         }
-        
+
         return $result;
     }
 
@@ -62,14 +70,14 @@ class Dao_Staff extends Dao_Base {
      */
     public function getStaffDetailByStaffId($staffId) {
         $result = array();
-        
+
         if ($staffId) {
             $sql = "select * from hotel_staff where staffid=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $staffId
             ));
         }
-        
+
         return $result;
     }
 
@@ -84,7 +92,7 @@ class Dao_Staff extends Dao_Base {
      */
     public function updateStaffById(array $info, int $id) {
         $result = false;
-        
+
         if ($id) {
             $result = $this->db->update('hotel_staff', $info, array(
                 'id' => $id

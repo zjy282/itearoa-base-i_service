@@ -2,8 +2,14 @@
 
 class ShoppingOrderController extends \BaseController {
 
+    /**
+     * @var ShoppingOrderModel
+     */
     private $model;
 
+    /**
+     * @var Convertor_ShoppingOrder
+     */
     private $convertor;
 
     public function init() {
@@ -31,6 +37,21 @@ class ShoppingOrderController extends \BaseController {
         $list = $this->model->getShoppingOrderList($param);
         $count = $this->model->getShoppingOrderCount($param);
         $data = $this->convertor->getShoppingOrderListConvertor($list, $count, $param);
+        $this->echoSuccessData($data);
+    }
+
+    public function getOrderListAction() {
+        $param = array();
+        $param['page'] = intval($this->getParamList('page'));
+        $param['limit'] = intval($this->getParamList('limit', 5));
+        $param['id'] = intval($this->getParamList('id'));
+        $param['name'] = trim($this->getParamList('name'));
+        $param['phone'] = trim($this->getParamList('phone'));
+        $param['hotelid'] = intval($this->getParamList('hotelid'));
+        $param['shoppingid'] = intval($this->getParamList('shoppingid'));
+        $data = $this->model->getShoppingOrderList($param);
+        $count = $this->model->getShoppingOrderCount($param);
+        $data = $this->convertor->getOrderListConvertor($data, $count, $param);
         $this->echoSuccessData($data);
     }
 
@@ -86,7 +107,7 @@ class ShoppingOrderController extends \BaseController {
         $param['count'] = trim($this->getParamList('count'));
         $param['shoppingid'] = intval($this->getParamList('shoppingid'));
         $param['hotelid'] = intval($this->getParamList('hotelid'));
-        
+
         if (empty($param['count']) || empty($param['shoppingid']) || empty($param['hotelid'])) {
             $this->throwException(2, '入参错误');
         }
@@ -95,7 +116,7 @@ class ShoppingOrderController extends \BaseController {
         if (empty($param['userid'])) {
             $this->throwException(3, '登录验证失败');
         }
-        
+
         $checkOrder = $this->model->getShoppingOrderList(array(
             'shoppingid' => $param['shoppingid'],
             'hotelid' => $param['hotelid'],
@@ -109,7 +130,7 @@ class ShoppingOrderController extends \BaseController {
             $this->throwException(4, '已经存在有效订单，请不要重复提交');
         }
         $data = $this->model->addShoppingOrder($param);
-        if (! $data) {
+        if (!$data) {
             $this->throwException(5, '提交失败');
         }
         $this->echoSuccessData(array(
@@ -131,10 +152,10 @@ class ShoppingOrderController extends \BaseController {
         if (empty($param['userid'])) {
             $this->throwException(3, 'token验证失败');
         }
-        if (! Enum_ShoppingOrder::getStatusNameList()[$param['status']]) {
+        if (!Enum_ShoppingOrder::getStatusNameList()[$param['status']]) {
             $this->throwException(2, '订单状态错误');
         }
-        
+
         // 验证订单信息
         $orderInfo = $this->model->getShoppingOrderDetail($param['id']);
         if (empty($orderInfo['id'])) {
@@ -147,7 +168,7 @@ class ShoppingOrderController extends \BaseController {
             'status' => $param['status'],
             'adminid' => $param['userid']
         ), $param['id']);
-        if (! $result) {
+        if (!$result) {
             $this->throwException(5, '修改失败');
         }
         $orderInfo['status'] = $param['status'];

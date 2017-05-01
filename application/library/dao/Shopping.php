@@ -16,7 +16,7 @@ class Dao_Shopping extends Dao_Base {
     public function getShoppingList(array $param): array {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
-        
+
         $paramSql = $this->handlerShoppingListParams($param);
         $sql = "select * from hotel_shopping {$paramSql['sql']}";
         if ($limit) {
@@ -43,6 +43,14 @@ class Dao_Shopping extends Dao_Base {
     private function handlerShoppingListParams($param) {
         $whereSql = array();
         $whereCase = array();
+        if (isset($param['id'])) {
+            if (is_array($param['id'])) {
+                $whereSql[] = 'id in (' . implode(',', $param['id']) . ')';
+            } else {
+                $whereSql[] = 'id = ?';
+                $whereCase[] = $param['id'];
+            }
+        }
         if (isset($param['hotelid'])) {
             $whereSql[] = 'hotelid = ?';
             $whereCase[] = $param['hotelid'];
@@ -54,6 +62,12 @@ class Dao_Shopping extends Dao_Base {
         if (isset($param['status'])) {
             $whereSql[] = 'status = ?';
             $whereCase[] = $param['status'];
+        }
+        if (isset($param['title'])) {
+            $whereSql[] = '(title_lang1 = ? or title_lang2 = ? or title_lang3 = ?)';
+            $whereCase[] = $param['title'];
+            $whereCase[] = $param['title'];
+            $whereCase[] = $param['title'];
         }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
         return array(
@@ -71,14 +85,14 @@ class Dao_Shopping extends Dao_Base {
      */
     public function getShoppingDetail(int $id): array {
         $result = array();
-        
+
         if ($id) {
             $sql = "select * from hotel_shopping where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
         }
-        
+
         return $result;
     }
 
@@ -93,11 +107,11 @@ class Dao_Shopping extends Dao_Base {
      */
     public function updateShoppingById(array $info, int $id) {
         $result = false;
-        
+
         if ($id) {
-            $result = $this->db->update('hotel_shopping', $info, $id);
+            $result = $this->db->update('hotel_shopping', $info, array('id' => $id));
         }
-        
+
         return $result;
     }
 
