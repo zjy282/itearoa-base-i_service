@@ -2,8 +2,14 @@
 
 class RoomResController extends \BaseController {
 
+    /**
+     * @var RoomResModel
+     */
     private $model;
 
+    /**
+     * @var Convertor_RoomRes
+     */
     private $convertor;
 
     public function init() {
@@ -19,10 +25,20 @@ class RoomResController extends \BaseController {
      */
     public function getRoomResListAction() {
         $param = array();
+        $param['page'] = intval($this->getParamList('page', 1));
+        $param['limit'] = intval($this->getParamList('limit', 5));
+        $param['id'] = intval($this->getParamList('id'));
+        $param['hotelid'] = intval($this->getParamList('hotelid'));
+        $param['icon'] = trim($this->getParamList('icon'));
         $param['name'] = trim($this->getParamList('name'));
+        $param['status'] = $this->getParamList('status');
+        if (is_null($param['status'])) {
+            unset($param['status']);
+        }
         $data = $this->model->getRoomResList($param);
-        $data = $this->convertor->getRoomResListConvertor($data);
-        $this->echoJson($data);
+        $count = $this->model->getRoomResCount($param);
+        $data = $this->convertor->getRoomResListConvertor($data, $count, $param);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -56,13 +72,25 @@ class RoomResController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
-            $param['name'] = trim($this->getParamList('name'));
+            $param['hotelid'] = $this->getParamList('hotelid');
+            $param['status'] = $this->getParamList('status');
+            $param['icon'] = $this->getParamList('icon');
+            $param['pdf'] = $this->getParamList('pdf');
+            $param['name_lang1'] = $this->getParamList('name_lang1');
+            $param['name_lang2'] = $this->getParamList('name_lang2');
+            $param['name_lang3'] = $this->getParamList('name_lang3');
+            $param['introduct_lang1'] = $this->getParamList('introduct_lang1');
+            $param['introduct_lang2'] = $this->getParamList('introduct_lang2');
+            $param['introduct_lang3'] = $this->getParamList('introduct_lang3');
+            $param['detail_lang1'] = $this->getParamList('detail_lang1');
+            $param['detail_lang2'] = $this->getParamList('detail_lang2');
+            $param['detail_lang3'] = $this->getParamList('detail_lang3');
             $data = $this->model->updateRoomResById($param, $id);
-            $data = $this->convertor->commonConvertor($data);
+            $data = $this->convertor->statusConvertor($data);
         } else {
             $this->throwException(1, 'id不能为空');
         }
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -74,15 +102,26 @@ class RoomResController extends \BaseController {
      */
     public function addRoomResAction() {
         $param = array();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['hotelid'] = intval($this->getParamList('hotelid'));
+        $param['status'] = intval($this->getParamList('status'));
+        $param['icon'] = trim($this->getParamList('icon'));
+        $param['pdf'] = trim($this->getParamList('pdf'));
+        $param['name_lang1'] = trim($this->getParamList('name_lang1'));
+        $param['name_lang2'] = trim($this->getParamList('name_lang2'));
+        $param['name_lang3'] = trim($this->getParamList('name_lang3'));
+        $param['introduct_lang1'] = trim($this->getParamList('introduct_lang1'));
+        $param['introduct_lang2'] = trim($this->getParamList('introduct_lang2'));
+        $param['introduct_lang3'] = trim($this->getParamList('introduct_lang3'));
         $data = $this->model->addRoomRes($param);
-        $data = $this->convertor->commonConvertor($data);
-        $this->echoJson($data);
+        $data = $this->convertor->statusConvertor(array(
+            'id' => $data
+        ));
+        $this->echoSuccessData($data);
     }
 
     /**
      * 根据房型ID和酒店ID获取设备列表
-     * 
+     *
      * @param
      *            int roomtypeid 房型ID
      * @param
@@ -94,20 +133,20 @@ class RoomResController extends \BaseController {
         $param['roomtypeid'] = intval($this->getParamList('roomtypeid'));
         $param['hotelid'] = intval($this->getParamList('hotelid'));
         $param['status'] = 1;
-        
-        if(empty($param['roomtypeid'])){
+
+        if (empty($param['roomtypeid'])) {
             $this->throwException(2, '房型信息不存在');
         }
-        if(empty($param['hotelid'])){
+        if (empty($param['hotelid'])) {
             $this->throwException(3, '物业ID错误');
         }
-        
+
         // 获取房型信息
         $roomTypeModel = new RoomtypeModel();
         $roomInfo = $roomTypeModel->getRoomtypeDetail($param['roomtypeid']);
         empty($roomInfo) ? $this->throwException(2, '房型信息不存在') : false;
         $resIdList = Util_Tools::filterIdListArray(explode(',', $roomInfo['resid_list']));
-        
+
         $resList = $this->model->getRoomResList(array(
             'id' => $resIdList,
             'status' => 1,

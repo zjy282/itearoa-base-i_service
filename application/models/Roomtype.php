@@ -4,21 +4,39 @@ class RoomtypeModel extends \BaseModel {
 
     private $dao;
 
-    public function __construct(){
+    public function __construct() {
         parent::__construct();
         $this->dao = new Dao_Roomtype();
     }
-    
+
     /**
      * 获取Roomtype列表信息
      * @param array param 查询条件
      * @return array
      */
-    public function getRoomtypeList(array $param){
-        isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+    public function getRoomtypeList(array $param) {
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = intval($param['id']) : false;
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $param['title'] ? $paramList['title'] = intval($param['title']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getRoomtypeList($paramList);
+    }
+
+    /**
+     * 获取Roomtype数量
+     *
+     * @param
+     *            array param 查询条件
+     * @return array
+     */
+    public function getRoomtypeCount(array $param) {
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = intval($param['id']) : false;
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $param['title'] ? $paramList['title'] = intval($param['title']) : false;
+        return $this->dao->getRoomtypeCount($paramList);
     }
 
     /**
@@ -26,9 +44,9 @@ class RoomtypeModel extends \BaseModel {
      * @param int id 查询的主键
      * @return array
      */
-    public function getRoomtypeDetail($id){
+    public function getRoomtypeDetail($id) {
         $result = array();
-        if ($id){
+        if ($id) {
             $result = $this->dao->getRoomtypeDetail($id);
         }
         return $result;
@@ -40,12 +58,23 @@ class RoomtypeModel extends \BaseModel {
      * @param int id 主键
      * @return array
      */
-    public function updateRoomtypeById($param,$id){
+    public function updateRoomtypeById($param, $id) {
         $result = false;
-        //自行添加要更新的字段,以下是age字段是样例
-        if ($id){
-            $info['age'] = intval($param['age']);
-            $result = $this->dao->updateRoomtypeById($info,$id);
+        if ($id) {
+            isset($param['title_lang1']) ? $info['title_lang1'] = $param['title_lang1'] : false;
+            isset($param['title_lang2']) ? $info['title_lang2'] = $param['title_lang2'] : false;
+            isset($param['title_lang3']) ? $info['title_lang3'] = $param['title_lang3'] : false;
+            isset($param['size']) ? $info['size'] = $param['size'] : false;
+            isset($param['panoramic']) ? $info['panoramic'] = $param['panoramic'] : false;
+            isset($param['hotelid']) ? $info['hotelid'] = $param['hotelid'] : false;
+            isset($param['bedtype_lang1']) ? $info['bedtype_lang1'] = $param['bedtype_lang1'] : false;
+            isset($param['bedtype_lang2']) ? $info['bedtype_lang2'] = $param['bedtype_lang2'] : false;
+            isset($param['bedtype_lang3']) ? $info['bedtype_lang3'] = $param['bedtype_lang3'] : false;
+            isset($param['detail_lang1']) ? $info['detail_lang1'] = $param['detail_lang1'] : false;
+            isset($param['detail_lang2']) ? $info['detail_lang2'] = $param['detail_lang2'] : false;
+            isset($param['detail_lang3']) ? $info['detail_lang3'] = $param['detail_lang3'] : false;
+            isset($param['resid_list']) ? $info['resid_list'] = $param['resid_list'] : false;
+            $result = $this->dao->updateRoomtypeById($info, $id);
         }
         return $result;
     }
@@ -55,9 +84,17 @@ class RoomtypeModel extends \BaseModel {
      * @param array param 需要增加的信息
      * @return array
      */
-    public function addRoomtype($param){
-        //自行添加要添加的字段,以下是age字段是样例
-        $info['age'] = intval($param['age']);
+    public function addRoomtype($param) {
+        isset($param['title_lang1']) ? $info['title_lang1'] = $param['title_lang1'] : false;
+        isset($param['title_lang2']) ? $info['title_lang2'] = $param['title_lang2'] : false;
+        isset($param['title_lang3']) ? $info['title_lang3'] = $param['title_lang3'] : false;
+        isset($param['size']) ? $info['size'] = $param['size'] : false;
+        isset($param['panoramic']) ? $info['panoramic'] = $param['panoramic'] : false;
+        isset($param['hotelid']) ? $info['hotelid'] = $param['hotelid'] : false;
+        isset($param['bedtype_lang1']) ? $info['bedtype_lang1'] = $param['bedtype_lang1'] : false;
+        isset($param['bedtype_lang2']) ? $info['bedtype_lang2'] = $param['bedtype_lang2'] : false;
+        isset($param['bedtype_lang3']) ? $info['bedtype_lang3'] = $param['bedtype_lang3'] : false;
+        $info['createtime'] = time();
         return $this->dao->addRoomtype($info);
     }
 }

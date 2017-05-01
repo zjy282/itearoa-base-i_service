@@ -10,6 +10,8 @@ class Enum_Oss {
 
     const OSS_PATH_HTML = 'html';
 
+    const OSS_PATH_PDF = 'pdf';
+
     public static function allowExtension($type) {
         $allowList = array();
         switch ($type) {
@@ -30,6 +32,11 @@ class Enum_Oss {
             case self::OSS_PATH_HTML:
                 $allowList = array(
                     'text/html' => 'html',
+                );
+                break;
+            case self::OSS_PATH_PDF:
+                $allowList = array(
+                    'application/pdf' => 'pdf',
                 );
                 break;
         }

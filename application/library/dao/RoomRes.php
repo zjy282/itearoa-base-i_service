@@ -16,35 +16,64 @@ class Dao_RoomRes extends Dao_Base {
     public function getRoomResList(array $param): array {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
-        
+
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select * from hotel_room_res {$paramSql['sql']}";
+        if ($limit) {
+            $sql .= " limit {$page},{$limit}";
+        }
+        $result = $this->db->fetchAll($sql, $paramSql['case']);
+        return is_array($result) ? $result : array();
+    }
+
+    /**
+     * 查询hotel_room_res数量
+     *
+     * @param
+     *            array 入参
+     * @return array
+     */
+    public function getRoomResCount(array $param): int {
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select count(1) as count from hotel_room_res {$paramSql['sql']}";
+        $result = $this->db->fetchAssoc($sql, $paramSql['case']);
+        return intval($result['count']);
+    }
+
+    private function handlerListParams($param) {
         $whereSql = array();
         $whereCase = array();
         if (isset($param['id'])) {
             if (is_array($param['id'])) {
-                $param['id'][] = 0;
                 $whereSql[] = 'id in (' . implode(',', $param['id']) . ')';
             } else {
                 $whereSql[] = 'id = ?';
-                $whereCase[] = intval($param['id']);
+                $whereCase[] = $param['id'];
             }
         }
         if (isset($param['hotelid'])) {
             $whereSql[] = 'hotelid = ?';
             $whereCase[] = $param['hotelid'];
         }
+        if (isset($param['icon'])) {
+            $whereSql[] = 'icon = ?';
+            $whereCase[] = $param['icon'];
+        }
+        if (isset($param['name'])) {
+            $whereSql[] = '(name_lang1 = ? or name_lang2 = ? or name_lang3 = ?)';
+            $whereCase[] = $param['name'];
+            $whereCase[] = $param['name'];
+            $whereCase[] = $param['name'];
+        }
         if (isset($param['status'])) {
             $whereSql[] = 'status = ?';
             $whereCase[] = $param['status'];
         }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
-        
-        $sql = "select * from hotel_room_res {$whereSql}";
-        if ($limit) {
-            $sql .= " limit {$page},{$limit}";
-        }
-        
-        $result = $this->db->fetchAll($sql, $whereCase);
-        return is_array($result) ? $result : array();
+        return array(
+            'sql' => $whereSql,
+            'case' => $whereCase
+        );
     }
 
     /**
@@ -56,14 +85,14 @@ class Dao_RoomRes extends Dao_Base {
      */
     public function getRoomResDetail(int $id): array {
         $result = array();
-        
+
         if ($id) {
             $sql = "select * from hotel_room_res where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
         }
-        
+
         return $result;
     }
 
@@ -78,11 +107,11 @@ class Dao_RoomRes extends Dao_Base {
      */
     public function updateRoomResById(array $info, int $id) {
         $result = false;
-        
+
         if ($id) {
-            $result = $this->db->update('hotel_room_res', $info, $id);
+            $result = $this->db->update('hotel_room_res', $info, array('id' => $id));
         }
-        
+
         return $result;
     }
 
