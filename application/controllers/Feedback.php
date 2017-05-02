@@ -2,8 +2,12 @@
 
 class FeedbackController extends \BaseController {
 
+    /**
+     * @var FeedbackModel
+     */
     private $model;
 
+    /** @var  Convertor_Feedback */
     private $convertor;
 
     public function init() {
@@ -20,7 +24,7 @@ class FeedbackController extends \BaseController {
     public function getFeedbackListAction() {
         $param = array();
         $param['hotelid'] = intval($this->getParamList('hotelid'));
-        if(empty($param['hotelid'])){
+        if (empty($param['hotelid'])) {
             $this->throwException(2, '物业ID不能为空');
         }
         $param['status'] = 1;
@@ -30,8 +34,31 @@ class FeedbackController extends \BaseController {
     }
 
     /**
+     * 获取后台Feedback列表
+     *
+     * @return Json
+     */
+    public function getListAction() {
+        $param = array();
+        $param['page'] = intval($this->getParamList('page', 1));
+        $param['limit'] = intval($this->getParamList('limit', 5));
+        $param['id'] = intval($this->getParamList('id'));
+        $param['hotelid'] = intval($this->getParamList('hotelid'));
+        $param['question'] = trim($this->getParamList('question'));
+        $param['type'] = intval($this->getParamList('type'));
+        $param['status'] = $this->getParamList('status');
+        if (is_null($param['status'])) {
+            unset($param['status']);
+        }
+        $data = $this->model->getFeedbackList($param);
+        $count = $this->model->getFeedbackCount($param);
+        $data = $this->convertor->getListConvertor($data, $count, $param);
+        $this->echoSuccessData($data);
+    }
+
+    /**
      * 根据id获取Feedback详情
-     * 
+     *
      * @param
      *            int id 获取详情信息的id
      * @return Json
@@ -49,7 +76,7 @@ class FeedbackController extends \BaseController {
 
     /**
      * 根据id修改Feedback信息
-     * 
+     *
      * @param
      *            int id 获取详情信息的id
      * @param
@@ -60,27 +87,38 @@ class FeedbackController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
-            $param['name'] = trim($this->getParamList('name'));
+            $param['hotelid'] = $this->getParamList('hotelid');
+            $param['type'] = $this->getParamList('type');
+            $param['sort'] = $this->getParamList('sort');
+            $param['question'] = $this->getParamList('question');
+            $param['status'] = $this->getParamList('status');
+            $param['option'] = $this->getParamList('option');
             $data = $this->model->updateFeedbackById($param, $id);
-            $data = $this->convertor->commonConvertor($data);
+            $data = $this->convertor->statusConvertor($data);
         } else {
             $this->throwException(1, 'id不能为空');
         }
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
     /**
      * 添加Feedback信息
-     * 
+     *
      * @param
      *            array param 需要新增的信息
      * @return Json
      */
     public function addFeedbackAction() {
         $param = array();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['hotelid'] = intval($this->getParamList('hotelid'));
+        $param['type'] = intval($this->getParamList('type'));
+        $param['sort'] = trim($this->getParamList('sort'));
+        $param['question'] = trim($this->getParamList('question'));
+        $param['status'] = intval($this->getParamList('status'));
         $data = $this->model->addFeedback($param);
-        $data = $this->convertor->commonConvertor($data);
-        $this->echoJson($data);
+        $data = $this->convertor->statusConvertor(array(
+            'id' => $data
+        ));
+        $this->echoSuccessData($data);
     }
 }

@@ -16,7 +16,7 @@ class Dao_Feedback extends Dao_Base {
     public function getFeedbackList(array $param): array {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
-        
+
         $paramSql = $this->handlerFeedbackListParams($param);
         $sql = "select * from hotel_feedback {$paramSql['sql']} order by sort desc";
         if ($limit) {
@@ -43,9 +43,25 @@ class Dao_Feedback extends Dao_Base {
     private function handlerFeedbackListParams($param) {
         $whereSql = array();
         $whereCase = array();
+        if (isset($param['id'])) {
+            if (is_array($param['id'])) {
+                $whereSql[] = 'id in (' . implode(',', $param['id']) . ')';
+            } else {
+                $whereSql[] = 'id = ?';
+                $whereCase[] = $param['id'];
+            }
+        }
         if (isset($param['hotelid'])) {
             $whereSql[] = 'hotelid = ?';
             $whereCase[] = $param['hotelid'];
+        }
+        if (isset($param['question'])) {
+            $whereSql[] = 'question = ?';
+            $whereCase[] = $param['question'];
+        }
+        if (isset($param['type'])) {
+            $whereSql[] = 'type = ?';
+            $whereCase[] = $param['type'];
         }
         if (isset($param['status'])) {
             $whereSql[] = 'status = ?';
@@ -67,14 +83,14 @@ class Dao_Feedback extends Dao_Base {
      */
     public function getFeedbackDetail(int $id): array {
         $result = array();
-        
+
         if ($id) {
             $sql = "select * from hotel_feedback where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
         }
-        
+
         return $result;
     }
 
@@ -89,11 +105,11 @@ class Dao_Feedback extends Dao_Base {
      */
     public function updateFeedbackById(array $info, int $id) {
         $result = false;
-        
+
         if ($id) {
-            $result = $this->db->update('hotel_feedback', $info, $id);
+            $result = $this->db->update('hotel_feedback', $info, array('id' => $id));
         }
-        
+
         return $result;
     }
 

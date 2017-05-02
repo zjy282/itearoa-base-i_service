@@ -2,8 +2,14 @@
 
 class FeedbackResultController extends \BaseController {
 
+    /**
+     * @var FeedbackResultModel
+     */
     private $model;
 
+    /**
+     * @var Convertor_FeedbackResult
+     */
     private $convertor;
 
     public function init() {
@@ -19,10 +25,13 @@ class FeedbackResultController extends \BaseController {
      */
     public function getFeedbackResultListAction() {
         $param = array();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['page'] = intval($this->getParamList('page', 1));
+        $param['limit'] = intval($this->getParamList('limit', 5));
+        $param['hotelid'] = intval($this->getParamList('hotelid'));
         $data = $this->model->getFeedbackResultList($param);
-        $data = $this->convertor->getFeedbackResultListConvertor($data);
-        $this->echoJson($data);
+        $count = $this->model->getFeedbackResultCount($param);
+        $data = $this->convertor->getFeedbackResultListConvertor($data, $count, $param);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -88,7 +97,7 @@ class FeedbackResultController extends \BaseController {
         }
         $param['answer'] = json_encode($param['answer']);
         $data = $this->model->addFeedbackResult($param);
-        if (! $data) {
+        if (!$data) {
             $this->throwException(4, '保存失败');
         }
         $this->echoSuccessData(array(

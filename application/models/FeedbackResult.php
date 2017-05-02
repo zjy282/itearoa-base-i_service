@@ -11,20 +11,35 @@ class FeedbackResultModel extends \BaseModel {
 
     /**
      * 获取FeedbackResult列表信息
-     * 
+     *
      * @param
      *            array param 查询条件
      * @return array
      */
     public function getFeedbackResultList(array $param) {
+        $paramList = array();
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getFeedbackResultList($paramList);
     }
 
     /**
+     * 获取FeedbackResult数量
+     *
+     * @param
+     *            array param 查询条件
+     * @return array
+     */
+    public function getFeedbackResultCount(array $param) {
+        $paramList = array();
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        return $this->dao->getFeedbackResultCount($paramList);
+    }
+
+    /**
      * 根据id查询FeedbackResult信息
-     * 
+     *
      * @param
      *            int id 查询的主键
      * @return array
@@ -39,7 +54,7 @@ class FeedbackResultModel extends \BaseModel {
 
     /**
      * 根据id更新FeedbackResult信息
-     * 
+     *
      * @param
      *            array param 需要更新的信息
      * @param
@@ -58,7 +73,7 @@ class FeedbackResultModel extends \BaseModel {
 
     /**
      * FeedbackResult新增信息
-     * 
+     *
      * @param
      *            array param 需要增加的信息
      * @return array
