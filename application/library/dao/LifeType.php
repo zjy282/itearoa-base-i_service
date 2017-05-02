@@ -5,6 +5,21 @@ class Dao_LifeType extends Dao_Base {
     public function __construct() {
         parent::__construct();
     }
+    
+    private function getListWhereSql($param){
+    	$limit = $param['limit'] ? intval($param['limit']) : 0;
+    	$page = $this->getStart($param['page'], $limit);
+    	
+    	$whereSql = array();
+    	$whereCase = array();
+    	if (isset($param['hotelid'])) {
+    		$whereSql[] = 'hotelid = ?';
+    		$whereCase[] = $param['hotelid'];
+    	}
+    	$whereList['sql'] = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
+    	$whereList['case'] = $whereCase;
+    	return $whereList;
+    }
 
     /**
      * 查询hotel_life_type列表
@@ -14,23 +29,27 @@ class Dao_LifeType extends Dao_Base {
      * @return array
      */
     public function getLifeTypeList(array $param): array {
-        $limit = $param['limit'] ? intval($param['limit']) : 0;
-        $page = $this->getStart($param['page'], $limit);
-        
-        $whereSql = array();
-        $whereCase = array();
-        if (isset($param['hotelid'])) {
-            $whereSql[] = 'hotelid = ?';
-            $whereCase[] = $param['hotelid'];
-        }
-        $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
-        
-        $sql = "select * from hotel_life_type {$whereSql}";
+        $whereList = $this->getListWhereSql($param);
+        $sql = "select * from hotel_life_type {$whereList['sql']}";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }
-        $result = $this->db->fetchAll($sql, $whereCase);
+        $result = $this->db->fetchAll($sql, $whereList['case']);
         return is_array($result) ? $result : array();
+    }
+    
+    /**
+     * 查询hotel_life_type数量
+     *
+     * @param
+     *            array 入参
+     * @return array
+     */
+    public function getLifeTypeCount(array $param): int {
+    	$whereList = $this->getListWhereSql($param);
+    	$sql = "select count(1) as count from hotel_life_type {$whereList['sql']}";
+    	$result = $this->db->fetchAssoc($sql, $whereList['case']);
+    	return intval($result['count']);
     }
 
     /**

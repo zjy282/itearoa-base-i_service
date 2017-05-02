@@ -54,24 +54,23 @@ class LifeModel extends \BaseModel {
         return $result;
     }
 
-    /**
-     * 根据id更新Life信息
-     *
-     * @param
-     *            array param 需要更新的信息
-     * @param
-     *            int id 主键
-     * @return array
-     */
-    public function updateLifeById($param, $id) {
-        $result = false;
-        // 自行添加要更新的字段,以下是age字段是样例
-        if ($id) {
-            $info['age'] = intval($param['age']);
-            $result = $this->dao->updateLifeById($info, $id);
-        }
-        return $result;
-    }
+	/**
+	 * 根据id更新Life信息
+	 *
+	 * @param
+	 *        	array param 需要更新的信息
+	 * @param
+	 *        	int id 主键
+	 * @return array
+	 */
+	public function updateLifeById($param, $id) {
+		$result = false;
+		if ($id) {
+			$info = $param;
+			$result = $this->dao->updateLifeById ( $info, $id );
+		}
+		return $result;
+	}
 
     /**
      * Life新增信息
@@ -81,8 +80,7 @@ class LifeModel extends \BaseModel {
      * @return array
      */
     public function addLife($param) {
-        // 自行添加要添加的字段,以下是age字段是样例
-        $info['age'] = intval($param['age']);
+    	$info = $param;
         return $this->dao->addLife($info);
     }
 }

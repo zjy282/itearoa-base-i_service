@@ -20,11 +20,14 @@ class LifeTypeController extends \BaseController {
     public function getLifeTypeListAction() {
         $param = array();
         $param['hotelid'] = intval($this->getParamList('hotelid'));
+        $param['page'] = intval($this->getParamList('page', 1));
+        $param['limit'] = intval($this->getParamList('limit', 5));
         if (empty($param['hotelid'])) {
             $this->throwException(2, '物业ID不能为空');
         }
         $data = $this->model->getLifeTypeList($param);
-        $data = $this->convertor->getLifeTypeListConvertor($data);
+        $count = $this->model->getLifeTypeCount($param);
+        $data = $this->convertor->getLifeTypeListConvertor($data,$count,$param);
         $this->echoSuccessData($data);
     }
 
@@ -39,11 +42,11 @@ class LifeTypeController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $data = $this->model->getLifeTypeDetail($id);
-            $data = $this->convertor->getLifeTypeDetail($data);
+            $data = $this->convertor->getLifeTypeDetailConvertor($data);
         } else {
             $this->throwException(1, '查询条件错误，id不能为空');
         }
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -59,27 +62,33 @@ class LifeTypeController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
-            $param['name'] = trim($this->getParamList('name'));
+            $param['title_lang1'] = trim($this->getParamList('title_lang1'));
+            $param['title_lang2'] = trim($this->getParamList('title_lang2'));
+            $param['title_lang3'] = trim($this->getParamList('title_lang3'));
+            $param['hotelid'] = trim($this->getParamList('hotelid'));
             $data = $this->model->updateLifeTypeById($param, $id);
             $data = $this->convertor->commonConvertor($data);
         } else {
             $this->throwException(1, 'id不能为空');
         }
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
-    /**
-     * 添加LifeType信息
-     *
-     * @param
-     *            array param 需要新增的信息
-     * @return Json
-     */
-    public function addLifeTypeAction() {
-        $param = array();
-        $param['name'] = trim($this->getParamList('name'));
-        $data = $this->model->addLifeType($param);
-        $data = $this->convertor->commonConvertor($data);
-        $this->echoJson($data);
-    }
+	/**
+	 * 添加LifeType信息
+	 *
+	 * @param
+	 *        	array param 需要新增的信息
+	 * @return Json
+	 */
+	public function addLifeTypeAction() {
+		$param = array ();
+		$param ['title_lang1'] = trim ( $this->getParamList ( 'title_lang1' ) );
+		$param ['title_lang2'] = trim ( $this->getParamList ( 'title_lang2' ) );
+		$param ['title_lang3'] = trim ( $this->getParamList ( 'title_lang3' ) );
+		$param ['hotelid'] = trim ( $this->getParamList ( 'hotelid' ) );
+		$data = $this->model->addLifeType ( $param );
+		$data = $this->convertor->commonConvertor ( $data );
+		$this->echoSuccessData ( $data );
+	}
 }

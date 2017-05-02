@@ -120,7 +120,6 @@ class HotelAdministratorController extends \BaseController {
         $param['username'] = trim($this->getParamList('username'));
         $param['password'] = trim($this->getParamList('password'));
         $param['ip'] = trim($this->getParamList('ip'));
-
         $userInfo = $this->model->login($param);
         $userInfo = $this->convertor->getHotelAdministratorDetailConvertor($userInfo);
 

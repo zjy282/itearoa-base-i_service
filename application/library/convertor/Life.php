@@ -32,4 +32,20 @@ class Convertor_Life extends Convertor_Base {
         $data['nextPage'] = Util_Tools::getNextPage($data['page'], $data['limit'], $data['total']);
         return $data;
     }
+
+	public function getLifeDetailConvertor($lifes, $lifeCount, $param) {
+		$data = array ();
+		$data ['id'] = $lifes ['id'];
+		$data ['name'] = $this->handlerMultiLang ( 'name', $lifes );
+		$data ['address'] = $this->handlerMultiLang ( 'address', $lifes );
+		$data ['tel'] = $lifes ['tel'];
+		$data ['introduct'] = $this->handlerMultiLang ( 'introduct', $lifes );
+		$data ['detail'] = Enum_Img::getPathByKeyAndType ( $this->handlerMultiLang ( 'detail', $lifes ) );
+		$data ['lat'] = $lifes ['lat'];
+		$data ['lng'] = $lifes ['lng'];
+		$data ['createTime'] = $lifes ['createtime'];
+		$data ['updateTime'] = $lifes ['updatetime'];
+		$data ['status'] = $lifes ['status'];
+		return $data;
+	}
 }

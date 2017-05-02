@@ -22,6 +22,19 @@ class LifeTypeModel extends \BaseModel {
         $paramList['page'] = $param['page'];
         return $this->dao->getLifeTypeList($paramList);
     }
+    
+    /**
+     * 获取LifeType数量
+     *
+     * @param
+     *            array param 查询条件
+     * @return array
+     */
+    public function getLifeTypeCount(array $param) {
+    	$paramList = array();
+    	$param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+    	return $this->dao->getLifeTypeCount($paramList);
+    }
 
     /**
      * 根据id查询LifeType信息
@@ -49,24 +62,28 @@ class LifeTypeModel extends \BaseModel {
      */
     public function updateLifeTypeById($param, $id) {
         $result = false;
-        // 自行添加要更新的字段,以下是age字段是样例
         if ($id) {
-            $info['age'] = intval($param['age']);
+            $info['title_lang1'] = $param['title_lang1'];
+            $info['title_lang2'] = $param['title_lang2'];
+            $info['title_lang3'] = $param['title_lang3'];
+            $info['hotelid'] = $param['hotelid'];
             $result = $this->dao->updateLifeTypeById($info, $id);
         }
         return $result;
     }
 
-    /**
-     * LifeType新增信息
-     *
-     * @param
-     *            array param 需要增加的信息
-     * @return array
-     */
-    public function addLifeType($param) {
-        // 自行添加要添加的字段,以下是age字段是样例
-        $info['age'] = intval($param['age']);
-        return $this->dao->addLifeType($info);
-    }
+	/**
+	 * LifeType新增信息
+	 *
+	 * @param
+	 *        	array param 需要增加的信息
+	 * @return array
+	 */
+	public function addLifeType($param) {
+		$info ['title_lang1'] = $param ['title_lang1'];
+		$info ['title_lang2'] = $param ['title_lang2'];
+		$info ['title_lang3'] = $param ['title_lang3'];
+		$info ['hotelid'] = $param ['hotelid'];
+		return $this->dao->addLifeType ( $info );
+	}
 }
