@@ -1,46 +1,76 @@
 <?php
-class Dao_ShareIcon extends Dao_Base{
-    
-    public function __construct(){
+
+class Dao_ShareIcon extends Dao_Base {
+
+    public function __construct() {
         parent::__construct();
     }
-    
+
     /**
      * 查询hotel_share_icon列表
      * @param array 入参
      * @return array
      */
-    public function getShareIconList(array $param):array {
-        $limit = $param['limit']?intval($param['limit']):0;
-        $page = $this->getStart($param['page'],$limit);
-        
+    public function getShareIconList(array $param): array {
+        $limit = $param['limit'] ? intval($param['limit']) : 0;
+        $page = $this->getStart($param['page'], $limit);
+
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select * from hotel_share_icon {$paramSql['sql']} order by sort desc";
+        if ($limit) {
+            $sql .= " limit {$page},{$limit}";
+        }
+        $result = $this->db->fetchAll($sql, $paramSql['case']);
+        return is_array($result) ? $result : array();
+    }
+
+    /**
+     * 查询hotel_share_icon数量
+     *
+     * @param
+     *            array 入参
+     * @return array
+     */
+    public function getShareIconCount(array $param): int {
+        $paramSql = $this->handlerListParams($param);
+        $sql = "select count(1) as count from hotel_share_icon {$paramSql['sql']}";
+        $result = $this->db->fetchAssoc($sql, $paramSql['case']);
+        return intval($result['count']);
+    }
+
+    private function handlerListParams($param) {
         $whereSql = array();
         $whereCase = array();
+        if (isset($param['id'])) {
+            if (is_array($param['id'])) {
+                $whereSql[] = 'id in (' . implode(',', $param['id']) . ')';
+            } else {
+                $whereSql[] = 'id = ?';
+                $whereCase[] = $param['id'];
+            }
+        }
         if (isset($param['hotelid'])) {
             $whereSql[] = 'hotelid = ?';
             $whereCase[] = $param['hotelid'];
         }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
-        
-        $sql = "select * from hotel_share_icon {$whereSql} order by sort desc";
-        if ($limit) {
-            $sql .= " limit {$page},{$limit}";
-        }
-        $result = $this->db->fetchAll($sql, $whereCase);
-        return is_array($result)?$result:array();
+        return array(
+            'sql' => $whereSql,
+            'case' => $whereCase
+        );
     }
 
     /**
      * 根据id查询hotel_share_icon详情
-     * @param int id 
+     * @param int id
      * @return array
      */
-    public function getShareIconDetail (int $id):array{
-        $result = array ();
-        
-        if ($id){
+    public function getShareIconDetail(int $id): array {
+        $result = array();
+
+        if ($id) {
             $sql = "select * from hotel_share_icon where id=?";
-            $result = $this->db->fetchAssoc($sql,array($id));
+            $result = $this->db->fetchAssoc($sql, array($id));
         }
 
         return $result;
@@ -49,14 +79,14 @@ class Dao_ShareIcon extends Dao_Base{
     /**
      * 根据id更新hotel_share_icon
      * @param array 需要更新的数据
-     * @param int id 
+     * @param int id
      * @return array
      */
-    public function updateShareIconById(array $info,int $id){
+    public function updateShareIconById(array $info, int $id) {
         $result = false;
 
-        if ($id){
-            $result = $this->db->update('hotel_share_icon',$info,$id);
+        if ($id) {
+            $result = $this->db->update('hotel_share_icon', $info, array('id' => $id));
         }
 
         return $result;
@@ -67,8 +97,24 @@ class Dao_ShareIcon extends Dao_Base{
      * @param array
      * @return int id
      */
-    public function addShareIcon(array $info){
+    public function addShareIcon(array $info) {
         $this->db->insert('hotel_share_icon', $info);
         return $this->db->lastInsertId();
+    }
+
+    public function batchAddShareIcon(array $info) {
+        $this->db->insertBatch('hotel_share_icon', $info);
+        return $this->db->lastInsertId();
+    }
+
+    public function deleteShareIconByIds($deleteIds, $hotelId) {
+        $ids = Util_Tools::filterIdListArray($deleteIds);
+        if ($ids) {
+            $sql = 'delete from hotel_share_icon where id in (' . implode(',', $ids) . ') and hotelid = ?';
+            return $this->db->executeUpdate($sql, array(
+                $hotelId
+            ));
+        }
+        return array();
     }
 }
