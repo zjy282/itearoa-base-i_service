@@ -10,17 +10,39 @@ class Convertor_LifeType extends Convertor_Base {
         parent::__construct();
     }
 
-    public function getLifeTypeListConvertor($list,$count,$param) {
+    /**
+     * lifetype结果转换器
+     * @param array $list
+     * @return array
+     */
+    public function getLifeTypeListConvertor($list) {
         $data = array();
         $data['list'] = array();
         foreach ($list as $type){
             $typeTemp = array();
             $typeTemp['id'] = $type['id'];
-            //TODO 此处为什么只输出一种语言的存疑
-            //$typeTemp['title'] = $this->handlerMultiLang('title', $type);
+            $typeTemp['title'] = $this->handlerMultiLang('title', $type);
+            $data['list'][] = $typeTemp;
+        }
+        return $data;
+    }
+
+    /**
+     * 管理端生活标签转换器
+     * @param array $list
+     * @param int $count
+     * @param array $param
+     * @return array
+     */
+    public function getAdminLifeTypeListConvertor($list,$count,$param) {
+        $data = array();
+        $data['list'] = array();
+        foreach ($list as $type){
+            $typeTemp = array();
+            $typeTemp['id'] = $type['id'];
             $typeTemp['titleLang1'] = $type['title_lang1'];
-            $typeTemp['titleLang2'] = $type['title_lang2'];;
-            $typeTemp['titleLang3'] = $type['title_lang3'];;
+            $typeTemp['titleLang2'] = $type['title_lang2'];
+            $typeTemp['titleLang3'] = $type['title_lang3'];
             $data['list'][] = $typeTemp;
         }
         $data['total'] = $count;

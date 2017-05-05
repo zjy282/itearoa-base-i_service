@@ -20,6 +20,22 @@ class LifeTypeController extends \BaseController {
     public function getLifeTypeListAction() {
         $param = array();
         $param['hotelid'] = intval($this->getParamList('hotelid'));
+        if (empty($param['hotelid'])) {
+            $this->throwException(2, '物业ID不能为空');
+        }
+        $data = $this->model->getLifeTypeList($param);
+        $data = $this->convertor->getLifeTypeListConvertor($data);
+        $this->echoSuccessData($data);
+    }
+
+    /**
+     * 获取后台LifeType列表
+     *
+     * @return Json
+     */
+    public function getAdminLifeTypeListAction() {
+        $param = array();
+        $param['hotelid'] = intval($this->getParamList('hotelid'));
         $param['page'] = intval($this->getParamList('page', 1));
         $param['limit'] = intval($this->getParamList('limit', 5));
         if (empty($param['hotelid'])) {
@@ -27,7 +43,7 @@ class LifeTypeController extends \BaseController {
         }
         $data = $this->model->getLifeTypeList($param);
         $count = $this->model->getLifeTypeCount($param);
-        $data = $this->convertor->getLifeTypeListConvertor($data,$count,$param);
+        $data = $this->convertor->getAdminLifeTypeListConvertor($data,$count,$param);
         $this->echoSuccessData($data);
     }
 
@@ -67,7 +83,7 @@ class LifeTypeController extends \BaseController {
             $param['title_lang3'] = trim($this->getParamList('title_lang3'));
             $param['hotelid'] = trim($this->getParamList('hotelid'));
             $data = $this->model->updateLifeTypeById($param, $id);
-            $data = $this->convertor->commonConvertor($data);
+            $data = $this->convertor->statusConvertor($data);
         } else {
             $this->throwException(1, 'id不能为空');
         }
@@ -88,7 +104,7 @@ class LifeTypeController extends \BaseController {
 		$param ['title_lang3'] = trim ( $this->getParamList ( 'title_lang3' ) );
 		$param ['hotelid'] = trim ( $this->getParamList ( 'hotelid' ) );
 		$data = $this->model->addLifeType ( $param );
-		$data = $this->convertor->commonConvertor ( $data );
+		$data = $this->convertor->statusConvertor ( $data );
 		$this->echoSuccessData ( $data );
 	}
 }

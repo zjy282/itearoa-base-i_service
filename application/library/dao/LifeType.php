@@ -7,9 +7,10 @@ class Dao_LifeType extends Dao_Base {
     }
     
     private function getListWhereSql($param){
-    	$limit = $param['limit'] ? intval($param['limit']) : 0;
-    	$page = $this->getStart($param['page'], $limit);
-    	
+        if (isset($param['page']) && isset($param['limit'])){
+            $whereList['pageList']['limit'] = $param['limit'] ? intval($param['limit']) : 0;
+            $whereList['pageList']['page'] = $this->getStart($param['page'], $limit);
+    	}
     	$whereSql = array();
     	$whereCase = array();
     	if (isset($param['hotelid'])) {
@@ -31,8 +32,8 @@ class Dao_LifeType extends Dao_Base {
     public function getLifeTypeList(array $param): array {
         $whereList = $this->getListWhereSql($param);
         $sql = "select * from hotel_life_type {$whereList['sql']}";
-        if ($limit) {
-            $sql .= " limit {$page},{$limit}";
+        if (isset($whereList['pageList'])) {
+            $sql .= " limit {$whereList['pageList']['page']},{$whereList['pageList']['limit']}";
         }
         $result = $this->db->fetchAll($sql, $whereList['case']);
         return is_array($result) ? $result : array();
@@ -85,7 +86,7 @@ class Dao_LifeType extends Dao_Base {
         $result = false;
         
         if ($id) {
-            $result = $this->db->update('hotel_life_type', $info, $id);
+            $result = $this->db->update('hotel_life_type', $info, array('id' => $id));
         }
         
         return $result;

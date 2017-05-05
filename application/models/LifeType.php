@@ -18,8 +18,8 @@ class LifeTypeModel extends \BaseModel {
      */
     public function getLifeTypeList(array $param) {
         isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
-        $paramList['limit'] = $param['limit'];
-        $paramList['page'] = $param['page'];
+        isset($param['limit']) ? $paramList['limit'] = $param['limit'] : false;
+        isset($param['page']) ? $paramList['page'] = $param['page'] : false;
         return $this->dao->getLifeTypeList($paramList);
     }
     
