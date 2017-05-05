@@ -2,7 +2,10 @@
 
 abstract class BaseController extends \Yaf_Controller_Abstract {
 
+    protected $package;
+
     public function init() {
+        $this->package = Yaf_Registry::get('package');
     }
 
     /**
