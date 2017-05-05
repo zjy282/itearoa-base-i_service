@@ -13,7 +13,7 @@ class Interceptor_ParamAuth extends \Interceptor_Base {
             header("Location: " . $sysConfig->api->httpUrl);
             exit();
         }
-        
+
         $paramList = array();
         if ($request->isGet()) {
             $paramList = $request->getQuery();
@@ -21,13 +21,13 @@ class Interceptor_ParamAuth extends \Interceptor_Base {
         if ($request->isPost()) {
             $paramList = $request->getPost();
         }
-        
+
         $timestamp = $paramList["time"];
         $paramSign = $paramList['sign'];
         unset($paramList['sign'], $paramList[trim($request->getRequestUri(), '/')]);
         $sign = Auth_Login::genSign($paramList);
-        
-        if ($sysConfig->api->checkToke && ! $this->isInWhiteList($request)) {
+
+        if ($sysConfig->api->checkToke && !$this->isInWhiteList($request)) {
             if (empty($timestamp)) {
                 throw new Exception("未检测到时间戳", 10001);
             }
@@ -39,7 +39,7 @@ class Interceptor_ParamAuth extends \Interceptor_Base {
             }
         }
         unset($paramList['timestamp']);
-        
+
         $this->getHotelLangInfo($paramList);
         $request->setParam("paramList", $paramList);
     }
@@ -53,7 +53,7 @@ class Interceptor_ParamAuth extends \Interceptor_Base {
     /**
      * 获取酒店当前语言信息
      *
-     * @param unknown $paramList            
+     * @param unknown $paramList
      */
     private function getHotelLangInfo($paramList) {
         $lang = $paramList['lang'];
@@ -62,7 +62,7 @@ class Interceptor_ParamAuth extends \Interceptor_Base {
             $cache = Cache_Redis::getInstance();
             $cacheKey = Enum_Lang::getHotelLangListCacheKey($hotelId);
             $hotelLang = $cache->get($cacheKey);
-            if (! $hotelLang) {
+            if (!$hotelLang) {
                 $hotelListModel = new HotelListModel();
                 $hotelLang = $hotelListModel->getHotelListDetail($hotelId)['lang_list'];
                 if ($hotelLang) {
@@ -76,6 +76,10 @@ class Interceptor_ParamAuth extends \Interceptor_Base {
                 'langIndex' => array_search($lang, $hotelLang) + 1
             ));
         }
+        $package = $paramList['package'];
+        if ($package) {
+            Yaf_Registry::set('package', $package);
+        }
     }
 
     private function getUserAgent() {
@@ -87,7 +91,7 @@ class Interceptor_ParamAuth extends \Interceptor_Base {
         if (empty($userAgent)) {
             return false;
         }
-        
+
         $spiderAgents = array(
             "QunarBot",
             "Mediapartners",
@@ -107,20 +111,20 @@ class Interceptor_ParamAuth extends \Interceptor_Base {
             'YodaoBot',
             'Baiduspider'
         );
-        
+
         foreach ($spiderAgents as $spiderAgent) {
             if (stripos($userAgent, $spiderAgent) !== false)
                 return true;
         }
-        
+
         return false;
     }
-    
+
     // 有些外部回调可能未知agent 所以加禁用白名单
     private function isInWhiteList(Yaf_Request_Abstract $request) {
         $controllerName = strtolower($request->getControllerName());
         $actionName = strtolower($request->getActionName());
-        
+
         // 多了放配置文件
         // 一定要小写
         $whiteList = array( // 方法名都小写
@@ -128,12 +132,12 @@ class Interceptor_ParamAuth extends \Interceptor_Base {
                 'gettime'
             )
         );
-        
+
         $flag = false;
         if (isset($whiteList[$controllerName]) && in_array($actionName, $whiteList[$controllerName])) {
             $flag = true;
         }
-        
+
         return $flag;
     }
 }
