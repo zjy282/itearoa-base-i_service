@@ -9,7 +9,7 @@ class Dao_LifeType extends Dao_Base {
     private function getListWhereSql($param){
         if (isset($param['page']) && isset($param['limit'])){
             $whereList['pageList']['limit'] = $param['limit'] ? intval($param['limit']) : 0;
-            $whereList['pageList']['page'] = $this->getStart($param['page'], $limit);
+            $whereList['pageList']['page'] = $this->getStart($param['page'], $whereList['pageList']['limit']);
     	}
     	$whereSql = array();
     	$whereCase = array();

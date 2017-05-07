@@ -36,4 +36,40 @@ class Convertor_Promotion extends Convertor_Base {
         $data['nextPage'] = Util_Tools::getNextPage($data['page'], $data['limit'], $data['total']);
         return $data;
     }
+    
+    public function getAdminPromotionListConvertor($promotionList, $tagList, $promotionCount, $param) {
+    	$tagListNew = array();
+    	foreach ($tagList as $tag) {
+    		$tagListNew[$tag['id']]['titleLang1'] = $tag['title_lang1'];
+    		$tagListNew[$tag['id']]['titleLang2'] = $tag['title_lang2'];
+    		$tagListNew[$tag['id']]['titleLang3'] = $tag['title_lang3'];
+    	}
+    
+    	$data = array(
+    			'list' => array()
+    	);
+    	foreach ($promotionList as $news) {
+    		$newTemp = array();
+    		$newTemp['id'] = $news['id'];
+    		$newTemp['titleLang1'] = $news['title_lang1'];
+    		$newTemp['titleLang2'] = $news['title_lang2'];
+    		$newTemp['titleLang3'] = $news['title_lang3'];
+    		$newTemp['titleLang3'] = $news['title_lang3'];
+    		$newTemp['articleLang1'] = Enum_Img::getPathByKeyAndType($news['article_lang1']);
+    		$newTemp['articleLang2'] = Enum_Img::getPathByKeyAndType($news['article_lang2']);
+    		$newTemp['articleLang3'] = Enum_Img::getPathByKeyAndType($news['article_lang3']);
+    		$newTemp['tagId'] = $news['tagid'];
+    		$newTemp['tagName_lang1'] = $tagListNew[$newTemp['tagId']]['title_lang1'];
+    		$newTemp['tagName_lang2'] = $tagListNew[$newTemp['tagId']]['title_lang2'];
+    		$newTemp['tagName_lang3'] = $tagListNew[$newTemp['tagId']]['title_lang3'];
+    		$newTemp['createtime'] = $news['createtime'];
+    		$newTemp['updatetime'] = $news['updatetime'];
+    		$data['list'][] = $newTemp;
+    	}
+    	$data['total'] = $promotionCount;
+    	$data['page'] = $param['page'];
+    	$data['limit'] = $param['limit'];
+    	$data['nextPage'] = Util_Tools::getNextPage($data['page'], $data['limit'], $data['total']);
+    	return $data;
+    }
 }

@@ -3,6 +3,7 @@
 class Enum_System {
 
     const RPC_REQUEST_PACKAGE = 'ota';
+    const ADMIN_PACKAGE = 'admin';
 
     const RPC_REQUEST_UA = "YoupuTrip/1.0(ota;)";
 

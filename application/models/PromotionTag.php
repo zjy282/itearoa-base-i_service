@@ -18,6 +18,8 @@ class PromotionTagModel extends \BaseModel {
      */
     public function getPromotionTagList(array $param) {
         isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        isset($param['limit']) ? $paramList['limit'] = $param['limit'] : false;
+        isset($param['page']) ? $paramList['page'] = $param['page'] : false;
         return $this->dao->getPromotionTagList($paramList);
     }
 
@@ -47,9 +49,11 @@ class PromotionTagModel extends \BaseModel {
      */
     public function updatePromotionTagById($param, $id) {
         $result = false;
-        // 自行添加要更新的字段,以下是age字段是样例
         if ($id) {
-            $info['age'] = intval($param['age']);
+            $info['title_lang1'] = $param['title_lang1'];
+            $info['title_lang2'] = $param['title_lang2'];
+            $info['title_lang3'] = $param['title_lang3'];
+            $info['hotelid'] = $param['hotelid'];
             $result = $this->dao->updatePromotionTagById($info, $id);
         }
         return $result;
@@ -63,8 +67,10 @@ class PromotionTagModel extends \BaseModel {
      * @return array
      */
     public function addPromotionTag($param) {
-        // 自行添加要添加的字段,以下是age字段是样例
-        $info['age'] = intval($param['age']);
+       	$info ['title_lang1'] = $param ['title_lang1'];
+		$info ['title_lang2'] = $param ['title_lang2'];
+		$info ['title_lang3'] = $param ['title_lang3'];
+		$info ['hotelid'] = $param ['hotelid'];
         return $this->dao->addPromotionTag($info);
     }
 }

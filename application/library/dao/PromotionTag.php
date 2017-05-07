@@ -5,7 +5,23 @@ class Dao_PromotionTag extends Dao_Base {
     public function __construct() {
         parent::__construct();
     }
-
+    
+    private function getListWhereSql($param){
+    	if (isset($param['page']) && isset($param['limit'])){
+    		$whereList['pageList']['limit'] = $param['limit'] ? intval($param['limit']) : 0;
+    		$whereList['pageList']['page'] = $this->getStart($param['page'], $whereList['pageList']['limit']);
+    	}
+    	$whereSql = array();
+    	$whereCase = array();
+    	if (isset($param['hotelid'])) {
+    		$whereSql[] = 'hotelid = ?';
+    		$whereCase[] = $param['hotelid'];
+    	}
+    	$whereList['sql'] = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
+    	$whereList['case'] = $whereCase;
+    	return $whereList;
+    }
+    
     /**
      * 查询hotel_promotion_tag列表
      *
@@ -14,23 +30,27 @@ class Dao_PromotionTag extends Dao_Base {
      * @return array
      */
     public function getPromotionTagList(array $param): array {
-        $limit = $param['limit'] ? intval($param['limit']) : 0;
-        $page = $this->getStart($param['page'], $limit);
-        
-        $whereSql = array();
-        $whereCase = array();
-        if (isset($param['hotelid'])) {
-            $whereSql[] = 'hotelid = ?';
-            $whereCase[] = $param['hotelid'];
+        $whereList = $this->getListWhereSql($param);
+        $sql = "select * from hotel_promotion_tag {$whereList['sql']}";
+        if (isset($whereList['pageList'])) {
+            $sql .= " limit {$whereList['pageList']['page']},{$whereList['pageList']['limit']}";
         }
-        $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
-        
-        $sql = "select * from hotel_promotion_tag {$whereSql}";
-        if ($limit) {
-            $sql .= " limit {$page},{$limit}";
-        }
-        $result = $this->db->fetchAll($sql, $whereCase);
+        $result = $this->db->fetchAll($sql, $whereList['case']);
         return is_array($result) ? $result : array();
+    }
+    
+    /**
+     * 查询hotel_promotion_tag数量
+     *
+     * @param
+     *            array 入参
+     * @return array
+     */
+    public function getPromotionTagCount(array $param): int {
+    	$whereList = $this->getListWhereSql($param);
+    	$sql = "select count(1) as count from hotel_promotion_tag {$whereList['sql']}";
+    	$result = $this->db->fetchAssoc($sql, $whereList['case']);
+    	return intval($result['count']);
     }
 
     /**

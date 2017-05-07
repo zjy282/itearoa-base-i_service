@@ -29,7 +29,8 @@ class LifeController extends \BaseController {
         
         $poiList = $this->model->getLifeList($param);
         $poiCount = $this->model->getLifeCount($param);
-        $data = $this->convertor->getLifeListConvertor($poiList, $poiCount, $param);
+        $this->package == Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getLifeListConvertor($poiList, $poiCount, $param) : $data = $this->convertor->getAdminLifeListConvertor($poiList, $poiCount, $param);
+        
         $this->echoSuccessData($data);
     }
 
@@ -44,7 +45,7 @@ class LifeController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $data = $this->model->getLifeDetail($id);
-            $data = $this->convertor->getLifeDetailConvertor($data);
+            $this->package == Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getLifeDetailConvertor($data) : $data = $this->convertor->getAdminLifeDetailConvertor($data);
         } else {
             $this->throwException(1, '查询条件错误，id不能为空');
         }
