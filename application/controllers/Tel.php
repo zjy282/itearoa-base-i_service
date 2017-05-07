@@ -2,8 +2,9 @@
 
 class TelController extends \BaseController {
 
+    /** @var  TelModel */
     private $model;
-
+    /** @var  Convertor_Tel */
     private $convertor;
 
     public function init() {
@@ -19,10 +20,21 @@ class TelController extends \BaseController {
      */
     public function getTelListAction() {
         $param = array();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['page'] = intval($this->getParamList('page', 1));
+        $param['limit'] = intval($this->getParamList('limit', 5));
+        $param['id'] = intval($this->getParamList('id'));
+        $param['hotelid'] = intval($this->getParamList('hotelid'));
+        $param['title'] = trim($this->getParamList('title'));
+        $param['tel'] = trim($this->getParamList('tel'));
+        $param['typeid'] = intval($this->getParamList('typeid'));
+        $param['status'] = $this->getParamList('status');
+        if (is_null($param['status'])) {
+            unset($param['status']);
+        }
         $data = $this->model->getTelList($param);
-        $data = $this->convertor->getTelListConvertor($data);
-        $this->echoJson($data);
+        $count = $this->model->getTelCount($param);
+        $data = $this->convertor->getTelListConvertor($data, $count, $param);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -56,13 +68,19 @@ class TelController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
-            $param['name'] = trim($this->getParamList('name'));
+            $param['hotelid'] = $this->getParamList('hotelid');
+            $param['title_lang1'] = $this->getParamList('title_lang1');
+            $param['title_lang2'] = $this->getParamList('title_lang2');
+            $param['title_lang3'] = $this->getParamList('title_lang3');
+            $param['tel'] = $this->getParamList('tel');
+            $param['status'] = $this->getParamList('status');
+            $param['typeid'] = $this->getParamList('typeid');
             $data = $this->model->updateTelById($param, $id);
-            $data = $this->convertor->commonConvertor($data);
+            $data = $this->convertor->statusConvertor($data);
         } else {
             $this->throwException(1, 'id不能为空');
         }
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -74,15 +92,23 @@ class TelController extends \BaseController {
      */
     public function addTelAction() {
         $param = array();
-        $param['name'] = trim($this->getParamList('name'));
+        $param['hotelid'] = intval($this->getParamList('hotelid'));
+        $param['title_lang1'] = trim($this->getParamList('title_lang1'));
+        $param['title_lang2'] = trim($this->getParamList('title_lang2'));
+        $param['title_lang3'] = trim($this->getParamList('title_lang3'));
+        $param['tel'] = trim($this->getParamList('tel'));
+        $param['status'] = intval($this->getParamList('status'));
+        $param['typeid'] = intval($this->getParamList('typeid'));
         $data = $this->model->addTel($param);
-        $data = $this->convertor->commonConvertor($data);
-        $this->echoJson($data);
+        $data = $this->convertor->statusConvertor(array(
+            'id' => $data
+        ));
+        $this->echoSuccessData($data);
     }
 
     /**
      * 获取物业电话黄页列表
-     * 
+     *
      * @param
      *            int hotelid 物业ID
      * @param
@@ -93,7 +119,7 @@ class TelController extends \BaseController {
         $param = array();
         $param['hotelid'] = intval($this->getParamList('hotelid'));
         $param['islogin'] = 0;
-        
+
         // 检查是否入住状态
         $token = $this->getParamList('token');
         $userId = Auth_Login::getToken($token);
@@ -104,10 +130,10 @@ class TelController extends \BaseController {
                 unset($param['islogin']);
             }
         }
-        
+
         $telTypeModel = new TelTypeModel();
         $telTypeList = $telTypeModel->getTelTypeList($param);
-        
+
         $param['status'] = 1;
         $telList = $this->model->getTelList($param);
         $result = $this->convertor->hotelTelListConvertor($telTypeList, $telList);

@@ -11,13 +11,16 @@ class TelTypeModel extends \BaseModel {
 
     /**
      * 获取TelType列表信息
-     * 
+     *
      * @param
      *            array param 查询条件
      * @return array
      */
     public function getTelTypeList(array $param) {
-        isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
+        $param['title'] ? $paramList['title'] = $param['title'] : false;
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
         isset($param['islogin']) ? $paramList['islogin'] = intval($param['islogin']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
@@ -25,8 +28,24 @@ class TelTypeModel extends \BaseModel {
     }
 
     /**
+     * 获取TelType数量
+     *
+     * @param
+     *            array param 查询条件
+     * @return array
+     */
+    public function getTelTypeCount(array $param) {
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = intval($param['id']) : false;
+        $param['title'] ? $paramList['title'] = intval($param['title']) : false;
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        isset($param['islogin']) ? $paramList['islogin'] = intval($param['islogin']) : false;
+        return $this->dao->getTelTypeCount($paramList);
+    }
+
+    /**
      * 根据id查询TelType信息
-     * 
+     *
      * @param
      *            int id 查询的主键
      * @return array
@@ -41,7 +60,7 @@ class TelTypeModel extends \BaseModel {
 
     /**
      * 根据id更新TelType信息
-     * 
+     *
      * @param
      *            array param 需要更新的信息
      * @param
@@ -50,9 +69,12 @@ class TelTypeModel extends \BaseModel {
      */
     public function updateTelTypeById($param, $id) {
         $result = false;
-        // 自行添加要更新的字段,以下是age字段是样例
         if ($id) {
-            $info['age'] = intval($param['age']);
+            isset($param['hotelid']) ? $info['hotelid'] = $param['hotelid'] : false;
+            isset($param['islogin']) ? $info['islogin'] = $param['islogin'] : false;
+            isset($param['title_lang1']) ? $info['title_lang1'] = $param['title_lang1'] : false;
+            isset($param['title_lang2']) ? $info['title_lang2'] = $param['title_lang2'] : false;
+            isset($param['title_lang3']) ? $info['title_lang3'] = $param['title_lang3'] : false;
             $result = $this->dao->updateTelTypeById($info, $id);
         }
         return $result;
@@ -60,14 +82,17 @@ class TelTypeModel extends \BaseModel {
 
     /**
      * TelType新增信息
-     * 
+     *
      * @param
      *            array param 需要增加的信息
      * @return array
      */
     public function addTelType($param) {
-        // 自行添加要添加的字段,以下是age字段是样例
-        $info['age'] = intval($param['age']);
+        isset($param['hotelid']) ? $info['hotelid'] = $param['hotelid'] : false;
+        isset($param['islogin']) ? $info['islogin'] = $param['islogin'] : false;
+        isset($param['title_lang1']) ? $info['title_lang1'] = $param['title_lang1'] : false;
+        isset($param['title_lang2']) ? $info['title_lang2'] = $param['title_lang2'] : false;
+        isset($param['title_lang3']) ? $info['title_lang3'] = $param['title_lang3'] : false;
         return $this->dao->addTelType($info);
     }
 }
