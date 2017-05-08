@@ -24,6 +24,19 @@ class PromotionTagModel extends \BaseModel {
     }
 
     /**
+     * 获取PromotionTag数量
+     *
+     * @param
+     *            array param 查询条件
+     * @return array
+     */
+    public function getPromotionTagCount(array $param) {
+    	$paramList = array();
+    	$param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+    	return $this->dao->getPromotionTagCount($paramList);
+    }
+    
+    /**
      * 根据id查询PromotionTag信息
      *
      * @param

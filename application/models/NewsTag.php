@@ -20,6 +20,19 @@ class NewsTagModel extends \BaseModel {
         isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
         return $this->dao->getNewsTagList($paramList);
     }
+    
+    /**
+     * 获取NewsTag数量
+     *
+     * @param
+     *            array param 查询条件
+     * @return array
+     */
+    public function getNewsTagCount(array $param) {
+    	$paramList = array();
+    	$param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+    	return $this->dao->getNewsTagCount($paramList);
+    }
 
     /**
      * 根据id查询NewsTag信息
@@ -47,9 +60,11 @@ class NewsTagModel extends \BaseModel {
      */
     public function updateNewsTagById($param, $id) {
         $result = false;
-        // 自行添加要更新的字段,以下是age字段是样例
         if ($id) {
-            $info['age'] = intval($param['age']);
+            $info['title_lang1'] = $param['title_lang1'];
+            $info['title_lang2'] = $param['title_lang2'];
+            $info['title_lang3'] = $param['title_lang3'];
+            $info['hotelid'] = $param['hotelid'];
             $result = $this->dao->updateNewsTagById($info, $id);
         }
         return $result;
@@ -63,8 +78,10 @@ class NewsTagModel extends \BaseModel {
      * @return array
      */
     public function addNewsTag($param) {
-        // 自行添加要添加的字段,以下是age字段是样例
-        $info['age'] = intval($param['age']);
+       	$info ['title_lang1'] = $param ['title_lang1'];
+		$info ['title_lang2'] = $param ['title_lang2'];
+		$info ['title_lang3'] = $param ['title_lang3'];
+		$info ['hotelid'] = $param ['hotelid'];
         return $this->dao->addNewsTag($info);
     }
 }
