@@ -51,7 +51,7 @@ class Dao_PoiType extends Dao_Base {
     	$sql = "select count(1) as count from hotel_poi_type {$whereList['sql']}";
     	$result = $this->db->fetchAssoc($sql, $whereList['case']);
     	return intval($result['count']);
-
+    }
     /**
      * 根据id查询hotel_poi_type详情
      *

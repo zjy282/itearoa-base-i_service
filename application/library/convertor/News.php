@@ -44,16 +44,16 @@ class Convertor_News extends Convertor_Base {
 		foreach ( $newsList as $news ) {
 			$newTemp = array ();
 			$newTemp ['id'] = $news ['id'];
-			$newTemp ['titleLang1'] = $news ['title_lang1'];
-			$newTemp ['titleLang2'] = $news ['title_lang2'];
-			$newTemp ['titleLang3'] = $news ['title_lang3'];
-			$newTemp ['articleLang1'] = Enum_Img::getPathByKeyAndType ( $news ['article_lang1'] );
-			$newTemp ['articleLang2'] = Enum_Img::getPathByKeyAndType ( $news ['article_lang2'] );
-			$newTemp ['articleLang3'] = Enum_Img::getPathByKeyAndType ( $news ['article_lang3'] );
+			$newTemp ['title_lang1'] = $news ['title_lang1'];
+			$newTemp ['title_lang2'] = $news ['title_lang2'];
+			$newTemp ['title_lang3'] = $news ['title_lang3'];
+			$newTemp ['article_lang1'] = Enum_Img::getPathByKeyAndType ( $news ['article_lang1'] );
+			$newTemp ['article_lang2'] = Enum_Img::getPathByKeyAndType ( $news ['article_lang2'] );
+			$newTemp ['article_lang3'] = Enum_Img::getPathByKeyAndType ( $news ['article_lang3'] );
 			$newTemp ['tagId'] = $news ['tagid'];
-			$newTemp ['tagName_lang1'] = $tagListNew [$newTemp ['tagId']] ['title_lang1'];
-			$newTemp ['tagName_lang2'] = $tagListNew [$newTemp ['tagId']] ['title_lang2'];
-			$newTemp ['tagName_lang3'] = $tagListNew [$newTemp ['tagId']] ['title_lang3'];
+			$newTemp ['tagName_lang1'] = $tagListNew [$newTemp ['tagId']] ['titleLang1'];
+			$newTemp ['tagName_lang2'] = $tagListNew [$newTemp ['tagId']] ['titleLang2'];
+			$newTemp ['tagName_lang3'] = $tagListNew [$newTemp ['tagId']] ['titleLang3'];
 			$newTemp ['createtime'] = $news ['createtime'];
 			$newTemp ['updatetime'] = $news ['updatetime'];
 			$data ['list'] [] = $newTemp;
@@ -80,12 +80,12 @@ class Convertor_News extends Convertor_Base {
 	public function getAdminNewsDetailConvertor($list) {
 		$data = array ();
 		$data ['id'] = $list ['id'];
-		$data ['titleLang1'] = $list ['title_lang1'];
-		$data ['titleLang2'] = $list ['title_lang2'];
-		$data ['titleLang3'] = $list ['title_lang3'];
-		$data ['articleLang1'] = Enum_Img::getPathByKeyAndType ( $list ['article_lang1'] );
-		$data ['articleLang2'] = Enum_Img::getPathByKeyAndType ( $list ['article_lang2'] );
-		$data ['articleLang3'] = Enum_Img::getPathByKeyAndType ( $list ['article_lang3'] );
+		$data ['title_lang1'] = $list ['title_lang1'];
+		$data ['title_lang2'] = $list ['title_lang2'];
+		$data ['title_lang3'] = $list ['title_lang3'];
+		$data ['article_lang1'] = Enum_Img::getPathByKeyAndType ( $list ['article_lang1'] );
+		$data ['article_lang2'] = Enum_Img::getPathByKeyAndType ( $list ['article_lang2'] );
+		$data ['article_lang3'] = Enum_Img::getPathByKeyAndType ( $list ['article_lang3'] );
 		$data ['tagId'] = $list ['tagid'];
 		$data ['status'] = $list ['status'];
 		$data ['createtime'] = $list ['createtime'];
