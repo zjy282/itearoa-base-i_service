@@ -18,7 +18,7 @@ class PoiTypeModel extends \BaseModel {
      */
     public function getPoiTypeList(array $param) {
         isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
-        $paramList['limit'] = $param['limit'];
+        isset($param['limit']) ? $paramList['limit'] = $param['limit'] : false;
         $paramList['page'] = $param['page'];
         return $this->dao->getPoiTypeList($paramList);
     }

@@ -17,6 +17,7 @@ class Dao_LifeType extends Dao_Base {
     		$whereSql[] = 'hotelid = ?';
     		$whereCase[] = $param['hotelid'];
     	}
+    	
     	$whereList['sql'] = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
     	$whereList['case'] = $whereCase;
     	return $whereList;

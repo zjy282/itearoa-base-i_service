@@ -21,7 +21,7 @@ class OssModel extends \BaseModel {
 
         $nameList = explode(".", $uploadName);
         $extension = strtolower(end($nameList)); // 上传文件后缀名
-        $allowType = Enum_OSS::allowExtension($fileType);
+        $allowType = Enum_Oss::allowExtension($fileType);
         if (!in_array($extension, $allowType)) {
             $this->throwException("格式错误,允许格式:" . implode(',', $allowType), 3);
         }

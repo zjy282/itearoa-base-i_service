@@ -51,15 +51,16 @@ class Convertor_Notic extends Convertor_Base {
     		$noticTemp ['title_lang1'] = $notic ['title_lang1'];
     		$noticTemp ['title_lang2'] = $notic ['title_lang2'];
     		$noticTemp ['title_lang3'] = $notic ['title_lang3'];
-    		$noticTemp ['article_lang1'] = Enum_Img::getPathByKeyAndType ( $notic ['article_lang1'] );
-    		$noticTemp ['article_lang2'] = Enum_Img::getPathByKeyAndType ( $notic ['article_lang2'] );
-    		$noticTemp ['article_lang3'] = Enum_Img::getPathByKeyAndType ( $notic ['article_lang3'] );
+    		$noticTemp ['article_lang1'] = $notic ['article_lang1'];
+    		$noticTemp ['article_lang2'] = $notic ['article_lang2'];
+    		$noticTemp ['article_lang3'] = $notic ['article_lang3'];
     		$noticTemp ['tagId'] = $notic ['tagid'];
+    		$noticTemp ['status'] = $notic ['status'];
     		$noticTemp ['tagName_lang1'] = $tagListNew [$noticTemp ['tagId']] ['titleLang1'];
     		$noticTemp ['tagName_lang2'] = $tagListNew [$noticTemp ['tagId']] ['titleLang2'];
     		$noticTemp ['tagName_lang3'] = $tagListNew [$noticTemp ['tagId']] ['titleLang3'];
-    		$noticTemp ['createtime'] = $notic ['createtime'];
-    		$noticTemp ['updatetime'] = $notic ['updatetime'];
+    		$noticTemp ['createTime'] = $notic ['createtime'];
+    		$noticTemp ['updateTime'] = $notic ['updatetime'];
     		$data ['list'] [] = $noticTemp;
     	}
     	$data ['total'] = $noticCount;
@@ -87,13 +88,13 @@ class Convertor_Notic extends Convertor_Base {
     	$data ['title_lang1'] = $list ['title_lang1'];
     	$data ['title_lang2'] = $list ['title_lang2'];
     	$data ['title_lang3'] = $list ['title_lang3'];
-    	$data ['article_lang1'] = Enum_Img::getPathByKeyAndType ( $list ['article_lang1'] );
-    	$data ['article_lang2'] = Enum_Img::getPathByKeyAndType ( $list ['article_lang2'] );
-    	$data ['article_lang3'] = Enum_Img::getPathByKeyAndType ( $list ['article_lang3'] );
+    	$data ['article_lang1'] = $list ['article_lang1'];
+    	$data ['article_lang2'] = $list ['article_lang2'];
+    	$data ['article_lang3'] = $list ['article_lang3'];
     	$data ['tagId'] = $list ['tagid'];
     	$data ['status'] = $list ['status'];
-    	$data ['createtime'] = $list ['createtime'];
-    	$data ['updatetime'] = $list ['updatetime'];
+    	$data ['createTime'] = $list ['createtime'];
+    	$data ['updateTime'] = $list ['updatetime'];
     	return $data;
     }
 }

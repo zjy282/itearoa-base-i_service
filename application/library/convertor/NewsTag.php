@@ -23,9 +23,9 @@ class Convertor_NewsTag extends Convertor_Base {
         foreach ($list as $type){
             $typeTemp = array();
             $typeTemp['id'] = $type['id'];
-            $typeTemp['titleLang1'] = $type['title_lang1'];
-            $typeTemp['titleLang2'] = $type['title_lang2'];
-            $typeTemp['titleLang3'] = $type['title_lang3'];
+            $typeTemp['title_lang1'] = $type['title_lang1'];
+            $typeTemp['title_lang2'] = $type['title_lang2'];
+            $typeTemp['title_lang3'] = $type['title_lang3'];
             $data['list'][] = $typeTemp;
         }
         $data['total'] = $count;

@@ -85,7 +85,7 @@ class Dao_PoiType extends Dao_Base {
         $result = false;
         
         if ($id) {
-            $result = $this->db->update('hotel_poi_type', $info, $id);
+            $result = $this->db->update('hotel_poi_type', $info, array('id' => $id));
         }
         
         return $result;

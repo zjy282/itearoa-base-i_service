@@ -20,7 +20,9 @@ class PromotionTagController extends \BaseController {
     public function getAdminTagListAction() {
         $param = array();
         $param['hotelid'] = intval($this->getParamList('hotelid'));
-        $this->getPageParam($param);
+		$param ['page'] = intval ( $this->getParamList ( 'page', 1 ) );
+		$limit = $this->getParamList ('limit');
+		$param ['limit'] = isset($limit) ? $limit : null;
         $list = $this->model->getPromotionTagList($param);
         $count = $this->model->getPromotionTagCount($param);
         $data = $this->convertor->getAdminTagListConvertor($list, $count, $param);
@@ -62,7 +64,7 @@ class PromotionTagController extends \BaseController {
             $param['title_lang2'] = trim($this->getParamList('title_lang2'));
             $param['title_lang3'] = trim($this->getParamList('title_lang3'));
             $param['hotelid'] = trim($this->getParamList('hotelid'));
-            $data = $this->model->updatePromotionById($param, $id);
+            $data = $this->model->updatePromotionTagById($param, $id);
             $data = $this->convertor->statusConvertor($data);
         } else {
             $this->throwException(1, 'id不能为空');

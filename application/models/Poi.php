@@ -17,6 +17,8 @@ class PoiModel extends \BaseModel {
 	 */
 	public function getPoiList(array $param) {
 		$param ['typeid'] ? $paramList ['typeid'] = $param ['typeid'] : false;
+		$param ['id'] ? $paramList ['id'] = $param ['id'] : false;
+		$param ['name'] ? $paramList ['name'] = $param ['name'] : false;
 		isset ( $param ['hotelid'] ) ? $paramList ['hotelid'] = $param ['hotelid'] : false;
 		isset ( $param ['status'] ) ? $paramList ['status'] = $param ['status'] : false;
 		$paramList ['limit'] = $param ['limit'];
@@ -33,6 +35,8 @@ class PoiModel extends \BaseModel {
 	 */
 	public function getPoiCount(array $param) {
 		$param ['typeid'] ? $paramList ['typeid'] = $param ['typeid'] : false;
+		$param ['id'] ? $paramList ['id'] = $param ['id'] : false;
+		$param ['name'] ? $paramList ['name'] = $param ['name'] : false;
 		isset ( $param ['hotelid'] ) ? $paramList ['hotelid'] = $param ['hotelid'] : false;
 		isset ( $param ['status'] ) ? $paramList ['status'] = $param ['status'] : false;
 		return $this->dao->getPoiCount ( $paramList );
@@ -68,8 +72,8 @@ class PoiModel extends \BaseModel {
 			$info = array ();
 			isset ( $param ['hotelid'] ) ? $info ['hotelid'] = intval ( $param ['hotelid'] ) : false;
 			isset ( $param ['typeid'] ) ? $info ['typeid'] = intval ( $param ['typeid'] ) : false;
-			isset ( $param ['name_lang1'] ) ? $info ['typeid'] = $param ['name_lang1'] : false;
-			isset ( $param ['name_lang2'] ) ? $info ['typeid'] = $param ['name_lang2'] : false;
+			isset ( $param ['name_lang1'] ) ? $info ['name_lang1'] = $param ['name_lang1'] : false;
+			isset ( $param ['name_lang2'] ) ? $info ['name_lang2'] = $param ['name_lang2'] : false;
 			isset ( $param ['name_lang3'] ) ? $info ['name_lang3'] = $param ['name_lang3'] : false;
 			isset ( $param ['detail_lang1'] ) ? $info ['detail_lang1'] = $param ['detail_lang1'] : false;
 			isset ( $param ['detail_lang2'] ) ? $info ['detail_lang2'] = $param ['detail_lang2'] : false;
@@ -84,7 +88,7 @@ class PoiModel extends \BaseModel {
 			isset ( $param ['lat'] ) ? $info ['lat'] = $param ['lat'] : false;
 			isset ( $param ['lng'] ) ? $info ['lng'] = $param ['lng'] : false;
 			isset ( $param ['status'] ) ? $info ['status'] = intval ( $param ['status'] ) : false;
-			$param ['updatetime'] = time ();
+			$info ['updatetime'] = time ();
 			$result = $this->dao->updatePoiById ( $info, $id );
 		}
 		return $result;

@@ -2274,6 +2274,7 @@ class Oss_Ali{
      * @return void
      */
     private function log($msg){
+    	return true;
         if(defined('ALI_LOG_PATH') ){
             $log_path = ALI_LOG_PATH;
             if(empty($log_path) || !file_exists($log_path)){

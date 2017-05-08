@@ -49,6 +49,7 @@ class ActivityController extends \BaseController {
         $param['tagid'] = intval($this->getParamList('tagid'));
         $param['title'] = trim($this->getParamList('title'));
         $param['status'] = $this->getParamList('status');
+        $param['id'] = intval($this->getParamList('id'));
         if (is_null($param['status'])) {
             unset($param['status']);
         }

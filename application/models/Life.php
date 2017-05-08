@@ -18,6 +18,8 @@ class LifeModel extends \BaseModel {
      */
     public function getLifeList(array $param) {
         $param['typeid'] ? $paramList['typeid'] = $param['typeid'] : false;
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
+        $param['name'] ? $paramList['name'] = $param['name'] : false;
         isset($param['hotelid']) ? $paramList['hotelid'] = $param['hotelid'] : false;
         isset($param['status']) ? $paramList['status'] = $param['status'] : false;
         $paramList['limit'] = $param['limit'];
@@ -34,6 +36,8 @@ class LifeModel extends \BaseModel {
      */
     public function getLifeCount(array $param) {
         $param['typeid'] ? $paramList['typeid'] = $param['typeid'] : false;
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
+        $param['name'] ? $paramList['name'] = $param['name'] : false;
         isset($param['hotelid']) ? $paramList['hotelid'] = $param['hotelid'] : false;
         isset($param['status']) ? $paramList['status'] = $param['status'] : false;
         return $this->dao->getLifeCount($paramList);
@@ -67,26 +71,25 @@ class LifeModel extends \BaseModel {
 		$result = false;
 		if ($id) {
 			$info = array();
-			isset($param ['hotelid']) ? $info ['hotelid'] = intval ( $this->getParamList ( 'hotelid' ) ) : false;
-			isset($param ['name_lang1']) ? $info ['name_lang1'] = $this->getParamList ( 'name_lang1' )  : false;
-			isset($param ['name_lang2']) ? $info ['name_lang2'] = $this->getParamList ( 'name_lang2' )  : false;
-			isset($param ['name_lang3']) ? $info ['name_lang3'] = $this->getParamList ( 'name_lang3' )  : false;
-			isset($param ['detail_lang1']) ? $info ['detail_lang1'] = $this->getParamList ( 'detail_lang1' )  : false;
-			isset($param ['detail_lang2']) ? $info ['detail_lang2'] = $this->getParamList ( 'detail_lang2' )  : false;
-			isset($param ['detail_lang3']) ? $info ['detail_lang3'] = $this->getParamList ( 'detail_lang3' )  : false;
-			isset($param ['address_lang1']) ? $info ['address_lang1'] = $this->getParamList ( 'address_lang1' )  : false;
-			isset($param ['address_lang2']) ? $info ['address_lang2'] = $this->getParamList ( 'address_lang2' )  : false;
-			isset($param ['address_lang3']) ? $info ['address_lang3'] = $this->getParamList ( 'address_lang3' )  : false;
-			isset($param ['introduct_lang1']) ? $info ['introduct_lang1'] = $this->getParamList ( 'introduct_lang1' )  : false;
-			isset($param ['hotelid']) ? $info ['hotelid'] = $this->getParamList ( 'hotelid' )  : false;
-			$param ['introduct_lang1'] = trim ( $this->getParamList ( 'introduct_lang1' ) );
-			$param ['introduct_lang2'] = trim ( $this->getParamList ( 'introduct_lang2' ) );
-			$param ['introduct_lang3'] = trim ( $this->getParamList ( 'introduct_lang3' ) );
-			$param ['tel'] = trim ( $this->getParamList ( 'tel' ) );
-			$param ['lat'] = trim ( $this->getParamList ( 'lat' ) );
-			$param ['lng'] = trim ( $this->getParamList ( 'lng' ) );
-			$param ['updatetime'] = time ();
-			$param ['status'] = intval ( $this->getParamList ( 'status' ) );
+			isset($param ['hotelid']) ? $info ['hotelid'] = $param ['hotelid'] : false;
+			isset($param ['typeid']) ? $info ['typeid'] = $param ['typeid'] : false;
+			isset($param ['name_lang1']) ? $info ['name_lang1'] = $param ['name_lang1']  : false;
+			isset($param ['name_lang2']) ? $info ['name_lang2'] = $param ['name_lang2']  : false;
+			isset($param ['name_lang3']) ? $info ['name_lang3'] = $param ['name_lang3']  : false;
+			isset($param ['detail_lang1']) ? $info ['detail_lang1'] = $param ['detail_lang1']  : false;
+			isset($param ['detail_lang2']) ? $info ['detail_lang2'] = $param ['detail_lang2']  : false;
+			isset($param ['detail_lang3']) ? $info ['detail_lang3'] = $param ['detail_lang3']  : false;
+			isset($param ['address_lang1']) ? $info ['address_lang1'] = $param ['address_lang1']  : false;
+			isset($param ['address_lang2']) ? $info ['address_lang2'] = $param ['address_lang2']  : false;
+			isset($param ['address_lang3']) ? $info ['address_lang3'] = $param ['address_lang3']  : false;
+			isset($param ['introduct_lang1']) ? $info ['introduct_lang1'] = $param ['introduct_lang1']  : false;
+			isset($param ['introduct_lang2']) ? $info ['introduct_lang2'] = $param ['introduct_lang2']  : false;
+			isset($param ['introduct_lang3']) ? $info ['introduct_lang3'] = $param ['introduct_lang3']  : false;
+			isset($param ['tel']) ? $info ['tel'] = $param ['tel']  : false;
+			isset($param ['lat']) ? $info ['lat'] = $param ['lat']  : false;
+			isset($param ['lng']) ? $info ['lng'] = $param ['lng']  : false;
+			isset($param ['updatetime']) ? $info ['updatetime'] = $param ['updatetime']  : false;
+			isset($param ['status']) ? $info ['status'] = $param ['status']  : false;
 			$result = $this->dao->updateLifeById ( $info, $id );
 		}
 		return $result;
