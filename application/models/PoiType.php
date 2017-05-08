@@ -22,6 +22,19 @@ class PoiTypeModel extends \BaseModel {
         $paramList['page'] = $param['page'];
         return $this->dao->getPoiTypeList($paramList);
     }
+    
+    /**
+     * 获取PoiType数量
+     *
+     * @param
+     *            array param 查询条件
+     * @return array
+     */
+    public function getPoiTypeCount(array $param) {
+    	$paramList = array();
+    	$param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+    	return $this->dao->getPoiTypeCount($paramList);
+    }
 
     /**
      * 根据id查询PoiType信息
@@ -49,9 +62,11 @@ class PoiTypeModel extends \BaseModel {
      */
     public function updatePoiTypeById($param, $id) {
         $result = false;
-        // 自行添加要更新的字段,以下是age字段是样例
         if ($id) {
-            $info['age'] = intval($param['age']);
+            $info['title_lang1'] = $param['title_lang1'];
+            $info['title_lang2'] = $param['title_lang2'];
+            $info['title_lang3'] = $param['title_lang3'];
+            $info['hotelid'] = $param['hotelid'];
             $result = $this->dao->updatePoiTypeById($info, $id);
         }
         return $result;
@@ -65,8 +80,10 @@ class PoiTypeModel extends \BaseModel {
      * @return array
      */
     public function addPoiType($param) {
-        // 自行添加要添加的字段,以下是age字段是样例
-        $info['age'] = intval($param['age']);
+		$info ['title_lang1'] = $param ['title_lang1'];
+		$info ['title_lang2'] = $param ['title_lang2'];
+		$info ['title_lang3'] = $param ['title_lang3'];
+		$info ['hotelid'] = $param ['hotelid'];
         return $this->dao->addPoiType($info);
     }
 }

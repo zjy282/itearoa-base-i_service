@@ -64,7 +64,7 @@ class Convertor_Life extends Convertor_Base {
     	return $data;
     }
 
-	public function getLifeDetailConvertor($lifes, $lifeCount, $param) {
+	public function getLifeDetailConvertor($lifes) {
 		$data = array ();
 		$data ['id'] = $lifes ['id'];
 		$data ['name'] = $this->handlerMultiLang ( 'name', $lifes );
@@ -80,7 +80,7 @@ class Convertor_Life extends Convertor_Base {
 		return $data;
 	}
 	
-	public function getAdminLifeDetailConvertor($lifes, $lifeCount, $param) {
+	public function getAdminLifeDetailConvertor($lifes) {
 		$data = array ();
 		$data ['id'] = $lifes ['id'];
 		$data['nameLang1'] = $lifes['name_lang1'];

@@ -65,9 +65,8 @@ class PoiModel extends \BaseModel {
      */
     public function updatePoiById($param, $id) {
         $result = false;
-        // 自行添加要更新的字段,以下是age字段是样例
         if ($id) {
-            $info['age'] = intval($param['age']);
+            $info = $param;
             $result = $this->dao->updatePoiById($info, $id);
         }
         return $result;
@@ -81,8 +80,7 @@ class PoiModel extends \BaseModel {
      * @return array
      */
     public function addPoi($param) {
-        // 自行添加要添加的字段,以下是age字段是样例
-        $info['age'] = intval($param['age']);
+        $info = $param;
         return $this->dao->addPoi($info);
     }
 }

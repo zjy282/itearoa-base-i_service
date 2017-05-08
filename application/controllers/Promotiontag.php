@@ -42,7 +42,7 @@ class PromotionTagController extends \BaseController {
         } else {
             $this->throwException(1, '查询条件错误，id不能为空');
         }
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -67,7 +67,7 @@ class PromotionTagController extends \BaseController {
         } else {
             $this->throwException(1, 'id不能为空');
         }
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -85,6 +85,6 @@ class PromotionTagController extends \BaseController {
 		$param ['hotelid'] = trim ( $this->getParamList ( 'hotelid' ) );
         $data = $this->model->addPromotionTag($param);
         $data = $this->convertor->statusConvertor($data);
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 }
