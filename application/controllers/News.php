@@ -25,7 +25,7 @@ class NewsController extends \BaseController {
 		$newsCount = $this->model->getNewsCount ( $param );
 		$newsTagModel = new NewsTagModel ();
 		$tagList = $newsTagModel->getNewsTagList ( $param );
-		$this->package == Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getNewsListConvertor ( $newsList, $tagList, $newsCount, $param ) : $data = $this->convertor->getAdminNewsListConvertor ( $newsList, $tagList, $newsCount, $param );
+		$this->package != Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getNewsListConvertor ( $newsList, $tagList, $newsCount, $param ) : $data = $this->convertor->getAdminNewsListConvertor ( $newsList, $tagList, $newsCount, $param );
 		$this->echoSuccessData ( $data );
 	}
 
@@ -40,7 +40,7 @@ class NewsController extends \BaseController {
 		$id = intval ( $this->getParamList ( 'id' ) );
 		if ($id) {
 			$data = $this->model->getNewsDetail ( $id );
-			$this->package == Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getNewsDetailConvertor ( $data ) : $data = $this->convertor->getAdminNewsDetailConvertor ( $data );
+			$this->package != Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getNewsDetailConvertor ( $data ) : $data = $this->convertor->getAdminNewsDetailConvertor ( $data );
 		} else {
 			$this->throwException ( 1, '查询条件错误，id不能为空' );
 		}

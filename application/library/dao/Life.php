@@ -95,7 +95,7 @@ class Dao_Life extends Dao_Base {
         $result = false;
         
         if ($id) {
-            $result = $this->db->update('hotel_life', $info, $id);
+            $result = $this->db->update('hotel_life', $info, array('id' => $id));
         }
         
         return $result;

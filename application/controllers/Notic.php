@@ -25,7 +25,7 @@ class NoticController extends \BaseController {
 		$count = $this->model->getNoticCount ( $param );
 		$tagModel = new NoticTagModel ();
 		$tagList = $tagModel->getNoticTagList ( $param );
-		$this->package == Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getNoticListConvertor ( $list, $tagList, $count, $param ) : $data = $this->convertor->getAdminNoticListConvertor ( $list, $tagList, $count, $param );
+		$this->package != Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getNoticListConvertor ( $list, $tagList, $count, $param ) : $data = $this->convertor->getAdminNoticListConvertor ( $list, $tagList, $count, $param );
 		$this->echoSuccessData ( $data );
 	}
 
@@ -40,7 +40,7 @@ class NoticController extends \BaseController {
 		$id = intval ( $this->getParamList ( 'id' ) );
 		if ($id) {
 			$data = $this->model->getNoticDetail ( $id );
-			$this->package == Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getNoticDetailConvertor ( $data ) : $data = $this->convertor->getAdminNoticDetailConvertor ( $data );
+			$this->package != Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getNoticDetailConvertor ( $data ) : $data = $this->convertor->getAdminNoticDetailConvertor ( $data );
 		} else {
 			$this->throwException ( 1, '查询条件错误，id不能为空' );
 		}

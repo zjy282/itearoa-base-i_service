@@ -66,7 +66,27 @@ class LifeModel extends \BaseModel {
 	public function updateLifeById($param, $id) {
 		$result = false;
 		if ($id) {
-			$info = $param;
+			$info = array();
+			isset($param ['hotelid']) ? $info ['hotelid'] = intval ( $this->getParamList ( 'hotelid' ) ) : false;
+			isset($param ['name_lang1']) ? $info ['name_lang1'] = $this->getParamList ( 'name_lang1' )  : false;
+			isset($param ['name_lang2']) ? $info ['name_lang2'] = $this->getParamList ( 'name_lang2' )  : false;
+			isset($param ['name_lang3']) ? $info ['name_lang3'] = $this->getParamList ( 'name_lang3' )  : false;
+			isset($param ['detail_lang1']) ? $info ['detail_lang1'] = $this->getParamList ( 'detail_lang1' )  : false;
+			isset($param ['detail_lang2']) ? $info ['detail_lang2'] = $this->getParamList ( 'detail_lang2' )  : false;
+			isset($param ['detail_lang3']) ? $info ['detail_lang3'] = $this->getParamList ( 'detail_lang3' )  : false;
+			isset($param ['address_lang1']) ? $info ['address_lang1'] = $this->getParamList ( 'address_lang1' )  : false;
+			isset($param ['address_lang2']) ? $info ['address_lang2'] = $this->getParamList ( 'address_lang2' )  : false;
+			isset($param ['address_lang3']) ? $info ['address_lang3'] = $this->getParamList ( 'address_lang3' )  : false;
+			isset($param ['introduct_lang1']) ? $info ['introduct_lang1'] = $this->getParamList ( 'introduct_lang1' )  : false;
+			isset($param ['hotelid']) ? $info ['hotelid'] = $this->getParamList ( 'hotelid' )  : false;
+			$param ['introduct_lang1'] = trim ( $this->getParamList ( 'introduct_lang1' ) );
+			$param ['introduct_lang2'] = trim ( $this->getParamList ( 'introduct_lang2' ) );
+			$param ['introduct_lang3'] = trim ( $this->getParamList ( 'introduct_lang3' ) );
+			$param ['tel'] = trim ( $this->getParamList ( 'tel' ) );
+			$param ['lat'] = trim ( $this->getParamList ( 'lat' ) );
+			$param ['lng'] = trim ( $this->getParamList ( 'lng' ) );
+			$param ['updatetime'] = time ();
+			$param ['status'] = intval ( $this->getParamList ( 'status' ) );
 			$result = $this->dao->updateLifeById ( $info, $id );
 		}
 		return $result;

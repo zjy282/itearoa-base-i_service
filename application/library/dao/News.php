@@ -95,7 +95,7 @@ class Dao_News extends Dao_Base {
         $result = false;
         
         if ($id) {
-            $result = $this->db->update('hotel_news', $info, $id);
+            $result = $this->db->update('hotel_news', $info, array( 'id' => $id) );
         }
         
         return $result;

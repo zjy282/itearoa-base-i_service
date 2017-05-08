@@ -95,7 +95,7 @@ class Dao_Notic extends Dao_Base {
         $result = false;
         
         if ($id) {
-            $result = $this->db->update('hotel_notic', $info, $id);
+            $result = $this->db->update('hotel_notic', $info, array ( 'id' => $id ) );
         }
         
         return $result;

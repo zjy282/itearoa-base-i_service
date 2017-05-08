@@ -41,7 +41,7 @@ class LifeController extends \BaseController {
 		$id = intval ( $this->getParamList ( 'id' ) );
 		if ($id) {
 			$data = $this->model->getLifeDetail ( $id );
-			$this->package == Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getLifeDetailConvertor ( $data ) : $data = $this->convertor->getAdminLifeDetailConvertor ( $data );
+			$this->package != Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getLifeDetailConvertor ( $data ) : $data = $this->convertor->getAdminLifeDetailConvertor ( $data );
 		} else {
 			$this->throwException ( 1, '查询条件错误，id不能为空' );
 		}
@@ -74,9 +74,6 @@ class LifeController extends \BaseController {
 			$param ['introduct_lang1'] = trim ( $this->getParamList ( 'introduct_lang1' ) );
 			$param ['introduct_lang2'] = trim ( $this->getParamList ( 'introduct_lang2' ) );
 			$param ['introduct_lang3'] = trim ( $this->getParamList ( 'introduct_lang3' ) );
-			$param ['detail_lang1'] = trim ( $this->getParamList ( 'detail_lang1' ) );
-			$param ['detail_lang2'] = trim ( $this->getParamList ( 'detail_lang2' ) );
-			$param ['detail_lang3'] = trim ( $this->getParamList ( 'detail_lang3' ) );
 			$param ['tel'] = trim ( $this->getParamList ( 'tel' ) );
 			$param ['lat'] = trim ( $this->getParamList ( 'lat' ) );
 			$param ['lng'] = trim ( $this->getParamList ( 'lng' ) );

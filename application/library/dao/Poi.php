@@ -14,17 +14,16 @@ class Dao_Poi extends Dao_Base {
      * @return array
      */
     public function getPoiList(array $param): array {
-        $limit = $param['limit'] ? intval($param['limit']) : 0;
-        $page = $this->getStart($param['page'], $limit);
-        
-        $paramSql = $this->handlerPoiListParams($param);
-        $sql = "select * from hotel_poi {$paramSql['sql']}";
-        if ($limit) {
-            $sql .= " limit {$page},{$limit}";
-        }
-        $result = $this->db->fetchAll($sql, $paramSql['case']);
-        return is_array($result) ? $result : array();
-    }
+		$limit = $param ['limit'] ? intval ( $param ['limit'] ) : 0;
+		$page = $this->getStart ( $param ['page'], $limit );
+		$paramSql = $this->handlerPoiListParams ( $param );
+		$sql = "select * from hotel_poi {$paramSql['sql']}";
+		if ($limit) {
+			$sql .= " limit {$page},{$limit}";
+		}
+		$result = $this->db->fetchAll ( $sql, $paramSql ['case'] );
+		return is_array ( $result ) ? $result : array ();
+	}
 
     /**
      * 查询hotel_poi数量
@@ -95,7 +94,7 @@ class Dao_Poi extends Dao_Base {
         $result = false;
         
         if ($id) {
-            $result = $this->db->update('hotel_poi', $info, $id);
+            $result = $this->db->update('hotel_poi', $info, array( 'id' => $id));
         }
         
         return $result;

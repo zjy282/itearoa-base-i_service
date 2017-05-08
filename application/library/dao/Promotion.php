@@ -95,7 +95,7 @@ class Dao_Promotion extends Dao_Base {
         $result = false;
         
         if ($id) {
-            $result = $this->db->update('hotel_promotion', $info, $id);
+            $result = $this->db->update('hotel_promotion', $info, array ( 'id' => $id));
         }
         
         return $result;

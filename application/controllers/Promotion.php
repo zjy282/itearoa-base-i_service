@@ -25,7 +25,7 @@ class PromotionController extends \BaseController {
 		$promotionCount = $this->model->getPromotionCount ( $param );
 		$promotionTagModel = new PromotionTagModel ();
 		$tagList = $promotionTagModel->getPromotionTagList ( $param );
-		$this->package == Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getPromotionListConvertor ( $promotionList, $tagList, $promotionCount, $param ) : $data = $this->convertor->getAdminPromotionListConvertor ( $promotionList, $tagList, $promotionCount, $param );
+		$this->package != Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getPromotionListConvertor ( $promotionList, $tagList, $promotionCount, $param ) : $data = $this->convertor->getAdminPromotionListConvertor ( $promotionList, $tagList, $promotionCount, $param );
 		$this->echoSuccessData ( $data );
 	}
 

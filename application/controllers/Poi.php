@@ -26,7 +26,7 @@ class PoiController extends \BaseController {
 		}
 		$poiList = $this->model->getPoiList ( $param );
 		$poiCount = $this->model->getPoiCount ( $param );
-		$this->package == Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getPoiListConvertor ( $poiList, $poiCount, $param ) : $data = $this->convertor->getAdminPoiListConvertor ( $poiList, $poiCount, $param );
+		$this->package != Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getPoiListConvertor ( $poiList, $poiCount, $param ) : $data = $this->convertor->getAdminPoiListConvertor ( $poiList, $poiCount, $param );
 		$this->echoSuccessData ( $data );
 	}
 
@@ -42,7 +42,7 @@ class PoiController extends \BaseController {
 		if ($id) {
 			$data = $this->model->getPoiDetail ( $id );
 			$data = $this->convertor->getPoiDetailConvertor ( $data );
-			$this->package == Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getPoiDetailConvertor ( $data) : $data = $this->convertor->getAdminPoiDetailConvertor ( $data );
+			$this->package != Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getPoiDetailConvertor ( $data) : $data = $this->convertor->getAdminPoiDetailConvertor ( $data );
 		} else {
 			$this->throwException ( 1, '查询条件错误，id不能为空' );
 		}
