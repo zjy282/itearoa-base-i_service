@@ -2,8 +2,9 @@
 
 class StaffController extends \BaseController {
 
+    /** @var  StaffModel */
     private $model;
-
+    /** @var  Convertor_Staff */
     private $convertor;
 
     public function init() {
@@ -105,7 +106,7 @@ class StaffController extends \BaseController {
         $param['groupid'] = intval($this->getParamList('groupid'));
         $param['platform'] = intval($this->getParamList('platform'));
         $param['identity'] = trim($this->getParamList('identity'));
-        
+
         $result = $this->model->loginAction($param);
         $result = $this->convertor->userInfoConvertor($result);
         $this->echoSuccessData($result);

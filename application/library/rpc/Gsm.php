@@ -5,16 +5,10 @@ class Rpc_Gsm {
     private function __construct() {
     }
 
-    public function send($groupId, $interface, $params) {
-        $groupModel = new GroupModel();
-        $groupPort = $groupModel->getGroupPortByGroupId($groupId);
-        if (empty($groupPort)) {
-            return array(
-                'code' => 1,
-                'msg' => 'GSM接口地址获取失败'
-            );
-        }
-
-
+    public static function send($interface, $params, $timeOut = 10) {
+        $url = $interface . '?' . http_build_query($params);
+        $respone = Util_Http::fileGetContentsWithTimeOut($url, $timeOut);
+        $result = json_decode($respone, true);
+        return $result;
     }
 }

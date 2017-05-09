@@ -133,9 +133,15 @@ class UserModel extends \BaseModel {
      * @return array
      */
     public function getOIdInfo($param) {
-        return array(
-            'oId' => md5(1)
-        );
+        $hotelModel = new HotelListModel();
+        $hotelInfo = $hotelModel->getHotelListDetail($param['hotelid']);
+        $paramList = array();
+        $paramList['PropertyInterfID'] = $hotelInfo['propertyinterfid'];
+        $paramList['Room'] = $param['room_no'];
+        $paramList['LastName'] = $param['fullname'];
+        $paramList = Enum_Gsm::genEncryptGsmParams($paramList);
+        $gsmResult = Rpc_Gsm::send(Enum_Gsm::USER_LOGIN_METHOD, $paramList);
+        return array('oId' => $gsmResult['OID']);
     }
 
     /**

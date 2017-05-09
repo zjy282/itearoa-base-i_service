@@ -105,6 +105,15 @@ class StaffModel extends \BaseModel {
      * @return array
      */
     public function getStaffIdInfo($param) {
+//        $paramList = array();
+        //        $paramList['LType'] = 1;
+        //        $paramList['LName'] = $param['lname'];
+        //        $paramList['Pwd'] = $param['pwd'];
+        //        $paramList = Enum_Gsm::genEncryptGsmParams($paramList);
+        //        $gsmResult = Rpc_Gsm::send(Enum_Gsm::STAFF_LOGIN_METHOD, $paramList);
+        //        var_dump($gsmResult);
+        //        exit;
+        //        return array('staffId' => $gsmResult['OID']);
         return array(
             'staffId' => md5(1)
         );
@@ -113,7 +122,7 @@ class StaffModel extends \BaseModel {
     /**
      * 登录
      *
-     * @param array $param            
+     * @param array $param
      * @return array
      */
     public function loginAction($param) {
@@ -123,17 +132,17 @@ class StaffModel extends \BaseModel {
         if (empty($param['hotelid']) || empty($param['groupid'])) {
             $this->throwException('酒店集团信息不正确', 3);
         }
-        
+
         // 获取Oid
         $staffIdInfo = $this->getStaffIdInfo($param);
         if (empty($staffIdInfo['staffId'])) {
             $this->throwException('房间号和名称错误，登录失败', 4);
         }
-        
+
         // 获取用户信息
         $getStaffInfo = $this->getStaffDetailByStaffId($staffIdInfo['staffId']);
         $userId = $getStaffInfo['id'];
-        
+
         $newStaffInfo = array(
             'hotelid' => $param['hotelid'],
             'groupid' => $param['groupid'],
@@ -141,7 +150,7 @@ class StaffModel extends \BaseModel {
             'platform' => intval($param['platform']),
             'identity' => trim($param['identity'])
         );
-        
+
         if ($userId) {
             // 更新用户数据
             if (! $this->updateStaffById($newStaffInfo, $userId)) {

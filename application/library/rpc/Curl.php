@@ -1,7 +1,7 @@
 <?php
 class Rpc_Curl {
     /**
-     * 
+     *
      * @param string $url
      * @param string $method get post
      * @param unknown_type $postData
@@ -28,7 +28,7 @@ class Rpc_Curl {
         $result['httpStatus'] = curl_getinfo ( $handle, CURLINFO_HTTP_CODE );
         $result['fullInfo'] = curl_getinfo ( $handle );
         curl_close ( $handle );
-        
+
         return $result;
     }
 }
