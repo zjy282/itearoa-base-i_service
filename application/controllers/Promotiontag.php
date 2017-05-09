@@ -79,12 +79,14 @@ class PromotionTagController extends \BaseController {
      */
     public function addPromotionTagAction() {
         $param = array();
-		$param ['title_lang1'] = trim ( $this->getParamList ( 'title_lang1' ) );
-		$param ['title_lang2'] = trim ( $this->getParamList ( 'title_lang2' ) );
-		$param ['title_lang3'] = trim ( $this->getParamList ( 'title_lang3' ) );
-		$param ['hotelid'] = trim ( $this->getParamList ( 'hotelid' ) );
+        $param ['title_lang1'] = trim($this->getParamList('title_lang1'));
+        $param ['title_lang2'] = trim($this->getParamList('title_lang2'));
+        $param ['title_lang3'] = trim($this->getParamList('title_lang3'));
+        $param ['hotelid'] = trim($this->getParamList('hotelid'));
         $data = $this->model->addPromotionTag($param);
-        $data = $this->convertor->statusConvertor($data);
+        $data = $this->convertor->statusConvertor(array(
+            'id' => $data
+        ));
         $this->echoSuccessData($data);
     }
 }

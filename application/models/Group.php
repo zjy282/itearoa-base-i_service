@@ -78,4 +78,14 @@ class GroupModel extends \BaseModel {
         isset($param['portUrl']) ? $info['port_url'] = $param['portUrl'] : false;
         return $this->dao->addGroup($info);
     }
+
+    /**
+     * 根据集团ID获取集团的GSM接口地址
+     * @param $groupId
+     * @return bool
+     */
+    public function getGroupPortByGroupId($groupId) {
+        $groupInfo = $this->getGroupDetail($groupId);
+        return $groupInfo['port_url'];
+    }
 }
