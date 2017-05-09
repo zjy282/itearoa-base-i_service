@@ -36,7 +36,9 @@ class PoiTypeController extends \BaseController {
     public function getAdminPoiTypeListAction() {
         $param = array();
         $param ['hotelid'] = intval($this->getParamList('hotelid'));
-        $this->getPageParam($param);
+        $param ['page'] = intval($this->getParamList('page', 1));
+        $limit = $this->getParamList('limit');
+        $param ['limit'] = isset($limit) ? $limit : null;
         if (empty ($param ['hotelid'])) {
             $this->throwException(2, '物业ID不能为空');
         }

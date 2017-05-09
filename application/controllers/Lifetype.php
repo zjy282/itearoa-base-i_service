@@ -41,7 +41,8 @@ class LifeTypeController extends \BaseController {
         $param = array();
         $param ['hotelid'] = intval($this->getParamList('hotelid'));
         $param ['page'] = intval($this->getParamList('page', 1));
-        $param ['limit'] = intval($this->getParamList('limit', 5));
+        $limit = $this->getParamList('limit');
+        $param ['limit'] = isset($limit) ? $limit : null;
         if (empty ($param ['hotelid'])) {
             $this->throwException(2, '物业ID不能为空');
         }

@@ -18,13 +18,15 @@ class NoticTagController extends \BaseController {
      * @return Json
      */
     public function getAdminTagListAction() {
-        $param = array();
-        $param ['hotelid'] = intval($this->getParamList('hotelid'));
-        $this->getPageParam($param);
-        $list = $this->model->getNoticTagList($param);
-        $count = $this->model->getNoticTagCount($param);
-        $data = $this->convertor->getAdminTagListConvertor($list, $count, $param);
-        $this->echoSuccessData($data);
+        $param = array ();
+        $param ['hotelid'] = intval ( $this->getParamList ( 'hotelid' ) );
+        $param ['page'] = intval ( $this->getParamList ( 'page', 1 ) );
+        $limit = $this->getParamList ('limit');
+        $param ['limit'] = isset($limit) ? $limit : null;
+        $list = $this->model->getNoticTagList ( $param );
+        $count = $this->model->getNoticTagCount ( $param );
+        $data = $this->convertor->getAdminTagListConvertor ( $list, $count, $param );
+        $this->echoSuccessData ( $data );
     }
 
     /**
@@ -77,7 +79,7 @@ class NoticTagController extends \BaseController {
      *            array param 需要新增的信息
      * @return Json
      */
-    public function addNewsTagAction() {
+    public function addNoticTagAction() {
         $param = array();
         $param ['title_lang1'] = trim($this->getParamList('title_lang1'));
         $param ['title_lang2'] = trim($this->getParamList('title_lang2'));

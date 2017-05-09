@@ -21,12 +21,15 @@ class NoticController extends \BaseController {
         $param = array();
         $param ['hotelid'] = intval($this->getParamList('hotelid'));
         $param ['tagid'] = intval($this->getParamList('tagid'));
+        $param ['id'] = intval($this->getParamList('id'));
+        $param ['status'] = $this->getParamList('status');
+        $param ['title'] = $this->getParamList('title');
         $this->getPageParam($param);
         $list = $this->model->getNoticList($param);
         $count = $this->model->getNoticCount($param);
         $tagModel = new NoticTagModel ();
         $tagList = $tagModel->getNoticTagList($param);
-        $this->package == Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getNoticListConvertor($list, $tagList, $count, $param) : $data = $this->convertor->getAdminNoticListConvertor($list, $tagList, $count, $param);
+        $this->package != Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getNoticListConvertor($list, $tagList, $count, $param) : $data = $this->convertor->getAdminNoticListConvertor($list, $tagList, $count, $param);
         $this->echoSuccessData($data);
     }
 
@@ -41,7 +44,7 @@ class NoticController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $data = $this->model->getNoticDetail($id);
-            $this->package == Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getNoticDetailConvertor($data) : $data = $this->convertor->getAdminNoticDetailConvertor($data);
+            $this->package != Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getNoticDetailConvertor($data) : $data = $this->convertor->getAdminNoticDetailConvertor($data);
         } else {
             $this->throwException(1, '查询条件错误，id不能为空');
         }
@@ -61,15 +64,15 @@ class NoticController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
-            $param ['hotelid'] = intval($this->getParamList('hotelid'));
-            $param ['status'] = intval($this->getParamList('status'));
-            $param ['title_lang1'] = trim($this->getParamList('title_lang1'));
-            $param ['title_lang2'] = trim($this->getParamList('title_lang2'));
-            $param ['title_lang3'] = trim($this->getParamList('title_lang3'));
-            $param ['article_lang1'] = trim($this->getParamList('article_lang1'));
-            $param ['article_lang2'] = trim($this->getParamList('article_lang2'));
-            $param ['article_lang3'] = trim($this->getParamList('article_lang3'));
-            $param ['tagid'] = trim($this->getParamList('tagid'));
+            $param ['hotelid'] = $this->getParamList('hotelid');
+            $param ['status'] = $this->getParamList('status');
+            $param ['title_lang1'] = $this->getParamList('title_lang1');
+            $param ['title_lang2'] = $this->getParamList('title_lang2');
+            $param ['title_lang3'] = $this->getParamList('title_lang3');
+            $param ['article_lang1'] = $this->getParamList('article_lang1');
+            $param ['article_lang2'] = $this->getParamList('article_lang2');
+            $param ['article_lang3'] = $this->getParamList('article_lang3');
+            $param ['tagid'] = $this->getParamList('tagid');
             $param ['updatetime'] = time();
             $data = $this->model->updateNoticById($param, $id);
             $data = $this->convertor->statusConvertor($data);
@@ -88,20 +91,18 @@ class NoticController extends \BaseController {
      */
     public function addNoticAction() {
         $param = array();
-        $param ['hotelid'] = intval($this->getParamList('hotelid'));
-        $param ['status'] = intval($this->getParamList('status'));
-        $param ['title_lang1'] = trim($this->getParamList('title_lang1'));
-        $param ['title_lang2'] = trim($this->getParamList('title_lang2'));
-        $param ['title_lang3'] = trim($this->getParamList('title_lang3'));
-        $param ['article_lang1'] = trim($this->getParamList('article_lang1'));
-        $param ['article_lang2'] = trim($this->getParamList('article_lang2'));
-        $param ['article_lang3'] = trim($this->getParamList('article_lang3'));
-        $param ['tagid'] = trim($this->getParamList('tagid'));
+        $param ['hotelid'] = $this->getParamList('hotelid');
+        $param ['status'] = $this->getParamList('status');
+        $param ['title_lang1'] = $this->getParamList('title_lang1');
+        $param ['title_lang2'] = $this->getParamList('title_lang2');
+        $param ['title_lang3'] = $this->getParamList('title_lang3');
+        $param ['tagid'] = $this->getParamList('tagid');
         $param ['updatetime'] = time();
+        $param ['createtime'] = time();
         $data = $this->model->addNotic($param);
         $data = $this->convertor->statusConvertor(array(
             'id' => $data
         ));
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 }

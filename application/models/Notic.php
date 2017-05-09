@@ -18,6 +18,8 @@ class NoticModel extends \BaseModel {
 	public function getNoticList(array $param) {
 		isset ( $param ['hotelid'] ) ? $paramList ['hotelid'] = intval ( $param ['hotelid'] ) : false;
 		$param ['tagid'] ? $paramList ['tagid'] = intval ( $param ['tagid'] ) : false;
+		$param ['id'] ? $paramList ['id'] = intval ( $param ['id'] ) : false;
+		$param ['title'] ? $paramList ['title'] = $param ['title'] : false;
 		isset ( $param ['status'] ) ? $paramList ['status'] = intval ( $param ['status'] ) : false;
 		$paramList ['limit'] = $param ['limit'];
 		$paramList ['page'] = $param ['page'];
@@ -33,6 +35,8 @@ class NoticModel extends \BaseModel {
 	 */
 	public function getNoticCount(array $param) {
 		isset ( $param ['hotelid'] ) ? $paramList ['hotelid'] = intval ( $param ['hotelid'] ) : false;
+		$param ['id'] ? $paramList ['id'] = intval ( $param ['id'] ) : false;
+		$param ['title'] ? $paramList ['title'] = $param ['title'] : false;
 		$param ['tagid'] ? $paramList ['tagid'] = intval ( $param ['tagid'] ) : false;
 		isset ( $param ['status'] ) ? $paramList ['status'] = intval ( $param ['status'] ) : false;
 		return $this->dao->getNoticCount ( $paramList );
@@ -65,7 +69,17 @@ class NoticModel extends \BaseModel {
 	public function updateNoticById($param, $id) {
 		$result = false;
 		if ($id) {
-			$info = $param;
+			$info = array ();
+			isset ( $param ['hotelid'] ) ? $info ['hotelid'] = $param ['hotelid'] : false;
+			isset ( $param ['status'] ) ? $info ['status'] = $param ['status'] : false;
+			isset ( $param ['title_lang1'] ) ? $info ['title_lang1'] = $param ['title_lang1'] : false;
+			isset ( $param ['title_lang2'] ) ? $info ['title_lang2'] = $param ['title_lang2'] : false;
+			isset ( $param ['title_lang3'] ) ? $info ['title_lang3'] = $param ['title_lang3'] : false;
+			isset ( $param ['article_lang1'] ) ? $info ['article_lang1'] = $param ['article_lang1'] : false;
+			isset ( $param ['article_lang2'] ) ? $info ['article_lang2'] = $param ['article_lang2'] : false;
+			isset ( $param ['article_lang3'] ) ? $info ['article_lang3'] = $param ['article_lang3'] : false;
+			isset ( $param ['tagid'] ) ? $info ['tagid'] = $param ['tagid'] : false;
+			isset ( $param ['updatetime'] ) ? $info ['updatetime'] = $param ['updatetime'] : false;
 			$result = $this->dao->updateNoticById ( $info, $id );
 		}
 		return $result;

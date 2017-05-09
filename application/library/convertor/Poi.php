@@ -30,29 +30,43 @@ class Convertor_Poi extends Convertor_Base {
 		return $data;
 	}
 
-	public function getAdminPoiListConvertor($poiList, $poiCount, $param) {
+	public function getAdminPoiListConvertor($poiList, $poiCount, $param, $typeList) {
 		$data = array ('list' => array () );
+		
+		$typeListNew = array ();
+		foreach ( $typeList as $type ) {
+			$typeListNew [$type ['id']] ['titleLang1'] = $type ['title_lang1'];
+			$typeListNew [$type ['id']] ['titleLang2'] = $type ['title_lang2'];
+			$typeListNew [$type ['id']] ['titleLang3'] = $type ['title_lang3'];
+		}
+		
 		foreach ( $poiList as $poi ) {
-			$lifeTemp = array ();
-			$lifeTemp ['id'] = $poi ['id'];
-			$lifeTemp ['name_lang1'] = $poi ['name_lang1'];
-			$lifeTemp ['name_lang2'] = $poi ['name_lang2'];
-			$lifeTemp ['name_lang3'] = $poi ['name_lang3'];
-			$lifeTemp ['address_lang1'] = $poi ['address_lang1'];
-			$lifeTemp ['address_lang2'] = $poi ['address_lang2'];
-			$lifeTemp ['address_lang3'] = $poi ['address_lang3'];
-			$lifeTemp ['tel'] = $poi ['tel'];
-			$lifeTemp ['hotelId'] = $poi ['hotelid'];
-			$lifeTemp ['typeId'] = $poi ['typeid'];
-			$lifeTemp ['introduct_lang1'] = $poi ['introduct_lang1'];
-			$lifeTemp ['introduct_lang2'] = $poi ['introduct_lang2'];
-			$lifeTemp ['introduct_lang3'] = $poi ['introduct_lang3'];
-			$lifeTemp ['detail_lang1'] = Enum_Img::getPathByKeyAndType ( $poi ['detail_lang1'] );
-			$lifeTemp ['detail_lang2'] = Enum_Img::getPathByKeyAndType ( $poi ['detail_lang2'] );
-			$lifeTemp ['detail_lang3'] = Enum_Img::getPathByKeyAndType ( $poi ['detail_lang3'] );
-			$lifeTemp ['lat'] = $poi ['lat'];
-			$lifeTemp ['lng'] = $poi ['lng'];
-			$data ['list'] [] = $lifeTemp;
+			$poiTemp = array ();
+			$poiTemp ['id'] = $poi ['id'];
+			$poiTemp ['name_lang1'] = $poi ['name_lang1'];
+			$poiTemp ['name_lang2'] = $poi ['name_lang2'];
+			$poiTemp ['name_lang3'] = $poi ['name_lang3'];
+			$poiTemp ['address_lang1'] = $poi ['address_lang1'];
+			$poiTemp ['address_lang2'] = $poi ['address_lang2'];
+			$poiTemp ['address_lang3'] = $poi ['address_lang3'];
+			$poiTemp ['tel'] = $poi ['tel'];
+			$poiTemp ['status'] = $poi ['status'];
+			$poiTemp ['hotelId'] = $poi ['hotelid'];
+			$poiTemp ['typeId'] = $poi ['typeid'];
+			$poiTemp ['tagName_lang1'] = $typeListNew [$poiTemp ['typeId']] ['titleLang1'];
+			$poiTemp ['tagName_lang2'] = $typeListNew [$poiTemp ['typeId']] ['titleLang2'];
+			$poiTemp ['tagName_lang3'] = $typeListNew [$poiTemp ['typeId']] ['titleLang3'];
+			$poiTemp ['introduct_lang1'] = $poi ['introduct_lang1'];
+			$poiTemp ['introduct_lang2'] = $poi ['introduct_lang2'];
+			$poiTemp ['introduct_lang3'] = $poi ['introduct_lang3'];
+			$poiTemp ['detail_lang1'] = $poi ['detail_lang1'];
+			$poiTemp ['detail_lang2'] = $poi ['detail_lang2'];
+			$poiTemp ['detail_lang3'] = $poi ['detail_lang3'];
+			$poiTemp ['lat'] = $poi ['lat'];
+			$poiTemp ['lng'] = $poi ['lng'];
+			$poiTemp ['createTime'] = $poi ['createtime'];
+			$poiTemp ['updateTime'] = $poi ['updatetime'];
+			$data ['list'] [] = $poiTemp;
 		}
 		$data ['total'] = $poiCount;
 		$data ['page'] = $param ['page'];

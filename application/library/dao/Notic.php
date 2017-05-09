@@ -55,6 +55,16 @@ class Dao_Notic extends Dao_Base {
             $whereSql[] = 'status = ?';
             $whereCase[] = $param['status'];
         }
+        if (isset($param['id'])) {
+        	$whereSql[] = 'id = ?';
+        	$whereCase[] = $param['id'];
+        }
+        if (isset($param['title'])) {
+        	$whereSql[] = '(title_lang1 = ? or title_lang2 = ? or title_lang2 = ?)';
+        	$whereCase[] = $param['title'];
+        	$whereCase[] = $param['title'];
+        	$whereCase[] = $param['title'];
+        }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
         return array(
             'sql' => $whereSql,
@@ -95,7 +105,7 @@ class Dao_Notic extends Dao_Base {
         $result = false;
         
         if ($id) {
-            $result = $this->db->update('hotel_notic', $info, $id);
+            $result = $this->db->update('hotel_notic', $info, array ( 'id' => $id ) );
         }
         
         return $result;

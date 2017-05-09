@@ -20,7 +20,9 @@ class NewsTagController extends \BaseController {
     public function getAdminTagListAction() {
         $param = array();
         $param ['hotelid'] = intval($this->getParamList('hotelid'));
-        $this->getPageParam($param);
+        $param ['page'] = intval($this->getParamList('page', 1));
+        $limit = $this->getParamList('limit');
+        $param ['limit'] = isset($limit) ? $limit : null;
         $list = $this->model->getNewsTagList($param);
         $count = $this->model->getNewsTagCount($param);
         $data = $this->convertor->getAdminTagListConvertor($list, $count, $param);

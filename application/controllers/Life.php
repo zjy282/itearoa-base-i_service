@@ -21,13 +21,22 @@ class LifeController extends \BaseController {
         $param = array();
         $param ['typeid'] = intval($this->getParamList('typeid'));
         $param ['hotelid'] = intval($this->getParamList('hotelid'));
+        $param ['name'] = $this->getParamList('name');
+        $param ['status'] = $this->getParamList('status');
+        $param ['id'] = intval($this->getParamList('id'));
         $this->getPageParam($param);
         if (empty ($param ['hotelid'])) {
             $this->throwException(2, '入参错误');
         }
-        $poiList = $this->model->getLifeList($param);
-        $poiCount = $this->model->getLifeCount($param);
-        $this->package == Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getLifeListConvertor($poiList, $poiCount, $param) : $data = $this->convertor->getAdminLifeListConvertor($poiList, $poiCount, $param);
+        $lifeList = $this->model->getLifeList($param);
+        $lifeCount = $this->model->getLifeCount($param);
+        if ($this->package != Enum_System::ADMIN_PACKAGE) {
+            $data = $this->convertor->getLifeListConvertor($lifeList, $lifeCount, $param);
+        } else {
+            $lifeTypeModel = new LifeTypeModel ();
+            $typeList = $lifeTypeModel->getLifeTypeList($param);
+            $data = $this->convertor->getAdminLifeListConvertor($lifeList, $lifeCount, $param, $typeList);
+        }
         $this->echoSuccessData($data);
     }
 
@@ -42,7 +51,7 @@ class LifeController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $data = $this->model->getLifeDetail($id);
-            $this->package == Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getLifeDetailConvertor($data) : $data = $this->convertor->getAdminLifeDetailConvertor($data);
+            $this->package != Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getLifeDetailConvertor($data) : $data = $this->convertor->getAdminLifeDetailConvertor($data);
         } else {
             $this->throwException(1, '查询条件错误，id不能为空');
         }
@@ -62,27 +71,25 @@ class LifeController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
-            $param ['hotelid'] = trim($this->getParamList('hotelid'));
-            $param ['name_lang1'] = trim($this->getParamList('name_lang1'));
-            $param ['name_lang2'] = trim($this->getParamList('name_lang2'));
-            $param ['name_lang3'] = trim($this->getParamList('name_lang3'));
-            $param ['detail_lang1'] = trim($this->getParamList('detail_lang1'));
-            $param ['detail_lang2'] = trim($this->getParamList('detail_lang2'));
-            $param ['detail_lang3'] = trim($this->getParamList('detail_lang3'));
-            $param ['address_lang1'] = trim($this->getParamList('address_lang1'));
-            $param ['address_lang2'] = trim($this->getParamList('address_lang2'));
-            $param ['address_lang3'] = trim($this->getParamList('address_lang3'));
-            $param ['introduct_lang1'] = trim($this->getParamList('introduct_lang1'));
-            $param ['introduct_lang2'] = trim($this->getParamList('introduct_lang2'));
-            $param ['introduct_lang3'] = trim($this->getParamList('introduct_lang3'));
-            $param ['detail_lang1'] = trim($this->getParamList('detail_lang1'));
-            $param ['detail_lang2'] = trim($this->getParamList('detail_lang2'));
-            $param ['detail_lang3'] = trim($this->getParamList('detail_lang3'));
-            $param ['tel'] = trim($this->getParamList('tel'));
-            $param ['lat'] = trim($this->getParamList('lat'));
-            $param ['lng'] = trim($this->getParamList('lng'));
+            $param ['hotelid'] = $this->getParamList('hotelid');
+            $param ['typeid'] = $this->getParamList('typeid');
+            $param ['name_lang1'] = $this->getParamList('name_lang1');
+            $param ['name_lang2'] = $this->getParamList('name_lang2');
+            $param ['name_lang3'] = $this->getParamList('name_lang3');
+            $param ['detail_lang1'] = $this->getParamList('detail_lang1');
+            $param ['detail_lang2'] = $this->getParamList('detail_lang2');
+            $param ['detail_lang3'] = $this->getParamList('detail_lang3');
+            $param ['address_lang1'] = $this->getParamList('address_lang1');
+            $param ['address_lang2'] = $this->getParamList('address_lang2');
+            $param ['address_lang3'] = $this->getParamList('address_lang3');
+            $param ['introduct_lang1'] = $this->getParamList('introduct_lang1');
+            $param ['introduct_lang2'] = $this->getParamList('introduct_lang2');
+            $param ['introduct_lang3'] = $this->getParamList('introduct_lang3');
+            $param ['tel'] = $this->getParamList('tel');
+            $param ['lat'] = $this->getParamList('lat');
+            $param ['lng'] = $this->getParamList('lng');
             $param ['updatetime'] = time();
-            $param ['status'] = intval($this->getParamList('status'));
+            $param ['status'] = $this->getParamList('status');
             $data = $this->model->updateLifeById($param, $id);
             $data = $this->convertor->statusConvertor($data);
         } else {
@@ -100,27 +107,23 @@ class LifeController extends \BaseController {
      */
     public function addLifeAction() {
         $param = array();
-        $param ['hotelid'] = trim($this->getParamList('hotelid'));
-        $param ['name_lang1'] = trim($this->getParamList('name_lang1'));
-        $param ['name_lang2'] = trim($this->getParamList('name_lang2'));
-        $param ['name_lang3'] = trim($this->getParamList('name_lang3'));
-        $param ['detail_lang1'] = trim($this->getParamList('detail_lang1'));
-        $param ['detail_lang2'] = trim($this->getParamList('detail_lang2'));
-        $param ['detail_lang3'] = trim($this->getParamList('detail_lang3'));
-        $param ['address_lang1'] = trim($this->getParamList('address_lang1'));
-        $param ['address_lang2'] = trim($this->getParamList('address_lang2'));
-        $param ['address_lang3'] = trim($this->getParamList('address_lang3'));
-        $param ['introduct_lang1'] = trim($this->getParamList('introduct_lang1'));
-        $param ['introduct_lang2'] = trim($this->getParamList('introduct_lang2'));
-        $param ['introduct_lang3'] = trim($this->getParamList('introduct_lang3'));
-        $param ['detail_lang1'] = trim($this->getParamList('detail_lang1'));
-        $param ['detail_lang2'] = trim($this->getParamList('detail_lang2'));
-        $param ['detail_lang3'] = trim($this->getParamList('detail_lang3'));
-        $param ['tel'] = trim($this->getParamList('tel'));
-        $param ['lat'] = trim($this->getParamList('lat'));
-        $param ['lng'] = trim($this->getParamList('lng'));
+        $param ['hotelid'] = $this->getParamList('hotelid');
+        $param ['typeid'] = $this->getParamList('typeid');
+        $param ['name_lang1'] = $this->getParamList('name_lang1');
+        $param ['name_lang2'] = $this->getParamList('name_lang2');
+        $param ['name_lang3'] = $this->getParamList('name_lang3');
+        $param ['address_lang1'] = $this->getParamList('address_lang1');
+        $param ['address_lang2'] = $this->getParamList('address_lang2');
+        $param ['address_lang3'] = $this->getParamList('address_lang3');
+        $param ['introduct_lang1'] = $this->getParamList('introduct_lang1');
+        $param ['introduct_lang2'] = $this->getParamList('introduct_lang2');
+        $param ['introduct_lang3'] = $this->getParamList('introduct_lang3');
+        $param ['tel'] = $this->getParamList('tel');
+        $param ['lat'] = $this->getParamList('lat');
+        $param ['lng'] = $this->getParamList('lng');
         $param ['updatetime'] = time();
-        $param ['status'] = intval($this->getParamList('status'));
+        $param ['createtime'] = time();
+        $param ['status'] = $this->getParamList('status');
         $data = $this->model->addLife($param);
         $data = $this->convertor->statusConvertor(array(
             'id' => $data

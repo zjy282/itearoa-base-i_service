@@ -55,6 +55,16 @@ class Dao_Life extends Dao_Base {
             $whereSql[] = 'status = ?';
             $whereCase[] = $param['status'];
         }
+        if (isset($param['id'])) {
+            $whereSql[] = 'id = ?';
+            $whereCase[] = $param['id'];
+        }
+        if (isset($param['name'])) {
+            $whereSql[] = '(name_lang1 = ? or name_lang2 = ? or name_lang2 = ?)';
+            $whereCase[] = $param['name'];
+            $whereCase[] = $param['name'];
+            $whereCase[] = $param['name'];
+        }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
         return array(
             'sql' => $whereSql,
@@ -95,7 +105,7 @@ class Dao_Life extends Dao_Base {
         $result = false;
         
         if ($id) {
-            $result = $this->db->update('hotel_life', $info, $id);
+            $result = $this->db->update('hotel_life', $info, array('id' => $id));
         }
         
         return $result;

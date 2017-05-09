@@ -14,17 +14,16 @@ class Dao_Poi extends Dao_Base {
      * @return array
      */
     public function getPoiList(array $param): array {
-        $limit = $param['limit'] ? intval($param['limit']) : 0;
-        $page = $this->getStart($param['page'], $limit);
-        
-        $paramSql = $this->handlerPoiListParams($param);
-        $sql = "select * from hotel_poi {$paramSql['sql']}";
-        if ($limit) {
-            $sql .= " limit {$page},{$limit}";
-        }
-        $result = $this->db->fetchAll($sql, $paramSql['case']);
-        return is_array($result) ? $result : array();
-    }
+		$limit = $param ['limit'] ? intval ( $param ['limit'] ) : 0;
+		$page = $this->getStart ( $param ['page'], $limit );
+		$paramSql = $this->handlerPoiListParams ( $param );
+		$sql = "select * from hotel_poi {$paramSql['sql']}";
+		if ($limit) {
+			$sql .= " limit {$page},{$limit}";
+		}
+		$result = $this->db->fetchAll ( $sql, $paramSql ['case'] );
+		return is_array ( $result ) ? $result : array ();
+	}
 
     /**
      * 查询hotel_poi数量
@@ -54,6 +53,16 @@ class Dao_Poi extends Dao_Base {
         if (isset($param['status'])) {
             $whereSql[] = 'status = ?';
             $whereCase[] = $param['status'];
+        }
+        if (isset($param['id'])) {
+        	$whereSql[] = 'id = ?';
+        	$whereCase[] = $param['id'];
+        }
+        if (isset($param['name'])) {
+        	$whereSql[] = '(name_lang1 = ? or name_lang2 = ? or name_lang3 = ?)';
+        	$whereCase[] = $param['name'];
+        	$whereCase[] = $param['name'];
+        	$whereCase[] = $param['name'];
         }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
         return array(
@@ -95,7 +104,7 @@ class Dao_Poi extends Dao_Base {
         $result = false;
         
         if ($id) {
-            $result = $this->db->update('hotel_poi', $info, $id);
+            $result = $this->db->update('hotel_poi', $info, array( 'id' => $id));
         }
         
         return $result;
