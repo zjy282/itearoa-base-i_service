@@ -14,7 +14,7 @@ class RoomtypeController extends \BaseController {
     public function init() {
         parent::init();
         $this->model = new RoomtypeModel();
-        $this->convertor = new Convertor_Roomtype();
+        $this->convertor = new Convertor_RoomType();
     }
 
     /**
