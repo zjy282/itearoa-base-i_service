@@ -228,5 +228,55 @@ class Util_Http {
         $context = stream_context_create($opts);
         return file_get_contents($url, null, $context);
     }
+
+    /**
+     * 获取客户端浏览器信息，含浏览器名称和版本
+     *
+     * @param bool $return_as_str
+     *            返回值是否采用字符串形式，默认返回数组类型，下标分别为agent和version
+     * @return mixed 客户端浏览器信息,如果未找到对应值，则返回null
+     */
+    public static function getBrowserInfo($return_as_str = false) {
+        // 浏览器信息定义
+        $browser_info = null;
+        // 定义浏览器
+        $browsers = array(
+            "firefox",
+            "msie",
+            "chrome",
+            "safari",
+            "opera",
+            "mozilla",
+            "seamonkey",
+            "konqueror",
+            "netscape",
+            "gecko",
+            "navigator",
+            "mosaic",
+            "lynx",
+            "amaya",
+            "omniweb",
+            "avant",
+            "camino",
+            "flock",
+            "okhttp",
+            "youputrip",
+        );
+        // 从$_SERVER中取UserAgent信息
+        $agent = isset($_SERVER['HTTP_USER_AGENT']) ? strtolower($_SERVER['HTTP_USER_AGENT']) : '';
+        // 从useragent中查找相应的浏览器信息
+        if ($agent) {
+            $match = null;
+            foreach ($browsers as $browser) {
+                if (preg_match("#($browser)[/ ]?([0-9.]*)#", $agent, $match)) {
+                    $browser_info["agent"] = $match[1];
+                    $browser_info["version"] = $match[2];
+                    break;
+                }
+            }
+        }
+        // 根据参数返回不同类型的值
+        return is_null($browser_info) ? null : ($return_as_str ? implode(' ', $browser_info) : $browser_info);
+    }
 }
 ?>
