@@ -120,9 +120,15 @@ class PushController extends \BaseController {
         $param['en_value'] = trim($this->getParamList('en_value'));
         $param['url_code'] = trim($this->getParamList('url_code'));
 
-        Log_File::writeLog('gsmPushMsg', json_encode($this->getParamList()));
         $result = $this->model->pushGsmMsg($param);
         $data = $this->convertor->gsmPushMsgConvertor(count($result));
+
+        $logInfo = array(
+            'params' => json_encode($this->getParamList()),
+            'result' => json_encode($data)
+        );
+        Log_File::writeLog('gsmPushMsg', implode('\n', $logInfo));
+
         $this->echoSuccessData($data);
     }
 }
