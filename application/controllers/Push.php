@@ -91,13 +91,13 @@ class PushController extends \BaseController {
         $param = array();
         $param['type'] = intval($this->getParamList('type'));
         $param['platform'] = intval($this->getParamList('platform'));
-        $param['dataid'] = $this->getParamList('dataid');
+        $param['dataid'] = intval($this->getParamList('dataid'));
         $param['cn_title'] = $this->getParamList('cn_title');
         $param['cn_value'] = $this->getParamList('cn_value');
         $param['en_title'] = $this->getParamList('en_title');
         $param['en_value'] = $this->getParamList('en_value');
         $param['url'] = $this->getParamList('url');
-        $data = $this->model->addPush($param);
+        $data = $this->model->addPushOne($param);
         $data = $this->convertor->statusConvertor(array('id' => $data));
         $this->echoSuccessData($data);
     }
@@ -118,18 +118,10 @@ class PushController extends \BaseController {
         $param['cn_value'] = trim($this->getParamList('cn_value'));
         $param['en_title'] = trim($this->getParamList('en_title'));
         $param['en_value'] = trim($this->getParamList('en_value'));
-        $urlCode = trim($this->getParamList('url_code'));
-        if (empty($urlCode)) {
-            $this->throwException(5, 'URL地址编号错误');
-        }
-        //@TODO 需要接入GSM接口根据urlCode获取推送的跳转地址
-        $param['url'] = 'http://www.baidu.com';
-        $param['platform'] = 1;
+        $param['url_code'] = trim($this->getParamList('url_code'));
 
-        // $result = $this->model->pushMsg($param);
-
-        $data = $this->model->addPush($param);
-        $data = $this->convertor->gsmPushMsgConvertor($data);
+        $result = $this->model->pushGsmMsg($param);
+        $data = $this->convertor->gsmPushMsgConvertor(count($result));
         $this->echoSuccessData($data);
     }
 }

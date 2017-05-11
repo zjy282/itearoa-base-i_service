@@ -17,7 +17,8 @@ class StaffModel extends \BaseModel {
      * @return array
      */
     public function getStaffList(array $param) {
-        isset($param['oid']) ? $paramList['oid'] = trim($param['oid']) : false;
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
+        $param['staffid'] ? $paramList['staffid'] = $param['staffid'] : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getStaffList($paramList);
@@ -112,6 +113,21 @@ class StaffModel extends \BaseModel {
         $paramList = Enum_Gsm::genEncryptGsmParams($paramList);
         $gsmResult = Rpc_Gsm::send(Enum_Gsm::STAFF_LOGIN_METHOD, $paramList);
         return array('staffId' => $gsmResult['StaffID']);
+    }
+
+    /**
+     * 获取GSM推送的员工地址
+     * @param $param
+     * @return string
+     */
+    public function getGsmRedirect($param) {
+        $paramList = array();
+        $paramList['StaffID'] = $param['StaffID'];
+        $paramList = Enum_Gsm::genEncryptGsmParams($paramList);
+        $paramList['OrderID'] = $param['OrderID'];
+
+        $url = Rpc_Gsm::makeGsmUrl(Enum_Gsm::STAFF_REDIRECT_METHOD, $paramList);
+        return $url;
     }
 
     /**

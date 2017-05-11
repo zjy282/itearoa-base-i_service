@@ -27,9 +27,13 @@ class Dao_Staff extends Dao_Base {
                 $whereCase[] = $param['id'];
             }
         }
-        if (isset($param['oid'])) {
-            $whereSql[] = 'oid = ?';
-            $whereCase[] = $param['oid'];
+        if (isset($param['staffid'])) {
+            if (is_array($param['staffid'])) {
+                $whereSql[] = 'staffid in (' . implode(',', $param['staffid']) . ')';
+            } else {
+                $whereSql[] = 'staffid = ?';
+                $whereCase[] = $param['staffid'];
+            }
         }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
 

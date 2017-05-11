@@ -17,7 +17,7 @@ class UserModel extends \BaseModel {
      * @return array
      */
     public function getUserList(array $param) {
-        isset($param['oid']) ? $paramList['oid'] = trim($param['oid']) : false;
+        $param['oid'] ? $paramList['oid'] = $param['oid'] : false;
         $param['id'] ? $paramList['id'] = $param['id'] : false;
         $param['room_no'] ? $paramList['room_no'] = $param['room_no'] : false;
         $param['fullname'] ? $paramList['fullname'] = $param['fullname'] : false;
@@ -143,6 +143,25 @@ class UserModel extends \BaseModel {
         $gsmResult = Rpc_Gsm::send(Enum_Gsm::USER_LOGIN_METHOD, $paramList);
         return array('oId' => $gsmResult['OID']);
     }
+
+    /**
+     * 获取GSM推送的用户地址
+     * @param $param
+     * @return string
+     */
+    public function getGsmRedirect($param) {
+        $paramList = array();
+        $paramList['PropertyInterfID'] = $param['PropertyInterfID'];
+        $paramList['CustomerID'] = $param['CustomerID'];
+        $paramList['Room'] = $param['Room'];
+        $paramList['LastName'] = $param['LastName'];
+        $paramList = Enum_Gsm::genEncryptGsmParams($paramList);
+        $paramList['OrderID'] = $param['OrderID'];
+
+        $url = Rpc_Gsm::makeGsmUrl(Enum_Gsm::USER_REDIRECT_METHOD, $paramList);
+        return $url;
+    }
+
 
     /**
      * 登录

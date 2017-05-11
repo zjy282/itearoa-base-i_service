@@ -85,13 +85,13 @@ class PushModel extends \BaseModel {
      *            array param 需要增加的信息
      * @return array
      */
-    public function addPush($param) {
+    public function addPushOne($param) {
         // 判断参数错误
         $info['type'] = intval($param['type']);
         if (empty($info['type'])) {
             $this->throwException('推送类型错误', 3);
         }
-        $info['dataid'] = $param['dataid'] ? $param['dataid'] : '';
+        $info['dataid'] = intval($param['dataid']);
         $info['platform'] = $param['platform'];
         $info['cn_title'] = $param['cn_title'];
         $info['cn_value'] = $param['cn_value'];
@@ -116,31 +116,46 @@ class PushModel extends \BaseModel {
                 $pushParams['cnValue'] = $info['cn_value'];
                 $pushParams['enTitle'] = $info['en_title'];
                 $pushParams['enValue'] = $info['en_value'];
-                $pushResult = $this->pushMsg($pushParams);
                 break;
             case Enum_Push::PUSH_TYPE_USER :
-                $pushParams['type'] = Enum_Push::PUSH_TYPE_ALIAS;
-                $userIdList = explode($info['dataid']);
-                $aliasIdList = array();
-                foreach ($userIdList as $userId) {
-                    $aliasIdList[] = Enum_Push::PUSH_ALIAS_USER_PREFIX . $userId;
+                if (empty($info['dataid'])) {
+                    $this->throwException('推送ID错误', 4);
                 }
-                $pushParams['dataid'] = implode($aliasIdList);
-                $pushParams['title'] = $info['cn_title'];
-                $pushParams['value'] = $info['cn_value'];
+                $pushParams['type'] = Enum_Push::PUSH_TYPE_ALIAS;
+                $userModel = new UserModel();
+                $userInfo = $userModel->getUserDetail($info['dataid']);
+                if (empty($userInfo['platform'])) {
+                    break;
+                }
+                $info['platform'] = $pushParams['phoneType'] = $userInfo['platform'];
+                $pushParams['dataid'] = Enum_Push::PUSH_ALIAS_USER_PREFIX . $userInfo['id'];
+                if ($userInfo['language'] == 'zh') {
+                    $pushParams['title'] = $info['cn_title'];
+                    $pushParams['value'] = $info['cn_value'];
+                } else {
+                    $pushParams['title'] = $info['en_title'];
+                    $pushParams['value'] = $info['en_value'];
+                }
                 break;
             case Enum_Push::PUSH_TYPE_STAFF :
-                $pushParams['type'] = Enum_Push::PUSH_TYPE_ALIAS;
-                $staffIdList = explode($info['dataid']);
-                $aliasIdList = array();
-                foreach ($staffIdList as $staffId) {
-                    $aliasIdList[] = Enum_Push::PUSH_ALIAS_STAFF_PREFIX . $staffId;
+                if (empty($info['dataid'])) {
+                    $this->throwException('推送ID错误', 4);
                 }
-                $pushParams['dataid'] = implode($aliasIdList);
+                $pushParams['type'] = Enum_Push::PUSH_TYPE_ALIAS;
+                $staffModel = new StaffModel();
+                $staffInfo = $staffModel->getStaffDetail($info['dataid']);
+                if (empty($staffInfo['platform'])) {
+                    break;
+                }
+                $info['platform'] = $pushParams['phoneType'] = $staffInfo['platform'];
+                $pushParams['dataid'] = Enum_Push::PUSH_ALIAS_STAFF_PREFIX . $staffInfo['id'];
                 $pushParams['title'] = $info['cn_title'];
                 $pushParams['value'] = $info['cn_value'];
                 break;
             case Enum_Push::PUSH_TYPE_HOTEL :
+                if (empty($info['dataid'])) {
+                    $this->throwException('推送ID错误', 4);
+                }
                 $pushParams['phoneType'] = $info['platform'];
                 $pushParams['cnTitle'] = $info['cn_title'];
                 $pushParams['cnValue'] = $info['cn_value'];
@@ -150,6 +165,9 @@ class PushModel extends \BaseModel {
                 $pushParams['type'] = Enum_Push::PUSH_TYPE_TAG;
                 break;
             case Enum_Push::PUSH_TYPE_GROUP :
+                if (empty($info['dataid'])) {
+                    $this->throwException('推送ID错误', 4);
+                }
                 $pushParams['phoneType'] = $info['platform'];
                 $pushParams['cnTitle'] = $info['cn_title'];
                 $pushParams['cnValue'] = $info['cn_value'];
@@ -160,10 +178,11 @@ class PushModel extends \BaseModel {
                 break;
         }
 
-        $info['result'] = intval($pushResult);
+        $pushResult = $this->pushMsg($pushParams);
         $info['createtime'] = time();
-
-        return $this->dao->addPush($info);
+        $info['result'] = $pushResult ? 1 : 0;
+        $this->dao->addPush($info);
+        return $pushResult;
     }
 
     /**
@@ -174,6 +193,7 @@ class PushModel extends \BaseModel {
      *            $return boolean
      */
     public function pushMsg($param) {
+        return true;
         $config = Enum_Push::getConfig('umeng');
         $push = new Push_Push(
             array(
@@ -235,5 +255,74 @@ class PushModel extends \BaseModel {
                 break;
         }
         return $pushResult;
+    }
+
+    /**
+     * GSM推送
+     * @param $paramList
+     * @return array
+     */
+    public function pushGsmMsg($paramList) {
+        $pushParams = array();
+        $pushParams['cn_title'] = $paramList['cn_title'];
+        $pushParams['cn_value'] = $paramList['cn_value'];
+        $pushParams['en_title'] = $paramList['en_title'];
+        $pushParams['en_value'] = $paramList['en_value'];
+        $urlCode = $paramList['url_code'];
+
+        $dataIdList = explode(",", $paramList['dataid']);
+        if (empty($dataIdList)) {
+            $this->throwException('用户ID无效', 3);
+        }
+
+        $sendSuccessIdList = array();
+        switch ($paramList['type']) {
+            case 1://用户ID推送
+                $hotelModel = new HotelListModel();
+                $userModel = new UserModel();
+                $userInfoList = $userModel->getUserList(array('oid' => $dataIdList));
+                //获取对应物业的propertyinterfid
+                $hotelIdList = array_column($userInfoList, 'hotelid');
+                $hotelInfoList = $hotelModel->getHotelListList(array('id' => $hotelIdList));
+                $propertyinterfIdList = array_column($hotelInfoList, 'propertyinterfid', 'id');
+                foreach ($userInfoList as $userOne) {
+                    if ($userOne['platform']) {
+                        $redirectParams = array(
+                            'OrderID' => $urlCode,
+                            'PropertyInterfID' => $propertyinterfIdList[$userOne['hotelid']],
+                            'CustomerID' => $userOne['oid'],
+                            'Room' => $userOne['room_no'],
+                            'LastName' => $userOne['fullname']
+                        );
+                        $pushParams['type'] = Enum_Push::PUSH_TYPE_USER;
+                        $pushParams['url'] = $userModel->getGsmRedirect($redirectParams);
+                        $pushParams['dataid'] = $userOne['id'];
+                        if ($this->addPushOne($pushParams)) {
+                            $sendSuccessIdList[] = $userOne['oid'];
+                        }
+                    }
+                }
+                break;
+            case 2://员工ID推送
+                $staffModel = new StaffModel();
+                $staffInfoList = $staffModel->getStaffList(array('staffid' => $dataIdList));
+                foreach ($staffInfoList as $staffOne) {
+                    if ($staffOne['platform']) {
+                        $redirectParams = array(
+                            'OrderID' => $urlCode,
+                            'StaffID' => $staffOne['staffid']
+                        );
+                        $pushParams['type'] = Enum_Push::PUSH_TYPE_STAFF;
+                        $pushParams['url'] = $staffModel->getGsmRedirect($redirectParams);
+                        $pushParams['dataid'] = $staffOne['id'];
+                        if ($this->addPushOne($pushParams)) {
+                            $sendSuccessIdList[] = $staffOne['staffid'];
+                        }
+                    }
+                }
+                break;
+
+        }
+        return $sendSuccessIdList;
     }
 }
