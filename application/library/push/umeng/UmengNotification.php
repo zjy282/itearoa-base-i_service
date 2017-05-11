@@ -65,7 +65,7 @@ abstract class Push_Umeng_UmengNotification {
     // return TRUE if it's complete, otherwise throw exception with details
     function isComplete() {
         if (is_null($this->appMasterSecret))
-            throw new Exception("Please set your app master secret for generating the signature!");
+            throw new Exception("Please set your app master secret for generating the signature!", 1004);
         $this->checkArrayValues($this->data);
         return TRUE;
     }
@@ -73,7 +73,7 @@ abstract class Push_Umeng_UmengNotification {
     private function checkArrayValues($arr) {
         foreach ($arr as $key => $value) {
             if (is_null($value))
-                throw new Exception($key . " is NULL!");
+                throw new Exception($key . " is NULL!", 1005);
             else
                 if (is_array($value)) {
                     $this->checkArrayValues($value);

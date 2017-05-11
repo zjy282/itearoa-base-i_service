@@ -5,7 +5,7 @@
  * write函数为私有函数，所有需要写日志的地方都需要新加一个函数来显示调用write函数。
  * 代码虽然会有冗余，但易于对日志逻辑的管理。
  */
-class Log_File {
+class Log_File extends \Yaf_Controller_Abstract {
 
     // PHP系统内置错误代码及定义
     protected static $errorCodes = array(
@@ -186,7 +186,7 @@ class Log_File {
             'errno' => $errno,
             'errmsg' => $msg,
         );
-        return self::write("sys_error", $msg, false, '', true);
+        return self::write("sys_error", $msg, false, '', false);
     }
 
     /**

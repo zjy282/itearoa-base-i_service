@@ -139,6 +139,8 @@ class Push_Push {
         }
         $customizedcast->setPredefinedKeyValue("filter", $filter);
         $customizedcast->setPredefinedKeyValue("timestamp", $this->timestamp);
+        //        $customizedcast->setPredefinedKeyValue("alias", $data['alias']);
+        //        $customizedcast->setPredefinedKeyValue("alias_type", $data['alias_type']);
         $customizedcast->setPredefinedKeyValue("production_mode", "false");
         return $customizedcast->send();
 

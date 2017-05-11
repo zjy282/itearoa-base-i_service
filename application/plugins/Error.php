@@ -76,7 +76,7 @@ class ErrorPlugin extends \Yaf_Plugin_Abstract {
                 echo "file:" . $errorfile . "<br/>";
                 echo "line:" . $errline . "<br/><br/>";
             }
-            // Log_File::writeSysErrorLog($errno, $errstr, $errorfile, $errline, true);
+            Log_File::writeSysErrorLog($errno, $errstr, $errorfile, $errline);
         }
     }
 }
