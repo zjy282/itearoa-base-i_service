@@ -105,18 +105,13 @@ class StaffModel extends \BaseModel {
      * @return array
      */
     public function getStaffIdInfo($param) {
-//        $paramList = array();
-        //        $paramList['LType'] = 1;
-        //        $paramList['LName'] = $param['lname'];
-        //        $paramList['Pwd'] = $param['pwd'];
-        //        $paramList = Enum_Gsm::genEncryptGsmParams($paramList);
-        //        $gsmResult = Rpc_Gsm::send(Enum_Gsm::STAFF_LOGIN_METHOD, $paramList);
-        //        var_dump($gsmResult);
-        //        exit;
-        //        return array('staffId' => $gsmResult['OID']);
-        return array(
-            'staffId' => md5(1)
-        );
+        $paramList = array();
+        $paramList['LType'] = 1;
+        $paramList['LName'] = $param['lname'];
+        $paramList['Pwd'] = $param['pwd'];
+        $paramList = Enum_Gsm::genEncryptGsmParams($paramList);
+        $gsmResult = Rpc_Gsm::send(Enum_Gsm::STAFF_LOGIN_METHOD, $paramList);
+        return array('staffId' => $gsmResult['StaffID']);
     }
 
     /**
@@ -153,14 +148,14 @@ class StaffModel extends \BaseModel {
 
         if ($userId) {
             // 更新用户数据
-            if (! $this->updateStaffById($newStaffInfo, $userId)) {
+            if (!$this->updateStaffById($newStaffInfo, $userId)) {
                 $this->throwException('登录失败，请重试', 5);
             }
         } else {
             // 新建用户
             $newStaffInfo['staffid'] = $staffIdInfo['staffId'];
             $userId = $this->addStaff($newStaffInfo);
-            if (! $userId) {
+            if (!$userId) {
                 $this->throwException('登录失败，请重试', 5);
             }
         }

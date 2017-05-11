@@ -124,6 +124,7 @@ class PushController extends \BaseController {
         }
         //@TODO 需要接入GSM接口根据urlCode获取推送的跳转地址
         $param['url'] = 'http://www.baidu.com';
+        $param['platform'] = 1;
 
         // $result = $this->model->pushMsg($param);
 
