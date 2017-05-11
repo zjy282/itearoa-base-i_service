@@ -3,13 +3,13 @@
 abstract class Push_Umeng_UmengNotification {
     // The host
     protected $host = "http://msg.umeng.com";
-    
+
     // The upload path
     protected $uploadPath = "/upload";
-    
+
     // The post path
     protected $postPath = "/api/send";
-    
+
     // The app master secret
     protected $appMasterSecret = NULL;
 
@@ -29,9 +29,9 @@ abstract class Push_Umeng_UmengNotification {
         // "policy" => array("start_time" => "xx", "expire_time" => "xx", "max_send_num" => "xx"),
         "production_mode" => "true"
     )
-    // "feedback" => "xx",
-    // "description" => "xx",
-    // "thirdparty_id" => "xx"
+        // "feedback" => "xx",
+        // "description" => "xx",
+        // "thirdparty_id" => "xx"
     ;
 
     protected $DATA_KEYS = array(
@@ -61,7 +61,7 @@ abstract class Push_Umeng_UmengNotification {
     function setAppMasterSecret($secret) {
         $this->appMasterSecret = $secret;
     }
-    
+
     // return TRUE if it's complete, otherwise throw exception with details
     function isComplete() {
         if (is_null($this->appMasterSecret))
@@ -74,21 +74,21 @@ abstract class Push_Umeng_UmengNotification {
         foreach ($arr as $key => $value) {
             if (is_null($value))
                 throw new Exception($key . " is NULL!");
-            else 
+            else
                 if (is_array($value)) {
                     $this->checkArrayValues($value);
                 }
         }
     }
-    
+
     // Set key/value for $data array, for the keys which can be set please see $DATA_KEYS, $PAYLOAD_KEYS, $BODY_KEYS, $POLICY_KEYS
     abstract function setPredefinedKeyValue($key, $value);
-    
+
     // send the notification to umeng, return response data if SUCCESS , otherwise throw Exception with details.
     function send() {
         // check the fields to make sure that they are not NULL
         $this->isComplete();
-        
+
         $url = $this->host . $this->postPath;
         $postBody = json_encode($this->data);
         $sign = md5("POST" . $url . $postBody . $this->appMasterSecret);
@@ -105,16 +105,13 @@ abstract class Push_Umeng_UmengNotification {
         $curlErrNo = curl_errno($ch);
         $curlErr = curl_error($ch);
         curl_close($ch);
-        print($result . "\r\n");
-        if ($httpCode == "0") {
-            // Time out
-            throw new Exception("Curl error number:" . $curlErrNo . " , Curl error details:" . $curlErr . "\r\n");
-        } else 
-            if ($httpCode != "200") {
-                // We did send the notifition out and got a non-200 response
-                throw new Exception("Http code:" . $httpCode . " details:" . $result . "\r\n");
-            } else {
-                return $result;
-            }
+
+        $pushResult = array(
+            'code' => $httpCode == 200 ? 0 : 1,
+            'body' => $postBody,
+            'httpCode' => $httpCode,
+            'result' => $httpCode == 0 ? 'timeOut' : $result
+        );
+        return $pushResult;
     }
 }

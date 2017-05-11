@@ -46,8 +46,8 @@ class Enum_Push {
                 'secretKey' => '16jks3ps5b5go2ox4lcym8q9mq2f9l4a'
             ),
             'ios' => array(
-                'appKey' => '58cc983a310c937554002429',
-                'secretKey' => '16jks3ps5b5go2ox4lcym8q9mq2f9l4a'
+                'appKey' => '58fe1c7f07fe6514a9000bb1',
+                'secretKey' => 'zui6nd4gpfmvvg9zl9wnxckdd87t5wi2'
             )
         )
     );

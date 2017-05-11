@@ -180,9 +180,11 @@ class PushModel extends \BaseModel {
 
         $pushResult = $this->pushMsg($pushParams);
         $info['createtime'] = time();
-        $info['result'] = $pushResult ? 1 : 0;
-        $this->dao->addPush($info);
-        return $pushResult;
+        $info['result'] = $pushResult['code'];
+        $info['request'] = $pushResult['body'];
+        $info['httpcode'] = $pushResult['httpCode'];
+        $info['response'] = $pushResult['result'];
+        return $this->dao->addPush($info);
     }
 
     /**
@@ -193,7 +195,6 @@ class PushModel extends \BaseModel {
      *            $return boolean
      */
     public function pushMsg($param) {
-        return true;
         $config = Enum_Push::getConfig('umeng');
         $push = new Push_Push(
             array(
