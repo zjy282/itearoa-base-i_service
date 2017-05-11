@@ -127,7 +127,7 @@ class PushController extends \BaseController {
             'params' => json_encode($this->getParamList()),
             'result' => json_encode($data)
         );
-        Log_File::writeLog('gsmPushMsg', implode('\n', $logInfo));
+        Log_File::writeLog('gsmPushMsg', implode("\n", $logInfo));
 
         $this->echoSuccessData($data);
     }
