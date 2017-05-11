@@ -110,7 +110,7 @@ abstract class Push_Umeng_UmengNotification {
             'code' => $httpCode == 200 ? 0 : 1,
             'body' => $postBody,
             'httpCode' => $httpCode,
-            'result' => $httpCode == 0 ? 'timeOut' : $result
+            'result' => $httpCode == 0 ? '{"ret":"FAIL","data":{"error_code":"timeout"}}' : $result
         );
         return $pushResult;
     }

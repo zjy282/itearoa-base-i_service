@@ -130,9 +130,11 @@ class PushModel extends \BaseModel {
                 $info['platform'] = $pushParams['phoneType'] = $userInfo['platform'];
                 $pushParams['dataid'] = Enum_Push::PUSH_ALIAS_USER_PREFIX . $userInfo['id'];
                 if ($userInfo['language'] == 'zh') {
+                    $pushParams['language'] = Enum_Push::PUSH_TAG_LANG_CN;
                     $pushParams['title'] = $info['cn_title'];
                     $pushParams['value'] = $info['cn_value'];
                 } else {
+                    $pushParams['language'] = Enum_Push::PUSH_TAG_LANG_EN;
                     $pushParams['title'] = $info['en_title'];
                     $pushParams['value'] = $info['en_value'];
                 }
@@ -149,6 +151,7 @@ class PushModel extends \BaseModel {
                 }
                 $info['platform'] = $pushParams['phoneType'] = $staffInfo['platform'];
                 $pushParams['dataid'] = Enum_Push::PUSH_ALIAS_STAFF_PREFIX . $staffInfo['id'];
+                $pushParams['language'] = Enum_Push::PUSH_TAG_LANG_CN;
                 $pushParams['title'] = $info['cn_title'];
                 $pushParams['value'] = $info['cn_value'];
                 break;
@@ -211,16 +214,35 @@ class PushModel extends \BaseModel {
         $pushResult = false;
         switch ($param['type']) {
             case Enum_Push::PUSH_TYPE_ALL :
-                $info['tag'] == Enum_Push::PUSH_TAG_LANG_CN;
+                $info['tag'] = Enum_Push::PUSH_TAG_LANG_CN;
                 $info['title'] = $param['cnTitle'];
                 $info['value'] = $param['cnValue'];
                 $info['phoneType'] = $param['phoneType'];
                 $info['url'] = $param['url'];
-                $pushResult = $push->pushAll($info); //推送中文标签全量
-                $info['tag'] == Enum_Push::PUSH_TAG_LANG_EN;
+                $pushResultZh = $push->pushAll($info); //推送中文标签全量
+                $info['tag'] = Enum_Push::PUSH_TAG_LANG_EN;
                 $info['title'] = $param['enTitle'];
                 $info['value'] = $param['enValue'];
-                $pushResult = $push->pushAll($info);//推送英文标签全量
+                $pushResultEn = $push->pushAll($info);//推送英文标签全量
+
+                $pushResult = array(
+                    'code' => ($pushResultZh['code'] || $pushResultEn['code']) ? 1 : 0,
+                    'body' => json_encode(array(
+                            Enum_Push::PUSH_TAG_LANG_CN => json_decode($pushResultZh['body'], true),
+                            Enum_Push::PUSH_TAG_LANG_EN => json_decode($pushResultEn['body'], true),
+                        )
+                    ),
+                    'httpCode' => json_encode(array(
+                            Enum_Push::PUSH_TAG_LANG_CN => $pushResultZh['httpCode'],
+                            Enum_Push::PUSH_TAG_LANG_EN => $pushResultEn['httpCode'],
+                        )
+                    ),
+                    'result' => json_encode(array(
+                            Enum_Push::PUSH_TAG_LANG_CN => json_decode($pushResultZh['result'], true),
+                            Enum_Push::PUSH_TAG_LANG_EN => json_decode($pushResultEn['result'], true),
+                        )
+                    )
+                );
                 break;
             case Enum_Push::PUSH_TYPE_ALIAS :
                 $dataId = array_unique(array_filter(explode(",", $param['dataid'])));
@@ -232,7 +254,23 @@ class PushModel extends \BaseModel {
                 $info['url'] = $param['url'];
                 $info['value'] = $param['value'];
                 $info['phoneType'] = $param['phoneType'];
-                $pushResult = $push->pushAlias($info);
+                $pushResultOne = $push->pushAlias($info);
+
+                $pushResult = array(
+                    'code' => $pushResultOne['code'],
+                    'body' => json_encode(array(
+                            $param['language'] => json_decode($pushResultOne['body'], true),
+                        )
+                    ),
+                    'httpCode' => json_encode(array(
+                            $param['language'] => $pushResultOne['httpCode'],
+                        )
+                    ),
+                    'result' => json_encode(array(
+                            $param['language'] => json_decode($pushResultOne['result'], true),
+                        )
+                    )
+                );
                 break;
             case Enum_Push::PUSH_TYPE_TAG : //tag推送
                 $dataId = array_unique(array_filter(explode(",", $param['dataid'])));
@@ -247,12 +285,31 @@ class PushModel extends \BaseModel {
                 $info['url'] = $param['url'];
                 $info['phoneType'] = $param['phoneType'];
                 $info['tag'][] = Enum_Push::PUSH_TAG_LANG_CN;
-                $pushResult = $push->pushTag($info);
+                $pushResultZh = $push->pushTag($info);
                 $info['title'] = $param['enTitle'];
                 $info['value'] = $param['enValue'];
                 array_pop($info['tag']);
                 $info['tag'][] = Enum_Push::PUSH_TAG_LANG_EN;
-                $pushResult = $push->pushTag($info);
+                $pushResultEn = $push->pushTag($info);
+
+                $pushResult = array(
+                    'code' => ($pushResultZh['code'] || $pushResultEn['code']) ? 1 : 0,
+                    'body' => json_encode(array(
+                            Enum_Push::PUSH_TAG_LANG_CN => json_decode($pushResultZh['body'], true),
+                            Enum_Push::PUSH_TAG_LANG_EN => json_decode($pushResultEn['body'], true),
+                        )
+                    ),
+                    'httpCode' => json_encode(array(
+                            Enum_Push::PUSH_TAG_LANG_CN => $pushResultZh['httpCode'],
+                            Enum_Push::PUSH_TAG_LANG_EN => $pushResultEn['httpCode'],
+                        )
+                    ),
+                    'result' => json_encode(array(
+                            Enum_Push::PUSH_TAG_LANG_CN => json_decode($pushResultZh['result'], true),
+                            Enum_Push::PUSH_TAG_LANG_EN => json_decode($pushResultEn['result'], true),
+                        )
+                    )
+                );
                 break;
         }
         return $pushResult;
