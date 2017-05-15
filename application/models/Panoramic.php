@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class PanoramicModel
+ * 物业全景管理Model
+ */
 class PanoramicModel extends \BaseModel {
 
     private $dao;

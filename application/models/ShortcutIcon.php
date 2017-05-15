@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class ShortcutIconModel
+ * APP快捷入口管理
+ */
 class ShortcutIconModel extends \BaseModel {
 
     private $dao;

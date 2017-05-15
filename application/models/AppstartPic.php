@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class AppstartPicModel
+ * APP启动广告图
+ */
 class AppstartPicModel extends \BaseModel {
 
     private $dao;

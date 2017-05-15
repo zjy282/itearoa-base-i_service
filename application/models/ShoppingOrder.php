@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class ShoppingOrderModel
+ * 购物订单管理Model
+ */
 class ShoppingOrderModel extends \BaseModel {
 
     private $dao;

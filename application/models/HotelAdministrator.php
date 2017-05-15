@@ -105,9 +105,9 @@ class HotelAdministratorModel extends \BaseModel {
     }
 
     /**
-     * 登录
-     *
-     * @param array $param
+     * 物业管理后台登录
+     * @param $param
+     * @return array
      */
     public function login($param) {
         $username = trim($param['username']);
@@ -134,6 +134,11 @@ class HotelAdministratorModel extends \BaseModel {
         return $userInfo;
     }
 
+    /**
+     * 物业后台修改密码
+     * @param $param
+     * @return array
+     */
     public function changePass($param) {
         $userid = intval($param['userid']);
         $oldpass = trim($param['oldpass']);

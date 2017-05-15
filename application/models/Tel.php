@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class TelModel
+ * 电话黄页管理
+ */
 class TelModel extends \BaseModel {
 
     private $dao;

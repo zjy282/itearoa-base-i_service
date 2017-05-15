@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class AppTitleModel
+ * APP内多语言标题管理
+ */
 class AppTitleModel extends \BaseModel {
 
     private $dao;

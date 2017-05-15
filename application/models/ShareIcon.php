@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class ShareIconModel
+ * 分享平台管理
+ */
 class ShareIconModel extends \BaseModel {
 
     private $dao;

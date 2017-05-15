@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class TrafficModel
+ * 交通信息管理
+ */
 class TrafficModel extends \BaseModel {
 
     /**

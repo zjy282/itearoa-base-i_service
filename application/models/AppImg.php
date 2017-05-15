@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class AppImgModel
+ * 启动图管理Model
+ */
 class AppImgModel extends \BaseModel {
 
     private $dao;

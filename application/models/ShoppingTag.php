@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class ShoppingTagModel
+ * 购物信息标签管理
+ */
 class ShoppingTagModel extends \BaseModel {
 
     private $dao;

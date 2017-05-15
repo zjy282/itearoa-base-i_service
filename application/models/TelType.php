@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class TelTypeModel
+ * 电话黄页分类管理
+ */
 class TelTypeModel extends \BaseModel {
 
     private $dao;

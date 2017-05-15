@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class PoiTypeModel
+ * 本地攻略类型管理
+ */
 class PoiTypeModel extends \BaseModel {
 
     private $dao;

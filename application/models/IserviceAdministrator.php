@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class IserviceAdministratorModel
+ * 总后台管理员Model
+ */
 class IserviceAdministratorModel extends \BaseModel {
 
     private $dao;
@@ -101,9 +105,9 @@ class IserviceAdministratorModel extends \BaseModel {
     }
 
     /**
-     * 登录
-     *
-     * @param array $param
+     * 总后台登录
+     * @param $param
+     * @return array
      */
     public function login($param) {
         $username = trim($param['username']);
@@ -130,6 +134,11 @@ class IserviceAdministratorModel extends \BaseModel {
         return $userInfo;
     }
 
+    /**
+     * 总后台修改密码
+     * @param $param
+     * @return array
+     */
     public function changePass($param) {
         $userid = intval($param['userid']);
         $oldpass = trim($param['oldpass']);

@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * Class NoticTagModel
+ * 物业通知标签管理
+ */
 class NoticTagModel extends \BaseModel {
 
 	private $dao;

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class StaffModel
+ * 员工管理
+ */
 class StaffModel extends \BaseModel {
 
     private $dao;
@@ -131,7 +135,7 @@ class StaffModel extends \BaseModel {
     }
 
     /**
-     * 登录
+     * 员工登录
      *
      * @param array $param
      * @return array

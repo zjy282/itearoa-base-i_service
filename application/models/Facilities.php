@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class FacilitiesModel
+ * 物业设施Model
+ */
 class FacilitiesModel extends \BaseModel {
 
     private $dao;

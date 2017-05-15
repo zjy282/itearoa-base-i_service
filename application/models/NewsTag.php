@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class NewsTagModel
+ * 新闻标签管理
+ */
 class NewsTagModel extends \BaseModel {
 
     private $dao;

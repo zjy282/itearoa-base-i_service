@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class RoomModel
+ * 房间管理Model
+ */
 class RoomModel extends \BaseModel {
 
     private $dao;

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class AppVersionModel
+ * APP版本管理
+ */
 class AppVersionModel extends \BaseModel {
 
     private $dao;

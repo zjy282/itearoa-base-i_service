@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class RoomtypePicModel
+ * 房型图片
+ */
 class RoomtypePicModel extends \BaseModel {
 
     private $dao;
@@ -41,7 +45,6 @@ class RoomtypePicModel extends \BaseModel {
      */
     public function updateRoomtypePicById($param,$id){
         $result = false;
-        //自行添加要更新的字段,以下是age字段是样例
         if ($id){
             $info['age'] = intval($param['age']);
             $result = $this->dao->updateRoomtypePicById($info,$id);
@@ -55,7 +58,6 @@ class RoomtypePicModel extends \BaseModel {
      * @return array
      */
     public function addRoomtypePic($param){
-        //自行添加要添加的字段,以下是age字段是样例
         $info['age'] = intval($param['age']);
         return $this->dao->addRoomtypePic($info);
     }
