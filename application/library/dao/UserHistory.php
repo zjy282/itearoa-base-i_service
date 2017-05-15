@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * 用户入住历史管理数据层
+ */
 class Dao_UserHistory extends Dao_Base {
 
     public function __construct() {
@@ -16,7 +19,7 @@ class Dao_UserHistory extends Dao_Base {
     public function getUserHistoryList(array $param): array {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
-        
+
         $whereSql = array();
         $whereCase = array();
         if (isset($param['userid'])) {
@@ -24,7 +27,7 @@ class Dao_UserHistory extends Dao_Base {
             $whereCase[] = $param['userid'];
         }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
-        
+
         $sql = "select * from hotel_user_history {$whereSql}";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
@@ -42,14 +45,14 @@ class Dao_UserHistory extends Dao_Base {
      */
     public function getUserHistoryDetail(int $id): array {
         $result = array();
-        
+
         if ($id) {
             $sql = "select * from hotel_UserHistory where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
         }
-        
+
         return $result;
     }
 
@@ -64,11 +67,11 @@ class Dao_UserHistory extends Dao_Base {
      */
     public function updateUserHistoryById(array $info, int $id) {
         $result = false;
-        
+
         if ($id) {
             $result = $this->db->update('hotel_user_history', $info, $id);
         }
-        
+
         return $result;
     }
 

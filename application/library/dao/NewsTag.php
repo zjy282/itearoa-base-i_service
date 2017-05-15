@@ -1,11 +1,18 @@
 <?php
-
+/**
+ * 物业新闻标签管理数据层
+ */
 class Dao_NewsTag extends Dao_Base {
 
     public function __construct() {
         parent::__construct();
     }
-    
+
+    /**
+     * 列表和数量获取筛选参数处理
+     * @param $param
+     * @return array
+     */
     private function getListWhereSql($param){
     	if (isset($param['page']) && isset($param['limit'])){
     		$whereList['pageList']['limit'] = $param['limit'] ? intval($param['limit']) : 0;

@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * 员工管理数据层
+ */
 class Dao_Staff extends Dao_Base {
 
     public function __construct() {
