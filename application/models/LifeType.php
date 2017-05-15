@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class LifeTypeModel
+ * 雅士阁生活类型管理
+ */
 class LifeTypeModel extends \BaseModel {
 
     private $dao;

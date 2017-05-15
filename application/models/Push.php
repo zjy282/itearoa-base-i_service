@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class PushModel
+ * 推送Model
+ */
 class PushModel extends \BaseModel {
 
     private $dao;
@@ -109,7 +113,7 @@ class PushModel extends \BaseModel {
         $pushParams = array();
         $pushParams['url'] = $info['url'];
         switch ($param['type']) {
-            case Enum_Push::PUSH_TYPE_ALL :
+            case Enum_Push::PUSH_TYPE_ALL : //全量推送
                 $pushParams['phoneType'] = $info['platform'];
                 $pushParams['type'] = Enum_Push::PUSH_TYPE_ALL;
                 $pushParams['cnTitle'] = $info['cn_title'];
@@ -117,7 +121,7 @@ class PushModel extends \BaseModel {
                 $pushParams['enTitle'] = $info['en_title'];
                 $pushParams['enValue'] = $info['en_value'];
                 break;
-            case Enum_Push::PUSH_TYPE_USER :
+            case Enum_Push::PUSH_TYPE_USER ://按照用户推送
                 if (empty($info['dataid'])) {
                     $this->throwException('推送ID错误', 4);
                 }
@@ -139,7 +143,7 @@ class PushModel extends \BaseModel {
                     $pushParams['value'] = $info['en_value'];
                 }
                 break;
-            case Enum_Push::PUSH_TYPE_STAFF :
+            case Enum_Push::PUSH_TYPE_STAFF ://按照员工推送
                 if (empty($info['dataid'])) {
                     $this->throwException('推送ID错误', 4);
                 }
@@ -155,7 +159,7 @@ class PushModel extends \BaseModel {
                 $pushParams['title'] = $info['cn_title'];
                 $pushParams['value'] = $info['cn_value'];
                 break;
-            case Enum_Push::PUSH_TYPE_HOTEL :
+            case Enum_Push::PUSH_TYPE_HOTEL ://物业全量推送
                 if (empty($info['dataid'])) {
                     $this->throwException('推送ID错误', 4);
                 }
@@ -167,7 +171,7 @@ class PushModel extends \BaseModel {
                 $pushParams['hotelId'] = $info['dataid'];
                 $pushParams['type'] = Enum_Push::PUSH_TYPE_TAG;
                 break;
-            case Enum_Push::PUSH_TYPE_GROUP :
+            case Enum_Push::PUSH_TYPE_GROUP ://集团全量推送
                 if (empty($info['dataid'])) {
                     $this->throwException('推送ID错误', 4);
                 }
@@ -181,6 +185,7 @@ class PushModel extends \BaseModel {
                 break;
         }
 
+        //新政推送记录
         $pushResult = $this->pushMsg($pushParams);
         $info['createtime'] = time();
         $info['result'] = $pushResult['code'];
@@ -198,6 +203,7 @@ class PushModel extends \BaseModel {
      *            $return boolean
      */
     public function pushMsg($param) {
+        //获取推送配置
         $config = Enum_Push::getConfig('umeng');
         $push = new Push_Push(
             array(
@@ -213,7 +219,7 @@ class PushModel extends \BaseModel {
         $info = array();
         $pushResult = false;
         switch ($param['type']) {
-            case Enum_Push::PUSH_TYPE_ALL :
+            case Enum_Push::PUSH_TYPE_ALL ://全量推送
                 $info['tag'] = Enum_Push::PUSH_TAG_LANG_CN;
                 $info['title'] = $param['cnTitle'];
                 $info['value'] = $param['cnValue'];
@@ -244,7 +250,7 @@ class PushModel extends \BaseModel {
                     )
                 );
                 break;
-            case Enum_Push::PUSH_TYPE_ALIAS :
+            case Enum_Push::PUSH_TYPE_ALIAS ://按照别名推送
                 $dataId = array_unique(array_filter(explode(",", $param['dataid'])));
                 if (!count($dataId)) {
                     $this->throwException('推送数据ID错误', 2);
@@ -272,7 +278,7 @@ class PushModel extends \BaseModel {
                     )
                 );
                 break;
-            case Enum_Push::PUSH_TYPE_TAG : //tag推送
+            case Enum_Push::PUSH_TYPE_TAG : //按照tag推送
                 $dataId = array_unique(array_filter(explode(",", $param['dataid'])));
                 if (count($dataId) > 0) {
                     $info['alias'] = implode(',', $dataId);
@@ -284,12 +290,12 @@ class PushModel extends \BaseModel {
                 $info['value'] = $param['cnValue'];
                 $info['url'] = $param['url'];
                 $info['phoneType'] = $param['phoneType'];
-                $info['tag'][] = Enum_Push::PUSH_TAG_LANG_CN;
+                $info['tag'][] = Enum_Push::PUSH_TAG_LANG_CN;//推送中文部分设备
                 $pushResultZh = $push->pushTag($info);
                 $info['title'] = $param['enTitle'];
                 $info['value'] = $param['enValue'];
                 array_pop($info['tag']);
-                $info['tag'][] = Enum_Push::PUSH_TAG_LANG_EN;
+                $info['tag'][] = Enum_Push::PUSH_TAG_LANG_EN;//推送英文部分设备
                 $pushResultEn = $push->pushTag($info);
 
                 $pushResult = array(
@@ -337,6 +343,7 @@ class PushModel extends \BaseModel {
         switch ($paramList['type']) {
             case 1://用户ID推送
                 $hotelModel = new HotelListModel();
+                //获取用户信息
                 $userModel = new UserModel();
                 $userInfoList = $userModel->getUserList(array('oid' => $dataIdList));
                 //获取对应物业的propertyinterfid
@@ -363,6 +370,7 @@ class PushModel extends \BaseModel {
                 break;
             case 2://员工ID推送
                 $staffModel = new StaffModel();
+                //获取员工信息
                 $staffInfoList = $staffModel->getStaffList(array('staffid' => $dataIdList));
                 foreach ($staffInfoList as $staffOne) {
                     if ($staffOne['platform']) {

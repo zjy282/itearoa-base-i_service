@@ -1,10 +1,19 @@
 <?php
 
+/**
+ * Class WetherModel
+ * 天气信息Model
+ */
 class WetherModel extends \BaseModel {
 
+    /**
+     * 根据城市获取雅虎天气信息
+     * @param $wetherKey
+     * @return array|bool|mixed|string
+     */
     public function getWeatherFromYahoo($wetherKey) {
         $cache = Cache_Redis::getInstance();
-        $cacheKey = "weatherInfo_yahoo_{$code}";
+        $cacheKey = "weatherInfo_yahoo_{$wetherKey}";
         $weatherInfo = $cache->get($cacheKey);
         if (! $weatherInfo) {
             $BASE_URL = "http://query.yahooapis.com/v1/public/yql";
@@ -32,10 +41,20 @@ class WetherModel extends \BaseModel {
         return $weatherInfo;
     }
 
+    /**
+     * 气温转换
+     * @param $temperature
+     * @return float
+     */
     private function temperatureChange($temperature) {
         return ($temperature - 32) / 1.8;
     }
 
+    /**
+     * 天气编号和中文对应
+     * @param $code
+     * @return string
+     */
     private function code2char($code) {
         switch ($code) {
             case 0:

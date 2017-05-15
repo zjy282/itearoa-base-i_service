@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class ActivityTagModel
+ * 活动标签Model
+ */
 class ActivityTagModel extends \BaseModel {
 
     private $dao;

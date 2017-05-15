@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class FeedbackModel
+ * 物业调查反馈
+ */
 class FeedbackModel extends \BaseModel {
 
     private $dao;

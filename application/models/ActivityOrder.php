@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class ActivityOrderModel
+ * 活动提交订单Model
+ */
 class ActivityOrderModel extends \BaseModel {
 
     private $dao;

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class ActivityModel
+ * 活动管理Model
+ */
 class ActivityModel extends \BaseModel {
 
     private $dao;

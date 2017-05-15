@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class UserHistoryModel
+ * 用户入住历史记录Model
+ */
 class UserHistoryModel extends \BaseModel {
 
     private $dao;

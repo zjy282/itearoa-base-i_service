@@ -1,11 +1,20 @@
 <?php
 
+/**
+ * Class OssModel
+ * OSS管理Model
+ */
 class OssModel extends \BaseModel {
 
     public function __construct() {
         parent::__construct();
     }
 
+    /**
+     * 上传至OSS
+     * @param $paramList
+     * @return array
+     */
     public function uploadToOss($paramList) {
         $oldfilekey = $paramList['oldfilekey'];
         $uploadFile = $paramList['uploadfile'];

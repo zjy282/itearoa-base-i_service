@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class UserModel
+ * APP用户管理
+ */
 class UserModel extends \BaseModel {
 
     private $dao;
@@ -164,7 +168,7 @@ class UserModel extends \BaseModel {
 
 
     /**
-     * 登录
+     * 用户登录
      *
      * @param array $param
      * @return array

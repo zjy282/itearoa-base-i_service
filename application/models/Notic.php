@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * Class NoticModel
+ * 物业通知管理
+ */
 class NoticModel extends \BaseModel {
 
 	private $dao;

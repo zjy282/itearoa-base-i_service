@@ -108,9 +108,9 @@ class AdministratorModel extends \BaseModel {
     }
 
     /**
-     * 登录
-     *
-     * @param array $param
+     * 集团后台登录
+     * @param $param
+     * @return array
      */
     public function login($param) {
         $username = trim($param['username']);
@@ -137,6 +137,11 @@ class AdministratorModel extends \BaseModel {
         return $userInfo;
     }
 
+    /**
+     * 集团后台修改密码
+     * @param $param
+     * @return array
+     */
     public function changePass($param) {
         $userid = intval($param['userid']);
         $oldpass = trim($param['oldpass']);

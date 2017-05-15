@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class HotelPicModel
+ * 物业图片信息Model
+ */
 class HotelPicModel extends \BaseModel {
 
     private $dao;

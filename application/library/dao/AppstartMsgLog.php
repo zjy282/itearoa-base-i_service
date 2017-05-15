@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * APP启动消息记录数据层
+ */
 class Dao_AppstartMsgLog extends Dao_Base {
 
     public function __construct() {

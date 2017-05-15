@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class Dao_Activity
+ * 活动管理数据层
+ */
 class Dao_Activity extends Dao_Base {
 
     public function __construct() {
@@ -40,6 +44,11 @@ class Dao_Activity extends Dao_Base {
         return intval($result['count']);
     }
 
+    /**
+     * 列表和数量获取筛选参数处理
+     * @param $param
+     * @return array
+     */
     private function handlerActivityListParams($param) {
         $whereSql = array();
         $whereCase = array();

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class OperateLogModel
+ * 操作日志Model
+ */
 class OperateLogModel extends \BaseModel {
 
     private $dao;

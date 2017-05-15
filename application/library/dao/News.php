@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 物业新闻管理数据层
+ */
 class Dao_News extends Dao_Base {
 
     public function __construct() {
@@ -40,6 +42,11 @@ class Dao_News extends Dao_Base {
         return intval($result['count']);
     }
 
+    /**
+     * 列表和数量获取筛选参数处理
+     * @param $param
+     * @return array
+     */
     private function handlerNewsListParams($param) {
         $whereSql = array();
         $whereCase = array();

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class IserviceFeedbackModel
+ * 系统反馈Model
+ */
 class IserviceFeedbackModel extends \BaseModel {
 
     private $dao;

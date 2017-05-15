@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * Class PromotionModel
+ * 促销管理
+ */
 class PromotionModel extends \BaseModel {
 
 	private $dao;

@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * 体验购物订单管理数据层
+ */
 class Dao_ShoppingOrder extends Dao_Base {
 
     public function __construct() {
@@ -16,7 +19,7 @@ class Dao_ShoppingOrder extends Dao_Base {
     public function getShoppingOrderList(array $param): array {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
-        
+
         $paramSql = $this->handlerShoppingOrderListParams($param);
         $sql = "select * from hotel_shopping_order {$paramSql['sql']}";
         if ($limit) {
@@ -40,6 +43,11 @@ class Dao_ShoppingOrder extends Dao_Base {
         return intval($result['count']);
     }
 
+    /**
+     * 列表和数量获取筛选参数处理
+     * @param $param
+     * @return array
+     */
     private function handlerShoppingOrderListParams() {
         $whereSql = array();
         $whereCase = array();
@@ -79,14 +87,14 @@ class Dao_ShoppingOrder extends Dao_Base {
      */
     public function getShoppingOrderDetail(int $id): array {
         $result = array();
-        
+
         if ($id) {
             $sql = "select * from hotel_shopping_order where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
         }
-        
+
         return $result;
     }
 
@@ -101,13 +109,13 @@ class Dao_ShoppingOrder extends Dao_Base {
      */
     public function updateShoppingOrderById(array $info, int $id) {
         $result = false;
-        
+
         if ($id) {
             $result = $this->db->update('hotel_shopping_order', $info, array(
                 'id' => $id
             ));
         }
-        
+
         return $result;
     }
 

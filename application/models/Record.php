@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class RecordModel
+ * 操作日志
+ */
 class RecordModel extends BaseModel {
 
     public function addOperateLog($paramList) {

@@ -1,4 +1,7 @@
 <?php
+/**
+ * 集团管理数据层
+ */
 class Dao_List extends Dao_Base{
     
     public function __construct(){

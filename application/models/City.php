@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class CityModel
+ * 城市信息Model
+ */
 class CityModel extends \BaseModel {
 
     private $dao;

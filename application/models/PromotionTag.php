@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class PromotionTagModel
+ * 促销标签管理
+ */
 class PromotionTagModel extends \BaseModel {
 
     private $dao;

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class FeedbackResultModel
+ * 用户提交的APP反馈结果
+ */
 class FeedbackResultModel extends \BaseModel {
 
     private $dao;

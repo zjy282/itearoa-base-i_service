@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class AppstartMsgLogModel
+ * APP启动消息记录
+ */
 class AppstartMsgLogModel extends \BaseModel {
 
     private $dao;

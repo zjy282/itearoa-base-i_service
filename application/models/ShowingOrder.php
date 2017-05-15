@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class ShowingOrderModel
+ * 预约看房订单管理
+ */
 class ShowingOrderModel extends \BaseModel {
 
     private $dao;
