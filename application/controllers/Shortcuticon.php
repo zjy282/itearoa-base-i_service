@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * 酒店快捷图标控制器类
+ *
+ */
 class ShortcutIconController extends \BaseController {
 
     /**
@@ -16,7 +19,7 @@ class ShortcutIconController extends \BaseController {
     }
 
     /**
-     * 获取ShortcutIcon列表
+     * 获取酒店快捷图标列表
      *
      * @return Json
      */
@@ -34,7 +37,7 @@ class ShortcutIconController extends \BaseController {
 
 
     /**
-     * 根据id获取ShortcutIcon详情
+     * 根据id获取酒店快捷图标详情
      * @param int id 获取详情信息的id
      * @return Json
      */
@@ -50,7 +53,7 @@ class ShortcutIconController extends \BaseController {
     }
 
     /**
-     * 根据id修改ShortcutIcon信息
+     * 根据id修改酒店快捷图标信息
      * @param int id 获取详情信息的id
      * @param array param 需要更新的字段
      * @return Json
@@ -81,7 +84,7 @@ class ShortcutIconController extends \BaseController {
     }
 
     /**
-     * 添加ShortcutIcon信息
+     * 添加酒店快捷图标信息
      * @param array param 需要新增的信息
      * @return Json
      */

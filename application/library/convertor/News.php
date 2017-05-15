@@ -1,7 +1,6 @@
 <?php
 /**
- * 新闻convertor
- * @author ZXM
+ * 新闻转换器类
  */
 class Convertor_News extends Convertor_Base {
 
@@ -9,6 +8,19 @@ class Convertor_News extends Convertor_Base {
 		parent::__construct ();
 	}
 
+	/**
+	 * 新闻列表
+	 * 
+	 * @param array $newsList
+	 *        	新闻列表
+	 * @param array $tagList
+	 *        	新闻标签
+	 * @param int $newsCount
+	 *        	新闻总数
+	 * @param array $param
+	 *        	扩展参数
+	 * @return array
+	 */
 	public function getNewsListConvertor($newsList, $tagList, $newsCount, $param) {
 		$tagListNew = array ();
 		foreach ( $tagList as $tag ) {
@@ -33,6 +45,19 @@ class Convertor_News extends Convertor_Base {
 		return $data;
 	}
 
+	/**
+	 * 后台新闻列表
+	 * 
+	 * @param array $newsList
+	 *        	新闻列表
+	 * @param array $tagList
+	 *        	新闻标签
+	 * @param int $newsCount
+	 *        	新闻总数
+	 * @param array $param
+	 *        	扩展参数
+	 * @return array
+	 */
 	public function getAdminNewsListConvertor($newsList, $tagList, $newsCount, $param) {
 		$tagListNew = array ();
 		foreach ( $tagList as $tag ) {
@@ -66,6 +91,13 @@ class Convertor_News extends Convertor_Base {
 		return $data;
 	}
 
+	/**
+	 * 新闻详情
+	 * 
+	 * @param array $list
+	 *        	新闻详情
+	 * @return array
+	 */
 	public function getNewsDetailConvertor($list) {
 		$data = array ();
 		$data ['id'] = $list ['id'];
@@ -78,6 +110,13 @@ class Convertor_News extends Convertor_Base {
 		return $data;
 	}
 
+	/**
+	 * 后台新闻详情
+	 * 
+	 * @param array $list
+	 *        	后台新闻详情
+	 * @return array
+	 */
 	public function getAdminNewsDetailConvertor($list) {
 		$data = array ();
 		$data ['id'] = $list ['id'];

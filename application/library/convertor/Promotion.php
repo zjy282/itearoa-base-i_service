@@ -1,7 +1,6 @@
 <?php
 /**
- * 促销convertor
- * @author ZXM
+ * 促销转换器类
  */
 class Convertor_Promotion extends Convertor_Base {
 
@@ -9,6 +8,19 @@ class Convertor_Promotion extends Convertor_Base {
 		parent::__construct ();
 	}
 
+	/**
+	 * 促销列表
+	 *
+	 * @param array $promotionList
+	 *        	促销列表
+	 * @param array $tagList
+	 *        	促销标签列表
+	 * @param int $promotionCount
+	 *        	促销标签总数
+	 * @param array $param
+	 *        	扩展参数
+	 * @return array
+	 */
 	public function getPromotionListConvertor($promotionList, $tagList, $promotionCount, $param) {
 		$tagListNew = array ();
 		foreach ( $tagList as $tag ) {
@@ -33,6 +45,19 @@ class Convertor_Promotion extends Convertor_Base {
 		return $data;
 	}
 
+	/**
+	 * 后台促销列表
+	 *
+	 * @param array $promotionList
+	 *        	促销列表
+	 * @param array $tagList
+	 *        	促销标签列表
+	 * @param int $promotionCount
+	 *        	促销标签总数
+	 * @param array $param
+	 *        	扩展参数
+	 * @return array
+	 */
 	public function getAdminPromotionListConvertor($promotionList, $tagList, $promotionCount, $param) {
 		$tagListNew = array ();
 		foreach ( $tagList as $tag ) {
@@ -66,6 +91,13 @@ class Convertor_Promotion extends Convertor_Base {
 		return $data;
 	}
 
+	/**
+	 * 促销详情
+	 *
+	 * @param array $promotionList
+	 *        	促销详情
+	 * @return array
+	 */
 	public function getPromotionDetailConvertor($list) {
 		$data = array ();
 		$data ['id'] = $list ['id'];
@@ -77,6 +109,13 @@ class Convertor_Promotion extends Convertor_Base {
 		return $data;
 	}
 
+	/**
+	 * 后台促销详情
+	 *
+	 * @param array $promotionList
+	 *        	促销详情
+	 * @return array
+	 */
 	public function getAdminPromotionDetailConvertor($list) {
 		$data = array ();
 		$data ['id'] = $list ['id'];

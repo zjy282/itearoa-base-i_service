@@ -1,7 +1,6 @@
 <?php
 /**
- * 雅士阁生活convertor
- * @author ZXM
+ * 雅士阁生活转换器类
  */
 class Convertor_Life extends Convertor_Base {
 
@@ -9,6 +8,17 @@ class Convertor_Life extends Convertor_Base {
 		parent::__construct ();
 	}
 
+	/**
+	 * 雅士阁生活列表结果转换器
+	 * 
+	 * @param array $lifeList
+	 *        	雅士阁生活列表
+	 * @param int $lifeCount
+	 *        	雅士阁生活总数
+	 * @param array $param
+	 *        	扩展参数
+	 * @return array
+	 */
 	public function getLifeListConvertor($lifeList, $lifeCount, $param) {
 		$data = array ('list' => array () );
 		foreach ( $lifeList as $lifes ) {
@@ -30,7 +40,20 @@ class Convertor_Life extends Convertor_Base {
 		return $data;
 	}
 
-	public function getAdminLifeListConvertor($lifeList, $lifeCount, $param,$typeList) {
+	/**
+	 * 后台雅士阁生活列表结果转换器
+	 * 
+	 * @param array $lifeList
+	 *        	雅士阁生活列表
+	 * @param int $lifeCount
+	 *        	雅士阁生活总数
+	 * @param array $param
+	 *        	扩展参数
+	 * @param array $typeList
+	 *        	生活类型列表
+	 * @return array
+	 */
+	public function getAdminLifeListConvertor($lifeList, $lifeCount, $param, $typeList) {
 		$data = array ('list' => array () );
 		$typeListNew = array ();
 		foreach ( $typeList as $type ) {
@@ -72,6 +95,13 @@ class Convertor_Life extends Convertor_Base {
 		return $data;
 	}
 
+	/**
+	 * 雅士阁生活详情结果转换器
+	 * 
+	 * @param array $lifes
+	 *        	雅士阁生活详情
+	 * @return array
+	 */
 	public function getLifeDetailConvertor($lifes) {
 		$data = array ();
 		$data ['id'] = $lifes ['id'];
@@ -88,6 +118,13 @@ class Convertor_Life extends Convertor_Base {
 		return $data;
 	}
 
+	/**
+	 * 后台雅士阁生活详情结果转换器
+	 * 
+	 * @param array $lifes
+	 *        	雅士阁生活详情
+	 * @return array
+	 */
 	public function getAdminLifeDetailConvertor($lifes) {
 		$data = array ();
 		$data ['id'] = $lifes ['id'];

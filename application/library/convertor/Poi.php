@@ -1,7 +1,6 @@
 <?php
 /**
- * 本地攻略convertor
- * @author ZXM
+ * 本地攻略转换器类
  */
 class Convertor_Poi extends Convertor_Base {
 
@@ -9,6 +8,13 @@ class Convertor_Poi extends Convertor_Base {
 		parent::__construct ();
 	}
 
+	/**
+	 * 酒店本地攻略列表
+	 * @param array $poiList 酒店本地攻略列表
+	 * @param int $poiCount 酒店本地攻略总数
+	 * @param array $param 扩展参数
+	 * @return array
+	 */
 	public function getPoiListConvertor($poiList, $poiCount, $param) {
 		$data = array ('list' => array () );
 		foreach ( $poiList as $pois ) {
@@ -29,7 +35,14 @@ class Convertor_Poi extends Convertor_Base {
 		$data ['nextPage'] = Util_Tools::getNextPage ( $data ['page'], $data ['limit'], $data ['total'] );
 		return $data;
 	}
-
+	/**
+	 * 后台酒店本地攻略列表
+	 * @param array $poiList 酒店本地攻略列表
+	 * @param int $poiCount 酒店本地攻略总数
+	 * @param array $param 扩展参数
+	 * @param array $typeList 本地攻略标签结果
+	 * @return array
+	 */
 	public function getAdminPoiListConvertor($poiList, $poiCount, $param, $typeList) {
 		$data = array ('list' => array () );
 		
@@ -75,6 +88,11 @@ class Convertor_Poi extends Convertor_Base {
 		return $data;
 	}
 
+	/**
+	 * 酒店本地攻略详情
+	 * @param array $poi
+	 * @return array
+	 */
 	public function getPoiDetailConvertor($poi) {
 		$data = array ();
 		$data ['id'] = $poi ['id'];
@@ -92,7 +110,12 @@ class Convertor_Poi extends Convertor_Base {
 		$data ['status'] = $poi ['status'];
 		return $data;
 	}
-
+	
+	/**
+	 * 后台酒店本地攻略详情
+	 * @param array $poi
+	 * @return array
+	 */
 	public function getAdminPoiDetailConvertor($poi) {
 		$data = array ();
 		$data ['id'] = $poi ['id'];
