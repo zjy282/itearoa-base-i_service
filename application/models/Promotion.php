@@ -85,6 +85,9 @@ class PromotionModel extends \BaseModel {
 			isset ( $param ['tagid'] ) ? $info ['tagid'] = $param ['tagid'] : false;
 			isset ( $param ['status'] ) ? $info ['status'] = $param ['status'] : false;
 			isset ( $param ['updatetime'] ) ? $info ['updatetime'] = $param ['updatetime'] : false;
+            isset($param['sort']) ? $info['sort'] = $param['sort'] : false;
+            isset($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
+            isset($param['video']) ? $info['video'] = $param['video'] : false;
 			$result = $this->dao->updatePromotionById ( $info, $id );
 		}
 		return $result;

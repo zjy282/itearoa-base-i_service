@@ -20,7 +20,7 @@ class Dao_Notic extends Dao_Base {
         $page = $this->getStart($param['page'], $limit);
         
         $paramSql = $this->handlerNoticListParams($param);
-        $sql = "select * from hotel_notic {$paramSql['sql']}";
+        $sql = "select * from hotel_notic {$paramSql['sql']} order by sort desc";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }

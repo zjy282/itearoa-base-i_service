@@ -21,7 +21,7 @@ class Dao_RoomRes extends Dao_Base {
         $page = $this->getStart($param['page'], $limit);
 
         $paramSql = $this->handlerListParams($param);
-        $sql = "select * from hotel_room_res {$paramSql['sql']}";
+        $sql = "select * from hotel_room_res {$paramSql['sql']} order by sort desc";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }

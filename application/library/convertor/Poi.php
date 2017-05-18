@@ -25,6 +25,8 @@ class Convertor_Poi extends Convertor_Base {
 			$poiTemp ['tel'] = $pois ['tel'];
 			$poiTemp ['introduct'] = $this->handlerMultiLang ( 'introduct', $pois );
 			$poiTemp ['detail'] = Enum_Img::getPathByKeyAndType ( $this->handlerMultiLang ( 'detail', $pois ) );
+            $poiTemp ['pdf'] = $pois['pdf'] ? Enum_Img::getPathByKeyAndType($pois['pdf']) : '';
+            $poiTemp ['video'] = $pois['video'] ? Enum_Img::getPathByKeyAndType($pois['video']) : '';
 			$poiTemp ['lat'] = $pois ['lat'];
 			$poiTemp ['lng'] = $pois ['lng'];
 			$data ['list'] [] = $poiTemp;
@@ -77,6 +79,9 @@ class Convertor_Poi extends Convertor_Base {
 			$poiTemp ['detail_lang3'] = $poi ['detail_lang3'];
 			$poiTemp ['lat'] = $poi ['lat'];
 			$poiTemp ['lng'] = $poi ['lng'];
+            $poiTemp ['sort'] = $poi ['sort'];
+            $poiTemp ['pdf'] = $poi ['pdf'];
+            $poiTemp ['video'] = $poi ['video'];
 			$poiTemp ['createTime'] = $poi ['createtime'];
 			$poiTemp ['updateTime'] = $poi ['updatetime'];
 			$data ['list'] [] = $poiTemp;

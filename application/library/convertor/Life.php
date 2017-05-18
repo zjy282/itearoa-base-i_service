@@ -29,6 +29,8 @@ class Convertor_Life extends Convertor_Base {
 			$lifeTemp ['tel'] = $lifes ['tel'];
 			$lifeTemp ['introduct'] = $this->handlerMultiLang ( 'introduct', $lifes );
 			$lifeTemp ['detail'] = Enum_Img::getPathByKeyAndType ( $this->handlerMultiLang ( 'detail', $lifes ) );
+            $lifeTemp ['pdf'] = $lifes['pdf'] ? Enum_Img::getPathByKeyAndType($lifes['pdf']) : '';
+            $lifeTemp ['video'] = $lifes['video'] ? Enum_Img::getPathByKeyAndType($lifes['video']) : '';
 			$lifeTemp ['lat'] = $lifes ['lat'];
 			$lifeTemp ['lng'] = $lifes ['lng'];
 			$data ['list'] [] = $lifeTemp;
@@ -84,6 +86,9 @@ class Convertor_Life extends Convertor_Base {
 			$lifeTemp ['tagName_lang1'] = $typeListNew [$lifeTemp ['tagId']] ['titleLang1'];
 			$lifeTemp ['tagName_lang2'] = $typeListNew [$lifeTemp ['tagId']] ['titleLang2'];
 			$lifeTemp ['tagName_lang3'] = $typeListNew [$lifeTemp ['tagId']] ['titleLang3'];
+            $lifeTemp ['sort'] = $lifes ['sort'];
+            $lifeTemp ['pdf'] = $lifes ['pdf'];
+            $lifeTemp ['video'] = $lifes ['video'];
 			$lifeTemp ['createTime'] = $lifes ['createtime'];
 			$lifeTemp ['updateTime'] = $lifes ['updatetime'];
 			$data ['list'] [] = $lifeTemp;

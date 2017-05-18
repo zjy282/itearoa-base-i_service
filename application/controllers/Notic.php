@@ -5,8 +5,14 @@
  */
 class NoticController extends \BaseController {
 
+    /**
+     * @var NoticModel
+     */
 	private $model;
 
+    /**
+     * @var Convertor_Notic
+     */
 	private $convertor;
 
 	public function init() {
@@ -76,6 +82,9 @@ class NoticController extends \BaseController {
 			$param ['article_lang2'] = $this->getParamList ( 'article_lang2' );
 			$param ['article_lang3'] = $this->getParamList ( 'article_lang3' );
 			$param ['tagid'] = $this->getParamList ( 'tagid' );
+            $param ['sort'] = $this->getParamList('sort');
+            $param ['pdf'] = $this->getParamList('pdf');
+            $param ['video'] = $this->getParamList('video');
 			$param ['updatetime'] = time ();
 			$data = $this->model->updateNoticById ( $param, $id );
 			$data = $this->convertor->statusConvertor ( $data );
@@ -100,6 +109,9 @@ class NoticController extends \BaseController {
 		$param ['title_lang2'] = $this->getParamList ( 'title_lang2' );
 		$param ['title_lang3'] = $this->getParamList ( 'title_lang3' );
 		$param ['tagid'] = $this->getParamList ( 'tagid' );
+        $param ['sort'] = intval($this->getParamList('sort'));
+        $param ['pdf'] = trim($this->getParamList('pdf'));
+        $param ['video'] = trim($this->getParamList('video'));
 		$param ['updatetime'] = time ();
 		$param ['createtime'] = time ();
 		$data = $this->model->addNotic ( $param );

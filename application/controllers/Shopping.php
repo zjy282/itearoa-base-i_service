@@ -105,6 +105,9 @@ class ShoppingController extends \BaseController {
 			$param ['detail_lang2'] = $this->getParamList ( 'detail_lang2' );
 			$param ['detail_lang3'] = $this->getParamList ( 'detail_lang3' );
 			$param ['hotelid'] = $this->getParamList ( 'hotelid' );
+            $param ['sort'] = $this->getParamList('sort');
+            $param ['pdf'] = $this->getParamList('pdf');
+            $param ['video'] = $this->getParamList('video');
 			$data = $this->model->updateShoppingById ( $param, $id );
 			$data = $this->convertor->statusConvertor ( $data );
 		} else {
@@ -131,6 +134,9 @@ class ShoppingController extends \BaseController {
 		$param ['tagid'] = intval ( $this->getParamList ( 'tagid' ) );
 		$param ['pic'] = trim ( $this->getParamList ( 'pic' ) );
 		$param ['hotelid'] = intval ( $this->getParamList ( 'hotelid' ) );
+        $param ['sort'] = intval($this->getParamList('sort'));
+        $param ['pdf'] = trim($this->getParamList('pdf'));
+        $param ['video'] = trim($this->getParamList('video'));
 		$data = $this->model->addShopping ( $param );
 		$data = $this->convertor->statusConvertor ( array ('id' => $data ) );
 		$this->echoSuccessData ( $data );

@@ -5,8 +5,12 @@
  */
 class PromotionController extends \BaseController {
 
+    /**
+     * @var PromotionModel
+     */
 	private $model;
 
+	/** @var  Convertor_Promotion */
 	private $convertor;
 
 	public function init() {
@@ -76,6 +80,9 @@ class PromotionController extends \BaseController {
 			$param ['article_lang3'] = $this->getParamList ( 'article_lang3' );
 			$param ['tagid'] = $this->getParamList ( 'tagid' );
 			$param ['status'] = $this->getParamList ( 'status' );
+            $param ['sort'] = $this->getParamList('sort');
+            $param ['pdf'] = $this->getParamList('pdf');
+            $param ['video'] = $this->getParamList('video');
 			$param ['updatetime'] = time ();
 			$data = $this->model->updatePromotionById ( $param, $id );
 			$data = $this->convertor->statusConvertor ( $data );
@@ -102,6 +109,9 @@ class PromotionController extends \BaseController {
 		$param ['status'] = $this->getParamList ( 'status' );
 		$param ['updatetime'] = time ();
 		$param ['createtime'] = time ();
+        $param ['sort'] = intval($this->getParamList('sort'));
+        $param ['pdf'] = trim($this->getParamList('pdf'));
+        $param ['video'] = trim($this->getParamList('video'));
 		$data = $this->model->addPromotion ( $param );
 		$data = $this->convertor->statusConvertor ( array ('id' => $data ) );
 		$this->echoSuccessData ( $data );

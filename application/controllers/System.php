@@ -20,7 +20,7 @@ class SystemController extends \BaseController {
 
 	/**
 	 * 获取系统支持的语言列表
-	 * 
+	 *
 	 * @return json
 	 */
 	public function getLanguageListAction() {
@@ -29,7 +29,7 @@ class SystemController extends \BaseController {
 
 	/**
 	 * 上传文件到OSS
-	 * 
+	 *
 	 * @return json
 	 */
 	public function uploadToOssAction() {
@@ -44,7 +44,7 @@ class SystemController extends \BaseController {
 
 	/**
 	 * 获取上传允许的文件类型
-	 * 
+	 *
 	 * @return json
 	 */
 	public function getAllowUploadFileTypeAction() {
@@ -55,7 +55,7 @@ class SystemController extends \BaseController {
 
 	/**
 	 * 获取设备列表
-	 * 
+	 *
 	 * @return json
 	 */
 	public function getPlatformListAction() {

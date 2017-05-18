@@ -20,7 +20,7 @@ class Dao_News extends Dao_Base {
         $page = $this->getStart($param['page'], $limit);
         
         $paramSql = $this->handlerNewsListParams($param);
-        $sql = "select * from hotel_news {$paramSql['sql']}";
+        $sql = "select * from hotel_news {$paramSql['sql']} order by sort desc";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }

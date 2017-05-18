@@ -10,7 +10,7 @@ class Convertor_RoomRes extends Convertor_Base {
 
 	/**
 	 * 客房物品类型列表
-	 * 
+	 *
 	 * @param array $list
 	 *        	客房物品类型列表
 	 * @return array
@@ -23,6 +23,7 @@ class Convertor_RoomRes extends Convertor_Base {
 			$resTemp ['icon'] = $resOne ['icon'];
 			$resTemp ['name'] = $this->handlerMultiLang ( 'name', $resOne );
 			$resTemp ['pdf'] = Enum_Img::getPathByKeyAndType ( $resOne ['pdf'] );
+			$resTemp ['video'] = Enum_Img::getPathByKeyAndType ( $resOne ['video'] );
 			$resTemp ['introduct'] = $this->handlerMultiLang ( 'introduct', $resOne );
 			$resTemp ['detail'] = $this->handlerMultiLang ( 'detail', $resOne );
 			$data ['list'] [] = $resTemp;
@@ -32,7 +33,7 @@ class Convertor_RoomRes extends Convertor_Base {
 
 	/**
 	 * 客房物品列表
-	 * 
+	 *
 	 * @param array $list
 	 *        	客房物品列表
 	 * @param int $count
@@ -51,6 +52,8 @@ class Convertor_RoomRes extends Convertor_Base {
 			$oneTemp ['name_lang2'] = $value ['name_lang2'];
 			$oneTemp ['name_lang3'] = $value ['name_lang3'];
 			$oneTemp ['pdf'] = $value ['pdf'];
+            $oneTemp ['sort'] = $value ['sort'];
+            $oneTemp ['video'] = $value ['video'];
 			$oneTemp ['introduct_lang1'] = $value ['introduct_lang1'];
 			$oneTemp ['introduct_lang2'] = $value ['introduct_lang2'];
 			$oneTemp ['introduct_lang3'] = $value ['introduct_lang3'];

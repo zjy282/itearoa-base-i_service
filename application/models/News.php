@@ -83,6 +83,9 @@ class NewsModel extends \BaseModel {
             isset($param ['article_lang3']) ? $info ['article_lang3'] = $param ['article_lang3'] : false;
             isset($param ['tagid']) ? $info ['tagid'] = $param ['tagid'] : false;
             isset($param ['updatetime']) ? $info ['updatetime'] = $param ['updatetime'] : false;
+            isset($param['sort']) ? $info['sort'] = $param['sort'] : false;
+            isset($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
+            isset($param['video']) ? $info['video'] = $param['video'] : false;
             $result = $this->dao->updateNewsById($info, $id);
         }
         return $result;

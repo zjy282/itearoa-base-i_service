@@ -34,6 +34,8 @@ class Convertor_Promotion extends Convertor_Base {
 			$newTemp ['article'] = Enum_Img::getPathByKeyAndType ( $this->handlerMultiLang ( 'article', $news ) );
 			$newTemp ['tagId'] = $news ['tagid'];
 			$newTemp ['tagName'] = $tagListNew [$newTemp ['tagId']];
+            $newTemp ['pdf'] = $news['pdf'] ? Enum_Img::getPathByKeyAndType($news['pdf']) : '';
+            $newTemp ['video'] = $news['video'] ? Enum_Img::getPathByKeyAndType($news['video']) : '';
 			$newTemp ['createtime'] = $news ['createtime'];
 			$newTemp ['updatetime'] = $news ['updatetime'];
 			$data ['list'] [] = $newTemp;
@@ -80,6 +82,9 @@ class Convertor_Promotion extends Convertor_Base {
 			$newTemp ['tagName_lang1'] = $tagListNew [$newTemp ['tagId']] ['titleLang1'];
 			$newTemp ['tagName_lang2'] = $tagListNew [$newTemp ['tagId']] ['titleLang2'];
 			$newTemp ['tagName_lang3'] = $tagListNew [$newTemp ['tagId']] ['titleLang3'];
+            $newTemp ['sort'] = $news ['sort'];
+            $newTemp ['pdf'] = $news ['pdf'];
+            $newTemp ['video'] = $news ['video'];
 			$newTemp ['createTime'] = $news ['createtime'];
 			$newTemp ['updateTime'] = $news ['updatetime'];
 			$data ['list'] [] = $newTemp;

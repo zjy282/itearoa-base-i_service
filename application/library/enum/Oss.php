@@ -12,6 +12,8 @@ class Enum_Oss {
 
     const OSS_PATH_PDF = 'pdf';
 
+    const OSS_PATH_VIDEP = 'video';
+
     public static function allowExtension($type) {
         $allowList = array();
         switch ($type) {

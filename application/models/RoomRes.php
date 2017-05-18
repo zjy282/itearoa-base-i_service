@@ -82,6 +82,8 @@ class RoomResModel extends \BaseModel {
             isset($param['detail_lang1']) ? $info['detail_lang1'] = $param['detail_lang1'] : false;
             isset($param['detail_lang2']) ? $info['detail_lang2'] = $param['detail_lang2'] : false;
             isset($param['detail_lang3']) ? $info['detail_lang3'] = $param['detail_lang3'] : false;
+            isset($param['sort']) ? $info['sort'] = $param['sort'] : false;
+            isset($param['video']) ? $info['video'] = $param['video'] : false;
             $result = $this->dao->updateRoomResById($info, $id);
         }
         return $result;
@@ -103,6 +105,8 @@ class RoomResModel extends \BaseModel {
         isset($param['introduct_lang1']) ? $info['introduct_lang1'] = $param['introduct_lang1'] : false;
         isset($param['introduct_lang2']) ? $info['introduct_lang2'] = $param['introduct_lang2'] : false;
         isset($param['introduct_lang3']) ? $info['introduct_lang3'] = $param['introduct_lang3'] : false;
+        isset($param['sort']) ? $info['sort'] = $param['sort'] : false;
+        isset($param['video']) ? $info['video'] = $param['video'] : false;
         return $this->dao->addRoomRes($info);
     }
 }

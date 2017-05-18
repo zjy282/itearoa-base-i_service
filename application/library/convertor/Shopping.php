@@ -34,6 +34,8 @@ class Convertor_Shopping extends Convertor_Base {
 			$shoppingTemp ['introduct'] = $this->handlerMultiLang ( 'introduct', $shopping );
 			$shoppingTemp ['detail'] = Enum_Img::getPathByKeyAndType ( $this->handlerMultiLang ( 'detail', $shopping ) );
 			$shoppingTemp ['pic'] = Enum_Img::getPathByKeyAndType ( $shopping ['pic'] );
+            $shoppingTemp ['pdf'] = $shopping['pdf'] ? Enum_Img::getPathByKeyAndType($shopping['pdf']) : '';
+            $shoppingTemp ['video'] = $shopping['video'] ? Enum_Img::getPathByKeyAndType($shopping['video']) : '';
 			$shoppingTemp ['tagId'] = $shopping ['tagid'];
 			$shoppingTemp ['tagName'] = $tagListNew [$shoppingTemp ['tagId']];
 			$shoppingTemp ['createtime'] = $shopping ['createtime'];
@@ -86,6 +88,9 @@ class Convertor_Shopping extends Convertor_Base {
 			$shoppingTemp ['hotelName'] = $hotelNameList [$shoppingTemp ['hotelid']];
 			$shoppingTemp ['pic'] = $value ['pic'];
 			$shoppingTemp ['createtime'] = $value ['createtime'];
+            $shoppingTemp ['sort'] = $value ['sort'];
+            $shoppingTemp ['pdf'] = $value ['pdf'];
+            $shoppingTemp ['video'] = $value ['video'];
 			$shoppingTemp ['tagid'] = $value ['tagid'];
 			$shoppingTemp ['tagName'] = $shoppingTagNameList [$shoppingTemp ['tagid']];
 			$data ['list'] [] = $shoppingTemp;

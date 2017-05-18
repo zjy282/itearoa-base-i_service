@@ -88,6 +88,9 @@ class ShoppingModel extends \BaseModel {
             isset($param['detail_lang2']) ? $info['detail_lang2'] = $param['detail_lang2'] : false;
             isset($param['detail_lang3']) ? $info['detail_lang3'] = $param['detail_lang3'] : false;
             isset($param['hotelid']) ? $info['hotelid'] = $param['hotelid'] : false;
+            isset($param['sort']) ? $info['sort'] = $param['sort'] : false;
+            isset($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
+            isset($param['video']) ? $info['video'] = $param['video'] : false;
 
             $result = $this->dao->updateShoppingById($info, $id);
         }
@@ -111,6 +114,9 @@ class ShoppingModel extends \BaseModel {
         isset($param['tagid']) ? $info['tagid'] = $param['tagid'] : false;
         isset($param['pic']) ? $info['pic'] = $param['pic'] : false;
         isset($param['hotelid']) ? $info['hotelid'] = $param['hotelid'] : false;
+        isset($param['sort']) ? $info['sort'] = $param['sort'] : false;
+        isset($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
+        isset($param['video']) ? $info['video'] = $param['video'] : false;
         $info['createtime'] = time();
         return $this->dao->addShopping($info);
     }

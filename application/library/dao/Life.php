@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 雅士阁生活管理数据层
  */
@@ -18,9 +19,9 @@ class Dao_Life extends Dao_Base {
     public function getLifeList(array $param): array {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
-        
+
         $paramSql = $this->handlerLifeListParams($param);
-        $sql = "select * from hotel_life {$paramSql['sql']}";
+        $sql = "select * from hotel_life {$paramSql['sql']} order by sort desc";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }
@@ -88,14 +89,14 @@ class Dao_Life extends Dao_Base {
      */
     public function getLifeDetail(int $id): array {
         $result = array();
-        
+
         if ($id) {
             $sql = "select * from hotel_life where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
         }
-        
+
         return $result;
     }
 
@@ -110,11 +111,11 @@ class Dao_Life extends Dao_Base {
      */
     public function updateLifeById(array $info, int $id) {
         $result = false;
-        
+
         if ($id) {
             $result = $this->db->update('hotel_life', $info, array('id' => $id));
         }
-        
+
         return $result;
     }
 

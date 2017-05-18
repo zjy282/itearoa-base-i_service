@@ -5,8 +5,14 @@
  */
 class NewsController extends \BaseController {
 
+    /**
+     * @var NewsModel
+     */
 	private $model;
 
+    /**
+     * @var Convertor_News
+     */
 	private $convertor;
 
 	public function init() {
@@ -76,6 +82,9 @@ class NewsController extends \BaseController {
 			$param ['article_lang2'] = $this->getParamList ( 'article_lang2' );
 			$param ['article_lang3'] = $this->getParamList ( 'article_lang3' );
 			$param ['tagid'] = $this->getParamList ( 'tagid' );
+            $param ['sort'] = $this->getParamList('sort');
+            $param ['pdf'] = $this->getParamList('pdf');
+            $param ['video'] = $this->getParamList('video');
 			$param ['updatetime'] = time ();
 			$data = $this->model->updateNewsById ( $param, $id );
 			$data = $this->convertor->statusConvertor ( $data );
@@ -102,6 +111,9 @@ class NewsController extends \BaseController {
 		$param ['tagid'] = $this->getParamList ( 'tagid' );
 		$param ['updatetime'] = time ();
 		$param ['createtime'] = time ();
+        $param ['sort'] = intval($this->getParamList('sort'));
+        $param ['pdf'] = trim($this->getParamList('pdf'));
+        $param ['video'] = trim($this->getParamList('video'));
 		$data = $this->model->addNews ( $param );
 		$data = $this->convertor->statusConvertor ( array ('id' => $data ) );
 		$this->echoSuccessData ( $data );

@@ -32,6 +32,8 @@ class Convertor_Notic extends Convertor_Base {
 			$newTemp ['id'] = $notic ['id'];
 			$newTemp ['title'] = $this->handlerMultiLang ( 'title', $notic );
 			$newTemp ['article'] = Enum_Img::getPathByKeyAndType ( $this->handlerMultiLang ( 'article', $notic ) );
+            $newTemp ['pdf'] = $notic['pdf'] ? Enum_Img::getPathByKeyAndType($notic['pdf']) : '';
+            $newTemp ['video'] = $notic['video'] ? Enum_Img::getPathByKeyAndType($notic['video']) : '';
 			$newTemp ['tagId'] = $notic ['tagid'];
 			$newTemp ['tagName'] = $tagListNew [$newTemp ['tagId']];
 			$newTemp ['createtime'] = $notic ['createtime'];
@@ -80,6 +82,9 @@ class Convertor_Notic extends Convertor_Base {
 			$noticTemp ['tagName_lang1'] = $tagListNew [$noticTemp ['tagId']] ['titleLang1'];
 			$noticTemp ['tagName_lang2'] = $tagListNew [$noticTemp ['tagId']] ['titleLang2'];
 			$noticTemp ['tagName_lang3'] = $tagListNew [$noticTemp ['tagId']] ['titleLang3'];
+            $noticTemp ['sort'] = $notic ['sort'];
+            $noticTemp ['pdf'] = $notic ['pdf'];
+            $noticTemp ['video'] = $notic ['video'];
 			$noticTemp ['createTime'] = $notic ['createtime'];
 			$noticTemp ['updateTime'] = $notic ['updatetime'];
 			$data ['list'] [] = $noticTemp;
