@@ -39,6 +39,12 @@ class Convertor_GroupActivity extends Convertor_Base {
             $activityTemp ['tagName'] = $tagListNew [$activityTemp ['tagId']];
             $activityTemp ['createtime'] = $activity ['createtime'];
             $activityTemp ['updatetime'] = $activity ['updatetime'];
+            $activityTemp ['pic'] = Enum_Img::getPathByKeyAndType($activity ['pic']);
+            $activityTemp ['pdf'] = Enum_Img::getPathByKeyAndType($activity ['pdf']);
+            $activityTemp ['video'] = Enum_Img::getPathByKeyAndType($activity ['video']);
+            $activityTemp ['fromdate'] = $activity ['fromdate'];
+            $activityTemp ['todate'] = $activity ['todate'];
+            $activityTemp ['count'] = $activity ['count'];
             $data ['list'] [] = $activityTemp;
         }
         $data ['total'] = $activityCount;
@@ -90,6 +96,10 @@ class Convertor_GroupActivity extends Convertor_Base {
             $activityTemp ['sort'] = $value ['sort'];
             $activityTemp ['pdf'] = $value ['pdf'];
             $activityTemp ['video'] = $value ['video'];
+            $activityTemp ['pic'] = $value ['pic'];
+            $activityTemp ['fromdate'] = $value ['fromdate'];
+            $activityTemp ['todate'] = $value ['todate'];
+            $activityTemp ['count'] = $value ['count'];
             $data ['list'] [] = $activityTemp;
         }
         $data ['total'] = $count;

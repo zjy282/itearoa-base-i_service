@@ -78,6 +78,9 @@ class TrafficController extends \BaseController {
 			$param ['detail_lang1'] = $this->getParamList ( 'detail_lang1' );
 			$param ['detail_lang2'] = $this->getParamList ( 'detail_lang2' );
 			$param ['detail_lang3'] = $this->getParamList ( 'detail_lang3' );
+            $param ['sort'] = $this->getParamList('sort');
+            $param ['pdf'] = $this->getParamList('pdf');
+            $param ['video'] = $this->getParamList('video');
 			$data = $this->model->updateTrafficById ( $param, $id );
 			$data = $this->convertor->statusConvertor ( $data );
 		} else {
@@ -99,6 +102,9 @@ class TrafficController extends \BaseController {
 		$param ['introduct_lang1'] = trim ( $this->getParamList ( 'introduct_lang1' ) );
 		$param ['introduct_lang2'] = trim ( $this->getParamList ( 'introduct_lang2' ) );
 		$param ['introduct_lang3'] = trim ( $this->getParamList ( 'introduct_lang3' ) );
+        $param ['sort'] = intval($this->getParamList('sort'));
+        $param ['pdf'] = trim($this->getParamList('pdf'));
+        $param ['video'] = trim($this->getParamList('video'));
 		$data = $this->model->addTraffic ( $param );
 		$data = $this->convertor->statusConvertor ( array ('id' => $data ) );
 		$this->echoSuccessData ( $data );

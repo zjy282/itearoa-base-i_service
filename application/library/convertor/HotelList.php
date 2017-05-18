@@ -174,9 +174,12 @@ class Convertor_HotelList extends Convertor_Base {
 		$data ['facilitiesList'] = array ();
 		foreach ( $hotel ['facilitiesList'] as $facilities ) {
 			$facilitiesTemp = array ();
+			$facilitiesTemp ['icon'] = $facilities['icon'];
 			$facilitiesTemp ['name'] = $this->handlerMultiLang ( 'name', $facilities );
 			$facilitiesTemp ['detail'] = $this->handlerMultiLang ( 'detail', $facilities );
 			$facilitiesTemp ['introduct'] = $this->handlerMultiLang ( 'introduct', $facilities );
+			$facilitiesTemp ['pdf'] = Enum_Img::getPathByKeyAndType ( $facilities['pdf'] );
+			$facilitiesTemp ['video'] = Enum_Img::getPathByKeyAndType ( $facilities['video'] );
 			$data ['facilitiesList'] [] = $facilitiesTemp;
 		}
 		$data ['floorList'] = array ();
@@ -192,6 +195,8 @@ class Convertor_HotelList extends Convertor_Base {
 			$trafficTemp = array ();
 			$trafficTemp ['introduct'] = $this->handlerMultiLang ( 'introduct', $traffic );
 			$trafficTemp ['detail'] = $this->handlerMultiLang ( 'detail', $traffic );
+            $trafficTemp ['pdf'] = Enum_Img::getPathByKeyAndType ( $traffic['pdf'] );
+            $trafficTemp ['video'] = Enum_Img::getPathByKeyAndType ( $traffic['video'] );
 			$data ['trafficList'] [] = $trafficTemp;
 		}
 		$data ['panoramicList'] = array ();

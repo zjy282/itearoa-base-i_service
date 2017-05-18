@@ -35,6 +35,7 @@ class FacilitiesController extends \BaseController {
 		$param ['id'] = intval ( $this->getParamList ( 'id' ) );
 		$param ['hotelid'] = intval ( $this->getParamList ( 'hotelid' ) );
 		$param ['name'] = trim ( $this->getParamList ( 'name' ) );
+		$param ['icon'] = trim ( $this->getParamList ( 'icon' ) );
 		$param ['status'] = $this->getParamList ( 'status' );
 		if (is_null ( $param ['status'] )) {
 			unset ( $param ['status'] );
@@ -87,6 +88,9 @@ class FacilitiesController extends \BaseController {
 			$param ['detail_lang1'] = $this->getParamList ( 'detail_lang1' );
 			$param ['detail_lang2'] = $this->getParamList ( 'detail_lang2' );
 			$param ['detail_lang3'] = $this->getParamList ( 'detail_lang3' );
+			$param ['icon'] = $this->getParamList ( 'icon' );
+			$param ['pdf'] = $this->getParamList ( 'pdf' );
+			$param ['video'] = $this->getParamList ( 'video' );
 			$data = $this->model->updateFacilitiesById ( $param, $id );
 			$data = $this->convertor->statusConvertor ( $data );
 		} else {
@@ -104,6 +108,7 @@ class FacilitiesController extends \BaseController {
 	 */
 	public function addFacilitiesAction() {
 		$param = array ();
+		$param ['icon'] = trim ( $this->getParamList ( 'icon' ) );
 		$param ['name_lang1'] = trim ( $this->getParamList ( 'name_lang1' ) );
 		$param ['name_lang2'] = trim ( $this->getParamList ( 'name_lang2' ) );
 		$param ['name_lang3'] = trim ( $this->getParamList ( 'name_lang3' ) );
@@ -112,6 +117,8 @@ class FacilitiesController extends \BaseController {
 		$param ['introduct_lang1'] = trim ( $this->getParamList ( 'introduct_lang1' ) );
 		$param ['introduct_lang2'] = trim ( $this->getParamList ( 'introduct_lang2' ) );
 		$param ['introduct_lang3'] = trim ( $this->getParamList ( 'introduct_lang3' ) );
+		$param ['pdf'] = trim ( $this->getParamList ( 'pdf' ) );
+		$param ['video'] = trim ( $this->getParamList ( 'video' ) );
 		$data = $this->model->addFacilities ( $param );
 		$data = $this->convertor->statusConvertor ( array ('id' => $data ) );
 		$this->echoSuccessData ( $data );

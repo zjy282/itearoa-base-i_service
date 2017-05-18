@@ -25,6 +25,7 @@ class Convertor_Facilities extends Convertor_Base {
 		foreach ( $list as $key => $value ) {
 			$oneTemp = array ();
 			$oneTemp ['id'] = $value ['id'];
+			$oneTemp ['icon'] = $value ['icon'];
 			$oneTemp ['name_lang1'] = $value ['name_lang1'];
 			$oneTemp ['name_lang2'] = $value ['name_lang2'];
 			$oneTemp ['name_lang3'] = $value ['name_lang3'];
@@ -37,6 +38,8 @@ class Convertor_Facilities extends Convertor_Base {
 			$oneTemp ['introduct_lang2'] = $value ['introduct_lang2'];
 			$oneTemp ['introduct_lang3'] = $value ['introduct_lang3'];
 			$oneTemp ['hotelid'] = $value ['hotelid'];
+			$oneTemp ['pdf'] = $value ['pdf'];
+			$oneTemp ['video'] = $value ['video'];
 			$data ['list'] [] = $oneTemp;
 		}
 		$data ['total'] = $count;

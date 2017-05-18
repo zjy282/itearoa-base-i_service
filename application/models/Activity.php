@@ -106,12 +106,12 @@ class ActivityModel extends \BaseModel {
     public function addActivity($param) {
         isset($param['hotelid']) ? $info['hotelid'] = $param['hotelid'] : false;
         isset($param['groupid']) ? $info['groupid'] = $param['groupid'] : false;
-        isset($param['sort']) ? $info['sort'] = $param['sort'] : false;
         isset($param['tagid']) ? $info['tagid'] = $param['tagid'] : false;
         isset($param['status']) ? $info['status'] = $param['status'] : false;
         isset($param['title_lang1']) ? $info['title_lang1'] = $param['title_lang1'] : false;
         isset($param['title_lang2']) ? $info['title_lang2'] = $param['title_lang2'] : false;
         isset($param['title_lang3']) ? $info['title_lang3'] = $param['title_lang3'] : false;
+        isset($param['sort']) ? $info['sort'] = $param['sort'] : false;
         isset($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
         isset($param['video']) ? $info['video'] = $param['video'] : false;
         $info['createtime'] = time();

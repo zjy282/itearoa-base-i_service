@@ -25,6 +25,7 @@ class FacilitiesModel extends \BaseModel {
         $param['id'] ? $paramList['id'] = intval($param['id']) : false;
         $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
         $param['name'] ? $paramList['name'] = trim($param['name']) : false;
+        $param['icon'] ? $paramList['icon'] = trim($param['icon']) : false;
         isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
@@ -43,6 +44,7 @@ class FacilitiesModel extends \BaseModel {
         $param['id'] ? $paramList['id'] = intval($param['id']) : false;
         $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
         $param['name'] ? $paramList['name'] = trim($param['name']) : false;
+        $param['icon'] ? $paramList['icon'] = trim($param['icon']) : false;
         isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
         return $this->dao->getFacilitiesCount($paramList);
     }
@@ -75,6 +77,7 @@ class FacilitiesModel extends \BaseModel {
         $result = false;
         if ($id) {
             isset($param['hotelid']) ? $info['hotelid'] = $param['hotelid'] : false;
+            isset($param['icon']) ? $info['icon'] = $param['icon'] : false;
             isset($param['status']) ? $info['status'] = $param['status'] : false;
             isset($param['name_lang1']) ? $info['name_lang1'] = $param['name_lang1'] : false;
             isset($param['name_lang2']) ? $info['name_lang2'] = $param['name_lang2'] : false;
@@ -85,6 +88,8 @@ class FacilitiesModel extends \BaseModel {
             isset($param['detail_lang1']) ? $info['detail_lang1'] = $param['detail_lang1'] : false;
             isset($param['detail_lang2']) ? $info['detail_lang2'] = $param['detail_lang2'] : false;
             isset($param['detail_lang3']) ? $info['detail_lang3'] = $param['detail_lang3'] : false;
+            isset($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
+            isset($param['video']) ? $info['video'] = $param['video'] : false;
             $result = $this->dao->updateFacilitiesById($info, $id);
         }
         return $result;
@@ -98,6 +103,7 @@ class FacilitiesModel extends \BaseModel {
      * @return array
      */
     public function addFacilities($param) {
+        isset($param['icon']) ? $info['icon'] = $param['icon'] : false;
         isset($param['name_lang1']) ? $info['name_lang1'] = $param['name_lang1'] : false;
         isset($param['name_lang2']) ? $info['name_lang2'] = $param['name_lang2'] : false;
         isset($param['name_lang3']) ? $info['name_lang3'] = $param['name_lang3'] : false;
@@ -106,6 +112,8 @@ class FacilitiesModel extends \BaseModel {
         isset($param['introduct_lang1']) ? $info['introduct_lang1'] = $param['introduct_lang1'] : false;
         isset($param['introduct_lang2']) ? $info['introduct_lang2'] = $param['introduct_lang2'] : false;
         isset($param['introduct_lang3']) ? $info['introduct_lang3'] = $param['introduct_lang3'] : false;
+        isset($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
+        isset($param['video']) ? $info['video'] = $param['video'] : false;
         $info['createtime'] = time();
         return $this->dao->addFacilities($info);
     }

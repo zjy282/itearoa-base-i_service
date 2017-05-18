@@ -62,6 +62,10 @@ class Dao_Facilities extends Dao_Base {
             $whereSql[] = 'hotelid = ?';
             $whereCase[] = $param['hotelid'];
         }
+        if (isset($param['icon'])) {
+            $whereSql[] = 'icon = ?';
+            $whereCase[] = $param['icon'];
+        }
         if (isset($param['name'])) {
             $whereSql[] = '(name_lang1 = ? or name_lang2 = ? or name_lang3 = ?)';
             $whereCase[] = $param['name'];

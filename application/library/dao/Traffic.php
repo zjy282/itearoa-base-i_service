@@ -21,7 +21,7 @@ class Dao_Traffic extends Dao_Base {
         $page = $this->getStart($param['page'], $limit);
 
         $paramSql = $this->handlerListParams($param);
-        $sql = "select * from hotel_traffic {$paramSql['sql']}";
+        $sql = "select * from hotel_traffic {$paramSql['sql']} order by sort desc";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }
