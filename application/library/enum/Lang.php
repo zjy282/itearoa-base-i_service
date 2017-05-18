@@ -11,7 +11,9 @@ class Enum_Lang {
      */
     private static $langNameList = array(
         'zh' => '中文',
-        'en' => '英文'
+        'en' => '英文',
+        'jp' => '日语',
+        'kor' => '韩语'
     );
 
     /**
@@ -34,4 +36,5 @@ class Enum_Lang {
         return 'hotel_lang_list_' . $hotelId . '_v1';
     }
 }
+
 ?>
