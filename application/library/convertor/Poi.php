@@ -58,7 +58,7 @@ class Convertor_Poi extends Convertor_Base {
 
 		$tagListNew = array ();
 		foreach ( $tagList as $tag ) {
-			$tagListNew [$taa ['id']] ['titleLang1'] = $tag ['title_lang1'];
+			$tagListNew [$tag ['id']] ['titleLang1'] = $tag ['title_lang1'];
 			$tagListNew [$tag ['id']] ['titleLang2'] = $tag ['title_lang2'];
 			$tagListNew [$tag ['id']] ['titleLang3'] = $tag ['title_lang3'];
 		}
@@ -75,10 +75,11 @@ class Convertor_Poi extends Convertor_Base {
 			$poiTemp ['tel'] = $poi ['tel'];
 			$poiTemp ['status'] = $poi ['status'];
 			$poiTemp ['hotelId'] = $poi ['hotelid'];
-			$poiTemp ['typeId'] = $poi ['typeid'];
+			$poiTemp ['tagId'] = $poi ['tagid'];
 			$poiTemp ['tagName_lang1'] = $tagListNew [$poiTemp ['tagId']] ['titleLang1'];
 			$poiTemp ['tagName_lang2'] = $tagListNew [$poiTemp ['tagId']] ['titleLang2'];
 			$poiTemp ['tagName_lang3'] = $tagListNew [$poiTemp ['tagId']] ['titleLang3'];
+			$poiTemp ['typeId'] = $poi ['typeid'];
 			$poiTemp ['typeName_lang1'] = $typeListNew [$poiTemp ['typeId']] ['titleLang1'];
 			$poiTemp ['typeName_lang2'] = $typeListNew [$poiTemp ['typeId']] ['titleLang2'];
 			$poiTemp ['typeName_lang3'] = $typeListNew [$poiTemp ['typeId']] ['titleLang3'];
