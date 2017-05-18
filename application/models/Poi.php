@@ -77,6 +77,7 @@ class PoiModel extends \BaseModel {
 			$info = array ();
 			isset ( $param ['hotelid'] ) ? $info ['hotelid'] = intval ( $param ['hotelid'] ) : false;
 			isset ( $param ['typeid'] ) ? $info ['typeid'] = intval ( $param ['typeid'] ) : false;
+			isset ( $param ['tagid'] ) ? $info ['tagid'] = intval ( $param ['tagid'] ) : false;
 			isset ( $param ['name_lang1'] ) ? $info ['name_lang1'] = $param ['name_lang1'] : false;
 			isset ( $param ['name_lang2'] ) ? $info ['name_lang2'] = $param ['name_lang2'] : false;
 			isset ( $param ['name_lang3'] ) ? $info ['name_lang3'] = $param ['name_lang3'] : false;
