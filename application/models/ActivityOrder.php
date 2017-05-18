@@ -94,6 +94,8 @@ class ActivityOrderModel extends \BaseModel {
     public function addActivityOrder($param) {
         $info['name'] = $param['name'];
         $info['phone'] = $param['phone'];
+        $info['ordercount'] = $param['ordercount'];
+        $info['remark'] = $param['remark'];
         $info['hotelid'] = intval($param['hotelid']);
         $info['activityid'] = intval($param['activityid']);
         $info['userid'] = intval($param['userid']);

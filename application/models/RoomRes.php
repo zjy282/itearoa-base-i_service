@@ -72,6 +72,7 @@ class RoomResModel extends \BaseModel {
             isset($param['hotelid']) ? $info['hotelid'] = $param['hotelid'] : false;
             isset($param['status']) ? $info['status'] = $param['status'] : false;
             isset($param['icon']) ? $info['icon'] = $param['icon'] : false;
+            isset($param['pic']) ? $info['pic'] = $param['pic'] : false;
             isset($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
             isset($param['name_lang1']) ? $info['name_lang1'] = $param['name_lang1'] : false;
             isset($param['name_lang2']) ? $info['name_lang2'] = $param['name_lang2'] : false;
@@ -98,6 +99,7 @@ class RoomResModel extends \BaseModel {
         isset($param['hotelid']) ? $info['hotelid'] = $param['hotelid'] : false;
         isset($param['status']) ? $info['status'] = $param['status'] : false;
         isset($param['icon']) ? $info['icon'] = $param['icon'] : false;
+        isset($param['pic']) ? $info['pic'] = $param['pic'] : false;
         isset($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
         isset($param['name_lang1']) ? $info['name_lang1'] = $param['name_lang1'] : false;
         isset($param['name_lang2']) ? $info['name_lang2'] = $param['name_lang2'] : false;

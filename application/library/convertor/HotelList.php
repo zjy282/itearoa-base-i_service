@@ -29,6 +29,7 @@ class Convertor_HotelList extends Convertor_Base {
 		foreach ( $list as $key => $value ) {
 			$oneTemp = array ();
 			$oneTemp ['id'] = $value ['id'];
+			$oneTemp ['localpic'] = $value ['localpic'];
 			$oneTemp ['groupid'] = $value ['groupid'];
 			$oneTemp ['groupName'] = $groupNameList [$value ['groupid']];
 			$oneTemp ['propertyinterfid'] = $value ['propertyinterfid'];
@@ -78,7 +79,8 @@ class Convertor_HotelList extends Convertor_Base {
 		$cityInfoList = array_column ( $cityInfoList, null, 'id' );
 		foreach ( $list as $hotel ) {
 			$dataTemp = array ();
-			$dataTemp ['hotelId'] = $hotel ['id'];
+            $dataTemp ['hotelId'] = $hotel ['id'];
+			$dataTemp ['localpic'] = $hotel ['localpic'];
 			$dataTemp ['propertyinterfId'] = $hotel ['propertyinterfid'];
 			$dataTemp ['cityId'] = $hotel ['cityid'];
 			$cityInfo = $cityInfoList [$dataTemp ['cityId']];
@@ -110,6 +112,7 @@ class Convertor_HotelList extends Convertor_Base {
 		$data ['hotelId'] = $hotelInfo ['id'];
 		$data ['groupId'] = $hotelInfo ['groupid'];
 		$data ['propertyinterfId'] = $hotelInfo ['propertyinterfid'];
+		$data ['localpic'] = $hotelInfo ['localpic'];
 		$data ['lng'] = $hotelInfo ['lng'];
 		$data ['lat'] = $hotelInfo ['lat'];
 		$data ['cityId'] = $hotelInfo ['cityid'];
@@ -150,6 +153,7 @@ class Convertor_HotelList extends Convertor_Base {
 		$data ['id'] = $hotelInfo ['id'];
 		$data ['groupid'] = $hotelInfo ['groupid'];
 		$data ['propertyinterfid'] = $hotelInfo ['propertyinterfid'];
+		$data ['localpic'] = $hotelInfo ['localpic'];
 		$data ['lng'] = $hotelInfo ['lng'];
 		$data ['lat'] = $hotelInfo ['lat'];
 		$data ['tel'] = $hotelInfo ['tel'];

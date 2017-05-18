@@ -99,6 +99,10 @@ class GroupActivityController extends \BaseController {
             $param ['groupid'] = $this->getParamList('groupid');
             $param ['tagid'] = $this->getParamList('tagid');
             $param ['status'] = $this->getParamList('status');
+            $param ['pic']  = trim($this->getParamList('pic'));
+            $param ['fromdate'] = intval($this->getParamList('fromdate'));
+            $param ['todate'] = intval($this->getParamList('todate'));
+            $param ['ordercount'] = intval($this->getParamList('ordercount'));
             $param ['title_lang1'] = $this->getParamList('title_lang1');
             $param ['title_lang2'] = $this->getParamList('title_lang2');
             $param ['title_lang3'] = $this->getParamList('title_lang3');
@@ -128,6 +132,10 @@ class GroupActivityController extends \BaseController {
         $param ['groupid'] = intval($this->getParamList('groupid'));
         $param ['tagid'] = intval($this->getParamList('tagid'));
         $param ['status'] = intval($this->getParamList('status'));
+        $param ['pic']  = trim($this->getParamList('pic'));
+        $param ['fromdate'] = intval($this->getParamList('fromdate'));
+        $param ['todate'] = intval($this->getParamList('todate'));
+        $param ['ordercount'] = intval($this->getParamList('ordercount'));
         $param ['title_lang1'] = trim($this->getParamList('title_lang1'));
         $param ['title_lang2'] = trim($this->getParamList('title_lang2'));
         $param ['title_lang3'] = trim($this->getParamList('title_lang3'));

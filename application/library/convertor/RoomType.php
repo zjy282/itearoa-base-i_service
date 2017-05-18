@@ -29,6 +29,8 @@ class Convertor_RoomType extends Convertor_Base {
 			$oneTemp ['title_lang2'] = $value ['title_lang2'];
 			$oneTemp ['title_lang3'] = $value ['title_lang3'];
 			$oneTemp ['panoramic'] = $value ['panoramic'];
+			$oneTemp ['roomCount'] = $value ['roomcount'];
+			$oneTemp ['personCount'] = $value ['personcount'];
 			$oneTemp ['bedtype_lang1'] = $value ['bedtype_lang1'];
 			$oneTemp ['bedtype_lang2'] = $value ['bedtype_lang2'];
 			$oneTemp ['bedtype_lang3'] = $value ['bedtype_lang3'];

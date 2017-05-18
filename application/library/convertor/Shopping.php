@@ -37,6 +37,7 @@ class Convertor_Shopping extends Convertor_Base {
             $shoppingTemp ['pdf'] = $shopping['pdf'] ? Enum_Img::getPathByKeyAndType($shopping['pdf']) : '';
             $shoppingTemp ['video'] = $shopping['video'] ? Enum_Img::getPathByKeyAndType($shopping['video']) : '';
 			$shoppingTemp ['tagId'] = $shopping ['tagid'];
+			$shoppingTemp ['price'] = $shopping ['price'];
 			$shoppingTemp ['tagName'] = $tagListNew [$shoppingTemp ['tagId']];
 			$shoppingTemp ['createtime'] = $shopping ['createtime'];
 			$shoppingTemp ['updatetime'] = $shopping ['updatetime'];
@@ -84,6 +85,7 @@ class Convertor_Shopping extends Convertor_Base {
 			$shoppingTemp ['detail_lang1'] = $value ['detail_lang1'];
 			$shoppingTemp ['detail_lang2'] = $value ['detail_lang2'];
 			$shoppingTemp ['detail_lang3'] = $value ['detail_lang3'];
+			$shoppingTemp ['price'] = $value ['price'];
 			$shoppingTemp ['hotelid'] = $value ['hotelid'];
 			$shoppingTemp ['hotelName'] = $hotelNameList [$shoppingTemp ['hotelid']];
 			$shoppingTemp ['pic'] = $value ['pic'];

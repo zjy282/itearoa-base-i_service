@@ -83,6 +83,7 @@ class ShoppingModel extends \BaseModel {
             isset($param['introduct_lang2']) ? $info['introduct_lang2'] = $param['introduct_lang2'] : false;
             isset($param['introduct_lang3']) ? $info['introduct_lang3'] = $param['introduct_lang3'] : false;
             isset($param['tagid']) ? $info['tagid'] = $param['tagid'] : false;
+            isset($param['price']) ? $info['price'] = $param['price'] : false;
             isset($param['pic']) ? $info['pic'] = $param['pic'] : false;
             isset($param['detail_lang1']) ? $info['detail_lang1'] = $param['detail_lang1'] : false;
             isset($param['detail_lang2']) ? $info['detail_lang2'] = $param['detail_lang2'] : false;
@@ -112,6 +113,7 @@ class ShoppingModel extends \BaseModel {
         isset($param['introduct_lang2']) ? $info['introduct_lang2'] = $param['introduct_lang2'] : false;
         isset($param['introduct_lang3']) ? $info['introduct_lang3'] = $param['introduct_lang3'] : false;
         isset($param['tagid']) ? $info['tagid'] = $param['tagid'] : false;
+        isset($param['price']) ? $info['price'] = $param['price'] : false;
         isset($param['pic']) ? $info['pic'] = $param['pic'] : false;
         isset($param['hotelid']) ? $info['hotelid'] = $param['hotelid'] : false;
         isset($param['sort']) ? $info['sort'] = $param['sort'] : false;

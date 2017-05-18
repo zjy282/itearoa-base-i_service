@@ -78,6 +78,10 @@ class GroupActivityModel extends \BaseModel {
             isset($param['groupid']) ? $info['groupid'] = $param['groupid'] : false;
             isset($param['tagid']) ? $info['tagid'] = $param['tagid'] : false;
             isset($param['status']) ? $info['status'] = $param['status'] : false;
+            isset($param['pic']) ? $info['pic'] = $param['pic'] : false;
+            isset($param['fromdate']) ? $info['fromdate'] = $param['fromdate'] : false;
+            isset($param['todate']) ? $info['todate'] = $param['todate'] : false;
+            isset($param['ordercount']) ? $info['ordercount'] = $param['ordercount'] : false;
             isset($param['title_lang1']) ? $info['title_lang1'] = $param['title_lang1'] : false;
             isset($param['title_lang2']) ? $info['title_lang2'] = $param['title_lang2'] : false;
             isset($param['title_lang3']) ? $info['title_lang3'] = $param['title_lang3'] : false;
@@ -105,6 +109,10 @@ class GroupActivityModel extends \BaseModel {
         isset($param['sort']) ? $info['sort'] = $param['sort'] : false;
         isset($param['tagid']) ? $info['tagid'] = $param['tagid'] : false;
         isset($param['status']) ? $info['status'] = $param['status'] : false;
+        isset($param['pic']) ? $info['pic'] = $param['pic'] : false;
+        isset($param['fromdate']) ? $info['fromdate'] = $param['fromdate'] : false;
+        isset($param['todate']) ? $info['todate'] = $param['todate'] : false;
+        isset($param['ordercount']) ? $info['ordercount'] = $param['ordercount'] : false;
         isset($param['title_lang1']) ? $info['title_lang1'] = $param['title_lang1'] : false;
         isset($param['title_lang2']) ? $info['title_lang2'] = $param['title_lang2'] : false;
         isset($param['title_lang3']) ? $info['title_lang3'] = $param['title_lang3'] : false;

@@ -38,6 +38,7 @@ class Convertor_Notic extends Convertor_Base {
 			$newTemp ['tagName'] = $tagListNew [$newTemp ['tagId']];
 			$newTemp ['createtime'] = $notic ['createtime'];
 			$newTemp ['updatetime'] = $notic ['updatetime'];
+			$newTemp ['pic'] = $notic ['pic'];
 			$data ['list'] [] = $newTemp;
 		}
 		$data ['total'] = $noticCount;
@@ -87,6 +88,7 @@ class Convertor_Notic extends Convertor_Base {
             $noticTemp ['video'] = $notic ['video'];
 			$noticTemp ['createTime'] = $notic ['createtime'];
 			$noticTemp ['updateTime'] = $notic ['updatetime'];
+			$noticTemp ['pic'] = $notic ['pic'];
 			$data ['list'] [] = $noticTemp;
 		}
 		$data ['total'] = $noticCount;
@@ -112,6 +114,7 @@ class Convertor_Notic extends Convertor_Base {
 		$data ['updateTime'] = $list ['updatetime'];
 		$data ['status'] = $list ['status'];
 		$data ['tagId'] = $list ['tagid'];
+		$data ['pic'] = $list ['pic'];
 		return $data;
 	}
 
@@ -132,6 +135,7 @@ class Convertor_Notic extends Convertor_Base {
 		$data ['article_lang2'] = $list ['article_lang2'];
 		$data ['article_lang3'] = $list ['article_lang3'];
 		$data ['tagId'] = $list ['tagid'];
+		$data ['pic'] = $list ['pic'];
 		$data ['status'] = $list ['status'];
 		$data ['createTime'] = $list ['createtime'];
 		$data ['updateTime'] = $list ['updatetime'];

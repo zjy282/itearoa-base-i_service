@@ -35,6 +35,7 @@ class Convertor_GroupNotice extends Convertor_Base {
             $newTemp ['pdf'] = $notic['pdf'] ? Enum_Img::getPathByKeyAndType($notic['pdf']) : '';
             $newTemp ['video'] = $notic['video'] ? Enum_Img::getPathByKeyAndType($notic['video']) : '';
 			$newTemp ['tagId'] = $notic ['tagid'];
+			$newTemp ['pic'] = $notic ['pic'];
 			$newTemp ['tagName'] = $tagListNew [$newTemp ['tagId']];
 			$newTemp ['createtime'] = $notic ['createtime'];
 			$newTemp ['updatetime'] = $notic ['updatetime'];
@@ -84,6 +85,7 @@ class Convertor_GroupNotice extends Convertor_Base {
 			$noticTemp ['tagName_lang3'] = $tagListNew [$noticTemp ['tagId']] ['titleLang3'];
             $noticTemp ['sort'] = $notic ['sort'];
             $noticTemp ['pdf'] = $notic ['pdf'];
+            $noticTemp ['pic'] = $notic ['pic'];
             $noticTemp ['video'] = $notic ['video'];
 			$noticTemp ['createTime'] = $notic ['createtime'];
 			$noticTemp ['updateTime'] = $notic ['updatetime'];
@@ -111,6 +113,7 @@ class Convertor_GroupNotice extends Convertor_Base {
 		$data ['createTime'] = $list ['createtime'];
 		$data ['updateTime'] = $list ['updatetime'];
 		$data ['status'] = $list ['status'];
+		$data ['pic'] = $list ['pic'];
 		$data ['tagId'] = $list ['tagid'];
 		return $data;
 	}
@@ -132,6 +135,7 @@ class Convertor_GroupNotice extends Convertor_Base {
 		$data ['article_lang2'] = $list ['article_lang2'];
 		$data ['article_lang3'] = $list ['article_lang3'];
 		$data ['tagId'] = $list ['tagid'];
+		$data ['pic'] = $list ['pic'];
 		$data ['status'] = $list ['status'];
 		$data ['createTime'] = $list ['createtime'];
 		$data ['updateTime'] = $list ['updatetime'];

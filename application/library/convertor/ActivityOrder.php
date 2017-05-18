@@ -46,6 +46,8 @@ class Convertor_ActivityOrder extends Convertor_Base {
 			$oneTemp ['userName'] = $userNameList [$oneTemp ['userid']];
 			$oneTemp ['name'] = $value ['name'];
 			$oneTemp ['phone'] = $value ['phone'];
+			$oneTemp ['remark'] = $value ['remark'];
+			$oneTemp ['orderCount'] = $value ['ordercount'];
 			$oneTemp ['createtime'] = $value ['creattime'];
 			$oneTemp ['hotelid'] = $value ['hotelid'];
 			$oneTemp ['hotelName'] = $hotelNameList [$oneTemp ['hotelid']];

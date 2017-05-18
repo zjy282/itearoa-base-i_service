@@ -21,6 +21,7 @@ class Convertor_RoomRes extends Convertor_Base {
 			$resTemp = array ();
 			$resTemp ['id'] = $resOne ['id'];
 			$resTemp ['icon'] = $resOne ['icon'];
+			$resTemp ['pic'] = $resOne ['pic'];
 			$resTemp ['name'] = $this->handlerMultiLang ( 'name', $resOne );
 			$resTemp ['pdf'] = Enum_Img::getPathByKeyAndType ( $resOne ['pdf'] );
 			$resTemp ['video'] = Enum_Img::getPathByKeyAndType ( $resOne ['video'] );
@@ -54,6 +55,7 @@ class Convertor_RoomRes extends Convertor_Base {
 			$oneTemp ['pdf'] = $value ['pdf'];
             $oneTemp ['sort'] = $value ['sort'];
             $oneTemp ['video'] = $value ['video'];
+            $oneTemp ['pic'] = $value ['pic'];
 			$oneTemp ['introduct_lang1'] = $value ['introduct_lang1'];
 			$oneTemp ['introduct_lang2'] = $value ['introduct_lang2'];
 			$oneTemp ['introduct_lang3'] = $value ['introduct_lang3'];

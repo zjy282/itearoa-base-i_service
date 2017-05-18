@@ -36,6 +36,10 @@ class Convertor_GroupActivity extends Convertor_Base {
             $activityTemp ['pdf'] = $activity['pdf'] ? Enum_Img::getPathByKeyAndType($activity['pdf']) : '';
             $activityTemp ['video'] = $activity['video'] ? Enum_Img::getPathByKeyAndType($activity['video']) : '';
             $activityTemp ['tagId'] = $activity ['tagid'];
+            $activityTemp ['pic'] = $activity ['pic'];
+            $activityTemp ['fromdate'] = $activity ['fromdate'];
+            $activityTemp ['todate'] = $activity ['todate'];
+            $activityTemp ['ordercount'] = $activity ['ordercount'];
             $activityTemp ['tagName'] = $tagListNew [$activityTemp ['tagId']];
             $activityTemp ['createtime'] = $activity ['createtime'];
             $activityTemp ['updatetime'] = $activity ['updatetime'];
@@ -86,6 +90,10 @@ class Convertor_GroupActivity extends Convertor_Base {
             $activityTemp ['article_lang1'] = $value ['article_lang1'];
             $activityTemp ['article_lang2'] = $value ['article_lang2'];
             $activityTemp ['article_lang3'] = $value ['article_lang3'];
+            $activityTemp ['pic'] = $value ['pic'];
+            $activityTemp ['fromdate'] = $value ['fromdate'];
+            $activityTemp ['todate'] = $value ['todate'];
+            $activityTemp ['ordercount'] = $value ['ordercount'];
             $activityTemp ['groupid'] = $value ['groupid'];
             $activityTemp ['groupName'] = $groupNameList [$activityTemp ['groupid']];
             $activityTemp ['status'] = $value ['status'];

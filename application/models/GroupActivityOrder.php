@@ -90,8 +90,11 @@ class GroupActivityOrderModel extends \BaseModel {
     public function addActivityOrder($param) {
         $info['name'] = $param['name'];
         $info['phone'] = $param['phone'];
+        $info['ordercount'] = $param['ordercount'];
+        $info['remark'] = $param['remark'];
         $info['activityid'] = intval($param['activityid']);
         $info['userid'] = intval($param['userid']);
+        $info['ordercount'] = intval($param['ordercount']);
         $info['groupid'] = intval($param['groupid']);
         $info['creattime'] = time();
         return $this->dao->addActivityOrder($info);

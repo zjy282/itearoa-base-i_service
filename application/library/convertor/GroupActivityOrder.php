@@ -44,6 +44,8 @@ class Convertor_GroupActivityOrder extends Convertor_Base {
 			$oneTemp ['phone'] = $value ['phone'];
 			$oneTemp ['createtime'] = $value ['creattime'];
 			$oneTemp ['groupid'] = $value ['groupid'];
+			$oneTemp ['remark'] = $value ['remark'];
+			$oneTemp ['orderCount'] = $value ['ordercount'];
 			$oneTemp ['groupName'] = $groupNameList [$oneTemp ['groupid']];
 			$oneTemp ['activityid'] = $value ['activityid'];
 			$oneTemp ['activityName'] = $activityNameList [$oneTemp ['activityid']];

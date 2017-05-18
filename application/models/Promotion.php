@@ -76,6 +76,7 @@ class PromotionModel extends \BaseModel {
 		if ($id) {
 			$info = array ();
 			isset ( $param ['hotelid'] ) ? $info ['hotelid'] = intval ( $param ['hotelid'] ) : false;
+			isset ( $param ['url'] ) ? $info ['url'] = $param ['url'] : false;
 			isset ( $param ['title_lang1'] ) ? $info ['title_lang1'] = $param ['title_lang1'] : false;
 			isset ( $param ['title_lang2'] ) ? $info ['title_lang2'] = $param ['title_lang2'] : false;
 			isset ( $param ['title_lang3'] ) ? $info ['title_lang3'] = $param ['title_lang3'] : false;

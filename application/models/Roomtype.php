@@ -70,6 +70,8 @@ class RoomtypeModel extends \BaseModel {
             isset($param['title_lang3']) ? $info['title_lang3'] = $param['title_lang3'] : false;
             isset($param['size']) ? $info['size'] = $param['size'] : false;
             isset($param['panoramic']) ? $info['panoramic'] = $param['panoramic'] : false;
+            isset($param['roomcount']) ? $info['roomcount'] = $param['roomcount'] : false;
+            isset($param['personcount']) ? $info['personcount'] = $param['personcount'] : false;
             isset($param['hotelid']) ? $info['hotelid'] = $param['hotelid'] : false;
             isset($param['bedtype_lang1']) ? $info['bedtype_lang1'] = $param['bedtype_lang1'] : false;
             isset($param['bedtype_lang2']) ? $info['bedtype_lang2'] = $param['bedtype_lang2'] : false;
@@ -94,6 +96,8 @@ class RoomtypeModel extends \BaseModel {
         isset($param['title_lang3']) ? $info['title_lang3'] = $param['title_lang3'] : false;
         isset($param['size']) ? $info['size'] = $param['size'] : false;
         isset($param['panoramic']) ? $info['panoramic'] = $param['panoramic'] : false;
+        isset($param['roomcount']) ? $info['roomcount'] = $param['roomcount'] : false;
+        isset($param['personcount']) ? $info['personcount'] = $param['personcount'] : false;
         isset($param['hotelid']) ? $info['hotelid'] = $param['hotelid'] : false;
         isset($param['bedtype_lang1']) ? $info['bedtype_lang1'] = $param['bedtype_lang1'] : false;
         isset($param['bedtype_lang2']) ? $info['bedtype_lang2'] = $param['bedtype_lang2'] : false;

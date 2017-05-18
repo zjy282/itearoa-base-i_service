@@ -38,6 +38,7 @@ class Convertor_Promotion extends Convertor_Base {
             $newTemp ['video'] = $news['video'] ? Enum_Img::getPathByKeyAndType($news['video']) : '';
 			$newTemp ['createtime'] = $news ['createtime'];
 			$newTemp ['updatetime'] = $news ['updatetime'];
+			$newTemp ['url'] = $news ['url'];
 			$data ['list'] [] = $newTemp;
 		}
 		$data ['total'] = $promotionCount;
@@ -87,6 +88,7 @@ class Convertor_Promotion extends Convertor_Base {
             $newTemp ['video'] = $news ['video'];
 			$newTemp ['createTime'] = $news ['createtime'];
 			$newTemp ['updateTime'] = $news ['updatetime'];
+			$newTemp ['url'] = $news ['url'];
 			$data ['list'] [] = $newTemp;
 		}
 		$data ['total'] = $promotionCount;
@@ -110,6 +112,7 @@ class Convertor_Promotion extends Convertor_Base {
 		$data ['article'] = Enum_Img::getPathByKeyAndType ( $this->handlerMultiLang ( 'article', $list ) );
 		$data ['createTime'] = $list ['createtime'];
 		$data ['updateTime'] = $list ['updatetime'];
+		$data ['url'] = $list ['url'];
 		$data ['tagId'] = $list ['tagid'];
 		return $data;
 	}
@@ -133,6 +136,7 @@ class Convertor_Promotion extends Convertor_Base {
 		$data ['tagId'] = $list ['tagid'];
 		$data ['createTime'] = $list ['createtime'];
 		$data ['updateTime'] = $list ['updatetime'];
+		$data ['url'] = $list ['url'];
 		return $data;
 	}
 }

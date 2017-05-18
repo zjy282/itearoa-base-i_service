@@ -72,10 +72,10 @@ class HotelListModel extends \BaseModel {
      */
     public function updateHotelListById($param, $id) {
         $result = false;
-        // 自行添加要更新的字段,以下是age字段是样例
         if ($id) {
             !is_null($param['groupid']) ? $info['groupid'] = $param['groupid'] : false;
             !is_null($param['propertyinterfid']) ? $info['propertyinterfid'] = $param['propertyinterfid'] : false;
+            !is_null($param['localpic']) ? $info['localpic'] = $param['localpic'] : false;
             !is_null($param['lng']) ? $info['lng'] = $param['lng'] : false;
             !is_null($param['lat']) ? $info['lat'] = $param['lat'] : false;
             !is_null($param['cityid']) ? $info['cityid'] = $param['cityid'] : false;
@@ -114,6 +114,7 @@ class HotelListModel extends \BaseModel {
         !is_null($param['groupid']) ? $info['groupid'] = $param['groupid'] : false;
         !is_null($param['propertyinterfid']) ? $info['propertyinterfid'] = $param['propertyinterfid'] : false;
         !is_null($param['lng']) ? $info['lng'] = $param['lng'] : false;
+        !is_null($param['localpic']) ? $info['localpic'] = $param['localpic'] : false;
         !is_null($param['lat']) ? $info['lat'] = $param['lat'] : false;
         !is_null($param['cityid']) ? $info['cityid'] = $param['cityid'] : false;
         !is_null($param['tel']) ? $info['tel'] = $param['tel'] : false;
