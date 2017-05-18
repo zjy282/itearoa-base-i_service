@@ -63,6 +63,10 @@ class Dao_Room extends Dao_Base {
             $whereSql[] = 'hotelid = ?';
             $whereCase[] = $param['hotelid'];
         }
+        if (isset($param['room'])) {
+            $whereSql[] = 'room = ?';
+            $whereCase[] = $param['room'];
+        }
         if (isset($param['floor'])) {
             $whereSql[] = 'floor = ?';
             $whereCase[] = $param['floor'];
