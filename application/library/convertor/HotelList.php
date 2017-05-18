@@ -45,6 +45,7 @@ class Convertor_HotelList extends Convertor_Base {
 			$oneTemp ['website'] = $value ['website'];
 			$oneTemp ['logo'] = $value ['logo'];
 			$oneTemp ['index_background'] = $value ['index_background'];
+			$oneTemp ['localpic'] = $value ['localpic'];
 			$oneTemp ['voice_lang1'] = $value ['voice_lang1'];
 			$oneTemp ['voice_lang2'] = $value ['voice_lang2'];
 			$oneTemp ['voice_lang3'] = $value ['voice_lang3'];
@@ -125,6 +126,7 @@ class Convertor_HotelList extends Convertor_Base {
 		$data ['website'] = $hotelInfo ['website'];
 		$data ['logo'] = Enum_Img::getPathByKeyAndType ( $hotelInfo ['logo'] );
 		$data ['indexBackground'] = Enum_Img::getPathByKeyAndType ( $hotelInfo ['index_background'] );
+		$data ['localPic'] = Enum_Img::getPathByKeyAndType ( $hotelInfo ['localpic'] );
 		$data ['voice'] = Enum_Img::getPathByKeyAndType ( $this->handlerMultiLang ( 'voice', $hotelInfo ) );
 		$data ['introduction'] = $this->handlerMultiLang ( 'introduction', $hotelInfo );
 		$data ['address'] = $this->handlerMultiLang ( 'address', $hotelInfo );

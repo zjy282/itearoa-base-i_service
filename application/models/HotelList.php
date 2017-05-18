@@ -86,6 +86,7 @@ class HotelListModel extends \BaseModel {
             !is_null($param['website']) ? $info['website'] = $param['website'] : false;
             !is_null($param['logo']) ? $info['logo'] = $param['logo'] : false;
             !is_null($param['index_background']) ? $info['index_background'] = $param['index_background'] : false;
+            !is_null($param['localpic']) ? $info['localpic'] = $param['localpic'] : false;
             !is_null($param['voice_lang1']) ? $info['voice_lang1'] = $param['voice_lang1'] : false;
             !is_null($param['voice_lang2']) ? $info['voice_lang2'] = $param['voice_lang2'] : false;
             !is_null($param['voice_lang3']) ? $info['voice_lang3'] = $param['voice_lang3'] : false;
@@ -124,6 +125,7 @@ class HotelListModel extends \BaseModel {
         !is_null($param['website']) ? $info['website'] = $param['website'] : false;
         !is_null($param['logo']) ? $info['logo'] = $param['logo'] : false;
         !is_null($param['index_background']) ? $info['index_background'] = $param['index_background'] : false;
+        !is_null($param['localpic']) ? $info['localpic'] = $param['localpic'] : false;
         !is_null($param['voice_lang1']) ? $info['voice_lang1'] = $param['voice_lang1'] : false;
         !is_null($param['voice_lang2']) ? $info['voice_lang2'] = $param['voice_lang2'] : false;
         !is_null($param['voice_lang3']) ? $info['voice_lang3'] = $param['voice_lang3'] : false;

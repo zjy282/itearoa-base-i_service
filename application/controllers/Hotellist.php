@@ -109,6 +109,7 @@ class HotelListController extends \BaseController {
 			$param ['website'] = $this->getParamList ( 'website' );
 			$param ['logo'] = $this->getParamList ( 'logo' );
 			$param ['index_background'] = $this->getParamList ( 'index_background' );
+			$param ['localpic'] = $this->getParamList ( 'localpic' );
 			$param ['voice_lang1'] = $this->getParamList ( 'voice_lang1' );
 			$param ['voice_lang2'] = $this->getParamList ( 'voice_lang2' );
 			$param ['voice_lang3'] = $this->getParamList ( 'voice_lang3' );
@@ -151,6 +152,7 @@ class HotelListController extends \BaseController {
 		$param ['website'] = $this->getParamList ( 'website' );
 		$param ['logo'] = $this->getParamList ( 'logo' );
 		$param ['index_background'] = $this->getParamList ( 'index_background' );
+		$param ['localpic'] = $this->getParamList ( 'localpic' );
 		$param ['voice_lang1'] = $this->getParamList ( 'voice_lang1' );
 		$param ['voice_lang2'] = $this->getParamList ( 'voice_lang2' );
 		$param ['voice_lang3'] = $this->getParamList ( 'voice_lang3' );
