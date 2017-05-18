@@ -83,6 +83,8 @@ class RoomtypeController extends \BaseController {
 			$param ['detail_lang2'] = $this->getParamList ( 'detail_lang2' );
 			$param ['detail_lang3'] = $this->getParamList ( 'detail_lang3' );
 			$param ['panoramic'] = $this->getParamList ( 'panoramic' );
+            $param ['roomcount'] = $this->getParamList ( 'roomcount' );
+            $param ['personcount'] = $this->getParamList ( 'personcount' );
 			$param ['bedtype_lang1'] = $this->getParamList ( 'bedtype_lang1' );
 			$param ['bedtype_lang2'] = $this->getParamList ( 'bedtype_lang2' );
 			$param ['bedtype_lang3'] = $this->getParamList ( 'bedtype_lang3' );
