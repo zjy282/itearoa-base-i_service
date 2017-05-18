@@ -95,7 +95,9 @@ class ActivityOrderController extends \BaseController {
 		$param = array ();
 		$param ['name'] = trim ( $this->getParamList ( 'name' ) );
 		$param ['phone'] = trim ( $this->getParamList ( 'phone' ) );
+		$param ['remark'] = trim ( $this->getParamList ( 'remark' ) );
 		$param ['hotelid'] = intval ( $this->getParamList ( 'hotelid' ) );
+		$param ['ordercount'] = intval ( $this->getParamList ( 'ordercount' ) );
 		$param ['activityid'] = intval ( $this->getParamList ( 'activityid' ) );
 		if (empty ( $param ['name'] ) || empty ( $param ['phone'] ) || empty ( $param ['hotelid'] ) || empty ( $param ['activityid'] )) {
 			$this->throwException ( 2, '入参错误' );

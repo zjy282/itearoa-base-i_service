@@ -142,6 +142,7 @@ class HotelListController extends \BaseController {
 		$param ['propertyinterfid'] = $this->getParamList ( 'propertyinterfid' );
 		$param ['lng'] = $this->getParamList ( 'lng' );
 		$param ['lat'] = $this->getParamList ( 'lat' );
+		$param ['localpic'] = $this->getParamList ( 'localpic' );
 		$param ['cityid'] = intval ( $this->getParamList ( 'cityid' ) );
 		$param ['tel'] = $this->getParamList ( 'tel' );
 		$param ['name_lang1'] = $this->getParamList ( 'name_lang1' );

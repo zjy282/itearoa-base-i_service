@@ -111,6 +111,8 @@ class RoomtypeController extends \BaseController {
 		$param ['size'] = floatval ( $this->getParamList ( 'size' ) );
 		$param ['panoramic'] = trim ( $this->getParamList ( 'panoramic' ) );
 		$param ['hotelid'] = intval ( $this->getParamList ( 'hotelid' ) );
+		$param ['roomcount'] = intval ( $this->getParamList ( 'roomcount' ) );
+		$param ['personcount'] = intval ( $this->getParamList ( 'personcount' ) );
 		$param ['bedtype_lang1'] = trim ( $this->getParamList ( 'bedtype_lang1' ) );
 		$param ['bedtype_lang2'] = trim ( $this->getParamList ( 'bedtype_lang2' ) );
 		$param ['bedtype_lang3'] = trim ( $this->getParamList ( 'bedtype_lang3' ) );

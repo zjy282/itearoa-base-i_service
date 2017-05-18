@@ -94,7 +94,9 @@ class GroupActivityOrderController extends \BaseController {
 		$param = array ();
 		$param ['name'] = trim ( $this->getParamList ( 'name' ) );
 		$param ['phone'] = trim ( $this->getParamList ( 'phone' ) );
+		$param ['remark'] = trim ( $this->getParamList ( 'remark' ) );
 		$param ['activityid'] = intval ( $this->getParamList ( 'activityid' ) );
+		$param ['ordercount'] = intval ( $this->getParamList ( 'ordercount' ) );
 		$param ['groupid'] = intval ( $this->getParamList ( 'groupid' ) );
 		if (empty ( $param ['name'] ) || empty ( $param ['phone'] ) || empty ( $param ['groupid'] ) || empty ( $param ['activityid'] )) {
 			$this->throwException ( 2, '入参错误' );

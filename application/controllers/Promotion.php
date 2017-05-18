@@ -72,6 +72,7 @@ class PromotionController extends \BaseController {
 		if ($id) {
 			$param = array ();
 			$param ['hotelid'] = $this->getParamList ( 'hotelid' );
+			$param ['url'] = $this->getParamList ( 'url' );
 			$param ['title_lang1'] = $this->getParamList ( 'title_lang1' );
 			$param ['title_lang2'] = $this->getParamList ( 'title_lang2' );
 			$param ['title_lang3'] = $this->getParamList ( 'title_lang3' );
@@ -102,6 +103,7 @@ class PromotionController extends \BaseController {
 	public function addPromotionAction() {
 		$param = array ();
 		$param ['hotelid'] = $this->getParamList ( 'hotelid' );
+		$param ['url'] = $this->getParamList ( 'url' );
 		$param ['title_lang1'] = $this->getParamList ( 'title_lang1' );
 		$param ['title_lang2'] = $this->getParamList ( 'title_lang2' );
 		$param ['title_lang3'] = $this->getParamList ( 'title_lang3' );

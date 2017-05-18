@@ -100,6 +100,7 @@ class ShoppingController extends \BaseController {
 			$param ['introduct_lang2'] = $this->getParamList ( 'introduct_lang2' );
 			$param ['introduct_lang3'] = $this->getParamList ( 'introduct_lang3' );
 			$param ['tagid'] = $this->getParamList ( 'tagid' );
+            $param ['price'] = $this->getParamList ( 'price' );
 			$param ['pic'] = $this->getParamList ( 'pic' );
 			$param ['detail_lang1'] = $this->getParamList ( 'detail_lang1' );
 			$param ['detail_lang2'] = $this->getParamList ( 'detail_lang2' );
@@ -132,6 +133,7 @@ class ShoppingController extends \BaseController {
 		$param ['introduct_lang2'] = trim ( $this->getParamList ( 'introduct_lang2' ) );
 		$param ['introduct_lang3'] = trim ( $this->getParamList ( 'introduct_lang3' ) );
 		$param ['tagid'] = intval ( $this->getParamList ( 'tagid' ) );
+		$param ['price'] = intval ( $this->getParamList ( 'price' ) );
 		$param ['pic'] = trim ( $this->getParamList ( 'pic' ) );
 		$param ['hotelid'] = intval ( $this->getParamList ( 'hotelid' ) );
         $param ['sort'] = intval($this->getParamList('sort'));

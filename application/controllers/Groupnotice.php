@@ -84,6 +84,7 @@ class GroupNoticeController extends \BaseController {
 			$param ['tagid'] = $this->getParamList ( 'tagid' );
             $param ['sort'] = $this->getParamList('sort');
             $param ['pdf'] = $this->getParamList('pdf');
+            $param ['pic'] = $this->getParamList('pic');
             $param ['video'] = $this->getParamList('video');
 			$param ['updatetime'] = time ();
 			$data = $this->model->updateNoticById ( $param, $id );
@@ -111,6 +112,7 @@ class GroupNoticeController extends \BaseController {
 		$param ['tagid'] = $this->getParamList ( 'tagid' );
         $param ['sort'] = intval($this->getParamList('sort'));
         $param ['pdf'] = trim($this->getParamList('pdf'));
+        $param ['pic'] = trim($this->getParamList('pic'));
         $param ['video'] = trim($this->getParamList('video'));
 		$param ['updatetime'] = time ();
 		$param ['createtime'] = time ();

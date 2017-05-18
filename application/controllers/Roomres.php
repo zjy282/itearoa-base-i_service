@@ -80,6 +80,7 @@ class RoomResController extends \BaseController {
 			$param ['hotelid'] = $this->getParamList ( 'hotelid' );
 			$param ['status'] = $this->getParamList ( 'status' );
 			$param ['icon'] = $this->getParamList ( 'icon' );
+		    $param ['pic'] = $this->getParamList ( 'pic' );
 			$param ['pdf'] = $this->getParamList ( 'pdf' );
 			$param ['name_lang1'] = $this->getParamList ( 'name_lang1' );
 			$param ['name_lang2'] = $this->getParamList ( 'name_lang2' );
@@ -112,6 +113,7 @@ class RoomResController extends \BaseController {
 		$param ['hotelid'] = intval ( $this->getParamList ( 'hotelid' ) );
 		$param ['status'] = intval ( $this->getParamList ( 'status' ) );
 		$param ['icon'] = trim ( $this->getParamList ( 'icon' ) );
+		$param ['pic'] = trim ( $this->getParamList ( 'pic' ) );
 		$param ['pdf'] = trim ( $this->getParamList ( 'pdf' ) );
 		$param ['name_lang1'] = trim ( $this->getParamList ( 'name_lang1' ) );
 		$param ['name_lang2'] = trim ( $this->getParamList ( 'name_lang2' ) );
