@@ -34,6 +34,7 @@ class RoomController extends \BaseController {
 		$param ['limit'] = intval ( $this->getParamList ( 'limit', 5 ) );
 		$param ['id'] = intval ( $this->getParamList ( 'id' ) );
 		$param ['hotelid'] = intval ( $this->getParamList ( 'hotelid' ) );
+		$param ['room'] = $this->getParamList ( 'room' );
 		$param ['floor'] = $this->getParamList ( 'floor' );
 		$param ['size'] = $this->getParamList ( 'size' );
 		$param ['typeid'] = $this->getParamList ( 'typeid' );
