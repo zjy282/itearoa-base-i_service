@@ -42,10 +42,11 @@ class Convertor_Poi extends Convertor_Base {
 	 * @param array $poiList 酒店本地攻略列表
 	 * @param int $poiCount 酒店本地攻略总数
 	 * @param array $param 扩展参数
-	 * @param array $typeList 本地攻略标签结果
+	 * @param array $typeList 本地攻略类型结果
+	 * @param array $tagList 本地攻略标签结果
 	 * @return array
 	 */
-	public function getAdminPoiListConvertor($poiList, $poiCount, $param, $typeList) {
+	public function getAdminPoiListConvertor($poiList, $poiCount, $param, $typeList,$tagList) {
 		$data = array ('list' => array () );
 		
 		$typeListNew = array ();
@@ -53,6 +54,13 @@ class Convertor_Poi extends Convertor_Base {
 			$typeListNew [$type ['id']] ['titleLang1'] = $type ['title_lang1'];
 			$typeListNew [$type ['id']] ['titleLang2'] = $type ['title_lang2'];
 			$typeListNew [$type ['id']] ['titleLang3'] = $type ['title_lang3'];
+		}
+
+		$tagListNew = array ();
+		foreach ( $tagList as $tag ) {
+			$tagListNew [$taa ['id']] ['titleLang1'] = $tag ['title_lang1'];
+			$tagListNew [$tag ['id']] ['titleLang2'] = $tag ['title_lang2'];
+			$tagListNew [$tag ['id']] ['titleLang3'] = $tag ['title_lang3'];
 		}
 		
 		foreach ( $poiList as $poi ) {
@@ -68,9 +76,12 @@ class Convertor_Poi extends Convertor_Base {
 			$poiTemp ['status'] = $poi ['status'];
 			$poiTemp ['hotelId'] = $poi ['hotelid'];
 			$poiTemp ['typeId'] = $poi ['typeid'];
-			$poiTemp ['tagName_lang1'] = $typeListNew [$poiTemp ['typeId']] ['titleLang1'];
-			$poiTemp ['tagName_lang2'] = $typeListNew [$poiTemp ['typeId']] ['titleLang2'];
-			$poiTemp ['tagName_lang3'] = $typeListNew [$poiTemp ['typeId']] ['titleLang3'];
+			$poiTemp ['tagName_lang1'] = $tagListNew [$poiTemp ['tagId']] ['titleLang1'];
+			$poiTemp ['tagName_lang2'] = $tagListNew [$poiTemp ['tagId']] ['titleLang2'];
+			$poiTemp ['tagName_lang3'] = $tagListNew [$poiTemp ['tagId']] ['titleLang3'];
+			$poiTemp ['typeName_lang1'] = $typeListNew [$poiTemp ['typeId']] ['titleLang1'];
+			$poiTemp ['typeName_lang2'] = $typeListNew [$poiTemp ['typeId']] ['titleLang2'];
+			$poiTemp ['typeName_lang3'] = $typeListNew [$poiTemp ['typeId']] ['titleLang3'];
 			$poiTemp ['introduct_lang1'] = $poi ['introduct_lang1'];
 			$poiTemp ['introduct_lang2'] = $poi ['introduct_lang2'];
 			$poiTemp ['introduct_lang3'] = $poi ['introduct_lang3'];

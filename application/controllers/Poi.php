@@ -25,6 +25,7 @@ class PoiController extends \BaseController {
     public function getPoiListAction() {
         $param = array();
         $param ['typeid'] = intval($this->getParamList('typeid'));
+        $param ['tagid'] = intval($this->getParamList('tagid'));
         $param ['hotelid'] = intval($this->getParamList('hotelid'));
         $param ['id'] = intval($this->getParamList('id'));
         $param ['name'] = $this->getParamList('name');
@@ -39,9 +40,11 @@ class PoiController extends \BaseController {
             $data = $this->convertor->getPoiListConvertor($poiList, $poiCount, $param);
         } else {
             $poiTypeModel = new PoiTypeModel ();
+            $poiTagModel = new PoiTagModel ();
             $typeParam ['hotelid'] = $param ['hotelid'];
             $typeList = $poiTypeModel->getPoiTypeList($typeParam);
-            $data = $this->convertor->getAdminPoiListConvertor($poiList, $poiCount, $param, $typeList);
+            $tagList = $poiTagModel->getPoiTagList($typeParam);
+            $data = $this->convertor->getAdminPoiListConvertor($poiList, $poiCount, $param, $typeList,$tagList);
         }
         $this->echoSuccessData($data);
     }
@@ -80,6 +83,7 @@ class PoiController extends \BaseController {
             $param = array();
             $param ['hotelid'] = $this->getParamList('hotelid');
             $param ['typeid'] = $this->getParamList('typeid');
+            $param ['tagid'] = $this->getParamList('tagid');
             $param ['name_lang1'] = $this->getParamList('name_lang1');
             $param ['name_lang2'] = $this->getParamList('name_lang2');
             $param ['name_lang3'] = $this->getParamList('name_lang3');
@@ -119,6 +123,7 @@ class PoiController extends \BaseController {
         $param = array();
         $param ['hotelid'] = $this->getParamList('hotelid');
         $param ['typeid'] = $this->getParamList('typeid');
+        $param ['tagid'] = $this->getParamList('tagid');
         $param ['name_lang1'] = $this->getParamList('name_lang1');
         $param ['name_lang2'] = $this->getParamList('name_lang2');
         $param ['name_lang3'] = $this->getParamList('name_lang3');
