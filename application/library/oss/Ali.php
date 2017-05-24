@@ -1263,7 +1263,7 @@ class Oss_Ali{
         $partsize = 1024 * 1024 ; //默认为 1M
         
         
-        $extension = explode ( '.', $file );
+        $extension = explode ( '.', $object );
         $extension = array_pop ( $extension );
         $content_type = Oss_MimeTypes::get_mimetype(strtolower($extension));
                 

@@ -43,7 +43,7 @@ class Convertor_GroupActivity extends Convertor_Base {
             $activityTemp ['tagName'] = $tagListNew [$activityTemp ['tagId']];
             $activityTemp ['createtime'] = $activity ['createtime'];
             $activityTemp ['updatetime'] = $activity ['updatetime'];
-            $activityTemp ['pic'] = Enum_Img::getPathByKeyAndType($activity ['pic']);
+            $activityTemp ['pic'] = Enum_Img::getPathByKeyAndType($activity ['pic'], Enum_Img::PIC_TYPE_KEY_WIDTH750);
             $activityTemp ['pdf'] = Enum_Img::getPathByKeyAndType($activity ['pdf']);
             $activityTemp ['video'] = Enum_Img::getPathByKeyAndType($activity ['video']);
             $activityTemp ['fromdate'] = $activity ['fromdate'];
