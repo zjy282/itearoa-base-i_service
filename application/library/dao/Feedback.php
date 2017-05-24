@@ -62,6 +62,10 @@ class Dao_Feedback extends Dao_Base {
             $whereSql[] = 'hotelid = ?';
             $whereCase[] = $param['hotelid'];
         }
+        if (isset($param['listid'])) {
+            $whereSql[] = 'listid = ?';
+            $whereCase[] = $param['listid'];
+        }
         if (isset($param['question'])) {
             $whereSql[] = 'question = ?';
             $whereCase[] = $param['question'];

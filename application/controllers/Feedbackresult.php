@@ -90,6 +90,7 @@ class FeedbackResultController extends \BaseController {
 		$param = array ();
 		$param ['answer'] = json_decode ( $this->getParamList ( 'answer' ), true );
 		$param ['hotelid'] = intval ( $this->getParamList ( 'hotelid' ) );
+		$param ['listid'] = intval ( $this->getParamList ( 'listid' ) );
 		$param ['userid'] = Auth_Login::getToken ( $this->getParamList ( 'token' ) );
 		if (empty ( $param ['answer'] )) {
 			$this->throwException ( 2, '回答不能为空或者格式错误' );
@@ -97,8 +98,11 @@ class FeedbackResultController extends \BaseController {
 		if (empty ( $param ['hotelid'] )) {
 			$this->throwException ( 2, '物业ID不能为空' );
 		}
+		if (empty ( $param ['listid'] )) {
+			$this->throwException ( 3, '表单ID不能为空' );
+		}
 		if (empty ( $param ['userid'] )) {
-			$this->throwException ( 3, 'token验证失败' );
+			$this->throwException ( 4, 'token验证失败' );
 		}
 		$param ['answer'] = json_encode ( $param ['answer'] );
 		$data = $this->model->addFeedbackResult ( $param );

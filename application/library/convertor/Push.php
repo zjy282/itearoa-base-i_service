@@ -10,7 +10,7 @@ class Convertor_Push extends Convertor_Base {
 
 	/**
 	 * 推送结果
-	 * 
+	 *
 	 * @param array $pushResult
 	 *        	推送结果
 	 * @return multitype:unknown
@@ -21,7 +21,7 @@ class Convertor_Push extends Convertor_Base {
 
 	/**
 	 * 推送结果列表
-	 * 
+	 *
 	 * @param array $list
 	 *        	推送结果列表
 	 * @param int $count

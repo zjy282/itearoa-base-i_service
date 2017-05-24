@@ -21,11 +21,8 @@ class Convertor_FeedbackList extends Convertor_Base {
 		$data ['list'] = array ();
 		foreach ( $list as $question ) {
 			$questionTemp = array ();
-			$questionTemp ['hotelId'] = $question ['hotelid'];
-			$questionTemp ['name'] = $question ['name'];
-			$questionTemp ['sort'] = $question ['sort'];
-			$questionTemp ['status'] = $question ['status'];
 			$questionTemp ['id'] = $question ['id'];
+			$questionTemp ['name'] = $question ['name'];
 			$data ['list'] [] = $questionTemp;
 		}
 		return $data;

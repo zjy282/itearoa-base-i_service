@@ -24,6 +24,7 @@ class FeedbackModel extends \BaseModel {
         $param['hotelid'] ? $paramList['hotelid'] = $param['hotelid'] : false;
         $param['question'] ? $paramList['question'] = $param['question'] : false;
         $param['type'] ? $paramList['type'] = $param['type'] : false;
+        $param['listid'] ? $paramList['listid'] = $param['listid'] : false;
         isset($param['status']) ? $paramList['status'] = $param['status'] : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
@@ -43,6 +44,7 @@ class FeedbackModel extends \BaseModel {
         $param['hotelid'] ? $paramList['hotelid'] = $param['hotelid'] : false;
         $param['question'] ? $paramList['question'] = $param['question'] : false;
         $param['type'] ? $paramList['type'] = $param['type'] : false;
+        $param['listid'] ? $paramList['listid'] = $param['listid'] : false;
         isset($param['status']) ? $paramList['status'] = $param['status'] : false;
         return $this->dao->getFeedbackCount($paramList);
     }
@@ -74,6 +76,7 @@ class FeedbackModel extends \BaseModel {
             isset($param['type']) ? $info['type'] = $param['type'] : false;
             isset($param['sort']) ? $info['sort'] = $param['sort'] : false;
             isset($param['question']) ? $info['question'] = $param['question'] : false;
+            isset($param['listid']) ? $info['listid'] = $param['listid'] : false;
             isset($param['option']) ? $info['option'] = $param['option'] : false;
             $result = $this->dao->updateFeedbackById($info, $id);
         }
@@ -90,6 +93,7 @@ class FeedbackModel extends \BaseModel {
         isset($param['status']) ? $info['status'] = $param['status'] : false;
         isset($param['type']) ? $info['type'] = $param['type'] : false;
         isset($param['sort']) ? $info['sort'] = $param['sort'] : false;
+        isset($param['listid']) ? $info['listid'] = $param['listid'] : false;
         isset($param['question']) ? $info['question'] = $param['question'] : false;
         return $this->dao->addFeedback($info);
     }

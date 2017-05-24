@@ -86,7 +86,7 @@ class FeedbackListModel extends \BaseModel {
         isset($param['status']) ? $info['status'] = $param['status'] : false;
         isset($param['name']) ? $info['name'] = $param['name'] : false;
         isset($param['sort']) ? $info['sort'] = $param['sort'] : false;
-        isset($param['createtime']) ? $info['createtime'] = $param['createtime'] : $info['createtime'] = time(); 
+        isset($param['createtime']) ? $info['createtime'] = $param['createtime'] : $info['createtime'] = time();
         return $this->dao->addFeedback($info);
     }
 }

@@ -86,6 +86,7 @@ class FeedbackResultModel extends \BaseModel {
         $info['answer'] = trim($param['answer']);
         $info['hotelid'] = intval($param['hotelid']);
         $info['userid'] = intval($param['userid']);
+        $info['listid'] = intval($param['listid']);
         $info['createtime'] = time();
         return $this->dao->addFeedbackResult($info);
     }
