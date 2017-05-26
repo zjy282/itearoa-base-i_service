@@ -155,7 +155,7 @@ class Convertor_HotelList extends Convertor_Base {
         $data ['id'] = $hotelInfo ['id'];
         $data ['groupid'] = $hotelInfo ['groupid'];
         $data ['propertyinterfid'] = $hotelInfo ['propertyinterfid'];
-        $data ['localpic'] = $hotelInfo ['localpic'];
+        $data ['localpic'] = Enum_Img::getPathByKeyAndType($hotelInfo ['localpic'], Enum_Img::PIC_TYPE_KEY_WIDTH750);
         $data ['lng'] = $hotelInfo ['lng'];
         $data ['lat'] = $hotelInfo ['lat'];
         $data ['tel'] = $hotelInfo ['tel'];

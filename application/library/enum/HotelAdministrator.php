@@ -20,6 +20,7 @@ class Enum_HotelAdministrator {
         11 => '物业通知',
         12 => '调查反馈',
         13 => 'APP管理',
+        14 => '评论管理',
     );
 
     public static function getPermission() {
