@@ -40,7 +40,7 @@ class LifeController extends \BaseController {
         }
         $lifeList = $this->model->getLifeList($param);
         $lifeCount = $this->model->getLifeCount($param);
-        if ($this->package != Enum_System::ADMIN_PACKAGE) {
+        if (Enum_System::notAdminPackage($this->package)) {
             $data = $this->convertor->getLifeListConvertor($lifeList, $lifeCount, $param);
         } else {
             $lifeTypeModel = new LifeTypeModel ();
@@ -61,7 +61,7 @@ class LifeController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $data = $this->model->getLifeDetail($id);
-            $this->package != Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getLifeDetailConvertor($data) : $data = $this->convertor->getAdminLifeDetailConvertor($data);
+            Enum_System::notAdminPackage($this->package) ? $data = $this->convertor->getLifeDetailConvertor($data) : $data = $this->convertor->getAdminLifeDetailConvertor($data);
         } else {
             $this->throwException(1, '查询条件错误，id不能为空');
         }

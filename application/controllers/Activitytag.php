@@ -41,7 +41,7 @@ class ActivityTagController extends \BaseController {
 
         $data = $this->model->getActivityTagList($param);
         $count = $this->model->getActivityTagCount($param);
-        if ($this->package != Enum_System::ADMIN_PACKAGE) {
+        if (Enum_System::notAdminPackage($this->package)) {
             $data = $this->convertor->getActivityTagListConvertor($data, $count, $param);
         } else {
             $data = $this->convertor->getAdminActivityTagListConvertor($data, $count, $param);

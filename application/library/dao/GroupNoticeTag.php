@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 集团通知标签管理数据层
  */
@@ -13,20 +14,20 @@ class Dao_GroupNoticeTag extends Dao_Base {
      * @param $param
      * @return array
      */
-    private function getListWhereSql($param){
-    	if (isset($param['page']) && isset($param['limit'])){
-    		$whereList['pageList']['limit'] = $param['limit'] ? intval($param['limit']) : 0;
-    		$whereList['pageList']['page'] = $this->getStart($param['page'], $whereList['pageList']['limit']);
-    	}
-    	$whereSql = array();
-    	$whereCase = array();
-    	if (isset($param['groupid'])) {
-    		$whereSql[] = 'groupid = ?';
-    		$whereCase[] = $param['groupid'];
-    	}
-    	$whereList['sql'] = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
-    	$whereList['case'] = $whereCase;
-    	return $whereList;
+    private function getListWhereSql($param) {
+        if (isset($param['page']) && isset($param['limit'])) {
+            $whereList['pageList']['limit'] = $param['limit'] ? intval($param['limit']) : 0;
+            $whereList['pageList']['page'] = $this->getStart($param['page'], $whereList['pageList']['limit']);
+        }
+        $whereSql = array();
+        $whereCase = array();
+        if (isset($param['groupid'])) {
+            $whereSql[] = 'groupid = ?';
+            $whereCase[] = $param['groupid'];
+        }
+        $whereList['sql'] = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
+        $whereList['case'] = $whereCase;
+        return $whereList;
     }
 
     /**
@@ -54,12 +55,12 @@ class Dao_GroupNoticeTag extends Dao_Base {
      * @return array
      */
     public function getNoticTagCount(array $param): int {
-    	$whereList = $this->getListWhereSql($param);
-    	$sql = "select count(1) as count from group_notice_tag {$whereList['sql']}";
-    	$result = $this->db->fetchAssoc($sql, $whereList['case']);
-    	return intval($result['count']);
+        $whereList = $this->getListWhereSql($param);
+        $sql = "select count(1) as count from group_notice_tag {$whereList['sql']}";
+        $result = $this->db->fetchAssoc($sql, $whereList['case']);
+        return intval($result['count']);
     }
-    
+
     /**
      * 根据id查询group_notice_tag详情
      *
@@ -69,14 +70,14 @@ class Dao_GroupNoticeTag extends Dao_Base {
      */
     public function getNoticTagDetail(int $id): array {
         $result = array();
-        
+
         if ($id) {
             $sql = "select * from group_notice_tag where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
         }
-        
+
         return $result;
     }
 
@@ -91,11 +92,11 @@ class Dao_GroupNoticeTag extends Dao_Base {
      */
     public function updateNoticTagById(array $info, int $id) {
         $result = false;
-        
+
         if ($id) {
-            $result = $this->db->update('group_notice_tag', $info, array ( 'id' => $id) );
+            $result = $this->db->update('group_notice_tag', $info, array('id' => $id));
         }
-        
+
         return $result;
     }
 

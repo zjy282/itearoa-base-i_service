@@ -62,10 +62,6 @@ class Dao_GroupActivityTag extends Dao_Base {
             $whereSql[] = 'groupid = ?';
             $whereCase[] = $param['groupid'];
         }
-        if (isset($param['groupid'])) {
-            $whereSql[] = 'groupid = ?';
-            $whereCase[] = $param['groupid'];
-        }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
         return array(
             'sql' => $whereSql,

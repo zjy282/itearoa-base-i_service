@@ -31,8 +31,8 @@ class Convertor_GroupActivity extends Convertor_Base {
         foreach ($activityList as $activity) {
             $activityTemp = array();
             $activityTemp ['id'] = $activity ['id'];
-            $activityTemp ['title'] = $this->handlerMultiLang('title', $activity);
-            $activityTemp ['article'] = Enum_Img::getPathByKeyAndType($this->handlerMultiLang('article', $activity));
+            $activityTemp ['title'] = $activity ['title'];
+            $activityTemp ['article'] = Enum_Img::getPathByKeyAndType($activity ['article']);
             $activityTemp ['pdf'] = $activity['pdf'] ? Enum_Img::getPathByKeyAndType($activity['pdf']) : '';
             $activityTemp ['video'] = $activity['video'] ? Enum_Img::getPathByKeyAndType($activity['video']) : '';
             $activityTemp ['tagId'] = $activity ['tagid'];
@@ -79,17 +79,13 @@ class Convertor_GroupActivity extends Convertor_Base {
         if ($tagidList) {
             $activityTagModel = new GroupActivityTagModel ();
             $activityTagList = $activityTagModel->getActivityTagList(array('id' => $tagidList));
-            $activityTagNameList = array_column($activityTagList, 'title_lang1', 'id');
+            $activityTagNameList = array_column($activityTagList, 'title', 'id');
         }
         foreach ($list as $key => $value) {
             $activityTemp = array();
             $activityTemp ['id'] = $value ['id'];
-            $activityTemp ['title_lang1'] = $value ['title_lang1'];
-            $activityTemp ['title_lang2'] = $value ['title_lang2'];
-            $activityTemp ['title_lang3'] = $value ['title_lang3'];
-            $activityTemp ['article_lang1'] = $value ['article_lang1'];
-            $activityTemp ['article_lang2'] = $value ['article_lang2'];
-            $activityTemp ['article_lang3'] = $value ['article_lang3'];
+            $activityTemp ['title'] = $value ['title'];
+            $activityTemp ['article'] = $value ['article'];
             $activityTemp ['pic'] = $value ['pic'];
             $activityTemp ['fromdate'] = $value ['fromdate'];
             $activityTemp ['todate'] = $value ['todate'];

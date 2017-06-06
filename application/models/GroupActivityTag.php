@@ -70,9 +70,7 @@ class GroupActivityTagModel extends \BaseModel {
     public function updateActivityTagById($param, $id) {
         $result = false;
         if ($id) {
-            $info['title_lang1'] = strval($param['title_lang1']);
-            $info['title_lang2'] = strval($param['title_lang2']);
-            $info['title_lang3'] = strval($param['title_lang3']);
+            $info['title'] = strval($param['title']);
             $result = $this->dao->updateActivityTagById($info, $id);
         }
         return $result;
@@ -87,9 +85,7 @@ class GroupActivityTagModel extends \BaseModel {
      */
     public function addActivityTag($param) {
         $info['groupid'] = intval($param['groupid']);
-        $info['title_lang1'] = strval($param['title_lang1']);
-        $info['title_lang2'] = strval($param['title_lang2']);
-        $info['title_lang3'] = strval($param['title_lang3']);
+        $info['title'] = strval($param['title']);
         return $this->dao->addActivityTag($info);
     }
 }

@@ -82,12 +82,8 @@ class GroupActivityModel extends \BaseModel {
             isset($param['fromdate']) ? $info['fromdate'] = $param['fromdate'] : false;
             isset($param['todate']) ? $info['todate'] = $param['todate'] : false;
             isset($param['ordercount']) ? $info['ordercount'] = $param['ordercount'] : false;
-            isset($param['title_lang1']) ? $info['title_lang1'] = $param['title_lang1'] : false;
-            isset($param['title_lang2']) ? $info['title_lang2'] = $param['title_lang2'] : false;
-            isset($param['title_lang3']) ? $info['title_lang3'] = $param['title_lang3'] : false;
-            isset($param['article_lang1']) ? $info['article_lang1'] = $param['article_lang1'] : false;
-            isset($param['article_lang2']) ? $info['article_lang2'] = $param['article_lang2'] : false;
-            isset($param['article_lang3']) ? $info['article_lang3'] = $param['article_lang3'] : false;
+            isset($param['title']) ? $info['title'] = $param['title'] : false;
+            isset($param['article']) ? $info['article'] = $param['article'] : false;
             isset($param['sort']) ? $info['sort'] = $param['sort'] : false;
             isset($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
             isset($param['video']) ? $info['video'] = $param['video'] : false;
@@ -113,9 +109,7 @@ class GroupActivityModel extends \BaseModel {
         isset($param['fromdate']) ? $info['fromdate'] = $param['fromdate'] : false;
         isset($param['todate']) ? $info['todate'] = $param['todate'] : false;
         isset($param['ordercount']) ? $info['ordercount'] = $param['ordercount'] : false;
-        isset($param['title_lang1']) ? $info['title_lang1'] = $param['title_lang1'] : false;
-        isset($param['title_lang2']) ? $info['title_lang2'] = $param['title_lang2'] : false;
-        isset($param['title_lang3']) ? $info['title_lang3'] = $param['title_lang3'] : false;
+        isset($param['title']) ? $info['title'] = $param['title'] : false;
         isset($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
         isset($param['video']) ? $info['video'] = $param['video'] : false;
         $info['createtime'] = time();

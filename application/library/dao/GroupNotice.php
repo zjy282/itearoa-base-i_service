@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 集团通知管理数据层
  */
@@ -18,7 +19,7 @@ class Dao_GroupNotice extends Dao_Base {
     public function getNoticList(array $param): array {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
-        
+
         $paramSql = $this->handlerNoticListParams($param);
         $sql = "select * from group_notice {$paramSql['sql']} order by sort desc";
         if ($limit) {
@@ -63,14 +64,12 @@ class Dao_GroupNotice extends Dao_Base {
             $whereCase[] = $param['status'];
         }
         if (isset($param['id'])) {
-        	$whereSql[] = 'id = ?';
-        	$whereCase[] = $param['id'];
+            $whereSql[] = 'id = ?';
+            $whereCase[] = $param['id'];
         }
         if (isset($param['title'])) {
-        	$whereSql[] = '(title_lang1 = ? or title_lang2 = ? or title_lang2 = ?)';
-        	$whereCase[] = $param['title'];
-        	$whereCase[] = $param['title'];
-        	$whereCase[] = $param['title'];
+            $whereSql[] = 'title = ?';
+            $whereCase[] = $param['title'];
         }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
         return array(
@@ -88,14 +87,14 @@ class Dao_GroupNotice extends Dao_Base {
      */
     public function getNoticDetail(int $id): array {
         $result = array();
-        
+
         if ($id) {
             $sql = "select * from group_notice where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
         }
-        
+
         return $result;
     }
 
@@ -110,11 +109,11 @@ class Dao_GroupNotice extends Dao_Base {
      */
     public function updateNoticById(array $info, int $id) {
         $result = false;
-        
+
         if ($id) {
-            $result = $this->db->update('group_notice', $info, array ( 'id' => $id ) );
+            $result = $this->db->update('group_notice', $info, array('id' => $id));
         }
-        
+
         return $result;
     }
 

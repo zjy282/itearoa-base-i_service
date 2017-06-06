@@ -36,7 +36,7 @@ class PromotionController extends \BaseController {
 		$promotionCount = $this->model->getPromotionCount ( $param );
 		$promotionTagModel = new PromotionTagModel ();
 		$tagList = $promotionTagModel->getPromotionTagList ( $param );
-		$this->package != Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getPromotionListConvertor ( $promotionList, $tagList, $promotionCount, $param ) : $data = $this->convertor->getAdminPromotionListConvertor ( $promotionList, $tagList, $promotionCount, $param );
+        Enum_System::notAdminPackage($this->package) ? $data = $this->convertor->getPromotionListConvertor ( $promotionList, $tagList, $promotionCount, $param ) : $data = $this->convertor->getAdminPromotionListConvertor ( $promotionList, $tagList, $promotionCount, $param );
 		$this->echoSuccessData ( $data );
 	}
 
@@ -51,7 +51,7 @@ class PromotionController extends \BaseController {
 		$id = intval ( $this->getParamList ( 'id' ) );
 		if ($id) {
 			$data = $this->model->getPromotionDetail ( $id );
-			$this->package != Enum_System::ADMIN_PACKAGE ? $data = $this->convertor->getPromotionDetailConvertor ( $data ) : $data = $this->convertor->getAdminPromotionListConvertor ( $data );
+            Enum_System::notAdminPackage($this->package) ? $data = $this->convertor->getPromotionDetailConvertor ( $data ) : $data = $this->convertor->getAdminPromotionListConvertor ( $data );
 		} else {
 			$this->throwException ( 1, '查询条件错误，id不能为空' );
 		}

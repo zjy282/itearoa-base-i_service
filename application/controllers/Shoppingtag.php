@@ -40,7 +40,7 @@ class ShoppingTagController extends \BaseController {
         }
         $data = $this->model->getShoppingTagList($param);
         $count = $this->model->getShoppingTagCount($param);
-        if ($this->package != Enum_System::ADMIN_PACKAGE) {
+        if (Enum_System::notAdminPackage($this->package)) {
             $data = $this->convertor->getShoppingTagListConvertor($data, $count, $param);
         } else {
             $data = $this->convertor->getAdminShoppingTagListConvertor($data, $count, $param);
