@@ -68,8 +68,12 @@ class Dao_User extends Dao_Base {
             }
         }
         if ($param['room_no']) {
-            $whereSql[] = 'room_no = ?';
-            $whereCase[] = $param['room_no'];
+            if (is_array($param['room_no'])) {
+                $whereSql[] = 'room_no in (' . implode(',', $param['room_no']) . ')';
+            } else {
+                $whereSql[] = 'room_no = ?';
+                $whereCase[] = $param['room_no'];
+            }
         }
         if ($param['fullname']) {
             $whereSql[] = 'fullname = ?';

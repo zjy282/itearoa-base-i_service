@@ -35,6 +35,12 @@ class Convertor_Room extends Convertor_Base {
             $roomTypeList = $roomTypeModel->getRoomtypeList(array('id' => $typeIdList));
             $roomTypeNameList = array_column($roomTypeList, 'title_lang1', 'id');
         }
+        $roomIdList = array_column($list, 'room');
+        if ($roomIdList) {
+            $userModel = new UserModel();
+            $userInfoList = $userModel->getUserList(array('hotelid' => $param['hotelid'], 'room_no' => $roomIdList));
+            $userInfoList = array_column($userInfoList, null, 'room_no');
+        }
 
         foreach ($list as $key => $value) {
             $oneTemp = array();
@@ -47,6 +53,7 @@ class Convertor_Room extends Convertor_Base {
             $oneTemp ['size'] = $value ['size'];
             $oneTemp ['room'] = $value ['room'];
             $oneTemp ['createTime'] = $value ['createtime'];
+            $oneTemp ['lastUser'] = $userInfoList[$value['room']];
             $data ['list'] [] = $oneTemp;
         }
         $data ['total'] = $count;
