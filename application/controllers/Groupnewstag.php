@@ -23,7 +23,7 @@ class GroupNewsTagController extends \BaseController {
     }
 
     /**
-     * 获取集团新闻标签列表
+     * 后台获取集团新闻标签列表
      *
      * @return Json
      */
@@ -36,6 +36,23 @@ class GroupNewsTagController extends \BaseController {
         $list = $this->model->getNewsTagList($param);
         $count = $this->model->getNewsTagCount($param);
         $data = $this->convertor->getAdminTagListConvertor($list, $count, $param);
+        $this->echoSuccessData($data);
+    }
+
+    /**
+     * 获取集团新闻标签列表
+     *
+     * @return Json
+     */
+    public function getTagListAction() {
+        $param = array();
+        $param ['groupid'] = intval($this->getParamList('groupid'));
+        if (empty($param ['groupid'])) {
+            $this->throwException(2, '集团ID不能为空');
+        }
+        $list = $this->model->getNewsTagList($param);
+        $count = $this->model->getNewsTagCount($param);
+        $data = $this->convertor->getTagListConvertor($list, $count, $param);
         $this->echoSuccessData($data);
     }
 

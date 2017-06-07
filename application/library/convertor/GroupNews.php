@@ -25,14 +25,14 @@ class Convertor_GroupNews extends Convertor_Base {
     public function getNewsListConvertor($newsList, $tagList, $newsCount, $param) {
         $tagListNew = array();
         foreach ($tagList as $tag) {
-            $tagListNew [$tag ['id']] = $this->handlerMultiLang('title', $tag);
+            $tagListNew [$tag ['id']] = $tag['title'];
         }
         $data = array('list' => array());
         foreach ($newsList as $news) {
             $newTemp = array();
             $newTemp ['id'] = $news ['id'];
             $newTemp ['title'] = $news['title'];
-            $newTemp ['article'] = $news['article'];
+            $newTemp ['article'] = Enum_Img::getPathByKeyAndType($news['article']);
             $newTemp ['pdf'] = $news['pdf'] ? Enum_Img::getPathByKeyAndType($news['pdf']) : '';
             $newTemp ['video'] = $news['video'] ? Enum_Img::getPathByKeyAndType($news['video']) : '';
             $newTemp ['tagId'] = $news ['tagid'];

@@ -25,14 +25,14 @@ class Convertor_GroupNotice extends Convertor_Base {
     public function getNoticListConvertor($noticList, $tagList, $noticCount, $param) {
         $tagListNew = array();
         foreach ($tagList as $tag) {
-            $tagListNew [$tag ['id']] = $this->handlerMultiLang('title', $tag);
+            $tagListNew [$tag ['id']] = $tag['title'];
         }
         $data = array('list' => array());
         foreach ($noticList as $notic) {
             $newTemp = array();
             $newTemp ['id'] = $notic ['id'];
             $newTemp ['title'] = $notic['title'];
-            $newTemp ['article'] = $notic['article'];
+            $newTemp ['article'] = Enum_Img::getPathByKeyAndType($notic['article']);
             $newTemp ['pdf'] = $notic['pdf'] ? Enum_Img::getPathByKeyAndType($notic['pdf']) : '';
             $newTemp ['video'] = $notic['video'] ? Enum_Img::getPathByKeyAndType($notic['video']) : '';
             $newTemp ['tagId'] = $notic ['tagid'];

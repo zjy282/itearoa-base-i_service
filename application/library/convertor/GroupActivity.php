@@ -48,7 +48,6 @@ class Convertor_GroupActivity extends Convertor_Base {
             $activityTemp ['video'] = Enum_Img::getPathByKeyAndType($activity ['video']);
             $activityTemp ['fromdate'] = $activity ['fromdate'];
             $activityTemp ['todate'] = $activity ['todate'];
-            $activityTemp ['count'] = $activity ['count'];
             $data ['list'] [] = $activityTemp;
         }
         $data ['total'] = $activityCount;

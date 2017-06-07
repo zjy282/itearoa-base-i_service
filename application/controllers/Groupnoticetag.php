@@ -23,7 +23,7 @@ class GroupNoticeTagController extends \BaseController {
     }
 
     /**
-     * 获取集团通知标签列表
+     * 后台获取集团通知标签列表
      *
      * @return Json
      */
@@ -38,6 +38,24 @@ class GroupNoticeTagController extends \BaseController {
         $data = $this->convertor->getAdminTagListConvertor($list, $count, $param);
         $this->echoSuccessData($data);
     }
+
+    /**
+     * 获取集团通知标签列表
+     *
+     * @return Json
+     */
+    public function getTagListAction() {
+        $param = array();
+        $param ['groupid'] = intval($this->getParamList('groupid'));
+        if (empty($param ['groupid'])) {
+            $this->throwException(2, '集团ID不能为空');
+        }
+        $list = $this->model->getNoticeTagList($param);
+        $count = $this->model->getNoticeTagCount($param);
+        $data = $this->convertor->getTagListConvertor($list, $count, $param);
+        $this->echoSuccessData($data);
+    }
+
 
     /**
      * 根据id获取集团通知标签详情
