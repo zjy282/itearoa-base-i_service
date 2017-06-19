@@ -62,6 +62,21 @@ class HotelListModel extends \BaseModel {
     }
 
     /**
+     * 根据propertyinterfId查询物业信息
+     *
+     * @param
+     *            int propertyinterfId 物业propertyinterfId
+     * @return array
+     */
+    public function getHotelListDetailByPropertyinterfId($propertyinterfId) {
+        $result = array();
+        if ($propertyinterfId) {
+            $result = $this->dao->getHotelListDetailByPropertyinterfId($propertyinterfId);
+        }
+        return $result;
+    }
+
+    /**
      * 根据id更新HotelList信息
      *
      * @param

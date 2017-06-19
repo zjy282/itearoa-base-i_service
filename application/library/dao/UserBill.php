@@ -1,27 +1,27 @@
 <?php
 
 /**
- * 物业管理数据层
+ * 用户账单管理数据层
  */
-class Dao_HotelList extends Dao_Base {
+class Dao_UserBill extends Dao_Base {
 
     public function __construct() {
         parent::__construct();
     }
 
     /**
-     * 查询hotel_list列表
+     * 查询用户账单列表
      *
      * @param
      *            array 入参
      * @return array
      */
-    public function getHotelListList(array $param): array {
+    public function getUserBillList(array $param): array {
         $limit = $param['limit'] ? intval($param['limit']) : 0;
         $page = $this->getStart($param['page'], $limit);
 
         $paramSql = $this->handlerListParams($param);
-        $sql = "select * from hotel_list {$paramSql['sql']}";
+        $sql = "select * from hotel_user_bill {$paramSql['sql']} order by date DESC";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }
@@ -30,15 +30,15 @@ class Dao_HotelList extends Dao_Base {
     }
 
     /**
-     * 查询hotel_list数量
+     * 查询用户账单数量
      *
      * @param
      *            array 入参
      * @return array
      */
-    public function getHotelListCount(array $param): int {
+    public function getUserBillCount(array $param): int {
         $paramSql = $this->handlerListParams($param);
-        $sql = "select count(1) as count from hotel_list {$paramSql['sql']}";
+        $sql = "select count(1) as count from hotel_user_bill {$paramSql['sql']}";
         $result = $this->db->fetchAssoc($sql, $paramSql['case']);
         return intval($result['count']);
     }
@@ -59,19 +59,33 @@ class Dao_HotelList extends Dao_Base {
                 $whereCase[] = $param['id'];
             }
         }
-        if (isset($param['groupid'])) {
-            $whereSql[] = 'groupid = ?';
-            $whereCase[] = $param['groupid'];
+        if ($param['room_no']) {
+            if (is_array($param['room_no'])) {
+                $whereSql[] = 'room_no in (' . implode(',', $param['room_no']) . ')';
+            } else {
+                $whereSql[] = 'room_no = ?';
+                $whereCase[] = $param['room_no'];
+            }
+        }
+        if ($param['name']) {
+            $whereSql[] = 'name = ?';
+            $whereCase[] = $param['name'];
+        }
+        if ($param['hotelid']) {
+            $whereSql[] = 'hotelid = ?';
+            $whereCase[] = $param['hotelid'];
+        }
+        if ($param['userid']) {
+            $whereSql[] = 'userid = ?';
+            $whereCase[] = $param['userid'];
+        }
+        if ($param['date']) {
+            $whereSql[] = 'date = ?';
+            $whereCase[] = $param['date'];
         }
         if (isset($param['status'])) {
             $whereSql[] = 'status = ?';
             $whereCase[] = $param['status'];
-        }
-        if (isset($param['name'])) {
-            $whereSql[] = '(name_lang1 = ? or name_lang2 = ? or name_lang3 = ?)';
-            $whereCase[] = $param['name'];
-            $whereCase[] = $param['name'];
-            $whereCase[] = $param['name'];
         }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
         return array(
@@ -81,45 +95,27 @@ class Dao_HotelList extends Dao_Base {
     }
 
     /**
-     * 根据id查询hotel_list详情
+     * 根据id查询用户账单详情
      *
      * @param
      *            int id
      * @return array
      */
-    public function getHotelListDetail(int $id): array {
+    public function getUserBillDetail(int $id): array {
         $result = array();
 
         if ($id) {
-            $sql = "select * from hotel_list where id=?";
+            $sql = "select * from hotel_user_bill where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
         }
-        return is_array($result) ? $result : array();
+
+        return $result;
     }
 
     /**
-     * 根据propertyinterfid查询物业详情
-     *
-     * @param
-     *            int id
-     * @return array
-     */
-    public function getHotelListDetailByPropertyinterfId(int $propertyinterfId): array {
-        $result = array();
-
-        if ($propertyinterfId) {
-            $sql = "select * from hotel_list where propertyinterfid = ?";
-            $result = $this->db->fetchAssoc($sql, array(
-                $propertyinterfId
-            ));
-        }
-        return is_array($result) ? $result : array();
-    }
-
-    /**
-     * 根据id更新hotel_list
+     * 根据id更新用户账单
      *
      * @param
      *            array 需要更新的数据
@@ -127,25 +123,26 @@ class Dao_HotelList extends Dao_Base {
      *            int id
      * @return array
      */
-    public function updateHotelListById(array $info, int $id) {
+    public function updateUserBillById(array $info, int $id) {
         $result = false;
 
         if ($id) {
-            $result = $this->db->update('hotel_list', $info, array('id' => $id));
+            $result = $this->db->update('hotel_user_bill', $info, array(
+                'id' => $id
+            ));
         }
-
         return $result;
     }
 
     /**
-     * 单条增加hotel_list数据
+     * 单条增加用户账单数据
      *
      * @param
      *            array
      * @return int id
      */
-    public function addHotelList(array $info) {
-        $this->db->insert('hotel_list', $info);
+    public function addUserBill(array $info) {
+        $this->db->insert('hotel_user_bill', $info);
         return $this->db->lastInsertId();
     }
 }
