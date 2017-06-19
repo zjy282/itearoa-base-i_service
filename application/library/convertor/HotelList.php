@@ -82,7 +82,7 @@ class Convertor_HotelList extends Convertor_Base {
         foreach ($list as $hotel) {
             $dataTemp = array();
             $dataTemp ['hotelId'] = $hotel ['id'];
-            $dataTemp ['localpic'] = $hotel ['localpic'];
+            $dataTemp ['localpic'] = Enum_Img::getPathByKeyAndType($hotel ['localpic'], Enum_Img::PIC_TYPE_KEY_WIDTH750);
             $dataTemp ['propertyinterfId'] = $hotel ['propertyinterfid'];
             $dataTemp ['cityId'] = $hotel ['cityid'];
             $cityInfo = $cityInfoList [$dataTemp ['cityId']];
@@ -92,6 +92,8 @@ class Convertor_HotelList extends Convertor_Base {
             $dataTemp ['countryEnName'] = $cityInfo ['countryenname'];
             $dataTemp ['name'] = $hotel ['name_lang1'];
             $dataTemp ['address'] = $hotel ['address'];
+            $dataTemp ['lat'] = $hotel ['lat'];
+            $dataTemp ['lng'] = $hotel ['lng'];
             $data ['list'] [] = $dataTemp;
         }
         return $data;
