@@ -111,7 +111,7 @@ class StaffModel extends \BaseModel {
      */
     public function getStaffIdInfo($param) {
         $paramList = array();
-        $paramList['LType'] = 1;
+        $paramList['LType'] = intval($param['isAd']);
         $paramList['LName'] = $param['lname'];
         $paramList['Pwd'] = $param['pwd'];
         $paramList = Enum_Gsm::genEncryptGsmParams($paramList);
