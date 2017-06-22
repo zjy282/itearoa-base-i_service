@@ -36,7 +36,7 @@ class Convertor_GroupNotice extends Convertor_Base {
             $newTemp ['pdf'] = $notic['pdf'] ? Enum_Img::getPathByKeyAndType($notic['pdf']) : '';
             $newTemp ['video'] = $notic['video'] ? Enum_Img::getPathByKeyAndType($notic['video']) : '';
             $newTemp ['tagId'] = $notic ['tagid'];
-            $newTemp ['pic'] = $notic ['pic'];
+            $newTemp ['pic'] = Enum_Img::getPathByKeyAndType($notic ['pic'], Enum_Img::PIC_TYPE_KEY_WIDTH750);
             $newTemp ['tagName'] = $tagListNew [$newTemp ['tagId']];
             $newTemp ['createtime'] = $notic ['createtime'];
             $newTemp ['updatetime'] = $notic ['updatetime'];

@@ -97,6 +97,7 @@ class LifeModel extends \BaseModel {
             isset($param['sort']) ? $info['sort'] = $param['sort'] : false;
             isset($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
             isset($param['video']) ? $info['video'] = $param['video'] : false;
+            isset($param['pic']) ? $info['pic'] = $param['pic'] : false;
             $result = $this->dao->updateLifeById($info, $id);
         }
         return $result;

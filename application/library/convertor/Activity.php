@@ -33,10 +33,7 @@ class Convertor_Activity extends Convertor_Base {
             $activityTemp ['id'] = $activity ['id'];
             $activityTemp ['title'] = $this->handlerMultiLang('title', $activity);
             $activityTemp ['article'] = Enum_Img::getPathByKeyAndType($this->handlerMultiLang('article', $activity));
-            $activityTemp ['pdf'] = $activity['pdf'] ? Enum_Img::getPathByKeyAndType($activity['pdf']) : '';
-            $activityTemp ['video'] = $activity['video'] ? Enum_Img::getPathByKeyAndType($activity['video']) : '';
             $activityTemp ['tagId'] = $activity ['tagid'];
-            $activityTemp ['pic'] = $activity ['pic'];
             $activityTemp ['fromdate'] = $activity ['fromdate'];
             $activityTemp ['todate'] = $activity ['todate'];
             $activityTemp ['ordercount'] = $activity ['ordercount'];

@@ -102,6 +102,7 @@ class PoiController extends \BaseController {
             $param ['sort'] = $this->getParamList('sort');
             $param ['pdf'] = $this->getParamList('pdf');
             $param ['video'] = $this->getParamList('video');
+            $param ['pic'] = $this->getParamList('pic');
             $param ['updatetime'] = time();
             $param ['status'] = $this->getParamList('status');
             $data = $this->model->updatePoiById($param, $id);
@@ -142,6 +143,7 @@ class PoiController extends \BaseController {
         $param ['sort'] = intval($this->getParamList('sort'));
         $param ['pdf'] = trim($this->getParamList('pdf'));
         $param ['video'] = trim($this->getParamList('video'));
+        $param ['pic'] = trim($this->getParamList('pic'));
         $data = $this->model->addPoi($param);
         $data = $this->convertor->statusConvertor(array('id' => $data));
         $this->echoSuccessData($data);

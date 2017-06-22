@@ -188,6 +188,7 @@ class Convertor_HotelList extends Convertor_Base {
             $facilitiesTemp ['introduct'] = $this->handlerMultiLang('introduct', $facilities);
             $facilitiesTemp ['pdf'] = Enum_Img::getPathByKeyAndType($facilities['pdf']);
             $facilitiesTemp ['video'] = Enum_Img::getPathByKeyAndType($facilities['video']);
+            $facilitiesTemp ['pic'] = Enum_Img::getPathByKeyAndType($facilities['pic'], Enum_Img::PIC_TYPE_KEY_WIDTH750);
             $data ['facilitiesList'] [] = $facilitiesTemp;
         }
         $data ['floorList'] = array();

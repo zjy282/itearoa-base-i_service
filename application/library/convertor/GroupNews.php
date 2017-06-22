@@ -35,6 +35,7 @@ class Convertor_GroupNews extends Convertor_Base {
             $newTemp ['article'] = Enum_Img::getPathByKeyAndType($news['article']);
             $newTemp ['pdf'] = $news['pdf'] ? Enum_Img::getPathByKeyAndType($news['pdf']) : '';
             $newTemp ['video'] = $news['video'] ? Enum_Img::getPathByKeyAndType($news['video']) : '';
+            $newTemp ['pic'] = Enum_Img::getPathByKeyAndType($news['pic'], Enum_Img::PIC_TYPE_KEY_WIDTH750);
             $newTemp ['tagId'] = $news ['tagid'];
             $newTemp ['tagName'] = $tagListNew [$newTemp ['tagId']];
             $newTemp ['createtime'] = $news ['createtime'];
@@ -78,6 +79,7 @@ class Convertor_GroupNews extends Convertor_Base {
             $newTemp ['sort'] = $news ['sort'];
             $newTemp ['pdf'] = $news ['pdf'];
             $newTemp ['video'] = $news ['video'];
+            $newTemp ['pic'] = $news ['pic'];
             $newTemp ['createTime'] = $news ['createtime'];
             $newTemp ['updateTime'] = $news ['updatetime'];
             $data ['list'] [] = $newTemp;

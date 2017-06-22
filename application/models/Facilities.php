@@ -90,6 +90,7 @@ class FacilitiesModel extends \BaseModel {
             isset($param['detail_lang3']) ? $info['detail_lang3'] = $param['detail_lang3'] : false;
             isset($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
             isset($param['video']) ? $info['video'] = $param['video'] : false;
+            isset($param['pic']) ? $info['pic'] = $param['pic'] : false;
             $result = $this->dao->updateFacilitiesById($info, $id);
         }
         return $result;
@@ -114,6 +115,7 @@ class FacilitiesModel extends \BaseModel {
         isset($param['introduct_lang3']) ? $info['introduct_lang3'] = $param['introduct_lang3'] : false;
         isset($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
         isset($param['video']) ? $info['video'] = $param['video'] : false;
+        isset($param['pic']) ? $info['pic'] = $param['pic'] : false;
         $info['createtime'] = time();
         return $this->dao->addFacilities($info);
     }
