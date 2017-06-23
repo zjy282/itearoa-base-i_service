@@ -57,6 +57,10 @@ class Dao_Poi extends Dao_Base {
             $whereSql[] = 'typeid = ?';
             $whereCase[] = $param['typeid'];
         }
+        if (isset($param['tagid'])) {
+            $whereSql[] = 'tagid = ?';
+            $whereCase[] = $param['tagid'];
+        }
         if (isset($param['status'])) {
             $whereSql[] = 'status = ?';
             $whereCase[] = $param['status'];
