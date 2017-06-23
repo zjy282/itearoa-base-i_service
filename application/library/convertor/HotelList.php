@@ -178,6 +178,8 @@ class Convertor_HotelList extends Convertor_Base {
             $roomTypeTemp ['panoramic'] = $roomType ['panoramic'];
             $roomTypeTemp ['bedtype'] = $this->handlerMultiLang('bedtype', $roomType);
             $roomTypeTemp ['pic'] = Enum_Img::getPathByKeyAndType($roomType ['pic'], Enum_Img::PIC_TYPE_KEY_WIDTH750);
+            $roomTypeTemp ['roomcount'] = $roomType ['roomcount'];
+            $roomTypeTemp ['personcount'] = $roomType ['personcount'];
             $data ['roomTypeList'] [] = $roomTypeTemp;
         }
         $data ['facilitiesList'] = array();
