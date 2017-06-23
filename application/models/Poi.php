@@ -41,6 +41,7 @@ class PoiModel extends \BaseModel {
      */
     public function getPoiCount(array $param) {
         $param ['typeid'] ? $paramList ['typeid'] = $param ['typeid'] : false;
+        $param ['tagid'] ? $paramList ['tagid'] = $param ['tagid'] : false;
         $param ['id'] ? $paramList ['id'] = $param ['id'] : false;
         $param ['name'] ? $paramList ['name'] = $param ['name'] : false;
         isset ($param ['hotelid']) ? $paramList ['hotelid'] = $param ['hotelid'] : false;
