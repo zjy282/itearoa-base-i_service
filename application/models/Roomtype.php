@@ -80,6 +80,7 @@ class RoomtypeModel extends \BaseModel {
             isset($param['detail_lang2']) ? $info['detail_lang2'] = $param['detail_lang2'] : false;
             isset($param['detail_lang3']) ? $info['detail_lang3'] = $param['detail_lang3'] : false;
             isset($param['resid_list']) ? $info['resid_list'] = $param['resid_list'] : false;
+            isset($param['pic']) ? $info['pic'] = $param['pic'] : false;
             $result = $this->dao->updateRoomtypeById($info, $id);
         }
         return $result;
@@ -102,6 +103,7 @@ class RoomtypeModel extends \BaseModel {
         isset($param['bedtype_lang1']) ? $info['bedtype_lang1'] = $param['bedtype_lang1'] : false;
         isset($param['bedtype_lang2']) ? $info['bedtype_lang2'] = $param['bedtype_lang2'] : false;
         isset($param['bedtype_lang3']) ? $info['bedtype_lang3'] = $param['bedtype_lang3'] : false;
+        isset($param['pic']) ? $info['pic'] = $param['pic'] : false;
         $info['createtime'] = time();
         return $this->dao->addRoomtype($info);
     }
