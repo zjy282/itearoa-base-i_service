@@ -42,12 +42,12 @@ class Enum_Push {
     private static $config = array(
         'umeng' => array(
             'android' => array(
-                'appKey' => '58cc983a310c937554002429',
-                'secretKey' => '16jks3ps5b5go2ox4lcym8q9mq2f9l4a'
+                'appKey' => '594e4614734be4240f001013',
+                'secretKey' => 'ofg3us0vbfvv6rfl1z6fxqddaalj2rst'
             ),
             'ios' => array(
-                'appKey' => '58fe1c7f07fe6514a9000bb1',
-                'secretKey' => 'zui6nd4gpfmvvg9zl9wnxckdd87t5wi2'
+                'appKey' => '5948e79df43e48682f000049',
+                'secretKey' => '4thoqf7r0bdbuugtal7rpyfuaotsuiey'
             )
         )
     );
