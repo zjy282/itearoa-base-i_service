@@ -141,7 +141,7 @@ class LifeController extends \BaseController {
         $param ['sort'] = intval($this->getParamList('sort'));
         $param ['pdf'] = trim($this->getParamList('pdf'));
         $param ['video'] = trim($this->getParamList('video'));
-        $param ['pic'] = $this->getParamList('pic');
+        $param ['pic'] = trim($this->getParamList('pic'));
         $data = $this->model->addLife($param);
         $data = $this->convertor->statusConvertor(array('id' => $data));
         $this->echoSuccessData($data);
