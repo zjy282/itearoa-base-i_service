@@ -116,6 +116,7 @@ class Convertor_HotelList extends Convertor_Base {
         $data ['hotelId'] = $hotelInfo ['id'];
         $data ['groupId'] = $hotelInfo ['groupid'];
         $data ['propertyinterfId'] = $hotelInfo ['propertyinterfid'];
+        $data ['portUrl'] = $hotelInfo ['portUrl'];
         $data ['lng'] = $hotelInfo ['lng'];
         $data ['lat'] = $hotelInfo ['lat'];
         $data ['cityId'] = $hotelInfo ['cityid'];
@@ -165,7 +166,6 @@ class Convertor_HotelList extends Convertor_Base {
         $data ['website'] = $hotelInfo ['website'];
         $data ['bookurl'] = $hotelInfo ['bookurl'];
         $data ['introduction'] = $this->handlerMultiLang('introduction', $hotelInfo);
-        $data ['portUrl'] = $hotelInfo ['portUrl'];
         $data ['pic'] = array();
         foreach ($hotel ['picList'] as $pic) {
             $data ['pic'] [] = Enum_Img::getPathByKeyAndType($pic ['pic'], Enum_Img::PIC_TYPE_KEY_WIDTH750);

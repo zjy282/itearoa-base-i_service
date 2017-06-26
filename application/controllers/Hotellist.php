@@ -78,6 +78,9 @@ class HotelListController extends \BaseController {
             $hotelShareIcon = $shareIconModel->getShareIconList(array('hotelid' => $id));
             $shortCutIconModel = new ShortcutIconModel ();
             $hotelShortCutIcon = $shortCutIconModel->getShortcutIconList(array('hotelid' => $id));
+            //获取集团接口信息
+            $groupModel = new GroupModel();
+            $hotelInfo['portUrl'] = $groupModel->getGroupPortByGroupId($hotelInfo['groupid']);
             $data = $this->convertor->getHotelListDetailConvertor($hotelInfo, $hotelShareIcon, $hotelShortCutIcon);
         } else {
             $this->throwException(1, '查询条件错误，id不能为空');
@@ -225,9 +228,6 @@ class HotelListController extends \BaseController {
         // 获取物业全景信息
         $panoramicModel = new PanoramicModel ();
         $panoramicList = $panoramicModel->getPanoramicList($param);
-        //获取集团信息
-        $groupModel = new GroupModel();
-        $hotelInfo['portUrl'] = $groupModel->getGroupPortByGroupId($hotelInfo['groupid']);
 
         $result = $this->convertor->hotelDetailConvertor(array('hotelInfo' => $hotelInfo, 'picList' => $picList, 'roomTypeList' => $roomTypeList, 'facilitiesList' => $facilitiesList, 'floorList' => $floorList, 'trafficList' => $trafficList, 'panoramicList' => $panoramicList));
         $this->echoSuccessData($result);
