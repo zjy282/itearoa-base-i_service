@@ -111,7 +111,7 @@ class HotelListModel extends \BaseModel {
             !is_null($param['introduction_lang1']) ? $info['introduction_lang1'] = $param['introduction_lang1'] : false;
             !is_null($param['introduction_lang2']) ? $info['introduction_lang2'] = $param['introduction_lang2'] : false;
             !is_null($param['introduction_lang3']) ? $info['introduction_lang3'] = $param['introduction_lang3'] : false;
-            !is_null($param['status']) ? $info['status'] = $param['status'] : false;
+            isset($param['status']) ? $info['status'] = $param['status'] : false;
             !is_null($param['lang_list']) ? $info['lang_list'] = $param['lang_list'] : false;
             !is_null($param['bookurl']) ? $info['bookurl'] = $param['bookurl'] : false;
             !is_null($param['rss']) ? $info['rss'] = $param['rss'] : false;
