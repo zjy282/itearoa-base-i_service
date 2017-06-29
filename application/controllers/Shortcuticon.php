@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 酒店快捷图标控制器类
  *
@@ -25,8 +26,9 @@ class ShortcutIconController extends \BaseController {
      */
     public function getShortcutIconListAction() {
         $param = array();
-        $param['page'] = intval($this->getParamList('page', 1));
-        $param['limit'] = intval($this->getParamList('limit', 5));
+        $param ['page'] = intval($this->getParamList('page', 1));
+        $limit = $this->getParamList('limit');
+        $param ['limit'] = isset ($limit) ? $limit : null;
         $param['id'] = intval($this->getParamList('id'));
         $param['hotelid'] = intval($this->getParamList('hotelid'));
         $data = $this->model->getShortcutIconList($param);
