@@ -17,8 +17,8 @@ class Enum_Push {
     const PUSH_TAG_LANG_CN = 'cn'; //中文语言
     const PUSH_TAG_HOTEL_PREFIX = 'hotel_';//酒店标签前缀
     const PUSH_TAG_GROUP_PREFIX = 'group_';//物业标签前缀
-    const PUSH_ALIAS_USER_PREFIX = 'user_';//用户别名前缀
-    const PUSH_ALIAS_STAFF_PREFIX = 'staff_';//员工别名前缀
+    const PUSH_ALIAS_USER_PREFIX = 'user';//用户别名前缀
+    const PUSH_ALIAS_STAFF_PREFIX = 'staff';//员工别名前缀
     /**
      * 推送机型定义
      */

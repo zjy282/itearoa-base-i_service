@@ -132,7 +132,8 @@ class PushModel extends \BaseModel {
                     break;
                 }
                 $info['platform'] = $pushParams['phoneType'] = $userInfo['platform'];
-                $pushParams['dataid'] = Enum_Push::PUSH_ALIAS_USER_PREFIX . $userInfo['id'];
+                $pushParams['dataid'] = $userInfo['id'];
+                $pushParams['datatype'] = Enum_Push::PUSH_ALIAS_USER_PREFIX;
                 if ($userInfo['language'] == 'zh') {
                     $pushParams['language'] = Enum_Push::PUSH_TAG_LANG_CN;
                     $pushParams['title'] = $info['cn_title'];
@@ -154,7 +155,8 @@ class PushModel extends \BaseModel {
                     break;
                 }
                 $info['platform'] = $pushParams['phoneType'] = $staffInfo['platform'];
-                $pushParams['dataid'] = Enum_Push::PUSH_ALIAS_STAFF_PREFIX . $staffInfo['id'];
+                $pushParams['dataid'] = $staffInfo['id'];
+                $pushParams['datatype'] = Enum_Push::PUSH_ALIAS_STAFF_PREFIX;
                 $pushParams['language'] = Enum_Push::PUSH_TAG_LANG_CN;
                 $pushParams['title'] = $info['cn_title'];
                 $pushParams['value'] = $info['cn_value'];
@@ -256,6 +258,7 @@ class PushModel extends \BaseModel {
                     $this->throwException('推送数据ID错误', 2);
                 }
                 $info['alias'] = implode(',', $dataId);
+                $info['alias_type'] = $param['datatype'];
                 $info['title'] = $param['title'];
                 $info['url'] = $param['url'];
                 $info['value'] = $param['value'];
