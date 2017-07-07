@@ -68,6 +68,7 @@ class RssTypeController extends \BaseController {
         if ($id) {
             $param = array();
             $param ['title'] = trim($this->getParamList('title'));
+            $param ['title_en'] = trim($this->getParamList('title_en'));
             $data = $this->model->updateRssTypeById($param, $id);
             $data = $this->convertor->statusConvertor($data);
         } else {
@@ -86,6 +87,7 @@ class RssTypeController extends \BaseController {
     public function addRssTypeAction() {
         $param = array();
         $param ['title'] = trim($this->getParamList('title'));
+        $param ['title_en'] = trim($this->getParamList('title_en'));
         $data = $this->model->addRssType($param);
         $data = $this->convertor->statusConvertor(array('id' => $data));
         $this->echoSuccessData($data);
