@@ -27,6 +27,7 @@ class Convertor_Rss extends Convertor_Base {
         $rssTypeModel = new RssTypeModel();
         $typeInfoList = $rssTypeModel->getRssTypeList(array('id' => $typeIdlist));
         $typeNameList = array_column($typeInfoList, 'title', 'id');
+        $typeEnNameList = array_column($typeInfoList, 'title_en', 'id');
         foreach ($list as $type) {
             $typeTemp = array();
             $typeTemp ['id'] = $type ['id'];
@@ -35,6 +36,7 @@ class Convertor_Rss extends Convertor_Base {
             $typeTemp ['rss'] = $type ['rss'];
             $typeTemp ['typeid'] = $type ['typeid'];
             $typeTemp ['typename'] = $typeNameList[$type ['typeid']];
+            $typeTemp ['typeenname'] = $typeEnNameList[$type ['typeid']];
             $typeTemp ['createtime'] = $type ['createtime'];
             $typeTemp ['updatetime'] = $type ['updatetime'];
             $typeTemp ['status'] = $type ['status'];
