@@ -114,7 +114,7 @@ class HotelListModel extends \BaseModel {
             isset($param['status']) ? $info['status'] = $param['status'] : false;
             !is_null($param['lang_list']) ? $info['lang_list'] = $param['lang_list'] : false;
             !is_null($param['bookurl']) ? $info['bookurl'] = $param['bookurl'] : false;
-            !is_null($param['rss']) ? $info['rss'] = $param['rss'] : false;
+            isset($param['rss']) ? $info['rss'] = $param['rss'] : false;
             $result = $this->dao->updateHotelListById($info, $id);
         }
         return $result;

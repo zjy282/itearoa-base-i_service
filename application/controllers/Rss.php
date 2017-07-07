@@ -118,7 +118,7 @@ class RssController extends BaseController {
         if ($hotelId) {
             $param = array();
             $hotelModel = new HotelListModel();
-            $param ['rss'] = $this->getParamList('rss');
+            $param ['rss'] = trim($this->getParamList('rss'));
             $data = $hotelModel->updateHotelListById($param, $hotelId);
             $data = $this->convertor->statusConvertor(array('id' => $data));
         } else {
