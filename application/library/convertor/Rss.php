@@ -63,6 +63,7 @@ class Convertor_Rss extends Convertor_Base {
             $rssTypeModel = new RssTypeModel();
             $typeInfoList = $rssTypeModel->getRssTypeList(array('id' => $typeIdlist));
             $typeNameList = array_column($typeInfoList, 'title', 'id');
+            $typeNameEnList = array_column($typeInfoList, 'title_en', 'id');
         }
         $langInfo = Yaf_Registry::get('hotelLangInfo');
         $data ['list'] = array();
@@ -73,6 +74,7 @@ class Convertor_Rss extends Convertor_Base {
             $typeTemp ['rss'] = $rss ['rss'];
             $typeTemp ['typeid'] = $rss ['typeid'];
             $typeTemp ['typename'] = $typeNameList[$rss ['typeid']];
+            $typeTemp ['typeenname'] = $typeNameEnList[$rss ['typeid']];
             $typeTemp ['createtime'] = $rss ['createtime'];
             $typeTemp ['updatetime'] = $rss ['updatetime'];
             $typeTemp ['status'] = $rss ['status'];
