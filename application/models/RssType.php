@@ -65,7 +65,8 @@ class RssTypeModel extends \BaseModel {
     public function updateRssTypeById($param, $id) {
         $result = false;
         if ($id) {
-            $info['title'] = $param['title'];
+            isset($param['title']) ? $info['title'] = $param['title'] : false;
+            isset($param['title_en']) ? $info['title_en'] = $param['title_en'] : false;
             $result = $this->dao->updateRssTypeById($info, $id);
         }
         return $result;
@@ -79,7 +80,8 @@ class RssTypeModel extends \BaseModel {
      * @return array
      */
     public function addRssType($param) {
-        $info ['title'] = $param ['title'];
+        isset($param['title']) ? $info['title'] = $param['title'] : false;
+        isset($param['title_en']) ? $info['title_en'] = $param['title_en'] : false;
         return $this->dao->addRssType($info);
     }
 }

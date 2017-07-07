@@ -27,6 +27,7 @@ class Convertor_RssType extends Convertor_Base {
             $typeTemp = array();
             $typeTemp ['id'] = $type ['id'];
             $typeTemp ['title'] = $type ['title'];
+            $typeTemp ['title_en'] = $type ['title_en'];
             $data ['list'] [] = $typeTemp;
         }
         $data ['total'] = $count;
