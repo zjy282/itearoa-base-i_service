@@ -173,6 +173,7 @@ class Convertor_HotelList extends Convertor_Base {
         $data ['roomTypeList'] = array();
         foreach ($hotel ['roomTypeList'] as $roomType) {
             $roomTypeTemp = array();
+            $roomTypeTemp ['id'] = $roomType ['id'];
             $roomTypeTemp ['title'] = $this->handlerMultiLang('title', $roomType);
             $roomTypeTemp ['size'] = $roomType ['size'];
             $roomTypeTemp ['detail'] = Enum_Img::getPathByKeyAndType($this->handlerMultiLang('detail', $roomType));
