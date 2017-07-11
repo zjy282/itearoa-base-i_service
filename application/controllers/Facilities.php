@@ -93,6 +93,7 @@ class FacilitiesController extends \BaseController {
             $param ['pdf'] = $this->getParamList('pdf');
             $param ['video'] = $this->getParamList('video');
             $param ['pic'] = $this->getParamList('pic');
+            $param ['sort'] = $this->getParamList('sort');
             $data = $this->model->updateFacilitiesById($param, $id);
             $data = $this->convertor->statusConvertor($data);
         } else {
@@ -122,6 +123,7 @@ class FacilitiesController extends \BaseController {
         $param ['pdf'] = trim($this->getParamList('pdf'));
         $param ['video'] = trim($this->getParamList('video'));
         $param ['pic'] = trim($this->getParamList('pic'));
+        $param ['sort'] = intval($this->getParamList('sort'));
         $data = $this->model->addFacilities($param);
         $data = $this->convertor->statusConvertor(array('id' => $data));
         $this->echoSuccessData($data);
