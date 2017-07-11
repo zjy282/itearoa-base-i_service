@@ -91,6 +91,7 @@ class FacilitiesModel extends \BaseModel {
             isset($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
             isset($param['video']) ? $info['video'] = $param['video'] : false;
             isset($param['pic']) ? $info['pic'] = $param['pic'] : false;
+            isset($param['sort']) ? $info['sort'] = $param['sort'] : false;
             $result = $this->dao->updateFacilitiesById($info, $id);
         }
         return $result;
@@ -116,6 +117,7 @@ class FacilitiesModel extends \BaseModel {
         isset($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
         isset($param['video']) ? $info['video'] = $param['video'] : false;
         isset($param['pic']) ? $info['pic'] = $param['pic'] : false;
+        isset($param['sort']) ? $info['sort'] = $param['sort'] : false;
         $info['createtime'] = time();
         return $this->dao->addFacilities($info);
     }
