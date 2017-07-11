@@ -42,6 +42,7 @@ class Convertor_Facilities extends Convertor_Base {
             $oneTemp ['pdf'] = $value ['pdf'];
             $oneTemp ['video'] = $value ['video'];
             $oneTemp ['pic'] = $value ['pic'];
+            $oneTemp ['sort'] = $value ['sort'];
             $data ['list'] [] = $oneTemp;
         }
         $data ['total'] = $count;
