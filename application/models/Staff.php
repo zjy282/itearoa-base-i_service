@@ -151,7 +151,7 @@ class StaffModel extends \BaseModel {
         // 获取Oid
         $staffIdInfo = $this->getStaffIdInfo($param);
         if (empty($staffIdInfo['staffId'])) {
-            $this->throwException('房间号和名称错误，登录失败', 4);
+            $this->throwException('账号密码错误，登录失败', 4);
         }
 
         // 获取用户信息
