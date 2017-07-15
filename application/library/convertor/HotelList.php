@@ -94,6 +94,7 @@ class Convertor_HotelList extends Convertor_Base {
             $dataTemp ['address'] = $hotel ['address'];
             $dataTemp ['lat'] = $hotel ['lat'];
             $dataTemp ['lng'] = $hotel ['lng'];
+            $dataTemp ['bookurl'] = $hotel ['bookurl'];
             $data ['list'] [] = $dataTemp;
         }
         return $data;
