@@ -32,7 +32,7 @@ class Convertor_Staff extends Convertor_Base {
         $data ['token'] = $list ['token'];
         $staffModel = new StaffModel();
         $data ['serviceUrl'] = $staffModel->getGsmRedirect(array(
-            'staffid' => $data['staffid']
+            'StaffID' => $data['staffid']
         ));
         return $data;
     }
