@@ -59,6 +59,7 @@ class Convertor_HotelList extends Convertor_Base {
             $oneTemp ['status'] = $value ['status'];
             $oneTemp ['lang_list'] = $value ['lang_list'];
             $oneTemp ['bookurl'] = $value ['bookurl'];
+            $oneTemp ['pdf'] = $value ['pdf'];
             $data ['list'] [] = $oneTemp;
         }
         $data ['total'] = $count;

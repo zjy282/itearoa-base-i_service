@@ -126,6 +126,7 @@ class HotelListController extends \BaseController {
             $param ['status'] = $this->getParamList('status');
             $param ['lang_list'] = $this->getParamList('lang_list');
             $param ['bookurl'] = $this->getParamList('bookurl');
+            $param ['pdf'] = $this->getParamList('pdf');
             $data = $this->model->updateHotelListById($param, $id);
             $data = $this->convertor->statusConvertor(array('id' => $data));
         } else {
