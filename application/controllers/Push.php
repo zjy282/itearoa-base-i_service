@@ -132,4 +132,28 @@ class PushController extends \BaseController {
         Log_File::writeLog('gsmPushMsg', implode("\n", $logInfo));
         $this->echoSuccessData($data);
     }
+
+    /**
+     * 用户获取推送服务列表
+     *
+     * @return Json
+     */
+    public function getUserMsgListAction() {
+        $token = trim($this->getParamList('token'));
+        $userId = Auth_Login::getToken($token);
+        if (empty ($userId)) {
+            $this->throwException(2, 'token验证失败');
+        }
+
+        $param = array();
+        $param ['page'] = intval($this->getParamList('page', 1));
+        $param ['limit'] = intval($this->getParamList('limit', 10));
+        $param ['type'] = Enum_Push::PUSH_TYPE_USER;
+        $param ['dataid'] = $userId;
+        $param ['result'] = 0;
+        $data = $this->model->getPushList($param);
+        $count = $this->model->getPushCount($param);
+        $data = $this->convertor->userMsgListConvertor($data, $count, $param);
+        $this->echoSuccessData($data);
+    }
 }
