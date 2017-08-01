@@ -177,6 +177,17 @@ class UserBillController extends BaseController {
         }
         $param['status'] = 1;
         $data = $this->model->addUserBill($param);
+        if ($data) {
+            $pushParams['cn_title'] = date('Ymd', $param['date']) . '账单';
+            $pushParams['cn_value'] = '点击查看账单详情';
+            $pushParams['en_title'] = date('Ymd', $param['date']) . 'invoice';
+            $pushParams['en_value'] = 'Click to check the invoice';
+            $pushParams['type'] = Enum_Push::PUSH_TYPE_USER;
+            $pushParams['url'] = Enum_Img::getPathByKeyAndType($param['pdf']);
+            $pushParams['dataid'] = $param['userid'];
+            $pushModel = new PushModel();
+            $pushModel->addPushOne($pushParams);
+        }
         $data = $this->convertor->statusConvertor(array('id' => $data));
         $this->echoSuccessData($data);
     }
