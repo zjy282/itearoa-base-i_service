@@ -31,6 +31,9 @@ class PromotionController extends \BaseController {
         $param ['tagid'] = intval($this->getParamList('tagid'));
         $param ['id'] = intval($this->getParamList('id'));
         $param ['status'] = $this->getParamList('status');
+        if(Enum_System::notAdminPackage($this->package)){
+            $param ['status'] = 1;
+        }
         $param ['title'] = $this->getParamList('title');
         $this->getPageParam($param);
         $promotionList = $this->model->getPromotionList($param);
