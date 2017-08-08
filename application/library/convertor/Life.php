@@ -25,15 +25,15 @@ class Convertor_Life extends Convertor_Base {
         $typeIdList = array_column($lifeList, 'typeid');
         if ($typeIdList) {
             $lifeTypeModel = new LifeTypeModel();
-            $liftTypeList = $lifeTypeModel->getLifeTypeList(array('id' => $typeIdList));
-            $liftTypeInfoList = array_column($liftTypeList, null, 'id');
+            $lifeTypeList = $lifeTypeModel->getLifeTypeList(array('id' => $typeIdList));
+            $lifeTypeInfoList = array_column($lifeTypeList, null, 'id');
         }
         foreach ($lifeList as $lifes) {
             $lifeTemp = array();
             $lifeTemp ['id'] = $lifes ['id'];
             $lifeTemp ['name'] = $this->handlerMultiLang('name', $lifes);
             $lifeTemp ['address'] = $this->handlerMultiLang('address', $lifes);
-            $lifeTemp ['type'] = $this->handlerMultiLang('title', $liftTypeInfoList[$lifeTemp['id']]);
+            $lifeTemp ['type'] = $this->handlerMultiLang('title', $lifeTypeInfoList[$lifeTemp['typeid']]);
             $lifeTemp ['tel'] = $lifes ['tel'];
             $lifeTemp ['introduct'] = $this->handlerMultiLang('introduct', $lifes);
             $lifeTemp ['detail'] = Enum_Img::getPathByKeyAndType($this->handlerMultiLang('detail', $lifes));
