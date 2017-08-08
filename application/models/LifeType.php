@@ -24,9 +24,10 @@ class LifeTypeModel extends \BaseModel {
         isset($param['hotelid']) ? $paramList['hotelid'] = intval($param['hotelid']) : false;
         isset($param['limit']) ? $paramList['limit'] = $param['limit'] : false;
         isset($param['page']) ? $paramList['page'] = $param['page'] : false;
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
         return $this->dao->getLifeTypeList($paramList);
     }
-    
+
     /**
      * 获取LifeType数量
      *
@@ -35,9 +36,10 @@ class LifeTypeModel extends \BaseModel {
      * @return array
      */
     public function getLifeTypeCount(array $param) {
-    	$paramList = array();
-    	$param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
-    	return $this->dao->getLifeTypeCount($paramList);
+        $paramList = array();
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
+        return $this->dao->getLifeTypeCount($paramList);
     }
 
     /**
@@ -76,18 +78,18 @@ class LifeTypeModel extends \BaseModel {
         return $result;
     }
 
-	/**
-	 * LifeType新增信息
-	 *
-	 * @param
-	 *        	array param 需要增加的信息
-	 * @return array
-	 */
-	public function addLifeType($param) {
-		$info ['title_lang1'] = $param ['title_lang1'];
-		$info ['title_lang2'] = $param ['title_lang2'];
-		$info ['title_lang3'] = $param ['title_lang3'];
-		$info ['hotelid'] = $param ['hotelid'];
-		return $this->dao->addLifeType ( $info );
-	}
+    /**
+     * LifeType新增信息
+     *
+     * @param
+     *            array param 需要增加的信息
+     * @return array
+     */
+    public function addLifeType($param) {
+        $info ['title_lang1'] = $param ['title_lang1'];
+        $info ['title_lang2'] = $param ['title_lang2'];
+        $info ['title_lang3'] = $param ['title_lang3'];
+        $info ['hotelid'] = $param ['hotelid'];
+        return $this->dao->addLifeType($info);
+    }
 }
