@@ -25,6 +25,7 @@ class AppVersionModel extends \BaseModel {
         $param['platform'] ? $paramList['platform'] = $param['platform'] : false;
         isset($param['forced']) ? $paramList['forced'] = intval($param['forced']) : false;
         isset($param['latest']) ? $paramList['latest'] = intval($param['latest']) : false;
+        $param['groupid'] ? $paramList['groupid'] = $param['groupid'] : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getAppVersionList($paramList);
@@ -43,6 +44,7 @@ class AppVersionModel extends \BaseModel {
         $param['platform'] ? $paramList['platform'] = $param['platform'] : false;
         isset($param['forced']) ? $paramList['forced'] = intval($param['forced']) : false;
         isset($param['latest']) ? $paramList['latest'] = intval($param['latest']) : false;
+        $param['groupid'] ? $paramList['groupid'] = $param['groupid'] : false;
         return $this->dao->getAppVersionCount($paramList);
     }
 
@@ -96,6 +98,7 @@ class AppVersionModel extends \BaseModel {
         !is_null($param['version']) ? $info['version'] = $param['version'] : false;
         !is_null($param['description']) ? $info['description'] = $param['description'] : false;
         !is_null($param['latest']) ? $info['latest'] = $param['latest'] : false;
+        !is_null($param['groupid']) ? $info['groupid'] = $param['groupid'] : false;
         $info['createtime'] = time();
         return $this->dao->addAppVersion($info);
     }
@@ -109,11 +112,12 @@ class AppVersionModel extends \BaseModel {
      */
     public function getLatestAppVersionByPlatform($param) {
         $platform = intval($param['platform']);
+        $groupid = intval($param['groupid']);
 
         if (!array_key_exists($platform, Enum_Platform::getPlatformNameList())) {
             $this->throwException('设备类型参数错误', 2);
         }
-        $result = $this->dao->getLatestAppVersionByPlatform($platform);
+        $result = $this->dao->getLatestAppVersionByPlatform($platform, $groupid);
         if (!$result) {
             $this->throwException('设备没有可用版本', 3);
         }

@@ -9,7 +9,7 @@ class Dao_AppstartPic extends Dao_Base {
     }
 
     /**
-     * 查询iservice_appstart_pic列表
+     * 查询group_appstart_pic列表
      *
      * @param
      *            array 入参
@@ -20,7 +20,7 @@ class Dao_AppstartPic extends Dao_Base {
         $page = $this->getStart($param['page'], $limit);
 
         $paramSql = $this->handlerListParams($param);
-        $sql = "select * from iservice_appstart_pic {$paramSql['sql']}";
+        $sql = "select * from group_appstart_pic {$paramSql['sql']}";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }
@@ -37,7 +37,7 @@ class Dao_AppstartPic extends Dao_Base {
      */
     public function getAppstartPicCount(array $param): int {
         $paramSql = $this->handlerListParams($param);
-        $sql = "select count(1) as count from iservice_appstart_pic {$paramSql['sql']}";
+        $sql = "select count(1) as count from group_appstart_pic {$paramSql['sql']}";
         $result = $this->db->fetchAssoc($sql, $paramSql['case']);
         return intval($result['count']);
     }
@@ -62,6 +62,10 @@ class Dao_AppstartPic extends Dao_Base {
             $whereSql[] = 'status = ?';
             $whereCase[] = $param['status'];
         }
+        if (isset($param['groupid'])) {
+            $whereSql[] = 'groupid = ?';
+            $whereCase[] = $param['groupid'];
+        }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
         return array(
             'sql' => $whereSql,
@@ -70,7 +74,7 @@ class Dao_AppstartPic extends Dao_Base {
     }
 
     /**
-     * 根据id查询iservice_appstart_pic详情
+     * 根据id查询group_appstart_pic详情
      *
      * @param
      *            int id
@@ -80,7 +84,7 @@ class Dao_AppstartPic extends Dao_Base {
         $result = array();
 
         if ($id) {
-            $sql = "select * from iservice_appstart_pic where id=?";
+            $sql = "select * from group_appstart_pic where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
@@ -90,7 +94,7 @@ class Dao_AppstartPic extends Dao_Base {
     }
 
     /**
-     * 根据id更新iservice_appstart_pic
+     * 根据id更新group_appstart_pic
      *
      * @param
      *            array 需要更新的数据
@@ -102,21 +106,21 @@ class Dao_AppstartPic extends Dao_Base {
         $result = false;
 
         if ($id) {
-            $result = $this->db->update('iservice_appstart_pic', $info, array('id' => $id));
+            $result = $this->db->update('group_appstart_pic', $info, array('id' => $id));
         }
 
         return $result;
     }
 
     /**
-     * 单条增加iservice_appstart_pic数据
+     * 单条增加group_appstart_pic数据
      *
      * @param
      *            array
      * @return int id
      */
     public function addAppstartPic(array $info) {
-        $this->db->insert('iservice_appstart_pic', $info);
+        $this->db->insert('group_appstart_pic', $info);
         return $this->db->lastInsertId();
     }
 }

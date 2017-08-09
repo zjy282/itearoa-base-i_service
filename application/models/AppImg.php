@@ -23,6 +23,7 @@ class AppImgModel extends \BaseModel {
     public function getAppImgList(array $param) {
         $param['id'] ? $paramList['id'] = $param['id'] : false;
         isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
+        $param['groupid'] ? $paramList['groupid'] = $param['groupid'] : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getAppImgList($paramList);
@@ -39,6 +40,7 @@ class AppImgModel extends \BaseModel {
         $paramList = array();
         $param['id'] ? $paramList['id'] = $param['id'] : false;
         isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
+        $param['groupid'] ? $paramList['groupid'] = $param['groupid'] : false;
         return $this->dao->getAppImgCount($paramList);
     }
 
@@ -71,6 +73,7 @@ class AppImgModel extends \BaseModel {
         if ($id) {
             !is_null($param['pickey']) ? $info['pickey'] = $param['pickey'] : false;
             !is_null($param['status']) ? $info['status'] = $param['status'] : false;
+            !is_null($param['groupid']) ? $info['groupid'] = $param['groupid'] : false;
             $result = $this->dao->updateAppImgById($info, $id);
         }
         return $result;
@@ -86,6 +89,7 @@ class AppImgModel extends \BaseModel {
     public function addAppImg($param) {
         !is_null($param['pickey']) ? $info['pickey'] = $param['pickey'] : false;
         !is_null($param['status']) ? $info['status'] = $param['status'] : false;
+        !is_null($param['groupid']) ? $info['groupid'] = $param['groupid'] : false;
         $info['createtime'] = time();
         return $this->dao->addAppImg($info);
     }

@@ -60,6 +60,10 @@ class Dao_IserviceFeedback extends Dao_Base {
             $whereSql[] = 'email = ?';
             $whereCase[] = $param['email'];
         }
+        if (isset($param['groupid'])) {
+            $whereSql[] = 'groupid = ?';
+            $whereCase[] = $param['groupid'];
+        }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
         return array(
             'sql' => $whereSql,

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * APP版本管理数据层
  */
@@ -9,7 +10,7 @@ class Dao_AppVersion extends Dao_Base {
     }
 
     /**
-     * 查询iservice_app_version列表
+     * 查询group_app_version列表
      *
      * @param
      *            array 入参
@@ -20,7 +21,7 @@ class Dao_AppVersion extends Dao_Base {
         $page = $this->getStart($param['page'], $limit);
 
         $paramSql = $this->handlerListParams($param);
-        $sql = "select * from iservice_app_version {$paramSql['sql']}";
+        $sql = "select * from group_app_version {$paramSql['sql']}";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }
@@ -29,7 +30,7 @@ class Dao_AppVersion extends Dao_Base {
     }
 
     /**
-     * 查询iservice_app_version数量
+     * 查询group_app_version数量
      *
      * @param
      *            array 入参
@@ -37,7 +38,7 @@ class Dao_AppVersion extends Dao_Base {
      */
     public function getAppVersionCount(array $param): int {
         $paramSql = $this->handlerListParams($param);
-        $sql = "select count(1) as count from iservice_app_version {$paramSql['sql']}";
+        $sql = "select count(1) as count from group_app_version {$paramSql['sql']}";
         $result = $this->db->fetchAssoc($sql, $paramSql['case']);
         return intval($result['count']);
     }
@@ -70,6 +71,10 @@ class Dao_AppVersion extends Dao_Base {
             $whereSql[] = 'latest = ?';
             $whereCase[] = $param['latest'];
         }
+        if (isset($param['groupid'])) {
+            $whereSql[] = 'groupid = ?';
+            $whereCase[] = $param['groupid'];
+        }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
         return array(
             'sql' => $whereSql,
@@ -79,7 +84,7 @@ class Dao_AppVersion extends Dao_Base {
 
 
     /**
-     * 根据id查询iservice_app_version详情
+     * 根据id查询group_app_version详情
      *
      * @param
      *            int id
@@ -89,7 +94,7 @@ class Dao_AppVersion extends Dao_Base {
         $result = array();
 
         if ($id) {
-            $sql = "select * from iservice_app_version where id=?";
+            $sql = "select * from group_app_version where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
@@ -99,7 +104,7 @@ class Dao_AppVersion extends Dao_Base {
     }
 
     /**
-     * 根据id更新iservice_app_version
+     * 根据id更新group_app_version
      *
      * @param
      *            array 需要更新的数据
@@ -111,21 +116,21 @@ class Dao_AppVersion extends Dao_Base {
         $result = false;
 
         if ($id) {
-            $result = $this->db->update('iservice_app_version', $info, array('id' => $id));
+            $result = $this->db->update('group_app_version', $info, array('id' => $id));
         }
 
         return $result;
     }
 
     /**
-     * 单条增加iservice_app_version数据
+     * 单条增加group_app_version数据
      *
      * @param
      *            array
      * @return int id
      */
     public function addAppVersion(array $info) {
-        $this->db->insert('iservice_app_version', $info);
+        $this->db->insert('group_app_version', $info);
         return $this->db->lastInsertId();
     }
 
@@ -136,12 +141,13 @@ class Dao_AppVersion extends Dao_Base {
      *            设备类型
      * @return array
      */
-    public function getLatestAppVersionByPlatform(int $platform) {
+    public function getLatestAppVersionByPlatform(int $platform, $groupid) {
         $result = array();
         if ($platform) {
-            $sql = "select * from iservice_app_version where platform = ? and latest = 1";
+            $sql = "select * from group_app_version where platform = ? and latest = 1 and groupid = ?";
             $result = $this->db->fetchAssoc($sql, array(
-                $platform
+                $platform,
+                $groupid
             ));
         }
         return $result;

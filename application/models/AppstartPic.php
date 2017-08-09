@@ -22,6 +22,7 @@ class AppstartPicModel extends \BaseModel {
      */
     public function getAppstartPicList(array $param) {
         $param['id'] ? $paramList['id'] = $param['id'] : false;
+        $param['groupid'] ? $paramList['groupid'] = $param['groupid'] : false;
         isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
@@ -38,6 +39,7 @@ class AppstartPicModel extends \BaseModel {
     public function getAppstartPicCount(array $param) {
         $paramList = array();
         $param['id'] ? $paramList['id'] = $param['id'] : false;
+        $param['groupid'] ? $paramList['groupid'] = $param['groupid'] : false;
         isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
         return $this->dao->getAppstartPicCount($paramList);
     }
@@ -89,6 +91,7 @@ class AppstartPicModel extends \BaseModel {
         !is_null($param['pic']) ? $info['pic'] = $param['pic'] : false;
         !is_null($param['status']) ? $info['status'] = $param['status'] : false;
         !is_null($param['link']) ? $info['link'] = $param['link'] : false;
+        !is_null($param['groupid']) ? $info['groupid'] = $param['groupid'] : false;
         return $this->dao->addAppstartPic($info);
     }
 }

@@ -21,6 +21,7 @@ class IserviceFeedbackModel extends \BaseModel {
     public function getIserviceFeedbackList(array $param) {
         $param['id'] ? $paramList['id'] = $param['id'] : false;
         $param['email'] ? $paramList['email'] = $param['email'] : false;
+        $param['groupid'] ? $paramList['groupid'] = $param['groupid'] : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getIserviceFeedbackList($paramList);
@@ -37,6 +38,7 @@ class IserviceFeedbackModel extends \BaseModel {
         $paramList = array();
         $param['id'] ? $paramList['id'] = $param['id'] : false;
         $param['email'] ? $paramList['email'] = $param['email'] : false;
+        $param['groupid'] ? $paramList['groupid'] = $param['groupid'] : false;
         return $this->dao->getIserviceFeedbackCount($paramList);
     }
 
@@ -78,6 +80,7 @@ class IserviceFeedbackModel extends \BaseModel {
         isset($param['email']) ? $info['email'] = $param['email'] : false;
         isset($param['content']) ? $info['content'] = $param['content'] : false;
         isset($param['createtime']) ? $info['createtime'] = $param['createtime'] : false;
+        isset($param['groupid']) ? $info['groupid'] = $param['groupid'] : false;
         return $this->dao->addIserviceFeedback($info);
     }
 }

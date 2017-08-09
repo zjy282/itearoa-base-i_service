@@ -9,7 +9,7 @@ class Dao_AppImg extends Dao_Base {
     }
 
     /**
-     * 查询iservice_app_img列表
+     * 查询group_app_img列表
      *
      * @param
      *            array 入参
@@ -20,7 +20,7 @@ class Dao_AppImg extends Dao_Base {
         $page = $this->getStart($param['page'], $limit);
 
         $paramSql = $this->handlerListParams($param);
-        $sql = "select * from iservice_app_img {$paramSql['sql']}";
+        $sql = "select * from group_app_img {$paramSql['sql']}";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }
@@ -29,7 +29,7 @@ class Dao_AppImg extends Dao_Base {
     }
 
     /**
-     * 查询iservice_app_img数量
+     * 查询group_app_img数量
      *
      * @param
      *            array 入参
@@ -37,7 +37,7 @@ class Dao_AppImg extends Dao_Base {
      */
     public function getAppImgCount(array $param): int {
         $paramSql = $this->handlerListParams($param);
-        $sql = "select count(1) as count from iservice_app_img {$paramSql['sql']}";
+        $sql = "select count(1) as count from group_app_img {$paramSql['sql']}";
         $result = $this->db->fetchAssoc($sql, $paramSql['case']);
         return intval($result['count']);
     }
@@ -62,6 +62,10 @@ class Dao_AppImg extends Dao_Base {
             $whereSql[] = 'status = ?';
             $whereCase[] = $param['status'];
         }
+        if (isset($param['groupid'])) {
+            $whereSql[] = 'groupid = ?';
+            $whereCase[] = $param['groupid'];
+        }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
         return array(
             'sql' => $whereSql,
@@ -70,7 +74,7 @@ class Dao_AppImg extends Dao_Base {
     }
 
     /**
-     * 根据id查询iservice_app_img详情
+     * 根据id查询group_app_img详情
      *
      * @param
      *            int id
@@ -80,7 +84,7 @@ class Dao_AppImg extends Dao_Base {
         $result = array();
 
         if ($id) {
-            $sql = "select * from iservice_app_img where id=?";
+            $sql = "select * from group_app_img where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));
@@ -90,7 +94,7 @@ class Dao_AppImg extends Dao_Base {
     }
 
     /**
-     * 根据id更新iservice_app_img
+     * 根据id更新group_app_img
      *
      * @param
      *            array 需要更新的数据
@@ -102,21 +106,21 @@ class Dao_AppImg extends Dao_Base {
         $result = false;
 
         if ($id) {
-            $result = $this->db->update('iservice_app_img', $info, array('id' => $id));
+            $result = $this->db->update('group_app_img', $info, array('id' => $id));
         }
 
         return $result;
     }
 
     /**
-     * 单条增加iservice_app_img数据
+     * 单条增加group_app_img数据
      *
      * @param
      *            array
      * @return int id
      */
     public function addAppImg(array $info) {
-        $this->db->insert('iservice_app_img', $info);
+        $this->db->insert('group_app_img', $info);
         return $this->db->lastInsertId();
     }
 
@@ -126,7 +130,7 @@ class Dao_AppImg extends Dao_Base {
      * @return array
      */
     public function getAvailableAppImg() {
-        $sql = 'select * from iservice_app_img where status = 1 order by createtime desc';
+        $sql = 'select * from group_app_img where status = 1 order by createtime desc';
         return $this->db->fetchAssoc($sql, array());
     }
 }
