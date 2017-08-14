@@ -62,6 +62,8 @@ class GroupModel extends \BaseModel {
             isset($param['name']) ? $info['name'] = $param['name'] : false;
             isset($param['enName']) ? $info['enname'] = $param['enName'] : false;
             isset($param['portUrl']) ? $info['port_url'] = $param['portUrl'] : false;
+            isset($param['about_zh']) ? $info['about_zh'] = $param['about_zh'] : false;
+            isset($param['about_en']) ? $info['about_en'] = $param['about_en'] : false;
             $result = $this->dao->updateGroupById($info, $id);
         }
         return $result;
