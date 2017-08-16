@@ -142,7 +142,6 @@ class PushController extends \BaseController {
     public function getUserMsgListAction() {
         $token = trim($this->getParamList('token'));
         $userId = Auth_Login::getToken($token);
-        $userId = 1;
         if (empty ($userId)) {
             $this->throwException(2, 'token验证失败');
         }
