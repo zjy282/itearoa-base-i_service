@@ -19,6 +19,9 @@ class Enum_Push {
     const PUSH_TAG_GROUP_PREFIX = 'group_';//物业标签前缀
     const PUSH_ALIAS_USER_PREFIX = 'user';//用户别名前缀
     const PUSH_ALIAS_STAFF_PREFIX = 'staff';//员工别名前缀
+
+    const PUSH_CONTENT_TYPE_URL = 'url';
+    const PUSH_CONTENT_TYPE_SHOPPING_ORDER = 'shopping_order';
     /**
      * 推送机型定义
      */

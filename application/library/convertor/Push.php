@@ -40,7 +40,8 @@ class Convertor_Push extends Convertor_Base {
             $oneTemp ['dataid'] = $value ['dataid'];
             $oneTemp ['cn_title'] = $value ['cn_title'];
             $oneTemp ['en_title'] = $value ['en_title'];
-            $oneTemp ['url'] = $value ['url'];
+            $oneTemp ['content_type'] = $value ['content_type'];
+            $oneTemp ['content_value'] = $value ['content_value'];
             $oneTemp ['result'] = $value ['result'];
             $oneTemp ['platform'] = $value ['platform'];
             $oneTemp ['createtime'] = $value ['createtime'];
@@ -73,7 +74,7 @@ class Convertor_Push extends Convertor_Base {
             $oneTemp ['userId'] = $value ['dataid'];
             $oneTemp ['title'] = $langInfo['lang'] == 'zh' ? $value ['cn_title'] : $value ['en_title'];
             $oneTemp ['value'] = $langInfo['lang'] == 'zh' ? $value ['cn_value'] : $value ['en_value'];
-            $oneTemp ['url'] = $value ['url'];
+            $oneTemp ['url'] = $value ['content_value'];
             $oneTemp ['createtime'] = $value ['createtime'];
             $data ['list'] [] = $oneTemp;
         }

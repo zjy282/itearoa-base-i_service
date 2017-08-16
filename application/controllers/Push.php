@@ -103,7 +103,8 @@ class PushController extends \BaseController {
         $param ['cn_value'] = $this->getParamList('cn_value');
         $param ['en_title'] = $this->getParamList('en_title');
         $param ['en_value'] = $this->getParamList('en_value');
-        $param ['url'] = $this->getParamList('url');
+        $param ['contentType'] = Enum_Push::PUSH_CONTENT_TYPE_URL;
+        $param ['contentValue'] = $this->getParamList('url');
         $data = $this->model->addPushOne($param);
         $data = $this->convertor->statusConvertor(array('id' => $data));
         $this->echoSuccessData($data);
@@ -141,6 +142,7 @@ class PushController extends \BaseController {
     public function getUserMsgListAction() {
         $token = trim($this->getParamList('token'));
         $userId = Auth_Login::getToken($token);
+        $userId = 1;
         if (empty ($userId)) {
             $this->throwException(2, 'token验证失败');
         }
@@ -150,6 +152,7 @@ class PushController extends \BaseController {
         $param ['limit'] = intval($this->getParamList('limit', 10));
         $param ['type'] = Enum_Push::PUSH_TYPE_USER;
         $param ['dataid'] = $userId;
+        $param['content_type'] = Enum_Push::PUSH_CONTENT_TYPE_URL;
         $param ['result'] = 0;
         $data = $this->model->getPushList($param);
         $count = $this->model->getPushCount($param);

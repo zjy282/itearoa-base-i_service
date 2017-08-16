@@ -35,8 +35,8 @@ class Push_Push {
             $unicast->setPredefinedKeyValue("text", $data['value']);
             $unicast->setAppMasterSecret($this->androidMasterSecret);
             $unicast->setPredefinedKeyValue("appkey", $this->androidKey);
-            if ($data['url']) {
-                $unicast->setPredefinedKeyValue("custom", json_encode(array('type' => 'url', 'value' => $data['url'])));
+            if ($data['contentType'] && $data['contentValue']) {
+                $unicast->setPredefinedKeyValue("custom", json_encode(array('type' => $data['contentType'], 'value' => $data['contentValue'])));
                 $unicast->setPredefinedKeyValue("after_open", "go_custom");
             } else {
                 $unicast->setPredefinedKeyValue("after_open", "go_app");
@@ -46,8 +46,8 @@ class Push_Push {
             $unicast->setPredefinedKeyValue("alert", $data['title']);
             $unicast->setPredefinedKeyValue("badge", 0);
             $unicast->setPredefinedKeyValue("sound", "chime");
-            $unicast->setCustomizedField("type", "url");
-            $unicast->setCustomizedField("value", $data['url']);
+            $unicast->setCustomizedField("type", $data['contentType']);
+            $unicast->setCustomizedField("value", $data['contentValue']);
             $unicast->setAppMasterSecret($this->iosMasterSecret);
             $unicast->setPredefinedKeyValue("appkey", $this->iosKey);
         }
@@ -70,8 +70,8 @@ class Push_Push {
             $customizedcast->setPredefinedKeyValue("ticker", $data['title']);
             $customizedcast->setPredefinedKeyValue("title", $data['title']);
             $customizedcast->setPredefinedKeyValue("text", $data['value']);
-            if ($data['url']) {
-                $customizedcast->setPredefinedKeyValue("custom", json_encode(array('type' => 'url', 'value' => $data['url'])));
+            if ($data['contentType'] && $data['contentValue']) {
+                $customizedcast->setPredefinedKeyValue("custom", json_encode(array('type' => $data['contentType'], 'value' => $data['contentValue'])));
                 $customizedcast->setPredefinedKeyValue("after_open", "go_custom");
             } else {
                 $customizedcast->setPredefinedKeyValue("after_open", "go_app");
@@ -83,8 +83,8 @@ class Push_Push {
             $customizedcast->setPredefinedKeyValue("alert", $data['title']);
             $customizedcast->setPredefinedKeyValue("badge", 0);
             $customizedcast->setPredefinedKeyValue("sound", "chime");
-            $customizedcast->setCustomizedField("type", "url");
-            $customizedcast->setCustomizedField("value", $data['url']);
+            $customizedcast->setCustomizedField("type", $data['contentType']);
+            $customizedcast->setCustomizedField("value", $data['contentValue']);
             $customizedcast->setAppMasterSecret($this->iosMasterSecret);
             $customizedcast->setPredefinedKeyValue("appkey", $this->iosKey);
         }
@@ -125,8 +125,8 @@ class Push_Push {
             $customizedcast->setPredefinedKeyValue("ticker", $data['title']);
             $customizedcast->setPredefinedKeyValue("title", $data['title']);
             $customizedcast->setPredefinedKeyValue("text", $data['value']);
-            if ($data['url']) {
-                $customizedcast->setPredefinedKeyValue("custom", json_encode(array('type' => 'url', 'value' => $data['url'])));
+            if ($data['contentType'] && $data['contentValue']) {
+                $customizedcast->setPredefinedKeyValue("custom", json_encode(array('type' => $data['contentType'], 'value' => $data['contentValue'])));
                 $customizedcast->setPredefinedKeyValue("after_open", "go_custom");
             } else {
                 $customizedcast->setPredefinedKeyValue("after_open", "go_app");
@@ -138,8 +138,8 @@ class Push_Push {
             $customizedcast->setPredefinedKeyValue("alert", $data['title']);
             $customizedcast->setPredefinedKeyValue("badge", 0);
             $customizedcast->setPredefinedKeyValue("sound", "chime");
-            $customizedcast->setCustomizedField("type", "url");
-            $customizedcast->setCustomizedField("value", $data['url']);
+            $customizedcast->setCustomizedField("type", $data['contentType']);
+            $customizedcast->setCustomizedField("value", $data['contentValue']);
             $customizedcast->setAppMasterSecret($this->iosMasterSecret);
             $customizedcast->setPredefinedKeyValue("appkey", $this->iosKey);
         }
@@ -174,8 +174,8 @@ class Push_Push {
             $brocast->setPredefinedKeyValue("ticker", $data['title']);
             $brocast->setPredefinedKeyValue("title", $data['title']);
             $brocast->setPredefinedKeyValue("text", $data['value']);
-            if ($data['url']) {
-                $brocast->setPredefinedKeyValue("custom", json_encode(array('type' => 'url', 'value' => $data['url'])));
+            if ($data['contentType'] && $data['contentValue']) {
+                $brocast->setPredefinedKeyValue("custom", json_encode(array('type' => $data['contentType'], 'value' => $data['contentValue'])));
                 $brocast->setPredefinedKeyValue("after_open", "go_custom");
             } else {
                 $brocast->setPredefinedKeyValue("after_open", "go_app");
@@ -187,8 +187,8 @@ class Push_Push {
             $brocast->setPredefinedKeyValue("alert", $data['title']);
             $brocast->setPredefinedKeyValue("badge", 0);
             $brocast->setPredefinedKeyValue("sound", "chime");
-            $brocast->setCustomizedField("type", "url");
-            $brocast->setCustomizedField("value", $data['url']);
+            $brocast->setCustomizedField("type", $data['contentType']);
+            $brocast->setCustomizedField("value", $data['contentValue']);
             $brocast->setAppMasterSecret($this->iosMasterSecret);
             $brocast->setPredefinedKeyValue("appkey", $this->iosKey);
         }
