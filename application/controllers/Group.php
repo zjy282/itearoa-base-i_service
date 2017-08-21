@@ -42,7 +42,11 @@ class GroupController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $data = $this->model->getGroupDetail($id);
-            $data = $this->convertor->getGroupDetailConvertor($data);
+            if (Enum_System::notAdminPackage($this->package)) {
+                $data = $this->convertor->getGroupDetailConvertor($data);
+            } else {
+                $data = $this->convertor->getAdminGroupDetailConvertor($data);
+            }
         } else {
             $this->throwException(1, '查询条件错误，id不能为空');
         }

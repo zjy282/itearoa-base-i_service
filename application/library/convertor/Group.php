@@ -58,4 +58,25 @@ class Convertor_Group extends Convertor_Base {
         }
         return $data;
     }
+
+    /**
+     * 后台集团详情数据转换器
+     *
+     * @param array $result
+     *            集团详情
+     * @return array
+     */
+    public function getAdminGroupDetailConvertor($result) {
+        $data = array();
+        if (is_array($result) && count($result) > 0) {
+            $langInfo = Yaf_Registry::get('hotelLangInfo');
+            $data ['id'] = $result ['id'];
+            $data ['name'] = $result ['name'];
+            $data ['enName'] = $result ['enname'];
+            $data ['portUrl'] = $result ['port_url'];
+            $data ['about_zh'] = $result ['about_zh'];
+            $data ['about_en'] = $result ['about_en'];
+        }
+        return $data;
+    }
 }
