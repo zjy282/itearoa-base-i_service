@@ -33,6 +33,7 @@ class ShoppingController extends \BaseController {
         $param = array();
         $param ['hotelid'] = intval($this->getParamList('hotelid'));
         $param ['tagid'] = intval($this->getParamList('tagid'));
+        $param['status'] = 1;
         $this->getPageParam($param);
         $shoppingList = $this->model->getShoppingList($param);
         $shoppingCount = $this->model->getShoppingCount($param);
@@ -110,6 +111,7 @@ class ShoppingController extends \BaseController {
             $param ['sort'] = $this->getParamList('sort');
             $param ['pdf'] = $this->getParamList('pdf');
             $param ['video'] = $this->getParamList('video');
+            $param ['status'] = $this->getParamList('status');
             $data = $this->model->updateShoppingById($param, $id);
             $data = $this->convertor->statusConvertor($data);
         } else {
@@ -140,6 +142,7 @@ class ShoppingController extends \BaseController {
         $param ['sort'] = intval($this->getParamList('sort'));
         $param ['pdf'] = trim($this->getParamList('pdf'));
         $param ['video'] = trim($this->getParamList('video'));
+        $param ['status'] = intval($this->getParamList('status'));
         $data = $this->model->addShopping($param);
         $data = $this->convertor->statusConvertor(array('id' => $data));
         $this->echoSuccessData($data);

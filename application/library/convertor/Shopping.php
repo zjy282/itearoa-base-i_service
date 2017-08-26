@@ -96,6 +96,7 @@ class Convertor_Shopping extends Convertor_Base {
             $shoppingTemp ['video'] = $value ['video'];
             $shoppingTemp ['tagid'] = $value ['tagid'];
             $shoppingTemp ['tagName'] = $shoppingTagNameList [$shoppingTemp ['tagid']];
+            $shoppingTemp ['status'] = $value ['status'];
             $data ['list'] [] = $shoppingTemp;
         }
         $data ['total'] = $count;

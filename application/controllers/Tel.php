@@ -137,6 +137,7 @@ class TelController extends \BaseController {
 				unset ( $param ['islogin'] );
 			}
 		}
+		$param ['status'] = 1;
 		$telTypeModel = new TelTypeModel ();
 		$telTypeList = $telTypeModel->getTelTypeList ( $param );
 		$param ['status'] = 1;

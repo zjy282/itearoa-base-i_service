@@ -23,6 +23,28 @@ class Convertor_ShoppingOrder extends Convertor_Base {
     public function getShoppingOrderListConvertor($list, $count, $param) {
         $data = array('list' => array());
         $statusNameList = Enum_ShoppingOrder::getStatusNameList();
+
+        $userIdList = array_column($list, 'userid');
+        if ($userIdList) {
+            $userModel = new UserModel();
+            $userInfoList = $userModel->getUserList(array('id' => $userIdList));
+            $userInfoList = array_column($userInfoList, null, 'id');
+        }
+
+        $shoppingIdList = array_column($list, 'shoppingid');
+        if ($shoppingIdList) {
+            $shoppingModel = new ShoppingModel();
+            $shoppingInfoList = $shoppingModel->getShoppingList(array('id' => $shoppingIdList));
+            $shoppingInfoList = array_column($shoppingInfoList, null, 'id');
+        }
+
+        $adminIdList = array_column($list, 'adminid');
+        if ($adminIdList) {
+            $staffModel = new StaffModel();
+            $staffInfoList = $staffModel->getStaffList(array('id' => $adminIdList));
+            $staffInfoList = array_column($staffInfoList, null, 'id');
+        }
+
         foreach ($list as $listOne) {
             $listOneTemp = array();
             $listOneTemp ['id'] = $listOne ['id'];
@@ -33,6 +55,27 @@ class Convertor_ShoppingOrder extends Convertor_Base {
             $listOneTemp ['statusName'] = $statusNameList [$listOne ['status']];
             $listOneTemp ['shoppingid'] = $listOne ['shoppingid'];
             $listOneTemp ['adminid'] = $listOne ['adminid'];
+            $userInfoTemp = $userInfoList[$listOneTemp['userid']];
+            $listOneTemp['userInfo'] = array(
+                'name' => $userInfoTemp['fullname'],
+                'room' => $userInfoTemp['room_no']
+            );
+            $shoppingInfoTemp = $shoppingInfoList[$listOneTemp['shoppingid']];
+            $listOneTemp['shoppingInfo'] = array(
+                'name' => $this->handlerMultiLang('title', $shoppingInfoTemp),
+                'introduct' => $this->handlerMultiLang('introduct', $shoppingInfoTemp),
+                'pic' => Enum_Img::getPathByKeyAndType($shoppingInfoTemp['pic']),
+                'detail' => $this->handlerMultiLang('detail', $shoppingInfoTemp),
+                'pdf' => Enum_Img::getPathByKeyAndType($shoppingInfoTemp['pdf']),
+                'video' => Enum_Img::getPathByKeyAndType($shoppingInfoTemp['video']),
+                'price' => floatval($shoppingInfoTemp['price'])
+            );
+            $staffInfoListTemp = $staffInfoList[$listOneTemp['adminid']];
+            if ($listOneTemp['adminid']) {
+                $listOneTemp['staffInfo'] = array(
+                    'name' => $staffInfoListTemp['lname']
+                );
+            }
             $data ['list'] [] = $listOneTemp;
         }
         $data ['total'] = $count;

@@ -47,6 +47,7 @@ class Convertor_HotelList extends Convertor_Base {
             $oneTemp ['logo'] = $value ['logo'];
             $oneTemp ['index_background'] = $value ['index_background'];
             $oneTemp ['localpic'] = $value ['localpic'];
+            $oneTemp ['listpic'] = $value ['listpic'];
             $oneTemp ['voice_lang1'] = $value ['voice_lang1'];
             $oneTemp ['voice_lang2'] = $value ['voice_lang2'];
             $oneTemp ['voice_lang3'] = $value ['voice_lang3'];
@@ -84,6 +85,7 @@ class Convertor_HotelList extends Convertor_Base {
             $dataTemp = array();
             $dataTemp ['hotelId'] = $hotel ['id'];
             $dataTemp ['localpic'] = Enum_Img::getPathByKeyAndType($hotel ['localpic'], Enum_Img::PIC_TYPE_KEY_WIDTH750);
+            $dataTemp ['listpic'] = Enum_Img::getPathByKeyAndType($hotel ['listpic'], Enum_Img::PIC_TYPE_KEY_WIDTH750);
             $dataTemp ['propertyinterfId'] = $hotel ['propertyinterfid'];
             $dataTemp ['cityId'] = $hotel ['cityid'];
             $cityInfo = $cityInfoList [$dataTemp ['cityId']];
@@ -92,6 +94,7 @@ class Convertor_HotelList extends Convertor_Base {
             $dataTemp ['countryName'] = $cityInfo ['countryname'];
             $dataTemp ['countryEnName'] = $cityInfo ['countryenname'];
             $dataTemp ['name'] = $hotel ['name_lang1'];
+            $dataTemp ['nameEn'] = $hotel ['name_lang2'];
             $dataTemp ['address'] = $hotel ['address'];
             $dataTemp ['lat'] = $hotel ['lat'];
             $dataTemp ['lng'] = $hotel ['lng'];

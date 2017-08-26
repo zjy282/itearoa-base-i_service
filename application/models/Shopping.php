@@ -92,6 +92,7 @@ class ShoppingModel extends \BaseModel {
             isset($param['sort']) ? $info['sort'] = $param['sort'] : false;
             isset($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
             isset($param['video']) ? $info['video'] = $param['video'] : false;
+            isset($param['status']) ? $info['status'] = $param['status'] : false;
 
             $result = $this->dao->updateShoppingById($info, $id);
         }
@@ -119,6 +120,7 @@ class ShoppingModel extends \BaseModel {
         isset($param['sort']) ? $info['sort'] = $param['sort'] : false;
         isset($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
         isset($param['video']) ? $info['video'] = $param['video'] : false;
+        isset($param['status']) ? $info['status'] = $param['status'] : false;
         $info['createtime'] = time();
         return $this->dao->addShopping($info);
     }

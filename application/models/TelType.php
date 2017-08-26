@@ -26,6 +26,7 @@ class TelTypeModel extends \BaseModel {
         $param['title'] ? $paramList['title'] = $param['title'] : false;
         $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
         isset($param['islogin']) ? $paramList['islogin'] = intval($param['islogin']) : false;
+        isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getTelTypeList($paramList);
@@ -44,6 +45,7 @@ class TelTypeModel extends \BaseModel {
         $param['title'] ? $paramList['title'] = intval($param['title']) : false;
         $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
         isset($param['islogin']) ? $paramList['islogin'] = intval($param['islogin']) : false;
+        isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
         return $this->dao->getTelTypeCount($paramList);
     }
 
@@ -79,6 +81,7 @@ class TelTypeModel extends \BaseModel {
             isset($param['title_lang1']) ? $info['title_lang1'] = $param['title_lang1'] : false;
             isset($param['title_lang2']) ? $info['title_lang2'] = $param['title_lang2'] : false;
             isset($param['title_lang3']) ? $info['title_lang3'] = $param['title_lang3'] : false;
+            isset($param['status']) ? $info['status'] = $param['status'] : false;
             $result = $this->dao->updateTelTypeById($info, $id);
         }
         return $result;
@@ -97,6 +100,7 @@ class TelTypeModel extends \BaseModel {
         isset($param['title_lang1']) ? $info['title_lang1'] = $param['title_lang1'] : false;
         isset($param['title_lang2']) ? $info['title_lang2'] = $param['title_lang2'] : false;
         isset($param['title_lang3']) ? $info['title_lang3'] = $param['title_lang3'] : false;
+        isset($param['status']) ? $info['status'] = $param['status'] : false;
         return $this->dao->addTelType($info);
     }
 }

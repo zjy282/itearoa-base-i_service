@@ -73,6 +73,10 @@ class Dao_TelType extends Dao_Base {
             $whereSql[] = 'islogin = ?';
             $whereCase[] = $param['islogin'];
         }
+        if (isset($param['status'])) {
+            $whereSql[] = 'status = ?';
+            $whereCase[] = $param['status'];
+        }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
         return array(
             'sql' => $whereSql,
