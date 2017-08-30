@@ -21,7 +21,7 @@ class CityModel extends \BaseModel {
      * @return array
      */
     public function getCityList(array $param) {
-        $param['id'] ? $paramList['id'] = intval($param['id']) : false;
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getCityList($paramList);
