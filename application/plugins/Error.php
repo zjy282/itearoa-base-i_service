@@ -56,6 +56,7 @@ class ErrorPlugin extends \Yaf_Plugin_Abstract {
      *            错误的上下文变量数组。手机版新架构测试用
      */
     public function site_error_handler($errno, $errstr = "", $errorfile = "", $errline = 0, $errcontext = array()) {
+        $errstr = json_encode($errstr);
         $sysConfig = Yaf_Registry::get('sysConfig');
         $debug = $sysConfig->application->debug;
         // 根据错误级别记录日志
