@@ -14,7 +14,7 @@ class ActivityModel extends \BaseModel {
     }
 
     /**
-     * 获取Activity列表信息
+     * 获取活动列表信息
      *
      * @param
      *            array param 查询条件
