@@ -21,7 +21,7 @@ class ActivityModel extends \BaseModel {
      * @return array
      */
     public function getActivityList(array $param) {
-        $param['id'] ? $paramList['id'] = intval($param['id']) : false;
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
         $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
         $param['groupid'] ? $paramList['groupid'] = intval($param['groupid']) : false;
         $param['tagid'] ? $paramList['tagid'] = intval($param['tagid']) : false;
