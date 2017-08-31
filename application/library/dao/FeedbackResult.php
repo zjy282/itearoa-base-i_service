@@ -18,7 +18,7 @@ class Dao_FeedbackResult extends Dao_Base {
         $page = $this->getStart($param['page'], $limit);
 
         $paramSql = $this->handlerListParams($param);
-        $sql = "select * from hotel_feedback_result {$paramSql['sql']}";
+        $sql = "select * from hotel_feedback_result {$paramSql['sql']} order by createtime desc";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }

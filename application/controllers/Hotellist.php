@@ -208,7 +208,7 @@ class HotelListController extends \BaseController {
         $param ['hotelid'] = intval($this->getParamList('hotelid'));
         $param ['status'] = 1;
         if (empty ($param ['hotelid'])) {
-            $this->throwException(2, '物业信息不错在');
+            $this->throwException(2, '物业信息不存在');
         }
         // 获取物业信息
         $hotelInfo = $this->model->getHotelListDetail($param ['hotelid']);

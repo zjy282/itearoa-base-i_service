@@ -109,10 +109,23 @@ class Convertor_ShoppingOrder extends Convertor_Base {
             $adminNameList = array_column($adminInfoList, 'lname', 'id');
         }
         $statusNameList = Enum_ShoppingOrder::getStatusNameList();
+
+        $userIdList = array_column($list, 'userid');
+        if ($userIdList) {
+            $userModel = new UserModel();
+            $userInfoList = $userModel->getUserList(array('id' => $userIdList));
+            $userInfoList = array_column($userInfoList, null, 'id');
+        }
+
         foreach ($list as $listOne) {
             $listOneTemp = array();
             $listOneTemp ['id'] = $listOne ['id'];
             $listOneTemp ['userid'] = $listOne ['userid'];
+            $userInfoTemp = $userInfoList[$listOneTemp['userid']];
+            $listOneTemp['userInfo'] = array(
+                'name' => $userInfoTemp['fullname'],
+                'room' => $userInfoTemp['room_no']
+            );
             $listOneTemp ['count'] = $listOne ['count'];
             $listOneTemp ['createtime'] = $listOne ['creattime'];
             $listOneTemp ['status'] = $listOne ['status'];

@@ -36,6 +36,7 @@ class Convertor_Traffic extends Convertor_Base {
             $oneTemp ['sort'] = $value ['sort'];
             $oneTemp ['pdf'] = $value ['pdf'];
             $oneTemp ['video'] = $value ['video'];
+            $oneTemp ['status'] = $value ['status'];
             $data ['list'] [] = $oneTemp;
         }
         $data ['total'] = $count;

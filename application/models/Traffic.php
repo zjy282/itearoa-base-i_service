@@ -27,6 +27,7 @@ class TrafficModel extends \BaseModel {
         $paramList = array();
         $param['id'] ? $paramList['id'] = intval($param['id']) : false;
         $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getTrafficList($paramList);
@@ -43,6 +44,7 @@ class TrafficModel extends \BaseModel {
         $paramList = array();
         $param['id'] ? $paramList['id'] = intval($param['id']) : false;
         $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
         return $this->dao->getTrafficCount($paramList);
     }
 
@@ -83,6 +85,7 @@ class TrafficModel extends \BaseModel {
             isset($param['sort']) ? $info['sort'] = $param['sort'] : false;
             isset($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
             isset($param['video']) ? $info['video'] = $param['video'] : false;
+            isset($param['status']) ? $info['status'] = $param['status'] : false;
             $result = $this->dao->updateTrafficById($info, $id);
         }
         return $result;
@@ -103,6 +106,7 @@ class TrafficModel extends \BaseModel {
         isset($param['sort']) ? $info['sort'] = $param['sort'] : false;
         isset($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
         isset($param['video']) ? $info['video'] = $param['video'] : false;
+        isset($param['status']) ? $info['status'] = $param['status'] : false;
         return $this->dao->addTraffic($info);
     }
 }

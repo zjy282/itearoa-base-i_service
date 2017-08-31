@@ -21,7 +21,7 @@ class Dao_Room extends Dao_Base {
         $page = $this->getStart($param['page'], $limit);
 
         $paramSql = $this->handlerListParams($param);
-        $sql = "select * from hotel_room {$paramSql['sql']}";
+        $sql = "select hotel_room.* from hotel_room left join hotel_user as hotelUser on hotelUser.room_no = hotel_room.room {$paramSql['sql']} order by hotelUser.lastlogintime desc";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }
@@ -53,26 +53,26 @@ class Dao_Room extends Dao_Base {
         $whereCase = array();
         if (isset($param['id'])) {
             if (is_array($param['id'])) {
-                $whereSql[] = 'id in (' . implode(',', $param['id']) . ')';
+                $whereSql[] = 'hotel_room.id in (' . implode(',', $param['id']) . ')';
             } else {
-                $whereSql[] = 'id = ?';
+                $whereSql[] = 'hotel_room.id = ?';
                 $whereCase[] = $param['id'];
             }
         }
         if (isset($param['hotelid'])) {
-            $whereSql[] = 'hotelid = ?';
+            $whereSql[] = 'hotel_room.hotelid = ?';
             $whereCase[] = $param['hotelid'];
         }
         if (isset($param['room'])) {
-            $whereSql[] = 'room = ?';
+            $whereSql[] = 'hotel_room.room = ?';
             $whereCase[] = $param['room'];
         }
         if (isset($param['floor'])) {
-            $whereSql[] = 'floor = ?';
+            $whereSql[] = 'hotel_room.floor = ?';
             $whereCase[] = $param['floor'];
         }
         if (isset($param['typeid'])) {
-            $whereSql[] = 'typeid = ?';
+            $whereSql[] = 'hotel_room.typeid = ?';
             $whereCase[] = $param['typeid'];
         }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';

@@ -25,6 +25,7 @@ class PanoramicModel extends \BaseModel {
         $param['id'] ? $paramList['id'] = intval($param['id']) : false;
         $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
         $param['title'] ? $paramList['title'] = trim($param['title']) : false;
+        isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getPanoramicList($paramList);
@@ -42,6 +43,7 @@ class PanoramicModel extends \BaseModel {
         $param['id'] ? $paramList['id'] = intval($param['id']) : false;
         $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
         $param['title'] ? $paramList['title'] = trim($param['title']) : false;
+        isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
         return $this->dao->getPanoramicCount($paramList);
     }
 
@@ -78,6 +80,7 @@ class PanoramicModel extends \BaseModel {
             isset($param['title_lang1']) ? $info['title_lang1'] = $param['title_lang1'] : false;
             isset($param['title_lang2']) ? $info['title_lang2'] = $param['title_lang2'] : false;
             isset($param['title_lang3']) ? $info['title_lang3'] = $param['title_lang3'] : false;
+            isset($param['status']) ? $info['status'] = $param['status'] : false;
             $result = $this->dao->updatePanoramicById($info, $id);
         }
         return $result;
@@ -97,6 +100,7 @@ class PanoramicModel extends \BaseModel {
         isset($param['title_lang1']) ? $info['title_lang1'] = $param['title_lang1'] : false;
         isset($param['title_lang2']) ? $info['title_lang2'] = $param['title_lang2'] : false;
         isset($param['title_lang3']) ? $info['title_lang3'] = $param['title_lang3'] : false;
+        isset($param['status']) ? $info['status'] = $param['status'] : false;
         return $this->dao->addPanoramic($info);
     }
 }

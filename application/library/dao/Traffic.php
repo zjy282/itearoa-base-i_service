@@ -63,6 +63,10 @@ class Dao_Traffic extends Dao_Base {
             $whereSql[] = 'hotelid = ?';
             $whereCase[] = $param['hotelid'];
         }
+        if (isset($param['status'])) {
+            $whereSql[] = 'status = ?';
+            $whereCase[] = $param['status'];
+        }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
         return array(
             'sql' => $whereSql,

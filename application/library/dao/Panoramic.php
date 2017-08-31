@@ -63,6 +63,10 @@ class Dao_Panoramic extends Dao_Base {
             $whereSql[] = 'hotelid = ?';
             $whereCase[] = $param['hotelid'];
         }
+        if (isset($param['status'])) {
+            $whereSql[] = 'status = ?';
+            $whereCase[] = $param['status'];
+        }
         if (isset($param['title'])) {
             $whereSql[] = '(title_lang1 = ? or title_lang2 = ? or title_lang3 = ?)';
             $whereCase[] = $param['title'];
