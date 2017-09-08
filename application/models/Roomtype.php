@@ -20,7 +20,7 @@ class RoomtypeModel extends \BaseModel {
      */
     public function getRoomtypeList(array $param) {
         $paramList = array();
-        $param['id'] ? $paramList['id'] = intval($param['id']) : false;
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
         $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
         $param['title'] ? $paramList['title'] = intval($param['title']) : false;
         $paramList['limit'] = $param['limit'];
@@ -37,7 +37,7 @@ class RoomtypeModel extends \BaseModel {
      */
     public function getRoomtypeCount(array $param) {
         $paramList = array();
-        $param['id'] ? $paramList['id'] = intval($param['id']) : false;
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
         $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
         $param['title'] ? $paramList['title'] = intval($param['title']) : false;
         return $this->dao->getRoomtypeCount($paramList);
