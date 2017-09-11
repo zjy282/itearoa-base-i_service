@@ -32,7 +32,11 @@ class NewsController extends \BaseController {
         $param ['hotelid'] = intval($this->getParamList('hotelid'));
         $param ['tagid'] = intval($this->getParamList('tagid'));
         $param ['id'] = intval($this->getParamList('id'));
-        $param ['status'] = $this->getParamList('status');
+        if (Enum_System::notAdminPackage($this->package)) {
+            $param['status'] = 1;
+        } else {
+            $param ['status'] = $this->getParamList('status');
+        }
         $param ['title'] = $this->getParamList('title');
         $this->getPageParam($param);
         $newsList = $this->model->getNewsList($param);

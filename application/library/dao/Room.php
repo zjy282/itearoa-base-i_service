@@ -21,7 +21,7 @@ class Dao_Room extends Dao_Base {
         $page = $this->getStart($param['page'], $limit);
 
         $paramSql = $this->handlerListParams($param);
-        $sql = "select hotel_room.* from hotel_room left join hotel_user as hotelUser on hotelUser.room_no = hotel_room.room {$paramSql['sql']} order by hotelUser.lastlogintime desc";
+        $sql = "select hotel_room.* from hotel_room left join hotel_user as hotelUser on hotelUser.room_no = hotel_room.room {$paramSql['sql']} order by hotelUser.lastlogintime desc,hotel_room.room";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }

@@ -22,7 +22,7 @@ class RoomModel extends \BaseModel {
         $paramList = array();
         $param['id'] ? $paramList['id'] = $param['id'] : false;
         $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
-        $param['room'] ? $paramList['room'] = intval($param['room']) : false;
+        $param['room'] ? $paramList['room'] = $param['room'] : false;
         $param['floor'] ? $paramList['floor'] = trim($param['floor']) : false;
         $param['typeid'] ? $paramList['typeid'] = intval($param['typeid']) : false;
         $paramList['limit'] = $param['limit'];
@@ -41,7 +41,7 @@ class RoomModel extends \BaseModel {
         $paramList = array();
         $param['id'] ? $paramList['id'] = $param['id'] : false;
         $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
-        $param['room'] ? $paramList['room'] = intval($param['room']) : false;
+        $param['room'] ? $paramList['room'] = $param['room'] : false;
         $param['floor'] ? $paramList['floor'] = trim($param['floor']) : false;
         $param['typeid'] ? $paramList['typeid'] = intval($param['typeid']) : false;
         return $this->dao->getRoomCount($paramList);
