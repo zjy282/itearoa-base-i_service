@@ -78,7 +78,7 @@ class AppTitleController extends \BaseController {
             $param ['title_lang1'] = $this->getParamList('title_lang1');
             $param ['title_lang2'] = $this->getParamList('title_lang2');
             $param ['title_lang3'] = $this->getParamList('title_lang3');
-            $checkKey = $this->model->getAppTitleList(array('key' => $param ['key']));
+            $checkKey = $this->model->getAppTitleList(array('key' => $param ['key'], 'hotelid' => $param ['hotelid']));
             $keyIdList = array_column($checkKey, 'id');
             if (count($keyIdList) > 1 || (count($keyIdList) == 1 && !in_array($id, $keyIdList))) {
                 $this->throwException(2, 'KEY已经存在');
