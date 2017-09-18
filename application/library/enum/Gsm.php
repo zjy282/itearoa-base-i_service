@@ -6,8 +6,8 @@
  */
 class Enum_Gsm {
 
-    const GSM_INTERFACE = 'https://driservices-gsm.the-ascott.com.cn';
-    const STAFF_INTERFACE = 'https://driservices-staff.the-ascott.com.cn';
+    const GSM_INTERFACE = 'https://iservices-gsm.the-ascott.com.cn';
+    const STAFF_INTERFACE = 'https://iservices-staff.the-ascott.com.cn';
 
     const SECERTKEY = 'iServicesExtra';
 
