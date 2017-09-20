@@ -107,9 +107,7 @@ class GroupNewsController extends \BaseController {
         $param = array();
         $param ['groupid'] = $this->getParamList('groupid');
         $param ['status'] = $this->getParamList('status');
-        $param ['title_lang1'] = $this->getParamList('title_lang1');
-        $param ['title_lang2'] = $this->getParamList('title_lang2');
-        $param ['title_lang3'] = $this->getParamList('title_lang3');
+        $param ['title'] = $this->getParamList('title');
         $param ['tagid'] = $this->getParamList('tagid');
         $param ['updatetime'] = time();
         $param ['createtime'] = time();
