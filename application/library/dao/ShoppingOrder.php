@@ -48,7 +48,7 @@ class Dao_ShoppingOrder extends Dao_Base {
      * @param $param
      * @return array
      */
-    private function handlerShoppingOrderListParams() {
+    private function handlerShoppingOrderListParams($param) {
         $whereSql = array();
         $whereCase = array();
         if (isset($param['shoppingid'])) {

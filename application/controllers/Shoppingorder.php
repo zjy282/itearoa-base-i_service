@@ -39,6 +39,8 @@ class ShoppingOrderController extends \BaseController {
         if (empty ($param ['hotelid'])) {
             $this->throwException(2, '物业Id错误');
         }
+        $param['status'] = [Enum_ShoppingOrder::ORDER_STATUS_WAIT, Enum_ShoppingOrder::ORDER_STATUS_SERVICE];
+
         $this->getPageParam($param);
         $list = $this->model->getShoppingOrderList($param);
         $count = $this->model->getShoppingOrderCount($param);
