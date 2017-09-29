@@ -95,6 +95,77 @@ class ShoppingOrderModel extends \BaseModel {
         $info['userid'] = intval($param['userid']);
         $info['creattime'] = time();
         $info['status'] = Enum_ShowingOrder::ORDER_STATUS_WAIT;
+	    $this->_emailShoppingOrder($info);
         return $this->dao->addShoppingOrder($info);
+    }
+
+
+    /**
+     * Send the detail of the order to manager
+     *
+     * @param array $info
+     * @return bool
+     */
+    private function _emailShoppingOrder($info)
+    {
+        $to = $this->_getEmailArray($info['hotelid']);
+        if (empty($to)) {
+            return false;
+        }
+        $shoppingDao = new Dao_Shopping();
+        $userDao = new Dao_User();
+        $userDetail = $userDao->getUserDetail($info['userid']);
+        $shoppingDetail = $shoppingDao->getShoppingDetail($info['shoppingid']);
+        $shoppingDetail['url'] = Enum_Img::getPathByKeyAndType($shoppingDetail ['pic'], Enum_Img::PIC_TYPE_KEY_WIDTH750);
+
+        $mailTemplate = "
+        <head>
+            <meta charset=\"UTF-8\">
+        </head>
+           <p>客房：%s</p> 
+           <p>房客：%s</p> 
+           <p>定单：%s X %s</p> 
+           <p>下单时间： %s</p>
+           <p>价格：%s</p>
+           <p><img src='%s'/></p>
+           
+        </body>
+        ";
+
+        $mailContent = sprintf($mailTemplate, $userDetail['room_no'], $userDetail['fullname'],
+            $shoppingDetail['title_lang1'], $info['count'],
+            date("Y-m-d H:i:s", $info['creattime']),
+            $shoppingDetail['price'],
+            $shoppingDetail['url']
+        );
+        $subject = "体验购物定单：" . $userDetail['room_no'] . "-" . $shoppingDetail['title_lang1'] . "X" . $info['count'];
+        $smtp = Mail_Email::getInstance();
+
+        $smtp->addCc('iservice@liheinfo.com');
+        $smtp->send($to, $subject, $mailContent);
+        return true;
+    }
+
+
+    /**
+     * @param $hotelId
+     * @return array|null
+     */
+    private function _getEmailArray($hotelId)
+    {
+        $data = array(
+            6 => array(
+                'fangzhou@liheinfo.com' => 'Fangzhou',
+                'frank@itearoa.co.nz' => 'frank'
+            ),
+            1 => array(
+                'frontoffice.arcb@the-ascott.com' => 'rontoffice.arcb',
+                'miki.wu@the-ascott.com' => 'miki.wu',
+                'tracy.han@the-ascott.com' => 'tracy.han',
+
+            )
+        );
+
+        return $data[$hotelId];
     }
 }
