@@ -32,6 +32,11 @@ class LifeController extends \BaseController {
         $param ['typeid'] = intval($this->getParamList('typeid'));
         $param ['hotelid'] = intval($this->getParamList('hotelid'));
         $param ['name'] = $this->getParamList('name');
+        if (Enum_System::notAdminPackage($this->package)) {
+            $param ['status'] = 1;
+        } else {
+            $param ['status'] = $this->getParamList('status');
+        }
         $param ['status'] = $this->getParamList('status');
         $param ['id'] = intval($this->getParamList('id'));
         $this->getPageParam($param);

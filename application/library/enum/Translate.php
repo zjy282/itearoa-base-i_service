@@ -49,17 +49,17 @@ class Enum_Translate {
 
     private static $translateList = array(
         'zh' => '中文',
-        'en' => '英语',
-        'jp' => '日语',
-        'fra' => '法语',
-        'de' => '德语',
-        'kor' => '韩语',
-        'ru' => '俄罗斯语',
-        'it' => '意大利语',
-        'th' => '泰语',
-        'spa' => '西班牙语',
-        'ara' => '阿拉伯语',
-        'pt' => '葡萄牙语'
+        'en' => 'English',
+        'jp' => '日本語',
+        'fra' => 'Français',
+        'de' => 'Deutsch',
+        'kor' => '한국어',
+        'ru' => 'русский язык',
+        'it' => 'In Italiano',
+        'th' => 'ภาษาไทย',
+        'spa' => 'El español',
+        'ara' => ' عربي',
+        'pt' => 'Português'
     );
 
     /**
