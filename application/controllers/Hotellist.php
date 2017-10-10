@@ -128,6 +128,8 @@ class HotelListController extends \BaseController {
             $param ['lang_list'] = $this->getParamList('lang_list');
             $param ['bookurl'] = $this->getParamList('bookurl');
             $param ['pdf'] = $this->getParamList('pdf');
+            $param['flighturl'] = $this->getParamList('flighturl');
+            $param['surveyurl'] = $this->getParamList('surveyurl');
             $data = $this->model->updateHotelListById($param, $id);
             $data = $this->convertor->statusConvertor(array('id' => $data));
         } else {
