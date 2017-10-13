@@ -7,7 +7,7 @@ class Dao_Base {
 
     /**
      * 数据库连接
-     * @var mixed
+     * @var Db_Connection|null
      */
     protected $db;
 
