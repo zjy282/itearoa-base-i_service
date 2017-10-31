@@ -54,10 +54,14 @@ class ShoppingController extends \BaseController {
         $param ['tagid'] = intval($this->getParamList('tagid'));
         $param ['title'] = trim($this->getParamList('title'));
         $param ['status'] = $this->getParamList('status');
+        $param ['nopage'] = $this->getParamList('nopage');
+        if (!isset($param['nopage']) || !$param['nopage']) {
+            $this->getPageParam($param);
+        }
+
         if (is_null($param ['status'])) {
             unset ($param ['status']);
         }
-        $this->getPageParam($param);
         $activityList = $this->model->getShoppingList($param);
         $activityCount = $this->model->getShoppingCount($param);
         $data = $this->convertor->getShoppingListConvertor($activityList, $activityCount, $param);

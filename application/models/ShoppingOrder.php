@@ -25,10 +25,23 @@ class ShoppingOrderModel extends \BaseModel {
         $param['shoppingid'] ? $paramList['shoppingid'] = strval($param['shoppingid']) : false;
         $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
         $param['userid'] ? $paramList['userid'] = intval($param['userid']) : false;
-        isset($param['status']) ? $paramList['status'] = $param['status'] : false;
+        $param['id'] ? $paramList['id'] = intval($param['id']) : false;
+        $param['status'] ? $paramList['status'] = $param['status'] : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getShoppingOrderList($paramList);
+    }
+
+    /**
+     * Get filter field info for shopping order
+     *
+     * @param array $param
+     * @return array
+     */
+    public function getShoppingOrderFilterList(array $param):array {
+        $paramList = array();
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        return $this->dao->getShoppingOrderFilter($paramList);
     }
 
     /**
@@ -84,11 +97,8 @@ class ShoppingOrderModel extends \BaseModel {
     /**
      * ShoppingOrder新增信息
      *
-     * @param
-     *            array param 需要增加的信息
-     * @return array
      */
-    public function addShoppingOrder($param) {
+    public function addShoppingOrder(array $param) {
         $info['count'] = intval($param['count']);
         $info['shoppingid'] = intval($param['shoppingid']);
         $info['hotelid'] = intval($param['hotelid']);

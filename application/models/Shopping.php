@@ -27,7 +27,7 @@ class ShoppingModel extends \BaseModel {
         $param['tagid'] ? $paramList['tagid'] = intval($param['tagid']) : false;
         $param['title'] ? $paramList['title'] = intval($param['title']) : false;
         isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
-        $paramList['limit'] = $param['limit'];
+        $param['limit'] ? $paramList['limit'] = $param['limit'] : false;
         $paramList['page'] = $param['page'];
         return $this->dao->getShoppingList($paramList);
     }

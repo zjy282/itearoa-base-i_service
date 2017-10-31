@@ -60,11 +60,29 @@ class ShoppingOrderController extends \BaseController {
         $param ['id'] = intval($this->getParamList('id'));
         $param ['hotelid'] = intval($this->getParamList('hotelid'));
         $param ['shoppingid'] = intval($this->getParamList('shoppingid'));
+        $param ['userid'] = intval($this->getParamList('userid'));
+        $param['status'] = $this->getParamList('status');
         $data = $this->model->getShoppingOrderList($param);
         $count = $this->model->getShoppingOrderCount($param);
         $data = $this->convertor->getOrderListConvertor($data, $count, $param);
         $this->echoSuccessData($data);
     }
+
+    /**
+     * Output json for filter of the order list
+     */
+    public function getOrderFilterListAction(){
+        $param = array();
+        $param ['hotelid'] = intval($this->getParamList('hotelid'));
+        $usersList = $this->model->getShoppingOrderFilterList($param);
+        $usersList = array_column($usersList, 'room_no','userid');
+        $statusList = Enum_ShoppingOrder::getStatusNameList();
+
+        $data['userlist'] = $usersList;
+        $data['statuslist'] = $statusList;
+        $this->echoSuccessData($data);
+    }
+
 
     /**
      * 根据id获取体验购物订单详情

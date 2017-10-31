@@ -51,6 +51,10 @@ class Dao_ShoppingOrder extends Dao_Base {
     private function handlerShoppingOrderListParams($param) {
         $whereSql = array();
         $whereCase = array();
+        if (isset($param['id'])) {
+            $whereSql[] = 'id = ?';
+            $whereCase[] = $param['id'];
+        }
         if (isset($param['shoppingid'])) {
             $whereSql[] = 'shoppingid = ?';
             $whereCase[] = $param['shoppingid'];
@@ -129,5 +133,19 @@ class Dao_ShoppingOrder extends Dao_Base {
     public function addShoppingOrder(array $info) {
         $this->db->insert('hotel_shopping_order', $info);
         return $this->db->lastInsertId();
+    }
+
+
+    public function getShoppingOrderFilter(array $param):array {
+        if (isset($param['hotelid'])){
+            $hotelId = intval($param['hotelid']);
+            $sql = "SELECT DISTINCT userid, room_no FROM hotel_shopping_order AS hso                   
+                    JOIN hotel_user AS hu ON hso.userid = hu.id WHERE hso.hotelid = {$hotelId} ORDER BY room_no";
+        } else {
+            $sql = "SELECT DISTINCT userid, room_no FROM hotel_shopping_order AS hso                                
+                    JOIN hotel_user AS hu ON hso.userid = hu.id ORDER BY room_no";
+        }
+        $result = $this->db->fetchAll($sql, array());
+        return is_array($result) ? $result : array();
     }
 }
