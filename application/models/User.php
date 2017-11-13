@@ -144,7 +144,7 @@ class UserModel extends \BaseModel {
         $paramList['Room'] = $param['room_no'];
         $paramList['LastName'] = $param['fullname'];
         $paramList = Enum_Gsm::genEncryptGsmParams($paramList);
-        $gsmResult = Rpc_Gsm::send(Enum_Gsm::USER_LOGIN_METHOD, $paramList);
+        $gsmResult = Rpc_Gsm::send(Enum_Gsm::getUserLoginUrl($hotelInfo['groupid']), $paramList);
         return array('oId' => $gsmResult['OID']);
     }
 
