@@ -12,8 +12,7 @@ class Dao_Staff extends Dao_Base {
     /**
      * 查询hotel_staff列表
      *
-     * @param
-     *            array 入参
+     * @param array $param
      * @return array
      */
     public function getStaffList(array $param): array {
@@ -38,6 +37,16 @@ class Dao_Staff extends Dao_Base {
                 $whereCase[] = $param['staffid'];
             }
         }
+
+        if (isset($param['hotelid'])) {
+            if (is_array($param['hotelid'])) {
+                $whereSql[] = 'hotelid in (' . implode(',', $param['staffid']) . ')';
+            } else {
+                $whereSql[] = 'hotelid = ?';
+                $whereCase[] = $param['hotelid'];
+            }
+        }
+
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
 
         $sql = "select * from hotel_staff {$whereSql}";

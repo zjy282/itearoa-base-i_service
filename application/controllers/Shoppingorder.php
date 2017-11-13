@@ -208,4 +208,22 @@ class ShoppingOrderController extends \BaseController {
         $orderInfo ['adminid'] = $param ['userid'];
         $this->echoSuccessData($orderInfo);
     }
+
+    /**
+     * Get source position list for hotel
+     *
+     * @param int $hotelid
+     * @return array|null
+     */
+    public static function getRobotDest(int $hotelid)
+    {
+        $info = array(
+            1 => array(
+                1 => '仓库1',
+                2 => '仓库2',
+                3 => '前台',
+            ),
+        );
+        return $info[intval($hotelid)];
+    }
 }

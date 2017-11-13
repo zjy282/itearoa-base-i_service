@@ -22,6 +22,11 @@ class Enum_Push {
 
     const PUSH_CONTENT_TYPE_URL = 'url';
     const PUSH_CONTENT_TYPE_SHOPPING_ORDER = 'shopping_order';
+
+    const PLATFORM = 'umeng';
+
+    private static $_config;
+
     /**
      * 推送机型定义
      */
@@ -40,35 +45,22 @@ class Enum_Push {
     }
 
     /**
-     * 推送平台对应的密钥
-     */
-    private static $config = array(
-        'umeng' => array(
-            'android' => array(
-                'appKey' => '594e4614734be4240f001013',
-                'secretKey' => 'ofg3us0vbfvv6rfl1z6fxqddaalj2rst'
-            ),
-            'ios' => array(
-                'appKey' => '5948e79df43e48682f000049',
-                'secretKey' => '4thoqf7r0bdbuugtal7rpyfuaotsuiey'
-            )
-        )
-    );
-
-    /**
-     * 按平台 系统获取对应的配置
+     * Get push msg key
      *
-     * @param $platform string
-     * @param $system string
-     * @reutrn array
+     * @param string $platform
+     * @param string $system
+     * @return mixed
      */
-    public static function getConfig($platform, $system = '') {
-        $platform = strtolower($platform);
-        if ($system) {
-            $system = strtolower($system);
-            return self::$config[$platform][$system];
+    public static function getConfig($platform = self::PLATFORM, $system = '')
+    {
+        if (empty(self::$_config)) {
+            self::$_config = Yaf_Registry::get('sysConfig');
+        }
+        $msgConfig = self::$_config[$platform];
+        if (!empty($system)) {
+            return $msgConfig[$system];
         } else {
-            return self::$config[$platform];
+            return $msgConfig;
         }
     }
 }

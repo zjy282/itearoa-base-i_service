@@ -6,6 +6,8 @@
  */
 class PushModel extends \BaseModel {
 
+    const MESSAGE_NOT_RECEIVED = "推送消息未送达";
+
     private $dao;
 
     public function __construct() {

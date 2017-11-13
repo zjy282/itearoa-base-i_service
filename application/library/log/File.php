@@ -192,7 +192,7 @@ class Log_File extends \Yaf_Controller_Abstract {
     /**
      * 自定义日志文件名和内容
      *
-     * @param str $name
+     * @param string $name
      *            日志文件名
      * @param <string> $msg
      *            日志内容

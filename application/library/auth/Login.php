@@ -94,7 +94,7 @@ class Auth_Login {
     /**
      * 生成logintoken
      *
-     * @param unknown $memberId            
+     * @param mixed $memberId
      * @return string
      */
     private static function makeLoginToken($memberId, $type = 1) {

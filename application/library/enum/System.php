@@ -12,6 +12,8 @@ class Enum_System {
 
     const RULE_MENU_PROJECT_ID = 4;
 
+    const MSG_SYSTEM_ERROR = "系统错误";
+
     public static function notAdminPackage($package) {
         return ($package != self::IAM_PACKAGE && $package != self::GROUP_PACKAGE);
     }

@@ -178,4 +178,85 @@ class ShoppingOrderModel extends \BaseModel {
 
         return $data[$hotelId];
     }
+
+
+    /**
+     * @param $params
+     * @return array
+     * @throws Exception
+     */
+    public function robotDeliver($params)
+    {
+        $daoRobotTask = new Dao_RobotTask();
+        $daoBase = new Dao_Base();
+        $daoShoppingOrder = new Dao_ShoppingOrder();
+        $orderArray = $daoShoppingOrder->getShoppingOrderInfo($params['itemlist']);
+        $daoRobotTask->hasSameRoomNo($orderArray);
+
+        try {
+            $daoBase->beginTransaction();
+            $item = array(
+                'userid' => $params['userid'],
+                'orders' => json_encode($params['itemlist']),
+                'status' => Enum_ShoppingOrder::ROBOT_BEGIN,
+            );
+            $orderUpdate = array(
+                'robot_status' => Enum_ShoppingOrder::ROBOT_BEGIN,
+                'status' => Enum_ShoppingOrder::ORDER_STATUS_SERVICE,
+                'adminid' => $params['userid']
+            );
+            $robotTaskId = $daoRobotTask->addTask($item);
+            foreach ($params['itemlist'] as $orderId){
+                $daoShoppingOrder->updateShoppingOrderById($orderUpdate, $orderId);
+            }
+
+            $apiParamArray = array(
+                'taskid' => $robotTaskId,
+                'start' => $params['start'],
+                'target' => $orderArray[0]['room_no']
+            );
+
+            $rpcObject = Rpc_Robot::getInstance();
+            $rpcJson = $rpcObject->send(Rpc_Robot::SCHEDULE, $apiParamArray);
+            $info['robot_detail'] = json_encode($rpcJson);
+            $flag = $daoRobotTask->updateTask($info, $robotTaskId);
+            if (!$flag || $rpcJson['errcode'] != 0) {
+                throw new Exception(json_encode($rpcJson['data']), $rpcJson['errcode']);
+                $a=0;
+            }
+            $daoBase->commit();
+            $result = array(
+                'code' => 0,
+                'msg' => 'success',
+                'data' => array(
+                    'serviceId' => $robotTaskId,
+                    'robotId' => $rpcJson['data']['taskId']
+                )
+            );
+            return $result;
+        } catch (Exception $e) {
+            $daoBase->rollback();
+            throw $e;
+
+        }
+
+    }
+
+    /**
+     * @param $target
+     * @return mixed
+     * @throws Exception
+     */
+    public function callRobot($target){
+
+        $param['target'] = $target;
+        $param['goback'] = "false";
+        $rpcObject = Rpc_Robot::getInstance();
+        $rpcJson = $rpcObject->send(Rpc_Robot::SCHEDULE, $param, false);
+        if($rpcJson['errcode'] != 0) {
+            throw new Exception($rpcJson['errmsg'], $rpcJson['errcode']);
+        }
+        return $rpcJson;
+
+    }
 }

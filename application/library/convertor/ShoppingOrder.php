@@ -23,6 +23,7 @@ class Convertor_ShoppingOrder extends Convertor_Base {
     public function getShoppingOrderListConvertor($list, $count, $param) {
         $data = array('list' => array());
         $statusNameList = Enum_ShoppingOrder::getStatusNameList();
+        $robotStatusNameList = Enum_ShoppingOrder::getRobotStatusNameList();
 
         $userIdList = array_column($list, 'userid');
         if ($userIdList) {
@@ -53,6 +54,7 @@ class Convertor_ShoppingOrder extends Convertor_Base {
             $listOneTemp ['createtime'] = $listOne ['creattime'];
             $listOneTemp ['status'] = $listOne ['status'];
             $listOneTemp ['statusName'] = $statusNameList [$listOne ['status']];
+            $listOneTemp ['robotStatusName'] = $robotStatusNameList [$listOne['robot_status']];
             $listOneTemp ['shoppingid'] = $listOne ['shoppingid'];
             $listOneTemp ['adminid'] = $listOne ['adminid'];
             $userInfoTemp = $userInfoList[$listOneTemp['userid']];
@@ -109,6 +111,7 @@ class Convertor_ShoppingOrder extends Convertor_Base {
             $adminNameList = array_column($adminInfoList, 'lname', 'id');
         }
         $statusNameList = Enum_ShoppingOrder::getStatusNameList();
+        $robotStatusNameList = Enum_ShoppingOrder::getRobotStatusNameList();
 
         $userIdList = array_column($list, 'userid');
         if ($userIdList) {
@@ -130,6 +133,8 @@ class Convertor_ShoppingOrder extends Convertor_Base {
             $listOneTemp ['createtime'] = $listOne ['creattime'];
             $listOneTemp ['status'] = $listOne ['status'];
             $listOneTemp ['statusName'] = $statusNameList [$listOne ['status']];
+            $listOneTemp ['robotStatus'] = $listOne ['robot_status'];
+            $listOneTemp ['robotStatusName'] = $robotStatusNameList [$listOne['robot_status']];
             $listOneTemp ['shoppingid'] = $listOne ['shoppingid'];
             $listOneTemp ['shoppingName'] = $shoppingNameList [$listOne ['shoppingid']];
             $listOneTemp ['adminid'] = $listOne ['adminid'];

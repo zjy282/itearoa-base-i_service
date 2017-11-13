@@ -31,7 +31,7 @@ class Interceptor_ParamAuth extends \Interceptor_Base {
             if (empty($timestamp)) {
                 throw new Exception("未检测到时间戳", 10001);
             }
-            if ($timestamp < time() - 60 * 5) {
+            if ($timestamp < time() - $this->_getTimeout($request)) {
                 throw new Exception("时间戳过期", 10002);
             }
             if ($sign !== $paramSign) {
@@ -139,6 +139,26 @@ class Interceptor_ParamAuth extends \Interceptor_Base {
         }
 
         return $flag;
+    }
+
+    /**
+     * Get timeout value for the sign
+     *
+     * @param Yaf_Request_Abstract $request
+     * @param int $default seconds
+     * @return int
+     */
+    private function _getTimeout(Yaf_Request_Abstract $request, $default = 300): int
+    {
+        $result = $default;
+        $controllerName = strtolower($request->getControllerName());
+        $actionName = strtolower($request->getActionName());
+
+        if ($controllerName == strtolower("service") && $actionName == strtolower("robotCallback")) {
+            $sysConfig = Yaf_Registry::get('sysConfig');
+            $result = $sysConfig->robot->callbacktimeout;
+        }
+        return $result;
     }
 }
 

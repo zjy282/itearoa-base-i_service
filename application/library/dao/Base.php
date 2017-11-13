@@ -25,6 +25,30 @@ class Dao_Base {
         $page = $page > 0 ? intval($page) : 1;
         return ($page - 1) * $limit;
     }
+
+    /**
+     * Begin transaction
+     */
+    public function beginTransaction()
+    {
+        $this->db->beginTransaction();
+    }
+
+    /**
+     * Commit
+     */
+    public function commit()
+    {
+        $this->db->commit();
+    }
+
+    /**
+     * Rollback
+     */
+    public function rollback()
+    {
+        $this->db->rollback();
+    }
 }
 
 ?>

@@ -51,10 +51,15 @@ class Dao_ShoppingOrder extends Dao_Base {
     private function handlerShoppingOrderListParams($param) {
         $whereSql = array();
         $whereCase = array();
-        if (isset($param['id'])) {
-            $whereSql[] = 'id = ?';
-            $whereCase[] = $param['id'];
+        if ($param['id']) {
+            if (is_array($param['id'])) {
+                $whereSql[] = 'id in (' . implode(',', $param['id']) . ')';
+            } else {
+                $whereSql[] = 'id = ?';
+                $whereCase[] = $param['id'];
+            }
         }
+
         if (isset($param['shoppingid'])) {
             $whereSql[] = 'shoppingid = ?';
             $whereCase[] = $param['shoppingid'];
@@ -105,13 +110,12 @@ class Dao_ShoppingOrder extends Dao_Base {
     /**
      * 根据id更新hotel_shopping_order
      *
-     * @param
-     *            array 需要更新的数据
-     * @param
-     *            int id
+     * @param  array $info
+     * @param int|array id
      * @return array
      */
-    public function updateShoppingOrderById(array $info, int $id) {
+    public function updateShoppingOrderById(array $info, $id)
+    {
         $result = false;
 
         if ($id) {
@@ -135,9 +139,15 @@ class Dao_ShoppingOrder extends Dao_Base {
         return $this->db->lastInsertId();
     }
 
-
-    public function getShoppingOrderFilter(array $param):array {
-        if (isset($param['hotelid'])){
+    /**
+     * Get shopping order filter array
+     *
+     * @param array $param
+     * @return array
+     */
+    public function getShoppingOrderFilter(array $param): array
+    {
+        if (isset($param['hotelid'])) {
             $hotelId = intval($param['hotelid']);
             $sql = "SELECT DISTINCT userid, room_no FROM hotel_shopping_order AS hso                   
                     JOIN hotel_user AS hu ON hso.userid = hu.id WHERE hso.hotelid = {$hotelId} ORDER BY room_no";
@@ -148,4 +158,22 @@ class Dao_ShoppingOrder extends Dao_Base {
         $result = $this->db->fetchAll($sql, array());
         return is_array($result) ? $result : array();
     }
+
+
+    /**
+     * Get order information
+     *
+     * @param array $orderIdArray
+     * @return array
+     */
+    public function getShoppingOrderInfo(array $orderIdArray): array
+    {
+        $param = implode(',', $orderIdArray);
+        $sql = "SELECT hso.id as order_id, hu.room_no as room_no, hu.id, hso.status, hso.hotelid FROM hotel_shopping_order AS hso
+                JOIN  hotel_user AS hu ON hso.userid = hu.id WHERE hso.id IN (${param})";
+        $result = $this->db->fetchAll($sql, array());
+        return is_array($result) ? $result : array();
+
+    }
+
 }

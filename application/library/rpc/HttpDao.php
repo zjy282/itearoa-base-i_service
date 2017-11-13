@@ -160,7 +160,7 @@ class Rpc_HttpDao {
         if ($this->isValidUrl($requestUrl)) {
             $responseRaw = null;
             $httpTimeout = max(1, (int) $httpTimeout);
-            $httpRet = Rpc_Curl::_request($requestUrl, $httpMethod, $postData, $httpTimeout);
+            $httpRet = Rpc_Curl::request($requestUrl, $httpMethod, $postData, $httpTimeout);
             
             if ($httpRet['httpStatus']) {
                 $responseRaw = $httpRet['response'];
