@@ -190,10 +190,18 @@ class HotelListController extends \BaseController {
         $param = array();
         $param ['groupid'] = intval($this->getParamList('groupid'));
         $param ['status'] = 1;
+        $lng = $this->getParamList('lng');
+        $lat = $this->getParamList('lat');
         if (empty ($param ['groupid'])) {
             $this->throwException(2, '集团ID不能为空');
         }
         $hotelList = $this->model->getHotelListList($param);
+        if (!is_null($lng) || !is_null($lat)) {
+            $lng = floatval($lng);
+            $lat = floatval($lat);
+            $this->model->sortByDistance($hotelList, $lng, $lat);
+        }
+
         $hotelList = $this->convertor->getEffectiveHotelListConvertor($hotelList);
         $this->echoSuccessData($hotelList);
     }

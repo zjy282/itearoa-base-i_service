@@ -162,4 +162,20 @@ class HotelListModel extends \BaseModel {
         !is_null($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
         return $this->dao->addHotelList($info);
     }
+
+    /**
+     * Sort the hotel list by distance
+     *
+     * @param array $list
+     * @param float $lng
+     * @param float $lat
+     */
+    public function sortByDistance(array &$list, float $lng, float $lat)
+    {
+        $sortArray = array();
+        foreach ($list as $item) {
+            $sortArray[] = sqrt(pow(floatval(($item['lng'] - $lng)), 2) + pow(floatval(($item['lat'] - $lat)), 2));
+        }
+        array_multisort($sortArray, $list);
+    }
 }
