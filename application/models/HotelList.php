@@ -174,7 +174,13 @@ class HotelListModel extends \BaseModel {
     {
         $sortArray = array();
         foreach ($list as &$item) {
-            $distance = sqrt(pow(floatval(($item['lng'] - $lng)), 2) + pow(floatval(($item['lat'] - $lat)), 2));
+            $radLat1 = deg2rad($lat);
+            $radLng1 = deg2rad($lng);
+            $radLat2 = deg2rad($item['lat']);
+            $radLng2 = deg2rad($item['lng']);
+            $a = $radLat1 - $radLat2;
+            $b = $radLng1 - $radLng2;
+            $distance = 2 * asin(sqrt(pow(sin($a / 2), 2) + cos($radLat1) * cos($radLat2) * pow(sin($b / 2), 2))) * 6378.137 * 1000;
             $item['distance'] = $distance;
             $sortArray[] = $distance;
         }
