@@ -173,8 +173,10 @@ class HotelListModel extends \BaseModel {
     public function sortByDistance(array &$list, float $lng, float $lat)
     {
         $sortArray = array();
-        foreach ($list as $item) {
-            $sortArray[] = sqrt(pow(floatval(($item['lng'] - $lng)), 2) + pow(floatval(($item['lat'] - $lat)), 2));
+        foreach ($list as &$item) {
+            $distance = sqrt(pow(floatval(($item['lng'] - $lng)), 2) + pow(floatval(($item['lat'] - $lat)), 2));
+            $item['distance'] = $distance;
+            $sortArray[] = $distance;
         }
         array_multisort($sortArray, $list);
     }
