@@ -34,6 +34,7 @@ class Convertor_Staff extends Convertor_Base {
         $data ['serviceUrl'] = $staffModel->getGsmRedirect(array(
             'StaffID' => $data['staffid']
         ));
+        $data['lname'] = $list['lname'];
         return $data;
     }
 }

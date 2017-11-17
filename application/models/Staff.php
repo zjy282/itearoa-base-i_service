@@ -6,6 +6,8 @@
  */
 class StaffModel extends \BaseModel {
 
+    const STAFF_WEB_IDENTIFY = 'staff_login_from_web';
+
     private $dao;
 
     public function __construct() {
@@ -166,7 +168,8 @@ class StaffModel extends \BaseModel {
             'identity' => trim($param['identity'])
         );
 
-        if ($userId) {
+        $notStaff = ($newStaffInfo['identity'] != self::STAFF_WEB_IDENTIFY);
+        if ($userId && $notStaff) {
             // 更新用户数据
             if (!$this->updateStaffById($newStaffInfo, $userId)) {
                 $this->throwException('登录失败，请重试', 5);
@@ -180,7 +183,9 @@ class StaffModel extends \BaseModel {
             }
         }
         $userInfo = $this->getStaffDetail($userId);
-        $userInfo['token'] = Auth_Login::makeToken($userId, 2);
+        if ($notStaff) {
+            $userInfo['token'] = Auth_Login::makeToken($userId, 2);
+        }
         return $userInfo;
     }
 }
