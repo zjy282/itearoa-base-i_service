@@ -19,8 +19,10 @@ class Enum_ShoppingOrder
 
 
     const ORDERS_ROOM_DIFFERENT = 1;
+    const ORDERS_POSITION_NOT_EXIST = 2;
 
     const EXCEPTION_DIFFERENT_ROOM = "订单属于不同房间";
+    const EXCEPTION_HAVE_NO_DEST = "目标点位不存在";
 
 
     const PUSH_MSG_CONTENT = "机器人购物信息";
