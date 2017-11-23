@@ -168,10 +168,13 @@ class StaffModel extends \BaseModel {
             'identity' => trim($param['identity'])
         );
 
-        $notStaff = ($newStaffInfo['identity'] != self::STAFF_WEB_IDENTIFY);
+        $isStaffWeb = ($newStaffInfo['identity'] == self::STAFF_WEB_IDENTIFY);
+        if ($isStaffWeb) {
+            $newStaffInfo['platform'] = $getStaffInfo['platform'];
+        }
         if ($userId) {
             // 更新用户数据
-            if ($notStaff && !$this->updateStaffById($newStaffInfo, $userId)) {
+            if (!$this->updateStaffById($newStaffInfo, $userId)) {
                 $this->throwException('登录失败，请重试', 5);
             }
         } else {
@@ -183,7 +186,7 @@ class StaffModel extends \BaseModel {
             }
         }
         $userInfo = $this->getStaffDetail($userId);
-        if ($notStaff) {
+        if (!$isStaffWeb) {
             $userInfo['token'] = Auth_Login::makeToken($userId, 2);
         }
         return $userInfo;
