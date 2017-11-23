@@ -169,9 +169,9 @@ class StaffModel extends \BaseModel {
         );
 
         $notStaff = ($newStaffInfo['identity'] != self::STAFF_WEB_IDENTIFY);
-        if ($userId && $notStaff) {
+        if ($userId) {
             // 更新用户数据
-            if (!$this->updateStaffById($newStaffInfo, $userId)) {
+            if ($notStaff && !$this->updateStaffById($newStaffInfo, $userId)) {
                 $this->throwException('登录失败，请重试', 5);
             }
         } else {
