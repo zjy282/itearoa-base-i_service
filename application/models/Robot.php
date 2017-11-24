@@ -179,7 +179,7 @@ class RobotModel extends \BaseModel
             }
 
             $apiParamArray = array(
-                'taskid' => $robotTaskId,
+                'robottaskid' => $robotTaskId,
                 'start' => $start,
                 'target' => $target,
             );

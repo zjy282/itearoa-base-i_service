@@ -96,9 +96,9 @@ class Rpc_Robot
     {
         $ts = intval(microtime(true) * 1000);
         $params['placeId'] = $this->_placeId;
-        if ($withCallback && $params['taskid']) {
-            $callbackParams = $this->_getCallbackUrl($params['taskid']);
-            unset($params['taskid']);
+        if ($withCallback && $params['robottaskid']) {
+            $callbackParams = $this->_getCallbackUrl($params['robottaskid']);
+            unset($params['robottaskid']);
             $params = array_merge($params, $callbackParams);
         }
         ksort($params);
@@ -135,7 +135,8 @@ class Rpc_Robot
         foreach (self::$callbackArray as $key => $value) {
             $getParam = array();
             $getParam['action'] = $value['action'];
-            $getParam['taskid'] = $taskId;
+            $getParam['robottaskid'] = $taskId;
+            $getParam['appname'] = 'ascott';
             $getParam['time'] = time();
             $getParam['sign'] = Auth_Login::genSign($getParam);
             $uri = $this->_callbackDomain . self::CALLBACK_URI . "?" . http_build_query($getParam);
@@ -192,6 +193,7 @@ class Rpc_Robot
         if ($notice == Rpc_Robot::NOTICE_BOTH || $notice == Rpc_Robot::NOTICE_GUEST) {
             $title = Enum_ShoppingOrder::PUSH_MSG_CONTENT;
             $content = Enum_ShoppingOrder::getRobotStatusNameListForGuest()[$taskUpdate['status']];
+            $title = $content;
             $pushParams = array();
 
             $pushParams['cn_title'] = $title;
@@ -211,6 +213,7 @@ class Rpc_Robot
             $count = 0;
             $title = Enum_ShoppingOrder::PUSH_MSG_CONTENT;
             $content = Enum_ShoppingOrder::getRobotStatusNameList()[$taskUpdate['status']];
+            $title = $content;
             $pushParams = array();
 
             $pushParams['cn_title'] = $title;

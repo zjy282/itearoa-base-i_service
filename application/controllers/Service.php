@@ -86,7 +86,7 @@ class ServiceController extends \BaseController
     public function robotCallbackAction()
     {
         $action = $this->getParamList('action');
-        $taskId = intval($this->getParamList('taskid'));
+        $taskId = intval($this->getParamList('robottaskid'));
 
         $result = array(
             'code' => 0,
