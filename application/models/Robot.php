@@ -5,6 +5,7 @@
  */
 class RobotModel extends \BaseModel
 {
+    const ROBOT_GUIDE = 'guide';
 
     private $dao;
 
@@ -113,17 +114,37 @@ class RobotModel extends \BaseModel
     }
 
     /**
+     * Call robot or robot guide
+     *
      * @param $target
+     * @param $type
      * @return mixed
      * @throws Exception
      */
-    public function callRobot($target)
+    public function callRobot(array $params)
     {
-
-        $param['target'] = $target;
-        $param['goback'] = "false";
+        $position = $this->getPositionDetail($params['target']);
+        $target = $position['robot_position'];
+        if (empty($target)) {
+            throw new Exception("param error", 1);
+        } else {
+            $param['target'] = $target;
+        }
+        if ($params['type'] == self::ROBOT_GUIDE) {
+            $param['type'] = self::ROBOT_GUIDE;
+        } else {
+            $param['goback'] = "false";
+        }
         $rpcObject = Rpc_Robot::getInstance();
         $rpcJson = $rpcObject->send(Rpc_Robot::SCHEDULE, $param, false);
+        $info = array(
+            'userid' => $params['userid'],
+            'hotelid' => $params['hotelid'],
+            'params' => json_encode($param),
+            'result' => json_encode($rpcJson),
+        );
+        $robotActionModel = new Dao_RobotAction();
+        $robotActionModel->addRobotAction($info);
         if ($rpcJson['errcode'] != 0) {
             throw new Exception($rpcJson['errmsg'], $rpcJson['errcode']);
         }

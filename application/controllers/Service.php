@@ -27,9 +27,13 @@ class ServiceController extends \BaseController
 
     public function callRobotAction()
     {
-        $target = $this->getParamList('dest');
+        $params['target'] = trim($this->getParamList('dest'));
+        $params['type'] = trim($this->getParamList('type'));
+        $params['hotelid'] = intval($this->getParamList('hotelid'));
+        $params['userid'] = intval($this->getParamList('userid'));
+
         try {
-            $response = $this->_model->callRobot($target);
+            $response = $this->_model->callRobot($params);
             if ($response['errcode'] != 0) {
                 throw new Exception($response['errmsg'], $response['errcode']);
             } else {
