@@ -27,7 +27,7 @@ class Interceptor_ParamAuth extends \Interceptor_Base {
         unset($paramList['sign'], $paramList[trim($request->getRequestUri(), '/')]);
         $sign = Auth_Login::genSign($paramList);
 
-        if ($sysConfig->api->checkToke && !$this->isInWhiteList($request)) {
+        if ($sysConfig->api->checkToke && !$this->isInWhiteList($request) && $this->_customerCheck($request)) {
             if (empty($timestamp)) {
                 throw new Exception("未检测到时间戳", 10001);
             }
@@ -158,6 +158,49 @@ class Interceptor_ParamAuth extends \Interceptor_Base {
             $sysConfig = Yaf_Registry::get('sysConfig');
             $result = $sysConfig->robot->callbacktimeout;
         }
+        return $result;
+    }
+
+    /**
+     * Check customer auth
+     *
+     * @param Yaf_Request_Abstract $request
+     * @return bool
+     * @throws Exception
+     */
+    private function _customerCheck(Yaf_Request_Abstract $request)
+    {
+        $result = false;
+        $controllerName = strtolower($request->getControllerName());
+        $actionName = strtolower($request->getActionName());
+        if ($request->isGet()) {
+            $paramList = $request->getQuery();
+        } elseif ($request->isPost()) {
+            $paramList = $request->getPost();
+        } else {
+            throw new Exception("未知方法", 10001);
+        }
+
+        // For robot
+        if ($controllerName == strtolower("service") && $actionName == strtolower("robotCallback")) {
+            $timestamp = $paramList["time"];
+            $paramSign = $paramList['sign'];
+
+            unset($paramList['sign'], $paramList[trim($request->getRequestUri(), '/')]);
+            $sign = Auth_Login::getRobotSign($paramList);
+            if (empty($timestamp)) {
+                throw new Exception("未检测到时间戳", 10001);
+            }
+            if ($timestamp < time() - $this->_getTimeout($request)) {
+                throw new Exception("时间戳过期", 10002);
+            }
+            if ($sign !== $paramSign) {
+                throw new Exception("验证戳校验错误;{$sign};", 10003);
+            } else {
+                $result = true;
+            }
+        }
+
         return $result;
     }
 }

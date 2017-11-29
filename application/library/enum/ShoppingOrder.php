@@ -29,7 +29,8 @@ class Enum_ShoppingOrder
 
 
     private static $orderPushStaffIdList = array(
-        1 => array(5195, 140, 129, 739, 699)
+        1 => array(5195, 140, 129, 739, 699),
+        6 => array(3861),
     );
 
     public static function getOrderPushStaffIdList($hotelId)

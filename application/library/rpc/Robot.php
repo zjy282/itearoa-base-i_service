@@ -136,9 +136,8 @@ class Rpc_Robot
             $getParam = array();
             $getParam['action'] = $value['action'];
             $getParam['robottaskid'] = $taskId;
-            $getParam['appname'] = 'ascott';
+            $getParam['appname'] = $this->_appName;
             $getParam['time'] = time();
-            $getParam['sign'] = Auth_Login::genSign($getParam);
             $uri = $this->_callbackDomain . self::CALLBACK_URI . "?" . http_build_query($getParam);
             $result[$key] = $uri;
         }

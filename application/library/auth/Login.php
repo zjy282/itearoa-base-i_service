@@ -127,6 +127,28 @@ class Auth_Login {
         
         return $memberId;
     }
+
+
+    public static function getRobotSign($params){
+
+        $sysConfig = Yaf_Registry::get('sysConfig');
+
+        $ts = $params['ts'];
+        $appName = $sysConfig->robot->appName;
+        $secretKey = $sysConfig->robot->secretKey;
+
+        unset($params['ts'], $params['appname']);
+        ksort($params);
+        $string = '';
+        foreach ($params as $key => $value) {
+            $string .= $key . ":" . $value . "|";
+        }
+        $string .= "appname:" . $appName . "|";
+        $string .= "secret:" . $secretKey . "|";
+        $string .= "ts:" . $ts;
+        $sign = md5($string);
+        return $sign;
+    }
 }
 
 ?>
