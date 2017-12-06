@@ -3,9 +3,11 @@
 /**
  * 员工结果转换器
  */
-class Convertor_Staff extends Convertor_Base {
+class Convertor_Staff extends Convertor_Base
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
@@ -16,7 +18,8 @@ class Convertor_Staff extends Convertor_Base {
      *            员工信息
      * @return array
      */
-    public function userInfoConvertor($list) {
+    public function userInfoConvertor($list)
+    {
         $data = array();
         $platformNameList = Enum_Platform::getPlatformNameList();
         $data ['id'] = $list ['id'];
@@ -30,11 +33,33 @@ class Convertor_Staff extends Convertor_Base {
         $data ['platformName'] = $platformNameList [$list ['platform']];
         $data ['identity'] = $list ['identity'];
         $data ['token'] = $list ['token'];
+        $data['hotel_list'] = explode(',', $list['hotel_list']);
+        $data['staff_web_hotel_id'] = $list['staff_web_hotel_id'];
         $staffModel = new StaffModel();
         $data ['serviceUrl'] = $staffModel->getGsmRedirect(array(
             'StaffID' => $data['staffid']
         ));
         $data['lname'] = $list['lname'];
+        return $data;
+    }
+
+    /**
+     * @param $list
+     * @return mixed
+     */
+    public function getStaffListConvertor($list)
+    {
+        //todo but not used for now
+        return $list;
+    }
+
+    /**
+     * @param $data
+     * @return mixed
+     */
+    public function getStaffDetail($data)
+    {
+        //todo but not used for now
         return $data;
     }
 }

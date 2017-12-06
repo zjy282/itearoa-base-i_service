@@ -32,9 +32,10 @@ class StaffController extends \BaseController {
     public function getStaffListAction() {
         $param = array();
         $param ['name'] = trim($this->getParamList('name'));
+        $param['hotelid'] = intval($this->getParamList('hotelid'));
         $data = $this->model->getStaffList($param);
         $data = $this->convertor->getStaffListConvertor($data);
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
     /**
@@ -52,29 +53,26 @@ class StaffController extends \BaseController {
         } else {
             $this->throwException(1, '查询条件错误，id不能为空');
         }
-        $this->echoJson($data);
+        $this->echoSuccessData($data);
     }
 
     /**
-     * 根据id修改物业员工信息
-     *
-     * @param
-     *            int id 获取详情信息的id
-     * @param
-     *            array param 需要更新的字段
-     * @return Json
+     * Update staff's info
      */
     public function updateStaffByIdAction() {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
-            $param ['name'] = trim($this->getParamList('name'));
+            $param ['staff_web_hotel_id'] = intval($this->getParamList('staff_web_hotel_id'));
             $data = $this->model->updateStaffById($param, $id);
-            $data = $this->convertor->commonConvertor($data);
+            if ($data) {
+                $this->echoSuccessData($data);
+            } else {
+                $this->throwException(1, 'DB fail');
+            }
         } else {
             $this->throwException(1, 'id不能为空');
         }
-        $this->echoJson($data);
     }
 
     /**

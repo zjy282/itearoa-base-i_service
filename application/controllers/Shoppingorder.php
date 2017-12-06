@@ -103,25 +103,29 @@ class ShoppingOrderController extends \BaseController {
     }
 
     /**
-     * 根据id修改体验购物订单信息
+     * update shopping order by id
      *
-     * @param
-     *            int id 获取详情信息的id
-     * @param
-     *            array param 需要更新的字段
-     * @return Json
+     * @return  echoJson
      */
     public function updateShoppingOrderByIdAction() {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
-            $param ['name'] = trim($this->getParamList('name'));
+            $param['status'] = intval($this->getParamList('status'));
+            $param['adminid'] = intval($this->getParamList('adminid'));
+            // status or adminid need to be set
+            if ($param['status'] == 0 && $param['adminid'] == 0) {
+                $this->throwException(1, 'Param lack');
+            }
             $data = $this->model->updateShoppingOrderById($param, $id);
-            $data = $this->convertor->commonConvertor($data);
+            if ($data) {
+                $this->echoSuccessData($data);
+            } else {
+                $this->throwException(1, 'DB fail');
+            }
         } else {
             $this->throwException(1, 'id不能为空');
         }
-        $this->echoJson($data);
     }
 
     /**
@@ -208,22 +212,5 @@ class ShoppingOrderController extends \BaseController {
         $orderInfo ['adminid'] = $param ['userid'];
         $this->echoSuccessData($orderInfo);
     }
-
-    /**
-     * Get source position list for hotel
-     *
-     * @param int $hotelid
-     * @return array|null
-     */
-    public static function getRobotDest(int $hotelid)
-    {
-        $info = array(
-            1 => array(
-                1 => '仓库1',
-                2 => '仓库2',
-                3 => '前台',
-            ),
-        );
-        return $info[intval($hotelid)];
-    }
+    
 }

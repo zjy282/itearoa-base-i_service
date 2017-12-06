@@ -25,6 +25,7 @@ class StaffModel extends \BaseModel {
     public function getStaffList(array $param) {
         $param['id'] ? $paramList['id'] = $param['id'] : false;
         $param['staffid'] ? $paramList['staffid'] = $param['staffid'] : false;
+        $param['hotelid'] ? $paramList['hotelid'] = $param['hotelid'] : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getStaffList($paramList);
@@ -72,13 +73,14 @@ class StaffModel extends \BaseModel {
     public function updateStaffById($param, $id) {
         $result = false;
         if ($id) {
-            $info['lname'] = $param['lname'];
-            $info['hotelid'] = intval($param['hotelid']);
-            $info['groupid'] = intval($param['groupid']);
+            $param['lname'] ? $info['lname'] = $param['lname'] : false;
+            intval($param['hotelid']) ? $info['hotelid'] = intval($param['hotelid']) : false;
+            intval($param['groupid']) ? $info['groupid'] = intval($param['groupid']) : false;
             $info['lastlogintime'] = time();
             $info['lastloginip'] = Util_Tools::ipton(Util_Http::getIP());
-            $info['platform'] = intval($param['platform']);
-            $info['identity'] = $param['identity'];
+            intval($param['platform']) ? $info['platform'] = intval($param['platform']) : false;
+            $param['identity'] ? $info['identity'] = $param['identity'] : false;
+            $param['staff_web_hotel_id'] ? $info['staff_web_hotel_id'] = intval($param['staff_web_hotel_id']) : false;
             $result = $this->dao->updateStaffById($info, $id);
         }
         return $result;
@@ -147,7 +149,10 @@ class StaffModel extends \BaseModel {
             $this->throwException('登录信息不正确', 2);
         }
         if (empty($param['hotelid']) || empty($param['groupid'])) {
-            $this->throwException('酒店集团信息不正确', 3);
+            //hotel and group are not necessary when login from staff web
+            if ($param['identity'] != self::STAFF_WEB_IDENTIFY) {
+                $this->throwException('酒店集团信息不正确', 3);
+            }
         }
 
         // 获取Oid
