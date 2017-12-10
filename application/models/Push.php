@@ -109,7 +109,6 @@ class PushModel extends \BaseModel {
             $this->throwException('推送内容错误', 4);
         }
 
-        $pushInfo = array();
         if ($param['contentType'] && $param['contentValue']) {
             $info['contentType'] = $param['contentType'];
             $info['contentValue'] = $param['contentValue'];
@@ -169,6 +168,7 @@ class PushModel extends \BaseModel {
                 $info['platform'] = $pushParams['phoneType'] = $staffInfo['platform'];
                 $pushParams['dataid'] = $staffInfo['id'];
                 $pushParams['datatype'] = Enum_Push::PUSH_ALIAS_STAFF_PREFIX;
+                //todo ESTSSLFMP get staff language from hotel_staff
                 $pushParams['language'] = Enum_Push::PUSH_TAG_LANG_CN;
                 $pushParams['title'] = $info['cn_title'];
                 $pushParams['value'] = $info['cn_value'];

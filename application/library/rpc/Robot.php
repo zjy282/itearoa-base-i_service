@@ -190,15 +190,16 @@ class Rpc_Robot
         $pushModel = new PushModel();
         //push MSG to guest
         if ($notice == Rpc_Robot::NOTICE_BOTH || $notice == Rpc_Robot::NOTICE_GUEST) {
-            $title = Enum_ShoppingOrder::PUSH_MSG_CONTENT;
             $content = Enum_ShoppingOrder::getRobotStatusNameListForGuest()[$taskUpdate['status']];
+            $enContent = Enum_ShoppingOrder::getRobotStatusNameListForGuest(Enum_Lang::ENGLISH)[$taskUpdate['status']];
             $title = $content;
+            $enTitle = $enContent;
             $pushParams = array();
 
             $pushParams['cn_title'] = $title;
             $pushParams['cn_value'] = $content;
-            $pushParams['en_title'] = $title;
-            $pushParams['en_value'] = $content;
+            $pushParams['en_title'] = $enTitle;
+            $pushParams['en_value'] = $enContent;
             $pushParams['type'] = Enum_Push::PUSH_TYPE_USER;
             $pushParams['contentType'] = Enum_Push::PUSH_CONTENT_TYPE_SHOPPING_ORDER;
             $pushParams['contentValue'] = $taskId;
@@ -210,15 +211,16 @@ class Rpc_Robot
         //push MSG to staff
         if ($notice == Rpc_Robot::NOTICE_BOTH || $notice == Rpc_Robot::NOTICE_STAFF) {
             $count = 0;
-            $title = Enum_ShoppingOrder::PUSH_MSG_CONTENT;
             $content = Enum_ShoppingOrder::getRobotStatusNameList()[$taskUpdate['status']];
+            $enContent = Enum_ShoppingOrder::getRobotStatusNameList()[Enum_Lang::ENGLISH][$taskUpdate['status']];
             $title = $content;
-            $pushParams = array();
+            $enTitle = $enContent;
 
+            $pushParams = array();
             $pushParams['cn_title'] = $title;
             $pushParams['cn_value'] = $content;
-            $pushParams['en_title'] = $title;
-            $pushParams['en_value'] = $content;
+            $pushParams['en_title'] = $enTitle;
+            $pushParams['en_value'] = $enContent;
             $pushParams['type'] = Enum_Push::PUSH_TYPE_STAFF;
             $pushParams['contentType'] = Enum_Push::PUSH_CONTENT_TYPE_SHOPPING_ORDER;
             $pushParams['contentValue'] = $taskId;

@@ -6,6 +6,11 @@
  */
 class Enum_Lang {
 
+    const CHINESE = 'zh';
+    const ENGLISH = 'en';
+    const JAPANESE = 'jp';
+    const KOREAN = 'kor';
+
     /**
      * 语言类型名称字典 array
      */

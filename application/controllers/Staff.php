@@ -139,4 +139,12 @@ class StaffController extends \BaseController {
         $result = $this->convertor->userInfoConvertor($userInfo);
         $this->echoSuccessData($result);
     }
+
+    /**
+     * todo extend staff table, store staff's language for msg push ESTSSLFMP
+     */
+    public function updateStaffLangAction()
+    {
+
+    }
 }
