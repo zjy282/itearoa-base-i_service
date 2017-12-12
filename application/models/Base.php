@@ -47,8 +47,8 @@ class BaseModel {
 
     /**
      * 抛出异常
-     * @param $name 异常消息
-     * @param $code 异常code
+     * @param $name string
+     * @param $code int
      * @throws Exception
      */
     protected function throwException($name, $code) {

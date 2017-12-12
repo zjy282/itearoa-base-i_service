@@ -229,4 +229,33 @@ class RobotModel extends \BaseModel
         }
 
     }
+
+    /**
+     * Send robot back to charging point
+     *
+     * @param $params
+     * @return mixed
+     * @throws Exception
+     */
+    public function backToCharge($params)
+    {
+        if (!$params['hotelid'] || !$params['userid'] || empty($params['productId'])) {
+            $this->throwException('Lack of param', 1);
+        }
+        $rpcObject = Rpc_Robot::getInstance();
+        $rpcJson = $rpcObject->send(Rpc_Robot::BACK, $params, false);
+        $info = array(
+            'userid' => $params['userid'],
+            'hotelid' => $params['hotelid'],
+            'params' => json_encode($params),
+            'result' => json_encode($rpcJson),
+        );
+        $robotActionModel = new Dao_RobotAction();
+        $robotActionModel->addRobotAction($info);
+        if ($rpcJson['errcode'] != 0) {
+            $this->throwException($rpcJson['errmsg'], $rpcJson['errcode']);
+        }
+        return $rpcJson;
+    }
+
 }

@@ -114,6 +114,40 @@ class ServiceController extends \BaseController
     }
 
     /**
+     * Action for send robot back to charging point
+     */
+    public function robotBackAction()
+    {
+        $params = array();
+        $params['productId'] = trim($this->getParamList('productid'));
+        $params['hotelid'] = intval($this->getParamList('hotelid'));
+        $params['userid'] = intval($this->getParamList('userid'));
+
+        try {
+            $response = $this->_model->backToCharge($params);
+            if ($response['errcode'] != 0) {
+                throw new Exception($response['errmsg'], $response['errcode']);
+            } else {
+                $result = array(
+                    'code' => 0,
+                    'msg' => 'Success',
+                    'data' => array(
+                        'taskId' => $response['data']['taskId']
+                    )
+                );
+            }
+        } catch (Exception $e) {
+            Log_File::writeLog('robotShopping', $e->getMessage() . "\n" . $e->getTraceAsString());
+            $result = array(
+                'code' => $e->getCode(),
+                'msg' => $e->getMessage(),
+                'data' => array()
+            );
+        }
+        $this->echoJson($result);
+    }
+
+    /**
      * Action for adding new position
      */
     public function addPositionAction()

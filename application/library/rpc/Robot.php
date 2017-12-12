@@ -7,6 +7,7 @@ class Rpc_Robot
 
     const CHECK_SCHEDULABLE = '/openapi/v1/robot/schedulable';
     const SCHEDULE = '/openapi/v1/robot/schedule';
+    const BACK = '/openapi/v1/robot/back';
     const CANCELL = '/openapi/v1/robot/schedule/cancel';
 
     const CALLBACK_URI = "/service/robotCallback";
