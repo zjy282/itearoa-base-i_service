@@ -42,6 +42,12 @@ class Convertor_HotelAdministrator extends Convertor_Base {
 			$oneTemp ['createTime'] = $value ['createtime'];
 			$oneTemp ['createAdmin'] = $value ['createAdmin'];
 			$oneTemp ['permission'] = $value ['permission'];
+            $oneTemp ['taskPermission'] = $value ['taskpermission'];
+            $oneTemp ['phone'] = $value ['phone'];
+            $oneTemp ['email'] = $value ['email'];
+            $oneTemp ['department'] = $value ['department'];
+            $oneTemp ['onduty'] = $value ['onduty'];
+            $oneTemp ['level'] = $value ['level'];
 			$oneTemp ['hotelId'] = $value ['hotelid'];
 			$oneTemp ['hotelName'] = $hotelNameList [$value ['hotelid']];
 			$oneTemp ['groupId'] = $groupIdList [$value ['hotelid']];
@@ -79,7 +85,33 @@ class Convertor_HotelAdministrator extends Convertor_Base {
 			$hotelInfo = $hotelListDao->getHotelListDetail ( $data ['hotelId'] );
 			$data ['groupid'] = $hotelInfo ['groupid'];
 			$data ['permission'] = $result ['permission'];
+            $data['taskpermission'] = $result['taskpermission'];
+            $data['phone'] = $result['phone'];
+            $data['email'] = $result['email'];
+            $data['department'] = $result['department'];
+            $data['level'] = $result['level'];
+            $data['onduty'] = $result['onduty'];
 		}
 		return $data;
 	}
+
+    /**
+     * Convert task permission list
+     *
+     * @param $list
+     * @param $count
+     * @param $param
+     * @return array
+     */
+    public function getTaskPermissionListConvertor($list, $count, $param)
+    {
+        $data = array();
+        $data['list'] = $list;
+        $data ['total'] = $count;
+        $data ['page'] = $param ['page'];
+        $data ['limit'] = $param ['limit'];
+        $data ['nextPage'] = Util_Tools::getNextPage($data ['page'], $data ['limit'], $data ['total']);
+        return $data;
+
+    }
 } 

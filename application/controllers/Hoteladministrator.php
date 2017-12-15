@@ -81,8 +81,14 @@ class HotelAdministratorController extends \BaseController {
 			$paramList ['realname'] ? $param ['realName'] = trim ( $paramList ['realname'] ) : false;
 			$paramList ['remark'] ? $param ['remark'] = trim ( $paramList ['remark'] ) : false;
 			$paramList ['permission'] ? $param ['permission'] = trim ( $paramList ['permission'] ) : false;
+            $paramList ['taskpermission'] ? $param['taskpermission'] = trim($paramList ['taskpermission']) : false;
 			isset ( $paramList ['status'] ) ? $param ['status'] = intval ( $paramList ['status'] ) : false;
 			isset ( $paramList ['hotelid'] ) ? $param ['hotelId'] = trim ( $paramList ['hotelid'] ) : false;
+            $param['phone'] = trim($this->getParamList('phone'));
+            $param['email'] = trim($this->getParamList('email'));
+            $param['department'] = intval($this->getParamList('department'));
+            $param['level'] = intval($this->getParamList('level'));
+
 			$data = $this->model->updateHotelAdministratorById ( $param, $id );
 			$data = $this->convertor->statusConvertor ( $data );
 		} else {
@@ -99,14 +105,19 @@ class HotelAdministratorController extends \BaseController {
 	 * @return Json
 	 */
 	public function addHotelAdministratorAction() {
-		$param = array ();
-		$param ['userName'] = trim ( $this->getParamList ( 'username' ) );
-		$param ['password'] = md5 ( trim ( $this->getParamList ( 'password' ) ) );
-		$param ['realName'] = trim ( $this->getParamList ( 'realname' ) );
-		$param ['remark'] = trim ( $this->getParamList ( 'remark' ) );
-		$param ['status'] = intval ( $this->getParamList ( 'status' ) );
-		$param ['hotelId'] = intval ( $this->getParamList ( 'hotelid' ) );
-		$param ['createAdmin'] = intval ( $this->getParamList ( 'createadmin' ) );
+        $param = array();
+        $param ['userName'] = trim($this->getParamList('username'));
+        $param ['password'] = md5(trim($this->getParamList('password')));
+        $param ['realName'] = trim($this->getParamList('realname'));
+        $param ['remark'] = trim($this->getParamList('remark'));
+        $param ['status'] = intval($this->getParamList('status'));
+        $param ['hotelId'] = intval($this->getParamList('hotelid'));
+        $param ['createAdmin'] = intval($this->getParamList('createadmin'));
+        $param['phone'] = trim($this->getParamList('phone'));
+        $param['email'] = trim($this->getParamList('email'));
+        $param['department'] = intval($this->getParamList('department'));
+        $param['level'] = intval($this->getParamList('level'));
+
 		$param ['createTime'] = time ();
 		$data = $this->model->addHotelAdministrator ( $param );
 		$data = $this->convertor->statusConvertor ( array ('id' => $data ) );
@@ -151,9 +162,34 @@ class HotelAdministratorController extends \BaseController {
 	}
 
 	/**
-	 * 获取物业后台管理员帐号权限列表
-	 */
-	public function getHotelPermissionAction() {
-		$this->echoSuccessData ( array ('list' => Enum_HotelAdministrator::getPermission () ) );
-	}
+	 * Get administrator's permission list
+     */
+    public function getHotelPermissionAction()
+    {
+        $type = intval($this->getParamList('type'));
+        if ($type > 0) {
+            $list = Enum_HotelAdministrator::getPermission($type);
+        } else {
+            $list = Enum_HotelAdministrator::getPermission();
+        }
+        $this->echoSuccessData(array('list' => $list));
+    }
+
+
+    /**
+     * Get department list and level list
+     */
+    public function getDepartmentAndLevelListAction()
+    {
+        $hotelId = intval($this->getParamList('hotelid'));
+        $departmentList = Enum_HotelAdministrator::getDepartment($hotelId);
+        $levelList = Enum_HotelAdministrator::getLevel($hotelId);
+        $result = array(
+            'department' => $departmentList,
+            'level' => $levelList
+        );
+        $this->echoSuccessData($result);
+    }
+
+
 }

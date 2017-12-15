@@ -79,6 +79,11 @@ class HotelAdministratorModel extends \BaseModel {
             isset($param['createAdmin']) ? $info['createadmin'] = $param['createAdmin'] : false;
             isset($param['hotelId']) ? $info['hotelid'] = $param['hotelId'] : false;
             isset($param['permission']) ? $info['permission'] = $param['permission'] : false;
+            isset($param['taskpermission']) ? $info['taskpermission'] = $param['taskpermission'] : false;
+            isset($param['phone']) ? $info['phone'] = $param['phone'] : false;
+            isset($param['email']) ? $info['email'] = $param['email'] : false;
+            isset($param['department']) ? $info['department'] = $param['department'] : false;
+            isset($param['level']) ? $info['level'] = $param['level'] : false;
             $result = $this->dao->updateHotelAdministratorById($info, $id);
         }
         return $result;
@@ -101,6 +106,11 @@ class HotelAdministratorModel extends \BaseModel {
         isset($param['createTime']) ? $info['createtime'] = $param['createTime'] : false;
         isset($param['createAdmin']) ? $info['createadmin'] = $param['createAdmin'] : false;
         isset($param['hotelId']) ? $info['hotelid'] = $param['hotelId'] : false;
+        isset($param['phone']) ? $info['phone'] = $param['phone'] : false;
+        isset($param['email']) ? $info['email'] = $param['email'] : false;
+        isset($param['department']) ? $info['department'] = $param['department'] : false;
+        isset($param['level']) ? $info['level'] = $param['level'] : false;
+
         return $this->dao->addHotelAdministrator($info);
     }
 

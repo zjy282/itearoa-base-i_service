@@ -224,4 +224,89 @@ class ServiceController extends \BaseController
     }
 
 
+    /**
+     * Get task category list
+     */
+    public function getTaskCategoryListAction()
+    {
+        $param = array();
+        $param['limit'] = intval($this->getParamList('limit'));
+        $param['page'] = intval($this->getParamList('page'));
+        $param['hotelid'] = intval($this->getParamList('hotelid'));
+
+        $serviceModel = new ServiceModel();
+        $convertor = new Convertor_TaskCategory();
+        $data = $serviceModel->getTaskCategoryList($param);
+        $count = $serviceModel->getTaskCategoryCount($param);
+        $data = $convertor->getTaskCategoryListConvertor($data, $count, $param);
+        $this->echoSuccessData($data);
+    }
+
+    /**
+     * Add a new task category
+     */
+    public function addTaskCategoryAction()
+    {
+        $param = array();
+        $param['hotelid'] = intval($this->getParamList('hotelid'));
+        $param['parentid'] = intval($this->getParamList('parentid'));
+        $param['title_lang1'] = trim($this->getParamList('title_lang1'));
+        $param['title_lang2'] = trim($this->getParamList('title_lang2'));
+        $param['title_lang3'] = trim($this->getParamList('title_lang3'));
+
+        $result = array(
+            'code' => 0,
+            'msg' => "success",
+            'data' => array(
+                'time' => time()
+            )
+        );
+        try {
+            $serviceModel = new ServiceModel();
+            $lastInsertID = $serviceModel->addTaskCategory($param);
+            $result['data']['id'] = $lastInsertID;
+
+        } catch (Exception $e) {
+            $result['code'] = $e->getCode();
+            $result['msg'] = $e->getMessage();
+        }
+        $this->echoJson($result);
+
+
+    }
+
+    /**
+     * Update task category by ID
+     */
+    public function updateTaskCategoryAction()
+    {
+
+        $param = array();
+        $id = intval($this->getParamList('id'));
+        $param['parentid'] = $this->getParamList('parentid');
+        $param['title_lang1'] = $this->getParamList('title_lang1');
+        $param['title_lang2'] = $this->getParamList('title_lang2');
+        $param['title_lang3'] = $this->getParamList('title_lang3');
+
+        $result = array(
+            'code' => 0,
+            'msg' => "success",
+            'data' => array(
+                'time' => time()
+            )
+        );
+
+        try {
+            $serviceModel = new ServiceModel();
+            $serviceModel->updateTaskCategoryById($param, $id);
+
+        } catch (Exception $e) {
+            $result['code'] = $e->getCode();
+            $result['msg'] = $e->getMessage();
+        }
+        $this->echoJson($result);
+
+    }
+
+
 }
