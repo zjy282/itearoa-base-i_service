@@ -75,18 +75,18 @@ class Enum_ShoppingOrder
     private static $robotStatusNameListForGuest = array(
         Enum_Lang::CHINESE => array(
             self::ROBOT_WAITING => '订单已提交，请稍等',
-            self::ROBOT_GOING => '送货机器人已出发，请稍等',
-            self::ROBOT_ARRIVED => '机器人已到达您的房间门口，请取货',
-            self::ROBOT_FINISHED => '已送达',
+            self::ROBOT_GOING => '机器人正在派送你选订的物品，请在房间内等待收取物品',
+            self::ROBOT_ARRIVED => '机器人已到达房间门口，请出门取物',
+            self::ROBOT_FINISHED => '你选订的物品已完成送达',
             self::ROBOT_GUEST_NOT_FETCH => '您没有及时从机器人取货，机器人已返回',
             self::ROBOT_CANCELLED => '取消送货',
             self::ROBOT_BEGIN => '任务派发'),
 
         Enum_Lang::ENGLISH => array(
             self::ROBOT_WAITING => 'Your order is submit, please wait',
-            self::ROBOT_GOING => 'Robot started off on delivering',
-            self::ROBOT_ARRIVED => 'Robot is at your door now, please take your products from it',
-            self::ROBOT_FINISHED => 'Your products are delivered',
+            self::ROBOT_GOING => 'The robot is delivering the items you ordered, please wait in the room',
+            self::ROBOT_ARRIVED => 'The robot arrived at the door, please pick up the items',
+            self::ROBOT_FINISHED => 'The items you ordered have been delivered',
             self::ROBOT_GUEST_NOT_FETCH => 'You didn\'t take the product in time, the robot returned to warehouse',
             self::ROBOT_CANCELLED => 'Your order is cancelled',
             self::ROBOT_BEGIN => '任务派发'),

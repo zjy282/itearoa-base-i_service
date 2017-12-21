@@ -27,7 +27,7 @@ class Interceptor_ParamAuth extends \Interceptor_Base {
         unset($paramList['sign'], $paramList[trim($request->getRequestUri(), '/')]);
         $sign = Auth_Login::genSign($paramList);
 
-        if ($sysConfig->api->checkToke && !$this->isInWhiteList($request) && $this->_customerCheck($request)) {
+        if ($sysConfig->api->checkToke && !$this->isInWhiteList($request) && !$this->_customerCheck($request)) {
             if (empty($timestamp)) {
                 throw new Exception("未检测到时间戳", 10001);
             }

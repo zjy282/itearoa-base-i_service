@@ -213,7 +213,7 @@ class Rpc_Robot
         if ($notice == Rpc_Robot::NOTICE_BOTH || $notice == Rpc_Robot::NOTICE_STAFF) {
             $count = 0;
             $content = Enum_ShoppingOrder::getRobotStatusNameList()[$taskUpdate['status']];
-            $enContent = Enum_ShoppingOrder::getRobotStatusNameList()[Enum_Lang::ENGLISH][$taskUpdate['status']];
+            $enContent = Enum_ShoppingOrder::getRobotStatusNameList(Enum_Lang::ENGLISH)[$taskUpdate['status']];
             $title = $content;
             $enTitle = $enContent;
 
