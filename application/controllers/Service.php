@@ -309,4 +309,111 @@ class ServiceController extends \BaseController
     }
 
 
+    /**
+     * Get task list
+     */
+    public function getTaskListAction()
+    {
+        $param = array();
+        $param['limit'] = intval($this->getParamList('limit'));
+        $param['page'] = intval($this->getParamList('page'));
+        $param['hotelid'] = $this->getParamList('hotelid');
+        $param['category_id'] = $this->getParamList('category_id');
+        $param['status'] = $this->getParamList('status');
+        $param['id'] = $this->getParamList('id');
+
+
+        $serviceModel = new ServiceModel();
+        $data = $serviceModel->getTaskList($param);
+        $count = $serviceModel->getTaskCount($param);
+
+        $convertor = new Convertor_Task();
+        $data = $convertor->getTaskListConvertor($data, $count, $param);
+        $this->echoSuccessData($data);
+    }
+
+    /**
+     * Add a new task
+     */
+    public function addTaskAction()
+    {
+        $params = array();
+        $params['title_lang1'] = $this->getParamList('title_lang1');
+        $params['title_lang2'] = $this->getParamList('title_lang2');
+        $params['title_lang3'] = $this->getParamList('title_lang3');
+        $params['price'] = $this->getParamList('price');
+        $params['status'] = $this->getParamList('status');
+        $params['category_id'] = $this->getParamList('category_id');
+        $params['pic'] = $this->getParamList('pic');
+
+        $result = array(
+            'code' => 0,
+            'msg' => "success",
+            'data' => array(
+                'time' => time()
+            )
+        );
+        try {
+            $serviceModel = new ServiceModel();
+            $lastInsertID = $serviceModel->addTask($params);
+            $result['data']['id'] = $lastInsertID;
+
+        } catch (Exception $e) {
+            $result['code'] = $e->getCode();
+            $result['msg'] = $e->getMessage();
+        }
+        $this->echoJson($result);
+
+
+    }
+
+    /**
+     * Update task by ID
+     */
+    public function updateTaskAction()
+    {
+
+        $params = array();
+        $id = intval($this->getParamList('id'));
+        //task info
+        $params['title_lang1'] = $this->getParamList('title_lang1');
+        $params['title_lang2'] = $this->getParamList('title_lang2');
+        $params['title_lang3'] = $this->getParamList('title_lang3');
+        $params['price'] = $this->getParamList('price');
+        $params['status'] = $this->getParamList('status');
+        $params['category_id'] = $this->getParamList('category_id');
+        $params['pic'] = $this->getParamList('pic');
+        //task process info
+        $params['department_id'] = $this->getParamList('department_id');
+        $params['staff_id'] = $this->getParamList('staff_id');
+        $params['highest_level'] = $this->getParamList('highest_level');
+        $params['level_interval_1'] = $this->getParamList('level_interval_1');
+        $params['level_interval_2'] = $this->getParamList('level_interval_2');
+        $params['level_interval_3'] = $this->getParamList('level_interval_3');
+        $params['level_interval_4'] = $this->getParamList('level_interval_4');
+        $params['level_interval_5'] = $this->getParamList('level_interval_5');
+        $params['sms'] = $this->getParamList('sms');
+        $params['email'] = $this->getParamList('email');
+
+        $result = array(
+            'code' => 0,
+            'msg' => "success",
+            'data' => array(
+                'time' => time()
+            )
+        );
+
+        try {
+            $serviceModel = new ServiceModel();
+            $serviceModel->updateTaskById($params, $id);
+
+        } catch (Exception $e) {
+            $result['code'] = $e->getCode();
+            $result['msg'] = $e->getMessage();
+        }
+        $this->echoJson($result);
+
+    }
+
+
 }
