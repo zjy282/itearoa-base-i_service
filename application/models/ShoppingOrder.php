@@ -170,10 +170,12 @@ class ShoppingOrderModel extends \BaseModel {
                 'frank@itearoa.co.nz' => 'frank'
             ),
             1 => array(
+                'amanda.li@the-ascott.com' => 'amanda.li',
                 'frontoffice.arcb@the-ascott.com' => 'rontoffice.arcb',
+                'frontoffice2.arcb@the-ascott.com' => 'frontoffice2.arcb',
+                'lewis.liu@the-ascott.com' => 'lewis.liu',
                 'miki.wu@the-ascott.com' => 'miki.wu',
                 'tracy.han@the-ascott.com' => 'tracy.han',
-
             )
         );
 
