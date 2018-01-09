@@ -16,13 +16,22 @@ class ServiceModel extends \BaseModel
      */
     private $_daoTask;
 
+    /**
+     * @var Dao_TaskOrder
+     */
+    private $_daoTaskOrder;
+
     const ERROR_NOG_CHANGED = "Not changed";
+    const TASK_ORDER_OPEN = 1;
+    const TASK_ORDER_PROCESSING = 2;
+    const TASK_ORDER_FINISH = 3;
 
     public function __construct()
     {
         parent::__construct();
         $this->_daoCategory = new Dao_TaskCategories();
         $this->_daoTask = new Dao_Task();
+        $this->_daoTaskOrder = new Dao_TaskOrder();
     }
 
     /**
@@ -190,6 +199,115 @@ class ServiceModel extends \BaseModel
         is_null($params['category_id']) ? $this->throwException("Lack category_id", 1) : $info['category_id'] = intval($params['category_id']);
         is_null($params['status']) ? false : $info['status'] = intval($params['status']);
         return $this->_daoTask->addTask($info);
+    }
+
+
+    /**
+     * Get task order list
+     *
+     * @param array $param
+     * @return array
+     */
+    public function getTaskOrderList(array $param)
+    {
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = intval($param['id']) : false;
+        $param['userid'] ? $paramList['userid'] = intval($param['userid']) : false;
+        $param['task_id'] ? $paramList['task_id'] = intval($param['task_id']) : false;
+        $param['category_id'] ? $paramList['category_id'] = intval($param['category_id']) : false;
+        $param['department_id'] ? $paramList['department_id'] = intval($param['department_id']) : false;
+        $param['staff_id'] ? $paramList['staff_id'] = intval($param['staff_id']) : false;
+        $param['admin_id'] ? $paramList['admin_id'] = intval($param['admin_id']) : false;
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $param['status'] ? $paramList['status'] = intval($param['status']) : false;
+
+        $paramList['limit'] = $param['limit'];
+        $paramList['page'] = $param['page'];
+        return $this->_daoTaskOrder->getTaskOrderList($paramList);
+    }
+
+    /**
+     * Get task order count
+     *
+     * @param array $param
+     * @return int
+     */
+    public function getTaskOrderCount(array $param)
+    {
+        $paramList = array();
+        $param['id'] ? $paramList['id'] = intval($param['id']) : false;
+        $param['user_id'] ? $paramList['user_id'] = intval($param['user_id']) : false;
+        $param['task_id'] ? $paramList['task_id'] = intval($param['task_id']) : false;
+        $param['category_id'] ? $paramList['category_id'] = intval($param['category_id']) : false;
+        $param['department_id'] ? $paramList['department_id'] = intval($param['department_id']) : false;
+        $param['staff_id'] ? $paramList['staff_id'] = intval($param['staff_id']) : false;
+        $param['admin_id'] ? $paramList['admin_id'] = intval($param['admin_id']) : false;
+        $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
+        $param['status'] ? $paramList['status'] = intval($param['status']) : false;
+
+        return $this->_daoTaskOrder->getTaskOrderCount($paramList);
+    }
+
+    /**
+     * Update task oder by ID
+     *
+     * @param $params
+     * @param $id
+     * @throws Exception
+     * @return bool
+     */
+    public function updateTaskOrderById($params, $id)
+    {
+        $info = array();
+
+        $params['userid'] ? $info['userid'] = intval($params['userid']) : false;
+        $params['task_id'] ? $info['task_id'] = intval($params['task_id']) : false;
+        $params['count'] ? $info['count'] = intval($params['count']) : false;
+        $params['status'] ? $info['status'] = intval($params['status']) : false;
+        $params['admin_id'] ? $info['admin_id'] = intval($params['admin_id']) : false;
+        $params['memo'] ? $info['memo'] = trim($params['memo']) : false;
+        $params['delay'] ? $info['delay'] = date('Y-m-d H:i:s', intval($params['delay'])) : false;
+
+        $info['updated_at'] = $params['updated_at'] ? date('Y-m-d H:i:s', trim($params['updated_at'])) : date('Y-m-d H:i:s', time());
+
+        if (empty($info) || $id <= 0) {
+            $this->throwException('Lack of param', 1);
+        }
+        $result = $this->_daoTaskOrder->updateTaskOrder($info, $id);
+        if (!$result) {
+            $this->throwException(self::ERROR_NOG_CHANGED, 2);
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Add a new task order
+     *
+     * @param array $params
+     * @return int
+     */
+    public function addTaskOrder(array $params): int
+    {
+        $info = array();
+
+        is_null($params['task_id']) ? $this->throwException("Lack task id", 1) : $info['task_id'] = intval($params['task_id']);
+        is_null($params['memo']) ? false : $info['memo'] = trim($params['memo']);
+        $info['count'] = is_null($params['count']) ? 1 : intval($params['count']);
+        is_null($params['admin_id']) ? false : $info['admin_id'] = intval($params['admin_id']);
+        if (is_null($params['userid'])) {
+            is_null($params['room_no']) ? $this->throwException("Need either User id or room_no", 1) : $info['room_no'] = trim($params['room_no']);
+        } else {
+            $info['userid'] = intval($params['userid']);
+            $daoUser = new Dao_User();
+            $user = $daoUser->getUserDetail($info['userid']);
+            $user ? $info['room_no'] = $user['room_no'] : false;
+        }
+
+        $info['status'] = self::TASK_ORDER_OPEN;
+        $info['created_at'] = $params['created_at'];
+        $info['updated_at'] = $params['updated_at'];
+        return $this->_daoTaskOrder->addTaskOrder($info);
     }
 
 }

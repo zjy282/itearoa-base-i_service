@@ -333,6 +333,33 @@ class ServiceController extends \BaseController
     }
 
     /**
+     * Get task order list
+     */
+    public function getTaskOrderListAction()
+    {
+        $param = array();
+        $param['limit'] = intval($this->getParamList('limit'));
+        $param['page'] = intval($this->getParamList('page'));
+        $param['hotelid'] = $this->getParamList('hotelid');
+        $param['userid'] = $this->getParamList('userid');
+        $param['staff_id'] = $this->getParamList('staff_id');
+        $param['admin_id'] = $this->getParamList('admin_id');
+        $param['category_id'] = $this->getParamList('category_id');
+        $param['department_id'] = $this->getParamList('department_id');
+        $param['status'] = $this->getParamList('status');
+        $param['id'] = $this->getParamList('id');
+
+
+        $serviceModel = new ServiceModel();
+        $data = $serviceModel->getTaskOrderList($param);
+        $count = $serviceModel->getTaskOrderCount($param);
+
+        $convertor = new Convertor_Task();
+        $data = $convertor->getTaskOrderListConvertor($data, $count, $param);
+        $this->echoSuccessData($data);
+    }
+
+    /**
      * Add a new task
      */
     public function addTaskAction()
@@ -363,9 +390,44 @@ class ServiceController extends \BaseController
             $result['msg'] = $e->getMessage();
         }
         $this->echoJson($result);
-
-
     }
+
+    /**
+     * Add a new task order
+     */
+    public function addTaskOrderAction()
+    {
+        $params = array();
+        $params['userid'] = $this->getParamList('userid');
+        $params['task_id'] = $this->getParamList('task_id');
+        $params['count'] = $this->getParamList('count');
+        $params['admin_id'] = $this->getParamList('admin_id');
+        $params['room_no'] = $this->getParamList('room_no');
+        $params['memo'] = $this->getParamList('memo');
+
+        $now = time();
+        $params['created_at'] = date('Y-m-d H:i:s', $now);
+        $params['updated_at'] = date('Y-m-d H:i:s', $now);;
+
+        $result = array(
+            'code' => 0,
+            'msg' => "success",
+            'data' => array(
+                'time' => time()
+            )
+        );
+        try {
+            $serviceModel = new ServiceModel();
+            $lastInsertID = $serviceModel->addTaskOrder($params);
+            $result['data']['id'] = $lastInsertID;
+
+        } catch (Exception $e) {
+            $result['code'] = $e->getCode();
+            $result['msg'] = $e->getMessage();
+        }
+        $this->echoJson($result);
+    }
+
 
     /**
      * Update task by ID
@@ -413,6 +475,46 @@ class ServiceController extends \BaseController
         }
         $this->echoJson($result);
 
+    }
+
+
+    /**
+     * Update task order by ID
+     */
+    public function updateTaskOrderAction()
+    {
+        $params = array();
+        $id = $this->getParamList('id');
+        $params['task_id'] = $this->getParamList('task_id');
+        $params['userid'] = $this->getParamList('userid');
+        $params['count'] = $this->getParamList('count');
+        $params['status'] = $this->getParamList('status');
+        $params['admin_id'] = $this->getParamList('admin_id');
+        $params['delay'] = $this->getParamList('delay');
+        $params['memo'] = $this->getParamList('memo');
+
+        $params['updated_at'] = time();
+
+        $result = array(
+            'code' => 0,
+            'msg' => "success",
+            'data' => array(
+                'time' => time()
+            )
+        );
+        try {
+            if (!$id) {
+                $this->throwException('Lack ID', 1);
+            }
+            $serviceModel = new ServiceModel();
+            $lastInsertID = $serviceModel->updateTaskOrderById($params, $id);
+            $result['data']['id'] = $lastInsertID;
+
+        } catch (Exception $e) {
+            $result['code'] = $e->getCode();
+            $result['msg'] = $e->getMessage();
+        }
+        $this->echoJson($result);
     }
 
 

@@ -56,4 +56,50 @@ class Convertor_Task extends Convertor_Base
         $data ['nextPage'] = Util_Tools::getNextPage($data ['page'], $data ['limit'], $data ['total']);
         return $data;
     }
+
+    /**
+     * Convert task order list to output
+     *
+     * @param $list
+     * @param $count
+     * @param $param
+     * @return array
+     */
+    public function getTaskOrderListConvertor($list, $count, $param)
+    {
+        $data = array('list' => array());
+        foreach ($list as $key => $value) {
+            $oneTemp = array();
+            $oneTemp['id'] = $value ['id'];
+            $oneTemp['userid'] = $value ['userid'];
+            $oneTemp['room_no'] = $value['room_no'];
+            $oneTemp['task_id'] = $value ['task_id'];
+            $oneTemp['count'] = $value ['count'];
+            $oneTemp['created_at'] = $value ['created_at'];
+            $oneTemp['updated_at'] = $value ['updated_at'];
+            $oneTemp['delay'] = $value ['delay'];
+            $oneTemp['status'] = $value['status'];
+            $oneTemp['admin_id'] = $value ['admin_id'];
+            $oneTemp['admin_name'] = $value['hotel_administrator_realname'];
+            $oneTemp['memo'] = $value ['memo'];
+            $oneTemp['tasks_title_lang1'] = $value['tasks_title_lang1'];
+            $oneTemp['tasks_title_lang2'] = $value['tasks_title_lang2'];
+            $oneTemp['tasks_title_lang3'] = $value['tasks_title_lang3'];
+
+            $oneTemp['tasks_pic'] = $value['tasks_pic'];
+            $oneTemp['task_categories_title_lang1'] = $value['task_categories_title_lang1'];
+            $oneTemp['task_categories_title_lang2'] = $value['task_categories_title_lang2'];
+            $oneTemp['task_categories_title_lang3'] = $value['task_categories_title_lang3'];
+
+            $oneTemp['price'] = $value['price'] * $value ['count'];
+
+            $data['list'][] = $oneTemp;
+        }
+        $data ['total'] = $count;
+        $data ['page'] = $param ['page'];
+        $data ['limit'] = $param ['limit'];
+        $data ['nextPage'] = Util_Tools::getNextPage($data ['page'], $data ['limit'], $data ['total']);
+        return $data;
+    }
+
 }
