@@ -74,6 +74,7 @@ class ServiceModel extends \BaseModel
         !is_null($param['title_lang1']) ? $info['title_lang1'] = trim($param['title_lang1']) : false;
         !is_null($param['title_lang2']) ? $info['title_lang2'] = trim($param['title_lang2']) : false;
         !is_null($param['title_lang3']) ? $info['title_lang3'] = trim($param['title_lang3']) : false;
+        !is_null($param['pic']) ? $info['pic'] = trim($param['pic']) : false;
         !is_null($param['parentid']) ? $info['parentid'] = intval($param['parentid']) : false;
         if (empty($info) || $id <= 0) {
             $this->throwException('Lack of param', 1);
@@ -99,6 +100,7 @@ class ServiceModel extends \BaseModel
         $param['title_lang1'] ? $info['title_lang1'] = $param['title_lang1'] : $this->throwException('Lack of param', 1);
         $info['title_lang2'] = $param['title_lang2'];
         $info['title_lang3'] = $param['title_lang3'];
+        !is_null($param['pic']) ? $info['pic'] = trim($param['pic']) : false;
         $info['parentid'] = $param['parentid'];
         return $this->_daoCategory->addCategory($info);
     }
@@ -309,5 +311,5 @@ class ServiceModel extends \BaseModel
         $info['updated_at'] = $params['updated_at'];
         return $this->_daoTaskOrder->addTaskOrder($info);
     }
-
+    
 }

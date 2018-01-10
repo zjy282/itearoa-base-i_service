@@ -253,6 +253,7 @@ class ServiceController extends \BaseController
         $param['title_lang1'] = trim($this->getParamList('title_lang1'));
         $param['title_lang2'] = trim($this->getParamList('title_lang2'));
         $param['title_lang3'] = trim($this->getParamList('title_lang3'));
+        $param['pic'] = trim($this->getParamList('pic'));
 
         $result = array(
             'code' => 0,
@@ -287,6 +288,7 @@ class ServiceController extends \BaseController
         $param['title_lang1'] = $this->getParamList('title_lang1');
         $param['title_lang2'] = $this->getParamList('title_lang2');
         $param['title_lang3'] = $this->getParamList('title_lang3');
+        $param['pic'] = trim($this->getParamList('pic'));
 
         $result = array(
             'code' => 0,
