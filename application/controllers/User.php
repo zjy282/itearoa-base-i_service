@@ -172,9 +172,9 @@ class UserController extends \BaseController {
             $this->throwException(2, 'token验证失败');
         }
         $param = array();
-        $param ['platform'] = intval($this->getParamList('platform'));
-        $param ['identity'] = trim($this->getParamList('identity'));
-        $param ['language'] = trim($this->getParamList('lang'));
+        $param ['platform'] = $this->getParamList('platform');
+        $param ['identity'] = $this->getParamList('identity');
+        $param ['language'] = $this->getParamList('lang');
         if (empty ($param ['platform']) || empty ($param ['identity']) || empty ($param ['language'])) {
             $this->throwException(3, '入参错误');
         }

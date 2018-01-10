@@ -93,15 +93,16 @@ class UserModel extends \BaseModel {
         $result = false;
         // 自行添加要更新的字段,以下是age字段是样例
         if ($id) {
-            $info['room_no'] = $param['room_no'];
-            $info['hotelid'] = intval($param['hotelid']);
-            $info['groupid'] = intval($param['groupid']);
-            $info['fullname'] = strval($param['fullname']);
+            is_null($param['room_no']) ? false : $info['room_no'] = $param['room_no'];
+            is_null($param['hotelid']) ? false : $info['hotelid'] = intval($param['hotelid']);
+            is_null($param['groupid']) ? false : $info['groupid'] = intval($param['groupid']);
+            is_null($param['fullname']) ? false : $info['fullname'] = trim($param['fullname']);
+            is_null($param['platform']) ? false : $info['platform'] = trim($param['platform']);
+            is_null($param['identity']) ? false : $info['identity'] = trim($param['identity']);
+            is_null($param['language']) ? false : $info['language'] = trim($param['language']);
+
             $info['lastlogintime'] = time();
             $info['lastloginip'] = Util_Tools::ipton(Util_Http::getIP());
-            $info['platform'] = intval($param['platform']);
-            $info['identity'] = $param['identity'];
-            $info['language'] = $param['language'];
             $result = $this->dao->updateUserById($info, $id);
         }
         return $result;
