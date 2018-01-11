@@ -6,6 +6,11 @@
  */
 class ShoppingOrderModel extends \BaseModel {
 
+    const ORDER_NOTIFY_EMAIL = 1;
+    const ORDER_NOTIFY_MSG = 2;
+    const ORDER_NOTIFY_BOTH = 3;
+
+
     private $dao;
 
     public function __construct() {
@@ -106,7 +111,7 @@ class ShoppingOrderModel extends \BaseModel {
         $info['userid'] = intval($param['userid']);
         $info['creattime'] = time();
         $info['status'] = Enum_ShowingOrder::ORDER_STATUS_WAIT;
-	    $this->_emailShoppingOrder($info);
+
         return $this->dao->addShoppingOrder($info);
     }
 
@@ -117,12 +122,8 @@ class ShoppingOrderModel extends \BaseModel {
      * @param array $info
      * @return bool
      */
-    private function _emailShoppingOrder($info)
+    public function sendOrderMsg($info, $type = self::ORDER_NOTIFY_EMAIL)
     {
-        $to = $this->_getEmailArray($info['hotelid']);
-        if (empty($to)) {
-            return false;
-        }
         $shoppingDao = new Dao_Shopping();
         $userDao = new Dao_User();
         $userDetail = $userDao->getUserDetail($info['userid']);
@@ -149,11 +150,40 @@ class ShoppingOrderModel extends \BaseModel {
             $shoppingDetail['price'],
             $shoppingDetail['url']
         );
-        $subject = "体验购物定单：" . $userDetail['room_no'] . "-" . $shoppingDetail['title_lang1'] . "X" . $info['count'];
-        $smtp = Mail_Email::getInstance();
+        $subject = "体验购物定单：" . $userDetail['room_no'] . " - " . $shoppingDetail['title_lang1'] . " X " . $info['count'];
+        $enSubject = "Shopping Order: " . $userDetail['room_no'] . " - " . $shoppingDetail['title_lang2'] . " X " . $info['count'];
 
-        $smtp->addCc('iservice@liheinfo.com');
-        $smtp->send($to, $subject, $mailContent);
+        if ($type == self::ORDER_NOTIFY_MSG || $type == self::ORDER_NOTIFY_BOTH) {
+            //send app message to staff
+            $pushParams['cn_title'] = $subject;
+            $pushParams['cn_value'] = '点击查看订单详情';
+            $pushParams['en_title'] = $enSubject;
+            $pushParams['en_value'] = 'Click to check the order';
+            $pushParams['type'] = Enum_Push::PUSH_TYPE_STAFF;
+            $pushParams['contentType'] = Enum_Push::PUSH_CONTENT_TYPE_SHOPPING_ORDER;
+            $pushParams['contentValue'] = $info['id'];
+            $pushModel = new PushModel();
+            $staffModel = new StaffModel();
+            $pushStaffIds = $staffModel->getStaffList(array(
+                'hotelid' => $info['hotelid']
+            ));
+
+            if ($pushStaffIds) {
+                foreach ($pushStaffIds as $staff) {
+                    $pushParams['dataid'] = $staff['id'];
+                    $pushModel->addPushOne($pushParams);
+                }
+            }
+        }
+
+        $to = $this->_getEmailArray($info['hotelid']);
+        if (($type == self::ORDER_NOTIFY_EMAIL || $type == self::ORDER_NOTIFY_BOTH) && !empty($to)) {
+            //send email message to staff
+            $smtp = Mail_Email::getInstance();
+            $smtp->addCc('iservice@liheinfo.com');
+            $smtp->send($to, $subject, $mailContent);
+        }
+
         return true;
     }
 

@@ -38,11 +38,6 @@ class Enum_ShoppingOrder
         6 => array(3861),
     );
 
-    public static function getOrderPushStaffIdList($hotelId)
-    {
-        return self::$orderPushStaffIdList[$hotelId];
-    }
-
     private static $statsNameList = array(
         self::ORDER_STATUS_WAIT => '待处理',
         self::ORDER_STATUS_SERVICE => '处理中',

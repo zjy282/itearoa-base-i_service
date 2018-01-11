@@ -152,31 +152,15 @@ class ShoppingOrderController extends \BaseController {
         //        if (count($checkOrder) > 0) {
         //            $this->throwException(4, '已经存在有效订单，请不要重复提交');
         //        }
-        $data = $this->model->addShoppingOrder($param);
-        if (!$data) {
+        $orderId = $this->model->addShoppingOrder($param);
+        if (!$orderId) {
             $this->throwException(5, '提交失败');
+        } else {
+            $param['id'] = $orderId;
+            //send message to the hotel staff
+            $this->model->sendOrderMsg($param, ShoppingOrderModel::ORDER_NOTIFY_BOTH);
         }
-        if ($data) {
-            $pushParams['cn_title'] = '您有一笔新体验购物订单';
-            $pushParams['cn_value'] = '点击查看订单详情';
-            $pushParams['en_title'] = 'You have a new shopping order';
-            $pushParams['en_value'] = 'Click to check the order';
-            $pushParams['type'] = Enum_Push::PUSH_TYPE_STAFF;
-            $pushParams['contentType'] = Enum_Push::PUSH_CONTENT_TYPE_SHOPPING_ORDER;
-            $pushParams['contentValue'] = $data;
-            $pushModel = new PushModel();
-
-            $pushStaffIds = Enum_ShoppingOrder::getOrderPushStaffIdList($param['hotelid']);
-            if ($pushStaffIds) {
-                $staffModel = new StaffModel();
-                $staffInfoList = $staffModel->getStaffList(array('staffid' => $pushStaffIds));
-                foreach ($staffInfoList as $staffInfo) {
-                    $pushParams['dataid'] = $staffInfo['id'];
-                    $pushModel->addPushOne($pushParams);
-                }
-            }
-        }
-        $this->echoSuccessData(array('orderId' => $data));
+        $this->echoSuccessData(array('orderId' => $orderId));
     }
 
     /**

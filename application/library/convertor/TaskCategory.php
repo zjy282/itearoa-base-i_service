@@ -23,6 +23,7 @@ class Convertor_TaskCategory extends Convertor_Base
     {
         $data = array('list' => array());
         foreach ($list as $key => $value) {
+            $value['pic'] = Enum_Img::getPathByKeyAndType($value['pic']);
             $data ['list'] [] = $value;
         }
         $data ['total'] = $count;

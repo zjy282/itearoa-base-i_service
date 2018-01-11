@@ -86,7 +86,7 @@ class Convertor_Task extends Convertor_Base
             $oneTemp['tasks_title_lang2'] = $value['tasks_title_lang2'];
             $oneTemp['tasks_title_lang3'] = $value['tasks_title_lang3'];
 
-            $oneTemp['tasks_pic'] = $value['tasks_pic'];
+            $oneTemp['tasks_pic'] = Enum_Img::getPathByKeyAndType($value['tasks_pic']);
             $oneTemp['task_categories_title_lang1'] = $value['task_categories_title_lang1'];
             $oneTemp['task_categories_title_lang2'] = $value['task_categories_title_lang2'];
             $oneTemp['task_categories_title_lang3'] = $value['task_categories_title_lang3'];
