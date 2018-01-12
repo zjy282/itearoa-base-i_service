@@ -403,16 +403,15 @@ class ServiceController extends \BaseController
         $token = trim($this->getParamList('token'));
 
         if (!empty($token)) {
-            $param['userid'] = Auth_Login::getToken($token);
-            if (empty ($param ['userid'])) {
+            $params['userid'] = Auth_Login::getToken($token);
+            if (empty ($params['userid'])) {
                 $this->throwException(3, '登录验证失败');
             }
         } else {
-            $param['userid'] = $this->getParamList('userid');
+            //keep it for iam website
+            $params['userid'] = $this->getParamList('userid');
         }
 
-
-        $param['creattime'] = time();
         $params['room_no'] = $this->getParamList('room_no');
         $params['task_id'] = $this->getParamList('task_id');
         $params['count'] = $this->getParamList('count');
