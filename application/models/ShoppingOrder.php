@@ -109,7 +109,7 @@ class ShoppingOrderModel extends \BaseModel {
         $info['shoppingid'] = intval($param['shoppingid']);
         $info['hotelid'] = intval($param['hotelid']);
         $info['userid'] = intval($param['userid']);
-        $info['creattime'] = time();
+        $info['creattime'] = intval($param['creattime']);
         $info['status'] = Enum_ShowingOrder::ORDER_STATUS_WAIT;
 
         return $this->dao->addShoppingOrder($info);

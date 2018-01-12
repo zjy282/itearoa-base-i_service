@@ -144,6 +144,7 @@ class ShoppingOrderController extends \BaseController {
             $this->throwException(2, '入参错误');
         }
         $token = trim($this->getParamList('token'));
+        $param['creattime'] = time();
         $param ['userid'] = Auth_Login::getToken($token);
         if (empty ($param ['userid'])) {
             $this->throwException(3, '登录验证失败');

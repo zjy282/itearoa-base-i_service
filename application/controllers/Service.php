@@ -400,11 +400,23 @@ class ServiceController extends \BaseController
     public function addTaskOrderAction()
     {
         $params = array();
-        $params['userid'] = $this->getParamList('userid');
+        $token = trim($this->getParamList('token'));
+
+        if (!empty($token)) {
+            $param['userid'] = Auth_Login::getToken($token);
+            if (empty ($param ['userid'])) {
+                $this->throwException(3, '登录验证失败');
+            }
+        } else {
+            $param['userid'] = $this->getParamList('userid');
+        }
+
+
+        $param['creattime'] = time();
+        $params['room_no'] = $this->getParamList('room_no');
         $params['task_id'] = $this->getParamList('task_id');
         $params['count'] = $this->getParamList('count');
         $params['admin_id'] = $this->getParamList('admin_id');
-        $params['room_no'] = $this->getParamList('room_no');
         $params['memo'] = $this->getParamList('memo');
 
         $now = time();
