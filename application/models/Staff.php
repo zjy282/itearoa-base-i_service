@@ -117,7 +117,7 @@ class StaffModel extends \BaseModel
         $info['lastloginip'] = Util_Tools::ipton(Util_Http::getIP());
         $info['platform'] = intval($param['platform']);
         $info['identity'] = $param['identity'];
-        $info['admin_id'] = intval('admin_id');
+        $info['admin_id'] = intval($param['admin_id']);
         return $this->dao->addStaff($info);
     }
 
