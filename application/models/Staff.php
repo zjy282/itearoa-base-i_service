@@ -93,6 +93,7 @@ class StaffModel extends \BaseModel
             intval($param['platform']) ? $info['platform'] = intval($param['platform']) : false;
             $param['identity'] ? $info['identity'] = $param['identity'] : false;
             $param['staff_web_hotel_id'] ? $info['staff_web_hotel_id'] = intval($param['staff_web_hotel_id']) : false;
+            $param['admin_id'] ? $info['admin_id'] = intval($param['admin_id']) : false;
             $result = $this->dao->updateStaffById($info, $id);
         }
         return $result;
@@ -116,6 +117,7 @@ class StaffModel extends \BaseModel
         $info['lastloginip'] = Util_Tools::ipton(Util_Http::getIP());
         $info['platform'] = intval($param['platform']);
         $info['identity'] = $param['identity'];
+        $info['admin_id'] = intval('admin_id');
         return $this->dao->addStaff($info);
     }
 
@@ -199,6 +201,7 @@ class StaffModel extends \BaseModel
         if ($isStaffWeb) {
             $newStaffInfo['platform'] = $getStaffInfo['platform'];
         }
+        $newStaffInfo['admin_id'] = $this->getAdminId(intval($newStaffInfo['groupid']), $staffIdInfo['staffId']);
         if ($userId) {
             // 更新用户数据
             if (!$this->updateStaffById($newStaffInfo, $userId)) {
@@ -256,6 +259,24 @@ class StaffModel extends \BaseModel
      */
     private function _getStaffId(int $hotelid, int $userId): string
     {
-        return self::STAFF_WEB_IDENTIFY . '_' . $hotelid . '_' . $userId;
+        return self::STAFF_ID_PREFIX . '_' . $hotelid . '_' . $userId;
+    }
+
+    /**
+     * Extract admin id from staffid
+     *
+     * @param string $staffId
+     * @return int
+     */
+    public function getAdminId(int $groupId, string $staffId): int
+    {
+        if(!in_array($groupId, self::GROUP_LOGIN_SERVICE)){
+            return 0;
+        }
+        preg_match('/_(\d+)$/', $staffId, $matches);
+        if (count($matches) != 2) {
+            $this->throwException('StaffId format error', 1);
+        }
+        return intval($matches[2]);
     }
 }
