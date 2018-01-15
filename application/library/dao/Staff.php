@@ -23,33 +23,35 @@ class Dao_Staff extends Dao_Base {
         $whereCase = array();
         if (isset($param['id'])) {
             if (is_array($param['id'])) {
-                $whereSql[] = 'id in (' . implode(',', $param['id']) . ')';
+                $whereSql[] = 'hotel_staff.id in (' . implode(',', $param['id']) . ')';
             } else {
-                $whereSql[] = 'id = ?';
+                $whereSql[] = 'hotel_staff.id = ?';
                 $whereCase[] = $param['id'];
             }
         }
         if (isset($param['staffid'])) {
             if (is_array($param['staffid'])) {
-                $whereSql[] = 'staffid in (' . implode(',', $param['staffid']) . ')';
+                $whereSql[] = 'hotel_staff.staffid in (' . implode(',', $param['staffid']) . ')';
             } else {
-                $whereSql[] = 'staffid = ?';
+                $whereSql[] = 'hotel_staff.staffid = ?';
                 $whereCase[] = $param['staffid'];
             }
         }
 
         if (isset($param['hotelid'])) {
             if (is_array($param['hotelid'])) {
-                $whereSql[] = 'hotelid in (' . implode(',', $param['staffid']) . ')';
+                $whereSql[] = 'hotel_staff.hotelid in (' . implode(',', $param['staffid']) . ')';
             } else {
-                $whereSql[] = 'hotelid = ?';
+                $whereSql[] = 'hotel_staff.hotelid = ?';
                 $whereCase[] = $param['hotelid'];
             }
         }
 
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
 
-        $sql = "select * from hotel_staff {$whereSql}";
+        $sql = "select hotel_staff.*, hotel_administrator.realname from hotel_staff LEFT JOIN hotel_administrator ON 
+                hotel_staff.admin_id = hotel_administrator.id
+                {$whereSql}";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }

@@ -27,11 +27,13 @@ class Dao_TaskOrder extends Dao_Base
         $sql = "SELECT task_orders.*,
                 tasks.title_lang1 AS tasks_title_lang1, tasks.title_lang2 AS tasks_title_lang2, tasks.pic AS tasks_pic, tasks.price,
                 task_categories.title_lang1 AS task_categories_title_lang1, task_categories.title_lang2 AS task_categories_title_lang2,
-                hotel_administrator.realname AS hotel_administrator_realname
+                hotel_administrator.realname AS hotel_administrator_realname,
+                hotel_staff.lname AS hotel_staff_lname
                   FROM task_orders
                   LEFT JOIN tasks ON  task_orders.task_id = tasks.id
                   LEFT JOIN task_categories ON  tasks.category_id = task_categories.id
-                  LEFT JOIN hotel_administrator ON  task_orders.admin_id = hotel_administrator.id {$paramSql['sql']}";
+                  LEFT JOIN hotel_staff ON task_orders.admin_id = hotel_staff.id
+                  LEFT JOIN hotel_administrator ON  hotel_staff.admin_id = hotel_administrator.id {$paramSql['sql']}";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }

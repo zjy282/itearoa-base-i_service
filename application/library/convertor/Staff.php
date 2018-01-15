@@ -49,8 +49,16 @@ class Convertor_Staff extends Convertor_Base
      */
     public function getStaffListConvertor($list)
     {
-        //todo but not used for now
-        return $list;
+        $data = array();
+        $tmp = array();
+        foreach ($list as $item) {
+            if (empty($item['realname'])) {
+                $item['realname'] = $item['lname'];
+            }
+            $tmp[] = $item;
+        }
+        $data['list'] = $tmp;
+        return $data;
     }
 
     /**

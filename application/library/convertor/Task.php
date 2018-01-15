@@ -80,7 +80,7 @@ class Convertor_Task extends Convertor_Base
             $oneTemp['delay'] = $value ['delay'];
             $oneTemp['status'] = $value['status'];
             $oneTemp['admin_id'] = $value ['admin_id'];
-            $oneTemp['admin_name'] = $value['hotel_administrator_realname'];
+            $oneTemp['admin_name'] = $value['hotel_administrator_realname'] ? $value['hotel_administrator_realname'] : $value['hotel_staff_lname'];
             $oneTemp['memo'] = $value ['memo'];
             $oneTemp['tasks_title_lang1'] = $value['tasks_title_lang1'];
             $oneTemp['tasks_title_lang2'] = $value['tasks_title_lang2'];
