@@ -340,10 +340,18 @@ class ServiceController extends \BaseController
     public function getTaskOrderListAction()
     {
         $param = array();
+        if (!empty($token)) {
+            $params['userid'] = Auth_Login::getToken($token);
+            if (empty ($params['userid'])) {
+                $this->throwException(3, '登录验证失败');
+            }
+        } else {
+            //keep it for iam website
+            $params['userid'] = $this->getParamList('userid');
+        }
         $param['limit'] = intval($this->getParamList('limit'));
         $param['page'] = intval($this->getParamList('page'));
         $param['hotelid'] = $this->getParamList('hotelid');
-        $param['userid'] = $this->getParamList('userid');
         $param['staff_id'] = $this->getParamList('staff_id');
         $param['admin_id'] = $this->getParamList('admin_id');
         $param['category_id'] = $this->getParamList('category_id');
