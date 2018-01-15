@@ -277,6 +277,6 @@ class StaffModel extends \BaseModel
         if (count($matches) != 2) {
             $this->throwException('StaffId format error', 1);
         }
-        return intval($matches[2]);
+        return intval($matches[1]);
     }
 }
