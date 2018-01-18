@@ -378,6 +378,7 @@ class PushModel extends \BaseModel {
                             'PropertyInterfID' => $propertyinterfIdList[$userOne['hotelid']],
                             'CustomerID' => $userOne['oid'],
                             'Room' => $userOne['room_no'],
+                            'groupid' => $userOne ['groupid'],
                             'LastName' => $userOne['fullname']
                         );
                         $pushParams['type'] = Enum_Push::PUSH_TYPE_USER;

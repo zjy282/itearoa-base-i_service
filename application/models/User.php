@@ -163,7 +163,7 @@ class UserModel extends \BaseModel {
         $paramList = Enum_Gsm::genEncryptGsmParams($paramList);
         $paramList['OrderID'] = $param['OrderID'];
 
-        $url = Rpc_Gsm::makeGsmUrl(Enum_Gsm::USER_REDIRECT_METHOD, $paramList);
+        $url = Rpc_Gsm::makeGsmUrl(Enum_Gsm::getUserRedirectUrl($param['groupid']), $paramList);
         return $url;
     }
 

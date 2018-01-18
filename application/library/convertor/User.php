@@ -30,6 +30,7 @@ class Convertor_User extends Convertor_Base {
             'CustomerID' => $list['oid'],
             'Room' => $list['room_no'],
             'LastName' => $list['fullname'],
+            'groupid' => $list ['groupid'],
         ));
         $data ['oid'] = $list ['oid'];
         $data ['createtime'] = $list ['createtime'];

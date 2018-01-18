@@ -12,6 +12,7 @@ class Enum_Gsm {
     const SECERTKEY = 'iServicesExtra';
 
     const USER_LOGIN_PATH = '/Trans/AuthTrans2';
+    const USER_REDIRECT_PATH = '/Trans/AuthRedirect2';
 
     const STAFF_LOGIN_METHOD = self::STAFF_INTERFACE . '/Trans/Auth';
 
@@ -41,6 +42,24 @@ class Enum_Gsm {
             $host = $groupInfo['port_url'];
         }
         return $host . self::USER_LOGIN_PATH;
+    }
+
+    /**
+     * Return redirect url path from group port_url
+     *
+     * @param $groupId
+     * @return string
+     */
+    public static function getUserRedirectUrl($groupId): string
+    {
+        $model = new GroupModel();
+        $groupInfo = $model->getGroupDetail(intval($groupId));
+        $host = self::GSM_INTERFACE;
+        if (isset($groupInfo['port_url']) && !empty($groupInfo['port_url'])) {
+            $host = $groupInfo['port_url'];
+        }
+        return $host . self::USER_REDIRECT_PATH;
+
     }
 
 }
