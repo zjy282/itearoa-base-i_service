@@ -69,6 +69,15 @@ class Dao_HotelAdministrator extends Dao_Base {
             $whereSql[] = 'status = ?';
             $whereCase[] = $param['status'];
         }
+        if (isset($param['level'])) {
+            $whereSql[] = 'level = ?';
+            $whereCase[] = $param['level'];
+        }
+        if (isset($param['department_id'])) {
+            $whereSql[] = 'department = ?';
+            $whereCase[] = $param['department_id'];
+        }
+
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
         return array(
             'sql' => $whereSql,

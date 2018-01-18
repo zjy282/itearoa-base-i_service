@@ -130,7 +130,10 @@ class Interceptor_ParamAuth extends \Interceptor_Base {
         $whiteList = array( // 方法名都小写
             'system' => array(
                 'gettime'
-            )
+            ),
+            'service' => array(
+                'orderremind',
+            ),
         );
 
         $flag = false;

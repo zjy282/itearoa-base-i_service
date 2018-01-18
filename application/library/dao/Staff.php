@@ -40,10 +40,28 @@ class Dao_Staff extends Dao_Base {
 
         if (isset($param['hotelid'])) {
             if (is_array($param['hotelid'])) {
-                $whereSql[] = 'hotel_staff.hotelid in (' . implode(',', $param['staffid']) . ')';
+                $whereSql[] = 'hotel_staff.hotelid in (' . implode(',', $param['hotelid']) . ')';
             } else {
                 $whereSql[] = 'hotel_staff.hotelid = ?';
                 $whereCase[] = $param['hotelid'];
+            }
+        }
+
+        if (isset($param['department_id'])) {
+            if (is_array($param['department_id'])) {
+                $whereSql[] = 'hotel_administrator.department in (' . implode(',', $param['department_id']) . ')';
+            } else {
+                $whereSql[] = 'hotel_administrator.department = ?';
+                $whereCase[] = $param['department_id'];
+            }
+        }
+
+        if (isset($param['level'])) {
+            if (is_array($param['level'])) {
+                $whereSql[] = 'hotel_administrator.level in (' . implode(',', $param['level']) . ')';
+            } else {
+                $whereSql[] = 'hotel_administrator.level = ?';
+                $whereCase[] = $param['level'];
             }
         }
 

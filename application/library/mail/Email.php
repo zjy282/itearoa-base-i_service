@@ -3,6 +3,10 @@
 
 class Mail_Email
 {
+
+    const ADDRESS_BCC = 'iservice@liheinfo.com';
+    const ADDRESS_CC = 'iservice@liheinfo.com';
+
     /**
      * @var Mail_Email
      */

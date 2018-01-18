@@ -440,6 +440,9 @@ class ServiceController extends \BaseController
         try {
             $serviceModel = new ServiceModel();
             $lastInsertID = $serviceModel->addTaskOrder($params);
+            $serviceModel->sendTaskOrderMsg($lastInsertID, ServiceModel::MSG_TO_STAFF, ServiceModel::MSG_TYPE_EMAIL);
+            $serviceModel->sendTaskOrderMsg($lastInsertID, ServiceModel::MSG_TO_STAFF, ServiceModel::MSG_TYPE_APP);
+
             $result['data']['id'] = $lastInsertID;
 
         } catch (Exception $e) {
@@ -528,14 +531,39 @@ class ServiceController extends \BaseController
                 $this->throwException('Lack ID', 1);
             }
             $serviceModel = new ServiceModel();
-            $lastInsertID = $serviceModel->updateTaskOrderById($params, $id);
-            $result['data']['id'] = $lastInsertID;
+            $serviceModel->updateTaskOrderById($params, $id);
+            $serviceModel->sendTaskOrderMsg($id, ServiceModel::MSG_TO_GUEST);
+            $result['data']['id'] = $id;
 
         } catch (Exception $e) {
             $result['code'] = $e->getCode();
             $result['msg'] = $e->getMessage();
         }
         $this->echoJson($result);
+    }
+
+
+    public function orderRemindAction()
+    {
+        $serviceModel = new ServiceModel();
+
+        $param = array(
+            'status' => ServiceModel::TASK_ORDER_OPEN
+        );
+        $orderList = $serviceModel->getTaskOrderList($param);
+        $tsStr = date("Y-H-d H:i:s", time());
+        echo "$tsStr Start...\n";
+        foreach ($orderList as $order) {
+            try {
+                $tsStr = date("Y-H-d H:i:s", time());
+                echo "$tsStr Process {$order['id']}\n";
+                $serviceModel->remindOrder($order);
+            } catch (Exception $e) {
+                Log_File::writeLog(ServiceModel::LOG_ERROR_FILE, $e->getTraceAsString());
+            }
+        }
+        $tsStr = date("Y-H-d H:i:s", time());
+        echo "$tsStr Finished\n";
     }
 
 

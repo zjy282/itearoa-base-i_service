@@ -35,6 +35,8 @@ class StaffModel extends \BaseModel
         $param['id'] ? $paramList['id'] = $param['id'] : false;
         $param['staffid'] ? $paramList['staffid'] = $param['staffid'] : false;
         $param['hotelid'] ? $paramList['hotelid'] = $param['hotelid'] : false;
+        $param['department_id'] ? $paramList['department_id'] = $param['department_id'] : false;
+        isset($param['level']) ? $paramList['level'] = $param['level'] : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getStaffList($paramList);
