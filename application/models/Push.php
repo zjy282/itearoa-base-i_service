@@ -8,6 +8,9 @@ class PushModel extends \BaseModel {
 
     const MESSAGE_NOT_RECEIVED = "推送消息未送达";
 
+    const APP_YSG_GROUP_ID = 1;
+    const APP_SHANSHUI_GROUP_ID = 2;
+
     private $dao;
 
     public function __construct() {
@@ -93,7 +96,7 @@ class PushModel extends \BaseModel {
      *            array param 需要增加的信息
      * @return array
      */
-    public function addPushOne($param) {
+    public function addPushOne($param, $platform = self::APP_YSG_GROUP_ID) {
         // 判断参数错误
         $info['type'] = intval($param['type']);
         if (empty($info['type'])) {
@@ -200,7 +203,7 @@ class PushModel extends \BaseModel {
         }
 
         //新政推送记录
-        $pushResult = $this->pushMsg($pushParams);
+        $pushResult = $this->_pushMsg($pushParams, $platform);
         $info['createtime'] = time();
         $info['result'] = $pushResult['code'];
         $info['request'] = $pushResult['body'];
@@ -213,15 +216,19 @@ class PushModel extends \BaseModel {
     }
 
     /**
-     * 推送消息
+     * Push message
      *
-     * @param
-     *            array param 推送消息信息
-     *            $return boolean
+     * @param $param
+     * @param int $platform specify which APP
+     * @return array|bool
      */
-    public function pushMsg($param) {
+    private function _pushMsg($param, $platform = self::APP_YSG_GROUP_ID)
+    {
         //获取推送配置
         $config = Enum_Push::getConfig('umeng');
+        if (is_null($config[$platform])) {
+            $config = $config[self::APP_YSG_GROUP_ID];
+        }
         $push = new Push_Push(
             array(
                 'android' => $config['android']['appKey'],

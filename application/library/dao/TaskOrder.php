@@ -69,8 +69,9 @@ class Dao_TaskOrder extends Dao_Base
         $paramSql = $this->handlerListParams(array('id' => $id));
         $sql = " SELECT task_orders.*, 
                   t.title_lang1 AS t_title1, t.title_lang2 AS t_title2, t.title_lang3 as t_title3,
-                  t.pic, t.price, t.highest_level, t.level_interval_1, t.level_interval_2, t.level_interval_3, t.level_interval_4, t.level_interval_5, t.sms, t.email as is_email,t.department_id, 
-                  ha.realname, ha.email, ha.phone, ha.onduty, hu.language as hu_language, hu.fullname, hu.hotelid,
+                  t.pic, t.price, t.highest_level, t.level_interval_1, t.level_interval_2, t.level_interval_3, 
+                  t.level_interval_4, t.level_interval_5, t.sms, t.email as is_email,t.department_id, t.staff_id,
+                  ha.realname, ha.email, ha.phone, ha.onduty, hu.language as hu_language, hu.fullname, hu.hotelid,hu.groupid,
                   tc.title_lang1 AS tc_title_lang1, tc.title_lang2 AS tc_title_lang2, tc.title_lang3 AS tc_title_lang3
                 FROM task_orders 
                 LEFT JOIN tasks AS t ON task_orders.task_id = t.id 

@@ -379,7 +379,7 @@ class ServiceModel extends \BaseModel
      * @param int $level
      * @return bool
      */
-    public function sendTaskOrderMsg(int $taskOrderId, int $to = self::MSG_TO_STAFF, int $type = self::MSG_TYPE_APP, int $level = 1): bool
+    public function sendTaskOrderMsg(int $taskOrderId, int $to = self::MSG_TO_STAFF, int $type = self::MSG_TYPE_APP, int $level = 0): bool
     {
 
         if ($to == self::MSG_TO_STAFF && !in_array($level, self::TASK_LEVEL_ARRAY)) {
@@ -402,30 +402,24 @@ class ServiceModel extends \BaseModel
         $hotelAdminDao = new Dao_HotelAdministrator();
 
         if ($to == self::MSG_TO_STAFF && $type == self::MSG_TYPE_EMAIL) {
+            if (!$taskOrder['is_email']) {
+                $this->throwException("Task email not configured, mute", 1);
+            }
             $mailContent = $this->_formatMsg($taskOrder, $to, $type, $level);
             $subject = $this->_formatMsg($taskOrder, $to, self::MSG_TYPE_APP, $level);
             $mailTo = array();
-            if ($level == 0) {
-                if (!empty($taskOrder['email'])) {
-                    $mailTo[$taskOrder['email']] = $taskOrder['realname'];
-                } else {
-                    $adminList = $hotelAdminDao->getHotelAdministratorList(array(
-                        'hotelid' => $taskOrder['hotelid'],
-                        'department_id' => intval($taskOrder['department_id']),
-                        'level' => $level,
-                    ));
-                    foreach ($adminList as $admin) {
-                        empty($admin['email']) ? false : $mailTo[$admin['email']] = $admin['realname'];
-                    }
-                }
+
+            if ($level == 0 && !empty($taskOrder['email'])) {
+                $mailTo[$taskOrder['email']] = $taskOrder['realname'];
             } else {
-                $adminList = $hotelAdminDao->getHotelAdministratorList(array(
+                $filterArray = array(
                     'hotelid' => $taskOrder['hotelid'],
-                    'department_id' => intval($taskOrder['department_id']),
                     'level' => $level,
-                ));
+                );
+                $taskOrder['department_id'] ? $filterArray['department_id'] = intval($taskOrder['department_id']) : false;
+                $adminList = $hotelAdminDao->getHotelAdministratorList($filterArray);
                 foreach ($adminList as $admin) {
-                    empty($admin['email']) ? false : $mailTo[$admin['email']] = $admin['email'];
+                    empty($admin['email']) ? false : $mailTo[$admin['email']] = $admin['realname'];
                 }
             }
             $smtp = Mail_Email::getInstance();
@@ -446,16 +440,26 @@ class ServiceModel extends \BaseModel
 
             $pushModel = new PushModel();
             $staffModel = new StaffModel();
-            $filterArray = array(
-                'hotelid' => intval($taskOrder['hotelid']),
-                'level' => $level
-            );
-            $taskOrder['department_id'] ? $filterArray['department_id'] = intval($taskOrder['department_id']) : false;
-            $pushStaffIds = $staffModel->getStaffList($filterArray);
+            $pushStaffIds = array();
+
+            if ($level == 0 && $taskOrder['staff_id']) {
+                $pushStaffIds[] = intval($taskOrder['staff_id']);
+            } else {
+                $filterArray = array(
+                    'hotelid' => intval($taskOrder['hotelid']),
+                    'level' => $level
+                );
+                $taskOrder['department_id'] ? $filterArray['department_id'] = intval($taskOrder['department_id']) : false;
+                $rows = $staffModel->getStaffList($filterArray);
+                foreach ($rows as $row) {
+                    $pushStaffIds[] = $row['id'];
+                }
+            }
+
             if ($pushStaffIds) {
-                foreach ($pushStaffIds as $staff) {
-                    $pushParams['dataid'] = $staff['id'];
-                    $pushModel->addPushOne($pushParams);
+                foreach ($pushStaffIds as $staffId) {
+                    $pushParams['dataid'] = $staffId;
+                    $pushModel->addPushOne($pushParams, $taskOrder['groupid']);
                 }
             }
 
@@ -474,7 +478,7 @@ class ServiceModel extends \BaseModel
             $pushParams['contentValue'] = $taskOrderId;
             $pushParams['dataid'] = $taskOrder['userid']; // user id
 
-            $pushModel->addPushOne($pushParams);
+            $pushModel->addPushOne($pushParams, $taskOrder['groupid']);
         }
 
         return true;
