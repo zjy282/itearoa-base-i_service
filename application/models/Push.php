@@ -227,8 +227,9 @@ class PushModel extends \BaseModel {
         //获取推送配置
         $config = Enum_Push::getConfig('umeng');
         if (is_null($config[$platform])) {
-            $config = $config[self::APP_YSG_GROUP_ID];
+            $platform = self::APP_YSG_GROUP_ID;
         }
+        $config = $config[$platform];
         $push = new Push_Push(
             array(
                 'android' => $config['android']['appKey'],
