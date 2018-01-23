@@ -161,11 +161,11 @@ class HotelAdministratorModel extends \BaseModel {
         if (empty($userInfo)) {
             $this->throwException('用户不存在', 4);
         }
-        if ($userInfo['password'] != $oldpass) {
+        if ($userInfo['password'] != md5($oldpass)) {
             $this->throwException('原密码错误！', 5);
         }
         if ($this->dao->updateHotelAdministratorById(array(
-            'password' => $newpass
+            'password' => md5($newpass)
         ), $userid)
         ) {
             return $userInfo;
