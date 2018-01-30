@@ -62,6 +62,7 @@ class Convertor_HotelList extends Convertor_Base {
             $oneTemp ['bookurl'] = $value ['bookurl'];
             $oneTemp ['flighturl'] = $value ['flighturl'];
             $oneTemp ['surveyurl'] = $value ['surveyurl'];
+            $oneTemp ['invoice_id'] = $value ['invoice_id'];
             $oneTemp ['pdf'] = $value ['pdf'];
             $data ['list'] [] = $oneTemp;
         }

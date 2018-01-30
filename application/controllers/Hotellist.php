@@ -130,6 +130,7 @@ class HotelListController extends \BaseController {
             $param ['pdf'] = $this->getParamList('pdf');
             $param['flighturl'] = $this->getParamList('flighturl');
             $param['surveyurl'] = $this->getParamList('surveyurl');
+            $param ['invoice_id'] = $this->getParamList('invoice_id');
             $data = $this->model->updateHotelListById($param, $id);
             $data = $this->convertor->statusConvertor(array('id' => $data));
         } else {
@@ -174,6 +175,7 @@ class HotelListController extends \BaseController {
         $param ['status'] = intval($this->getParamList('status'));
         $param ['lang_list'] = $this->getParamList('lang_list');
         $param ['bookurl'] = $this->getParamList('bookurl');
+        $param ['invoice_id'] = $this->getParamList('invoice_id');
         $data = $this->model->addHotelList($param);
         $data = $this->convertor->statusConvertor(array('id' => $data));
         $this->echoSuccessData($data);
