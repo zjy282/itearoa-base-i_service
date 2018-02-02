@@ -21,7 +21,7 @@ class Dao_GroupNotice extends Dao_Base {
         $page = $this->getStart($param['page'], $limit);
 
         $paramSql = $this->handlerNoticListParams($param);
-        $sql = "select * from group_notice {$paramSql['sql']} order by sort desc";
+        $sql = "select * from group_notice {$paramSql['sql']} order by sort";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }

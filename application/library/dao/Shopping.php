@@ -21,7 +21,7 @@ class Dao_Shopping extends Dao_Base {
         $page = $this->getStart($param['page'], $limit);
 
         $paramSql = $this->handlerShoppingListParams($param);
-        $sql = "select * from hotel_shopping {$paramSql['sql']} order by sort desc";
+        $sql = "select * from hotel_shopping {$paramSql['sql']} order by sort";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }

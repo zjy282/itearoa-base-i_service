@@ -22,7 +22,7 @@ class Dao_GroupActivity extends Dao_Base {
         $page = $this->getStart($param['page'], $limit);
 
         $paramSql = $this->handlerActivityListParams($param);
-        $sql = "select * from group_activity {$paramSql['sql']} order by sort desc";
+        $sql = "select * from group_activity {$paramSql['sql']} order by sort";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }

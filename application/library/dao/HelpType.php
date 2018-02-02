@@ -47,7 +47,7 @@ class Dao_HelpType extends Dao_Base {
      */
     public function getHelpTypeList(array $param): array {
         $whereList = $this->getListWhereSql($param);
-        $sql = "select * from group_help_type {$whereList['sql']} order by sort DESC";
+        $sql = "select * from group_help_type {$whereList['sql']} order by sort";
         if (isset($whereList['pageList'])) {
             $sql .= " limit {$whereList['pageList']['page']},{$whereList['pageList']['limit']}";
         }

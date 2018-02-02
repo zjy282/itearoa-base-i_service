@@ -19,7 +19,7 @@ class Dao_Poi extends Dao_Base {
 		$limit = $param ['limit'] ? intval ( $param ['limit'] ) : 0;
 		$page = $this->getStart ( $param ['page'], $limit );
 		$paramSql = $this->handlerPoiListParams ( $param );
-		$sql = "select * from hotel_poi {$paramSql['sql']} order by sort desc";
+		$sql = "select * from hotel_poi {$paramSql['sql']} order by sort";
 		if ($limit) {
 			$sql .= " limit {$page},{$limit}";
 		}
