@@ -146,7 +146,11 @@ class UserModel extends \BaseModel {
         $paramList['LastName'] = $param['fullname'];
         $paramList = Enum_Gsm::genEncryptGsmParams($paramList);
         $gsmResult = Rpc_Gsm::send(Enum_Gsm::getUserLoginUrl($hotelInfo['groupid']), $paramList);
-        return array('oId' => $gsmResult['OID']);
+        return array(
+            'oId' => $gsmResult['OID'],
+            'room' => $gsmResult['Room'],
+            'fullName' => $gsmResult['FullName']
+        );
     }
 
     /**
@@ -236,6 +240,7 @@ class UserModel extends \BaseModel {
         }
         $userInfo = $this->getUserDetail($userId);
         $userInfo['token'] = Auth_Login::makeToken($userId);
+        $userInfo['room_response'] = $oIdInfo['room'];
         return $userInfo;
     }
 }

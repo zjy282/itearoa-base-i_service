@@ -5,6 +5,14 @@
  */
 class Convertor_User extends Convertor_Base {
 
+    /**
+     * Hotel array for which need to take care of room_response
+     * @var array
+     */
+    private $_hotelArray = array(
+        24,
+    );
+
     public function __construct() {
         parent::__construct();
     }
@@ -25,10 +33,15 @@ class Convertor_User extends Convertor_Base {
         $data ['id'] = $list ['id'];
         $data ['hotelid'] = $list ['hotelid'];
         $data ['groupid'] = $list ['groupid'];
+        if (in_array($list['hotelid'], $this->_hotelArray) && !empty($list['room_response'])) {
+            $room_url = $list['room_response'];
+        } else {
+            $room_url = $list['room_no'];
+        }
         $data ['serviceUrl'] = $userModel->getGsmRedirect(array(
             'PropertyInterfID' => $hotelInfo['propertyinterfid'],
             'CustomerID' => $list['oid'],
-            'Room' => $list['room_no'],
+            'Room' => $room_url,
             'LastName' => $list['fullname'],
             'groupid' => $list ['groupid'],
         ));
