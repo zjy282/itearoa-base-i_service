@@ -92,11 +92,17 @@ class Rpc_Robot
      * @param array $params
      * @param bool $withCallback
      * @return array
+     * @throws Exception
      */
     private function _makeUrl(string $interface, array $params, bool $withCallback = true): array
     {
         $ts = intval(microtime(true) * 1000);
-        $params['placeId'] = $this->_placeId;
+        if (trim($this->_placeId[$params['hotelid']])) {
+            $params['placeId'] = trim($this->_placeId[$params['hotelid']]);
+        } else {
+            throw new Exception("placeId not configured", 1);
+        }
+        unset($params['hotelid']);
         if ($withCallback && $params['robottaskid']) {
             $callbackParams = $this->_getCallbackUrl($params['robottaskid']);
             unset($params['robottaskid']);
@@ -245,5 +251,4 @@ class Rpc_Robot
             $shoppingOrderDao->updateShoppingOrderById($orderUpdate, $orderId);
         }
     }
-
 }

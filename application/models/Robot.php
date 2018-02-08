@@ -135,6 +135,7 @@ class RobotModel extends \BaseModel
         } else {
             $param['goback'] = "false";
         }
+        $param['hotelid'] = $params['hotelid'];
         $rpcObject = Rpc_Robot::getInstance();
         $rpcJson = $rpcObject->send(Rpc_Robot::SCHEDULE, $param, false);
         $info = array(
@@ -203,6 +204,7 @@ class RobotModel extends \BaseModel
                 'robottaskid' => $robotTaskId,
                 'start' => $start,
                 'target' => $target,
+                'hotelid' => $params['hotelid'],
             );
 
             $rpcObject = Rpc_Robot::getInstance();
