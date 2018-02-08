@@ -195,16 +195,22 @@ class ShoppingOrderModel extends \BaseModel {
     private function _getEmailArray($hotelId)
     {
         $data = array(
-            6 => array(
-                'fangzhou@liheinfo.com' => 'Fangzhou',
-                'frank@itearoa.co.nz' => 'frank'
-            ),
             1 => array(
                 'amanda.li@the-ascott.com' => 'amanda.li',
                 'frontoffice.arcb@the-ascott.com' => 'rontoffice.arcb',
                 'lewis.liu@the-ascott.com' => 'lewis.liu',
                 'miki.wu@the-ascott.com' => 'miki.wu',
                 'tracy.han@the-ascott.com' => 'tracy.han',
+            ),
+            6 => array(
+                'fangzhou@liheinfo.com' => 'Fangzhou',
+                'frank@itearoa.co.nz' => 'frank'
+            ),
+            7 => array(
+                'summer.li@the-ascott.com' => '李云云',
+                'bobo.wu@the-ascott.com' => '伍宝琴',
+                'jennifer.wang@the-ascott.com' => '王奋',
+                'frontoffice.aifcg@the-ascott.com' => '前台',
             )
         );
 
