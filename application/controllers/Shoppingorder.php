@@ -113,6 +113,7 @@ class ShoppingOrderController extends \BaseController {
             $param = array();
             $param['status'] = intval($this->getParamList('status'));
             $param['adminid'] = intval($this->getParamList('adminid'));
+            $param['memo'] = trim($this->getParamList('memo'));
             // status or adminid need to be set
             if ($param['status'] == 0 && $param['adminid'] == 0) {
                 $this->throwException(1, 'Param lack');

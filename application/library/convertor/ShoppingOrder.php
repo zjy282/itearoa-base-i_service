@@ -138,6 +138,7 @@ class Convertor_ShoppingOrder extends Convertor_Base {
             $listOneTemp ['shoppingid'] = $listOne ['shoppingid'];
             $listOneTemp ['shoppingName'] = $shoppingNameList [$listOne ['shoppingid']];
             $listOneTemp ['adminid'] = $listOne ['adminid'];
+            $listOneTemp['memo'] = $listOne['memo'];
             $listOneTemp ['adminName'] = $adminNameList [$listOne ['adminid']];
             $data ['list'] [] = $listOneTemp;
         }

@@ -95,6 +95,7 @@ class ShoppingOrderModel extends \BaseModel {
             $info = array();
             $param['status'] ?  $info['status'] = $param['status'] : false;
             $param['adminid'] ? $info['adminid'] = $param['adminid'] : false;
+            $param['memo'] ? $info['memo'] = $param['memo'] : false;
             $result = $this->dao->updateShoppingOrderById($info, $id);
         }
         return $result;
