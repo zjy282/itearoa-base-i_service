@@ -195,7 +195,7 @@ class UserModel extends \BaseModel {
 
         // 获取Oid
         $oIdInfo = $this->getOIdInfo($param);
-        if (empty($oIdInfo['oId'])) {
+        if (empty($oIdInfo['oId']) || $oIdInfo['oId'] < 0) {
             $this->throwException('房间号和名称错误，登录失败', 4);
         }
 
