@@ -243,4 +243,87 @@ class UserModel extends \BaseModel {
         $userInfo['room_response'] = $oIdInfo['room'];
         return $userInfo;
     }
+
+
+    /**
+     * sign facilities
+     *
+     * @param array $params
+     * @return array
+     */
+    public function signFacilities(array $params)
+    {
+        $result = array(
+            'code' => 0,
+            'msg' => 'success'
+        );
+        $dao = new Dao_SignSports();
+        try {
+            $oIdInfo = $this->getOIdInfo($params);
+            if (empty($oIdInfo['oId']) || $oIdInfo['oId'] < 0) {
+                $this->throwException('房间号和名称错误，登录失败', 4);
+            }
+            $getUserInfo = $this->getUserDetailByOId($oIdInfo['oId']);
+            $userId = $getUserInfo['id'];
+            if (!$userId) {
+                $userInfo = array(
+                    'hotelid' => $params['hotelid'],
+                    'groupid' => $params['groupid'],
+                    'room_no' => $params['room_no'],
+                    'fullname' => $params['lastname'],
+                    'identity' => '',
+                    'language' => 'zh',
+                    'oid' => $oIdInfo['oId'],
+                );
+                $userId = $this->addUser($userInfo);
+                if (!$userId) {
+                    $this->throwException('登录失败，请重试', 5);
+                }
+            } else {
+                $userInfo = array(
+                    'hotelid' => $params['hotelid'],
+                    'groupid' => $params['groupid'],
+                    'room_no' => $params['room_no'],
+                    'fullname' => $params['lastname'],
+                );
+                $this->updateUserById($userInfo, $userId);
+            }
+            $info = array(
+                'userid' => $userId,
+                'type' => $params['type'],
+                'room_no' => $params['room_no'],
+                'lastname' => $params['fullname'],
+                'hotelid' => $params['hotelid'],
+                'groupid' => $params['groupid'],
+                'lock_no' => $params['lock_no'],
+                'num' => $params['num'],
+                'sports' => $params['sports'],
+                'start_time' => $params['start_time'],
+                'end_time' => $params['end_time'],
+                'created_at' => date('Y-m-d H:i:s', $params['time']),
+            );
+            $lastInsertId = $dao->add($info);
+            $result['msg'] = $lastInsertId;
+        } catch (Exception $e) {
+            $result['code'] = 1;
+            $result['msg'] = $e->getMessage();
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param $params
+     * @return array
+     */
+    public function getSignData($params)
+    {
+        $dao = new Dao_SignSports();
+        $paramList = array();
+        $params['hotelid'] ? $paramList['hotelid'] = intval($params['hotelid']) : false;
+        $params['start'] ? $paramList['start'] = trim($params['start']) : false;
+        $params['end'] ? $paramList['end'] = trim($params['end']) : false;
+
+        return $dao->getSignList($paramList);
+    }
 }

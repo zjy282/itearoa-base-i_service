@@ -192,4 +192,41 @@ class UserController extends \BaseController {
         $this->echoSuccessData($result);
     }
 
+    /**
+     * Action for sign facilities
+     */
+    public function signFacilitiesAction()
+    {
+        $param = array();
+        $param ['room_no'] = trim($this->getParamList('room_no'));
+        $param ['fullname'] = trim($this->getParamList('lastname'));
+        $param ['hotelid'] = intval($this->getParamList('hotelid'));
+        $param ['groupid'] = intval($this->getParamList('groupid'));
+
+        $param ['num'] = intval($this->getParamList('num'));
+        $param['lock_no'] = trim($this->getParamList('lock_no'));
+        $param['start_time'] = trim($this->getParamList('start_time'));
+        $param['end_time'] = trim($this->getParamList('end_time'));
+        $param['time'] = intval($this->getParamList('time'));
+        $param['type'] = trim($this->getParamList('type'));
+        $param['sports'] = trim($this->getParamList('sports'));
+
+        $result = $this->model->signFacilities($param);
+        $this->echoJson($result);
+    }
+
+    /**
+     * Action for get sign history list
+     */
+    public function getSignListAction()
+    {
+        $params = array();
+        $params['hotelid'] = $this->getParamList('hotelid');
+        $params['start'] = $this->getParamList('start');
+        $params['end'] = $this->getParamList('end');
+
+        $result = $this->model->getSignData($params);
+        $this->echoSuccessData($result);
+    }
+
 }
