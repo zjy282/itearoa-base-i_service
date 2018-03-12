@@ -305,7 +305,7 @@ class UserModel extends \BaseModel {
             $lastInsertId = $dao->add($info);
             $result['msg'] = $lastInsertId;
         } catch (Exception $e) {
-            $result['code'] = 1;
+            $result['code'] = $e->getCode();
             $result['msg'] = $e->getMessage();
         }
 
