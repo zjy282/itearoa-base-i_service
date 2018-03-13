@@ -4,11 +4,13 @@
  * Class UserModel
  * APP用户管理
  */
-class UserModel extends \BaseModel {
+class UserModel extends \BaseModel
+{
 
     private $dao;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->dao = new Dao_User();
     }
@@ -20,7 +22,8 @@ class UserModel extends \BaseModel {
      *            array param 查询条件
      * @return array
      */
-    public function getUserList(array $param) {
+    public function getUserList(array $param)
+    {
         $param['oid'] ? $paramList['oid'] = $param['oid'] : false;
         $param['id'] ? $paramList['id'] = $param['id'] : false;
         $param['room_no'] ? $paramList['room_no'] = $param['room_no'] : false;
@@ -39,7 +42,8 @@ class UserModel extends \BaseModel {
      *            array param 查询条件
      * @return array
      */
-    public function getUserCount(array $param) {
+    public function getUserCount(array $param)
+    {
         $paramList = array();
         isset($param['oid']) ? $paramList['oid'] = trim($param['oid']) : false;
         $param['id'] ? $paramList['id'] = $param['id'] : false;
@@ -57,7 +61,8 @@ class UserModel extends \BaseModel {
      *            int id 查询的主键
      * @return array
      */
-    public function getUserDetail($id) {
+    public function getUserDetail($id)
+    {
         $result = array();
         if ($id) {
             $result = $this->dao->getUserDetail($id);
@@ -72,7 +77,8 @@ class UserModel extends \BaseModel {
      *            int id 查询的主键
      * @return array
      */
-    public function getUserDetailByOId($oid) {
+    public function getUserDetailByOId($oid)
+    {
         $result = array();
         if ($oid) {
             $result = $this->dao->getUserDetailByOId($oid);
@@ -89,7 +95,8 @@ class UserModel extends \BaseModel {
      *            int id 主键
      * @return array
      */
-    public function updateUserById($param, $id) {
+    public function updateUserById($param, $id)
+    {
         $result = false;
         // 自行添加要更新的字段,以下是age字段是样例
         if ($id) {
@@ -115,7 +122,8 @@ class UserModel extends \BaseModel {
      *            array param 需要增加的信息
      * @return array
      */
-    public function addUser($param) {
+    public function addUser($param)
+    {
         $info['room_no'] = $param['room_no'];
         $info['hotelid'] = intval($param['hotelid']);
         $info['groupid'] = intval($param['groupid']);
@@ -137,7 +145,8 @@ class UserModel extends \BaseModel {
      *            array param 需要增加的信息
      * @return array
      */
-    public function getOIdInfo($param) {
+    public function getOIdInfo($param)
+    {
         $hotelModel = new HotelListModel();
         $hotelInfo = $hotelModel->getHotelListDetail($param['hotelid']);
         $paramList = array();
@@ -158,7 +167,8 @@ class UserModel extends \BaseModel {
      * @param $param
      * @return string
      */
-    public function getGsmRedirect($param) {
+    public function getGsmRedirect($param)
+    {
         $paramList = array();
         $paramList['PropertyInterfID'] = $param['PropertyInterfID'];
         $paramList['CustomerID'] = $param['CustomerID'];
@@ -178,7 +188,8 @@ class UserModel extends \BaseModel {
      * @param array $param
      * @return array
      */
-    public function loginAction($param) {
+    public function loginAction($param)
+    {
         if (empty($param['room_no']) || empty($param['fullname'])) {
             $this->throwException('登录信息不正确', 2);
         }
@@ -316,14 +327,33 @@ class UserModel extends \BaseModel {
      * @param $params
      * @return array
      */
-    public function getSignData($params)
+    public function getSignReport($params)
     {
         $dao = new Dao_SignSports();
         $paramList = array();
         $params['hotelid'] ? $paramList['hotelid'] = intval($params['hotelid']) : false;
+        $params['type'] ? $paramList['type'] = trim($params['type']) : false;
+        $params['start'] ? $paramList['start'] = trim($params['start']) : false;
+        $params['end'] ? $paramList['end'] = trim($params['end']) : false;
+        $paramList['limit'] = $params['limit'];
+        $paramList['page'] = $params['page'];
+
+        return $dao->getSignList($paramList);
+    }
+
+    /**
+     * @param $params
+     * @return int
+     */
+    public function getSignReportCount($params): int
+    {
+        $dao = new Dao_SignSports();
+        $paramList = array();
+        $params['hotelid'] ? $paramList['hotelid'] = intval($params['hotelid']) : false;
+        $params['type'] ? $paramList['type'] = trim($params['type']) : false;
         $params['start'] ? $paramList['start'] = trim($params['start']) : false;
         $params['end'] ? $paramList['end'] = trim($params['end']) : false;
 
-        return $dao->getSignList($paramList);
+        return $dao->getSignCount($paramList);
     }
 }

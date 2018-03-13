@@ -54,6 +54,18 @@ class Dao_SignSports extends Dao_Base
     }
 
     /**
+     * @param array $params
+     * @return int
+     */
+    public function getSignCount(array $params): int
+    {
+        $paramSql = $this->_handlerListParams($params);
+        $sql = "select count(1) as count from sign_sports {$paramSql['sql']}";
+        $result = $this->db->fetchAssoc($sql, $paramSql['case']);
+        return intval($result['count']);
+    }
+
+    /**
      * @param $param
      * @return array
      */
@@ -81,6 +93,11 @@ class Dao_SignSports extends Dao_Base
         if (isset($param['hotelid'])) {
             $whereSql[] = 'hotelid = ?';
             $whereCase[] = $param['hotelid'];
+        }
+
+        if (isset($param['type'])) {
+            $whereSql[] = 'type = ?';
+            $whereCase[] = $param['type'];
         }
 
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';

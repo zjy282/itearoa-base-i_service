@@ -224,8 +224,14 @@ class UserController extends \BaseController {
         $params['hotelid'] = $this->getParamList('hotelid');
         $params['start'] = $this->getParamList('start');
         $params['end'] = $this->getParamList('end');
+        $params['type'] = trim($this->getParamList('type'));
+        $params['page'] = $this->getParamList('page');
+        $params['limit'] = $this->getParamList('limit');
 
-        $result = $this->model->getSignData($params);
+        $data = $this->model->getSignReport($params);
+        $count = $this->model->getSignReportCount($params);
+        $result = $this->convertor->getSignListConvertor($data, $count, $params);
+
         $this->echoSuccessData($result);
     }
 

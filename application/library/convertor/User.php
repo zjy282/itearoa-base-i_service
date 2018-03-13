@@ -110,4 +110,20 @@ class Convertor_User extends Convertor_Base {
         $data ['nextPage'] = Util_Tools::getNextPage($data ['page'], $data ['limit'], $data ['total']);
         return $data;
     }
+
+    /**
+     * @param $list
+     * @param $count
+     * @param $param
+     * @return array
+     */
+    public function getSignListConvertor($list, $count, $param)
+    {
+        $data = array('list' => $list);
+        $data ['total'] = $count;
+        $data ['page'] = $param ['page'];
+        $data ['limit'] = $param ['limit'];
+        $data ['nextPage'] = Util_Tools::getNextPage($data ['page'], $data ['limit'], $data ['total']);
+        return $data;
+    }
 }
