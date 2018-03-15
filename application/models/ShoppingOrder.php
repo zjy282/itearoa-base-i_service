@@ -10,6 +10,9 @@ class ShoppingOrderModel extends \BaseModel {
     const ORDER_NOTIFY_MSG = 2;
     const ORDER_NOTIFY_BOTH = 3;
 
+    const ERROR_SHOPPING_PERMISSION = 4;
+    const ERROR_SHOPPING_PERMISSION_MSG = '请选择已入住物业进行购买';
+
 
     private $dao;
 
@@ -102,14 +105,23 @@ class ShoppingOrderModel extends \BaseModel {
     }
 
     /**
-     * ShoppingOrder新增信息
+     * Create a new shopping order
      *
+     * @param array $param
+     * @throws Exception
+     * @return int
      */
-    public function addShoppingOrder(array $param) {
+    public function addShoppingOrder(array $param)
+    {
         $info['count'] = intval($param['count']);
         $info['shoppingid'] = intval($param['shoppingid']);
         $info['hotelid'] = intval($param['hotelid']);
         $info['userid'] = intval($param['userid']);
+        $userDao = new Dao_User();
+        $userDetail = $userDao->getUserDetail($info['userid']);
+        if (empty($userDetail) || $userDetail['hotelid'] != $info['hotelid']) {
+            $this->throwException(self::ERROR_SHOPPING_PERMISSION_MSG, self::ERROR_SHOPPING_PERMISSION);
+        }
         $info['creattime'] = intval($param['creattime']);
         $info['status'] = Enum_ShowingOrder::ORDER_STATUS_WAIT;
 
