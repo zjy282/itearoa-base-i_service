@@ -20,7 +20,7 @@ class Dao_GroupNews extends Dao_Base {
         $page = $this->getStart($param['page'], $limit);
         
         $paramSql = $this->handlerNewsListParams($param);
-        $sql = "select * from group_news {$paramSql['sql']} order by id";
+        $sql = "select * from group_news {$paramSql['sql']} order by id DESC";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }

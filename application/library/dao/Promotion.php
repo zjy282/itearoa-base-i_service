@@ -20,7 +20,7 @@ class Dao_Promotion extends Dao_Base {
         $page = $this->getStart($param['page'], $limit);
         
         $paramSql = $this->handlerPromotionListParams($param);
-        $sql = "select * from hotel_promotion {$paramSql['sql']} order by id";
+        $sql = "select * from hotel_promotion {$paramSql['sql']} order by id DESC";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }
