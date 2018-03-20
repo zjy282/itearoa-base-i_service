@@ -117,6 +117,7 @@ class HotelListModel extends \BaseModel {
             !is_null($param['bookurl']) ? $info['bookurl'] = $param['bookurl'] : false;
             !is_null($param['flighturl']) ? $info['flighturl'] = $param['flighturl'] : false;
             !is_null($param['surveyurl']) ? $info['surveyurl'] = $param['surveyurl'] : false;
+            !is_null($param['has_robot']) ? $info['has_robot'] = $param['has_robot'] : false;
             !is_null($param['invoice_id']) ? $info['invoice_id'] = trim($param['invoice_id']) : false;
             !is_null($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
             isset($param['rss']) ? $info['rss'] = $param['rss'] : false;

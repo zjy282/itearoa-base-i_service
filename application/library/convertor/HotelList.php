@@ -63,6 +63,7 @@ class Convertor_HotelList extends Convertor_Base {
             $oneTemp ['flighturl'] = $value ['flighturl'];
             $oneTemp ['surveyurl'] = $value ['surveyurl'];
             $oneTemp ['invoice_id'] = $value ['invoice_id'];
+            $oneTemp ['hasRobot'] = $value['has_robot'];
             $oneTemp ['pdf'] = $value ['pdf'];
             $data ['list'] [] = $oneTemp;
         }
@@ -146,6 +147,7 @@ class Convertor_HotelList extends Convertor_Base {
         $data ['wetherInfo'] = $wetherInfo;
         $data ['langList'] = array_intersect_key($langNameList, array_flip($langList));
         $data ['shareList'] = array();
+        $data['hasRobot'] = $hotelInfo['has_robot'];
         foreach ($hotelShareIcon as $share) {
             $data ['shareList'] [] = array('key' => $share ['key']);
         }
@@ -175,6 +177,7 @@ class Convertor_HotelList extends Convertor_Base {
         $data ['website'] = $hotelInfo ['website'];
         $data ['bookurl'] = $hotelInfo ['bookurl'];
         $data ['introduction'] = $this->handlerMultiLang('introduction', $hotelInfo);
+        $data['hasRobot'] = $hotelInfo['has_robot'];
         $data ['pic'] = array();
         foreach ($hotel ['picList'] as $pic) {
             $data ['pic'] [] = Enum_Img::getPathByKeyAndType($pic ['pic'], Enum_Img::PIC_TYPE_KEY_WIDTH750);
