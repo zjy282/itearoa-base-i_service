@@ -42,6 +42,17 @@ class SystemController extends \BaseController {
 		$this->echoSuccessData ( $result );
 	}
 
+    /**
+     * Delete file from Oss
+     */
+    public function deleteFromOssAction()
+    {
+        $fileKey = trim($this->getParamList('filekey'));
+        $ossModel = new OssModel ();
+        $result = $ossModel->deleteFromOss($fileKey);
+        $this->echoSuccessData($result);
+    }
+
 	/**
 	 * 获取上传允许的文件类型
 	 *

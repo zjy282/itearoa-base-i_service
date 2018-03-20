@@ -7,6 +7,7 @@ class Dao_Oss extends \Dao_Base {
     private $oss;
 
     public function __construct() {
+        //todo Get oss info from config
         $this->oss = new Oss_Ali();
     }
 
@@ -28,6 +29,27 @@ class Dao_Oss extends \Dao_Base {
         }
         return $picId;
     }
+
+    /**
+     * Delete file from oss
+     *
+     * @param $bucket
+     * @param $object
+     * @return bool
+     * @throws Exception
+     * @throws OSS_Exception
+     */
+    public function deleteFile($bucket, $object)
+    {
+        $exist = $this->oss->is_object_exist($bucket, $object);
+        if ($exist->isOK()) {
+            $response = $this->oss->delete_object($bucket, $object);
+            return $response->isOK();
+        } else {
+            throw new Exception($object . ' not exist');
+        }
+    }
+
 }
 
 ?>

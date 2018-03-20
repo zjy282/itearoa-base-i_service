@@ -1494,7 +1494,7 @@ class Oss_Ali{
      * @param array $options (Optional)
      * @author xiaobing.meng@alibaba-inc.com
      * @since 2011-11-14
-     * @return boolean
+     * @return ResponseCore
      */
     public function is_object_exist($bucket, $object, $options = NULL){
         //options

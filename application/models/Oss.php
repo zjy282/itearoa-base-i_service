@@ -6,14 +6,17 @@
  */
 class OssModel extends \BaseModel {
 
+    private $_daoOss;
+
     public function __construct() {
         parent::__construct();
+        $this->_daoOss = new Dao_Oss();
     }
 
     /**
      * 上传至OSS
      * @param $paramList
-     * @return array
+     * @return array||void
      */
     public function uploadToOss($paramList) {
         $oldfilekey = $paramList['oldfilekey'];
@@ -35,14 +38,13 @@ class OssModel extends \BaseModel {
             $this->throwException("格式错误,允许格式:" . implode(',', $allowType), 3);
         }
 
-        $ossDao = new Dao_Oss();
         if ($oldfilekey) {
             $imgData = array('fileName' => str_replace('_', '/', $oldfilekey), 'key' => $oldfilekey);
         } else {
             $imgData = Enum_Img::getPicNameAndKey($uploadName, $fileType);
         }
         if ($imgData['fileName'] && $filePath) {
-            $picId = $ossDao->uploadImg(Enum_Oss::OBJ_NAME_SHINE, $imgData, $filePath);
+            $picId = $this->_daoOss->uploadImg(Enum_Oss::OBJ_NAME_SHINE, $imgData, $filePath);
         }
         if ($picId) {
             return array(
@@ -51,5 +53,17 @@ class OssModel extends \BaseModel {
         } else {
             $this->throwException('上传失败', 4);
         }
+    }
+
+    /**
+     * @param $fileKey
+     * @throws Exception
+     * @throws OSS_Exception
+     * @return bool
+     */
+    public function deleteFromOss($fileKey) {
+        $filePath = str_replace('_', '/', $fileKey);
+        $result = $this->_daoOss->deleteFile(Enum_Oss::OBJ_NAME_SHINE, $filePath);
+        return boolval($result);
     }
 }
