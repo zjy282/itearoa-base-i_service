@@ -34,7 +34,9 @@ class ShoppingController extends \BaseController {
         $param ['hotelid'] = intval($this->getParamList('hotelid'));
         $param ['tagid'] = intval($this->getParamList('tagid'));
         $param['status'] = 1;
-        $this->getPageParam($param);
+        if ($this->getParamList('limit') !== '0') {
+            $this->getPageParam($param);
+        }
         $shoppingList = $this->model->getShoppingList($param);
         $shoppingCount = $this->model->getShoppingCount($param);
         $shoppingTagModel = new ShoppingTagModel ();
