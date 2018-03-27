@@ -38,6 +38,12 @@ class ShoppingOrderController extends \BaseController {
         }
         if (empty ($param ['hotelid'])) {
             $this->throwException(2, '物业Id错误');
+        } else {
+            $staffModel = new StaffModel();
+            $staffInfo = $staffModel->getStaffDetail($adminId);
+            if ($staffInfo['hotelid'] != $param ['hotelid']) {
+                $this->throwException(2, 'hotel and staff info not match');
+            }
         }
         $param['status'] = [Enum_ShoppingOrder::ORDER_STATUS_WAIT, Enum_ShoppingOrder::ORDER_STATUS_SERVICE];
 
