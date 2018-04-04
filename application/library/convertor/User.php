@@ -11,6 +11,7 @@ class Convertor_User extends Convertor_Base {
      */
     private $_hotelArray = array(
         24,
+        22,
     );
 
     public function __construct() {
