@@ -269,7 +269,7 @@ class UserModel extends \BaseModel
             'code' => 0,
             'msg' => 'success'
         );
-        $dao = new Dao_SignSports();
+        $dao = new Dao_Sign();
         try {
             $oIdInfo = $this->getOIdInfo($params);
             if (empty($oIdInfo['oId']) || $oIdInfo['oId'] < 0) {
@@ -314,7 +314,7 @@ class UserModel extends \BaseModel
                 'end_time' => $params['end_time'],
                 'created_at' => date('Y-m-d H:i:s', $params['time']),
             );
-            $lastInsertId = $dao->add($info);
+            $lastInsertId = $dao->addSign($info);
             $result['msg'] = $lastInsertId;
         } catch (Exception $e) {
             $result['code'] = $e->getCode();
@@ -322,39 +322,5 @@ class UserModel extends \BaseModel
         }
 
         return $result;
-    }
-
-    /**
-     * @param $params
-     * @return array
-     */
-    public function getSignReport($params)
-    {
-        $dao = new Dao_SignSports();
-        $paramList = array();
-        $params['hotelid'] ? $paramList['hotelid'] = intval($params['hotelid']) : false;
-        $params['type'] ? $paramList['type'] = trim($params['type']) : false;
-        $params['start'] ? $paramList['start'] = trim($params['start']) : false;
-        $params['end'] ? $paramList['end'] = trim($params['end']) : false;
-        $paramList['limit'] = $params['limit'];
-        $paramList['page'] = $params['page'];
-
-        return $dao->getSignList($paramList);
-    }
-
-    /**
-     * @param $params
-     * @return int
-     */
-    public function getSignReportCount($params): int
-    {
-        $dao = new Dao_SignSports();
-        $paramList = array();
-        $params['hotelid'] ? $paramList['hotelid'] = intval($params['hotelid']) : false;
-        $params['type'] ? $paramList['type'] = trim($params['type']) : false;
-        $params['start'] ? $paramList['start'] = trim($params['start']) : false;
-        $params['end'] ? $paramList['end'] = trim($params['end']) : false;
-
-        return $dao->getSignCount($paramList);
     }
 }

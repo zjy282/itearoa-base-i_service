@@ -36,6 +36,7 @@ class Enum_HotelAdministrator
             13 => 'APP管理',
             14 => '评论管理',
             15 => '互动服务',
+            16 => '签到系统',
         ),
     );
 
