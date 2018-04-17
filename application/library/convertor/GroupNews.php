@@ -3,9 +3,11 @@
 /**
  * 集团新闻转换器类
  */
-class Convertor_GroupNews extends Convertor_Base {
+class Convertor_GroupNews extends Convertor_Base
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
@@ -22,22 +24,23 @@ class Convertor_GroupNews extends Convertor_Base {
      *            扩展参数
      * @return array
      */
-    public function getNewsListConvertor($newsList, $tagList, $newsCount, $param) {
+    public function getNewsListConvertor($newsList, $tagList, $newsCount, $param)
+    {
         $tagListNew = array();
         foreach ($tagList as $tag) {
-            $tagListNew [$tag ['id']] = $tag['title'];
+            $tagListNew[$tag ['id']] = $tag['title_lang' . $param['langIndex']];
         }
         $data = array('list' => array());
         foreach ($newsList as $news) {
             $newTemp = array();
             $newTemp ['id'] = $news ['id'];
-            $newTemp ['title'] = $news['title'];
-            $newTemp ['article'] = Enum_Img::getPathByKeyAndType($news['article']);
+            $newTemp ['title'] = $news['title_lang' . $param['langIndex']];
+            $newTemp ['article'] = Enum_Img::getPathByKeyAndType($news['article_lang' . $param['langIndex']]);
             $newTemp ['pdf'] = $news['pdf'] ? Enum_Img::getPathByKeyAndType($news['pdf']) : '';
             $newTemp ['video'] = $news['video'] ? Enum_Img::getPathByKeyAndType($news['video']) : '';
             $newTemp ['pic'] = Enum_Img::getPathByKeyAndType($news['pic'], Enum_Img::PIC_TYPE_KEY_WIDTH750);
             $newTemp ['tagId'] = $news ['tagid'];
-            $newTemp ['tagName'] = $tagListNew [$newTemp ['tagId']];
+            $newTemp ['tagName'] = $tagListNew[$newTemp['tagId']];
             $newTemp ['createtime'] = $news ['createtime'];
             $newTemp ['updatetime'] = $news ['updatetime'];
             $data ['list'] [] = $newTemp;
@@ -62,20 +65,25 @@ class Convertor_GroupNews extends Convertor_Base {
      *            扩展参数
      * @return array
      */
-    public function getAdminNewsListConvertor($newsList, $tagList, $newsCount, $param) {
+    public function getAdminNewsListConvertor($newsList, $tagList, $newsCount, $param)
+    {
         $tagListNew = array();
         foreach ($tagList as $tag) {
-            $tagListNew [$tag ['id']] ['title'] = $tag ['title'];
+            $tagListNew[$tag ['id']] = $tag['title_lang' . $param['langIndex']];
         }
         $data = array('list' => array());
         foreach ($newsList as $news) {
             $newTemp = array();
-            $newTemp ['id'] = $news ['id'];
-            $newTemp ['title'] = $news ['title'];
-            $newTemp ['article'] = $news ['article'];
+            $newTemp['id'] = $news['id'];
+            $newTemp['title'] = $news['title_lang' . $param['langIndex']];
+            $newTemp['title_lang1'] = $news['title_lang1'];
+            $newTemp['title_lang2'] = $news ['title_lang2'];
+
+            $newTemp ['article_lang1'] = $news ['article_lang1'];
+            $newTemp ['article_lang2'] = $news ['article_lang2'];
             $newTemp ['status'] = $news ['status'];
             $newTemp ['tagId'] = $news ['tagid'];
-            $newTemp ['tagName'] = $tagListNew [$newTemp ['tagId']] ['title'];
+            $newTemp ['tagName'] = $tagListNew [$newTemp ['tagId']];
             $newTemp ['sort'] = $news ['sort'];
             $newTemp ['pdf'] = $news ['pdf'];
             $newTemp ['video'] = $news ['video'];
@@ -98,7 +106,8 @@ class Convertor_GroupNews extends Convertor_Base {
      *            新闻详情
      * @return array
      */
-    public function getNewsDetailConvertor($list) {
+    public function getNewsDetailConvertor($list)
+    {
         $data = array();
         $data ['id'] = $list ['id'];
         $data ['title'] = $this->handlerMultiLang('title', $list);
@@ -117,7 +126,8 @@ class Convertor_GroupNews extends Convertor_Base {
      *            后台新闻详情
      * @return array
      */
-    public function getAdminNewsDetailConvertor($list) {
+    public function getAdminNewsDetailConvertor($list)
+    {
         $data = array();
         $data ['id'] = $list ['id'];
         $data ['title'] = $list ['title'];

@@ -4,7 +4,8 @@
  * 集团新闻控制器类
  *
  */
-class GroupNewsController extends \BaseController {
+class GroupNewsController extends \BaseController
+{
 
     /**
      * @var GroupNewsModel
@@ -16,7 +17,8 @@ class GroupNewsController extends \BaseController {
      */
     private $convertor;
 
-    public function init() {
+    public function init()
+    {
         parent::init();
         $this->model = new GroupNewsModel ();
         $this->convertor = new Convertor_GroupNews ();
@@ -27,7 +29,8 @@ class GroupNewsController extends \BaseController {
      *
      * @return Json
      */
-    public function getGroupNewsListAction() {
+    public function getGroupNewsListAction()
+    {
         $param = array();
         $param ['groupid'] = intval($this->getParamList('groupid'));
         $param ['tagid'] = intval($this->getParamList('tagid'));
@@ -37,7 +40,9 @@ class GroupNewsController extends \BaseController {
         } else {
             $param ['status'] = $this->getParamList('status');
         }
-        $param ['title'] = $this->getParamList('title');
+        $param ['title_lang1'] = $this->getParamList('title_lang1');
+        $param ['title_lang2'] = $this->getParamList('title_lang2');
+        $param['langIndex'] = Enum_Lang::getLangIndex($this->getParamList('lang', Enum_Lang::CHINESE));
         $this->getPageParam($param);
         $newsList = $this->model->getNewsList($param);
         $newsCount = $this->model->getNewsCount($param);
@@ -54,7 +59,8 @@ class GroupNewsController extends \BaseController {
      *            int id 获取详情信息的id
      * @return Json
      */
-    public function getNewsDetailAction() {
+    public function getNewsDetailAction()
+    {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $data = $this->model->getNewsDetail($id);
@@ -74,14 +80,17 @@ class GroupNewsController extends \BaseController {
      *            array param 需要更新的字段
      * @return Json
      */
-    public function updateNewsByIdAction() {
+    public function updateNewsByIdAction()
+    {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
             $param ['groupid'] = $this->getParamList('groupid');
             $param ['status'] = $this->getParamList('status');
-            $param ['title'] = $this->getParamList('title');
-            $param ['article'] = $this->getParamList('article');
+            $param ['title_lang1'] = $this->getParamList('title_lang1');
+            $param ['title_lang2'] = $this->getParamList('title_lang2');
+            $param ['article_lang1'] = $this->getParamList('article_lang1');
+            $param ['article_lang2'] = $this->getParamList('article_lang2');
             $param ['tagid'] = $this->getParamList('tagid');
             $param ['sort'] = $this->getParamList('sort');
             $param ['pdf'] = $this->getParamList('pdf');
@@ -103,11 +112,13 @@ class GroupNewsController extends \BaseController {
      *            array param 需要新增的信息
      * @return Json
      */
-    public function addNewsAction() {
+    public function addNewsAction()
+    {
         $param = array();
         $param ['groupid'] = $this->getParamList('groupid');
         $param ['status'] = $this->getParamList('status');
-        $param ['title'] = $this->getParamList('title');
+        $param ['title_lang1'] = $this->getParamList('title_lang1');
+        $param ['title_lang2'] = $this->getParamList('title_lang2');
         $param ['tagid'] = $this->getParamList('tagid');
         $param ['updatetime'] = time();
         $param ['createtime'] = time();

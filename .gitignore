@@ -8,3 +8,5 @@ env/
 *.swo
 .idea/
 .log/*
+
+/vendor/

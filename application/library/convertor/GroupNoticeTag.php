@@ -3,9 +3,11 @@
 /**
  * 集团通知标签转换器类
  */
-class Convertor_GroupNoticeTag extends Convertor_Base {
+class Convertor_GroupNoticeTag extends Convertor_Base
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
@@ -20,13 +22,17 @@ class Convertor_GroupNoticeTag extends Convertor_Base {
      *            扩展参数
      * @return array
      */
-    public function getAdminTagListConvertor($list, $count, $param) {
+    public function getAdminTagListConvertor($list, $count, $param)
+    {
         $data = array();
         $data ['list'] = array();
         foreach ($list as $type) {
             $typeTemp = array();
             $typeTemp ['id'] = $type ['id'];
-            $typeTemp ['title'] = $type ['title'];
+            $typeTemp ['title_lang1'] = $type ['title_lang1'];
+            $typeTemp ['title_lang2'] = $type ['title_lang2'];
+            $typeTemp ['title_lang3'] = $type ['title_lang3'];
+
             $data ['list'] [] = $typeTemp;
         }
         $data ['total'] = $count;
@@ -47,13 +53,14 @@ class Convertor_GroupNoticeTag extends Convertor_Base {
      *            扩展参数
      * @return array
      */
-    public function getTagListConvertor($list, $count, $param) {
+    public function getTagListConvertor($list, $count, $param)
+    {
         $data = array();
         $data ['list'] = array();
         foreach ($list as $type) {
             $typeTemp = array();
             $typeTemp ['id'] = $type ['id'];
-            $typeTemp ['title'] = $type ['title'];
+            $typeTemp ['title'] = $type ['title_lang' . Enum_Lang::getLangIndex($param['lang'])];
             $data ['list'] [] = $typeTemp;
         }
         $data ['total'] = $count;
@@ -67,10 +74,11 @@ class Convertor_GroupNoticeTag extends Convertor_Base {
      *            集团通知标签
      * @return array
      */
-    public function getTagDetailConvertor($detail) {
+    public function getTagDetailConvertor($detail, $lang)
+    {
         $data = array();
         $data ['id'] = $detail ['id'];
-        $data ['title'] = $detail ['title'];
+        $data ['title'] = $detail ['title_lang' . Enum_Lang::getLangIndex($lang)];
         return $data;
     }
 }

@@ -66,7 +66,9 @@ class GroupNoticeTagModel extends \BaseModel {
     public function updateNoticeTagById($param, $id) {
         $result = false;
         if ($id) {
-            $info['title'] = $param['title'];
+            $info['title_lang1'] = $param['title_lang1'];
+            $info['title_lang2'] = $param['title_lang2'];
+            $info['title_lang3'] = $param['title_lang3'];
             $info['groupid'] = $param['groupid'];
             $result = $this->dao->updateNoticTagById($info, $id);
         }
@@ -81,7 +83,9 @@ class GroupNoticeTagModel extends \BaseModel {
      * @return array
      */
     public function addNoticeTag($param) {
-        $info ['title'] = $param ['title'];
+        $info['title_lang1'] = $param['title_lang1'];
+        $info['title_lang2'] = $param['title_lang2'];
+        $info['title_lang3'] = $param['title_lang3'];
         $info ['groupid'] = $param ['groupid'];
         return $this->dao->addNoticTag($info);
     }

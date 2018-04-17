@@ -66,9 +66,13 @@ class Dao_GroupNews extends Dao_Base {
             $whereSql[] = 'id = ?';
             $whereCase[] = $param['id'];
         }
-        if (isset($param['title'])) {
-        	$whereSql[] = 'title = ?';
-        	$whereCase[] = $param['title'];
+        if (isset($param['title_lang1'])) {
+            $whereSql[] = 'title_lang1 = ?';
+            $whereCase[] = $param['title_lang1'];
+        }
+        if (isset($param['title_lang2'])) {
+            $whereSql[] = 'title_lang2 = ?';
+            $whereCase[] = $param['title_lang2'];
         }
         $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
         return array(

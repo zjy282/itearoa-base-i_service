@@ -65,7 +65,8 @@ class GroupNewsTagModel extends \BaseModel {
     public function updateNewsTagById($param, $id) {
         $result = false;
         if ($id) {
-            $info['title'] = $param['title'];
+            $info['title_lang1'] = $param['title_lang1'];
+            $info['title_lang2'] = $param['title_lang2'];
             $info['groupid'] = $param['groupid'];
             $result = $this->dao->updateNewsTagById($info, $id);
         }
@@ -80,7 +81,8 @@ class GroupNewsTagModel extends \BaseModel {
      * @return array
      */
     public function addNewsTag($param) {
-        $info ['title'] = $param ['title'];
+        $info['title_lang1'] = $param['title_lang1'];
+        $info['title_lang2'] = $param['title_lang2'];
         $info ['groupid'] = $param ['groupid'];
         return $this->dao->addNewsTag($info);
     }

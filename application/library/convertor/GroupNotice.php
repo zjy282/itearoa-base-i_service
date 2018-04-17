@@ -3,9 +3,11 @@
 /**
  * 集团通知转换器类
  */
-class Convertor_GroupNotice extends Convertor_Base {
+class Convertor_GroupNotice extends Convertor_Base
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
@@ -22,17 +24,19 @@ class Convertor_GroupNotice extends Convertor_Base {
      *            扩展参数
      * @return array
      */
-    public function getNoticListConvertor($noticList, $tagList, $noticCount, $param) {
+    public function getNoticListConvertor($noticList, $tagList, $noticCount, $param)
+    {
         $tagListNew = array();
         foreach ($tagList as $tag) {
-            $tagListNew [$tag ['id']] = $tag['title'];
+            $tagListNew [$tag ['id']] = $tag['title_lang' . Enum_Lang::getLangIndex($param['lang'])];
+            $tagListNew [$tag ['id']] = 'test';
         }
         $data = array('list' => array());
         foreach ($noticList as $notic) {
             $newTemp = array();
             $newTemp ['id'] = $notic ['id'];
-            $newTemp ['title'] = $notic['title'];
-            $newTemp ['article'] = Enum_Img::getPathByKeyAndType($notic['article']);
+            $newTemp ['title'] = $notic['title_lang' . Enum_Lang::getLangIndex($param['lang'])];
+            $newTemp ['article'] = Enum_Img::getPathByKeyAndType($notic['article_title' . Enum_Lang::getLangIndex($param['lang'])]);
             $newTemp ['pdf'] = $notic['pdf'] ? Enum_Img::getPathByKeyAndType($notic['pdf']) : '';
             $newTemp ['video'] = $notic['video'] ? Enum_Img::getPathByKeyAndType($notic['video']) : '';
             $newTemp ['tagId'] = $notic ['tagid'];
@@ -62,20 +66,25 @@ class Convertor_GroupNotice extends Convertor_Base {
      *            扩展参数
      * @return array
      */
-    public function getAdminNoticListConvertor($noticList, $tagList, $noticCount, $param) {
+    public function getAdminNoticListConvertor($noticList, $tagList, $noticCount, $param)
+    {
         $tagListNew = array();
         foreach ($tagList as $tag) {
-            $tagListNew [$tag ['id']] ['title'] = $tag ['title'];
+            $tagListNew [$tag ['id']] = $tag ['title_lang' . Enum_Lang::getLangIndex($param['lang'])];
         }
         $data = array('list' => array());
         foreach ($noticList as $notic) {
             $noticTemp = array();
             $noticTemp ['id'] = $notic ['id'];
-            $noticTemp ['title'] = $notic ['title'];
-            $noticTemp ['article'] = $notic ['article'];
+            $noticTemp ['title_lang1'] = $notic ['title_lang1'];
+            $noticTemp ['title_lang2'] = $notic ['title_lang2'];
+            $noticTemp ['title_lang3'] = $notic ['title_lang3'];
+            $noticTemp ['article_lang1'] = $notic ['article_lang1'];
+            $noticTemp ['article_lang2'] = $notic ['article_lang2'];
+            $noticTemp ['article_lang3'] = $notic ['article_lang3'];
             $noticTemp ['tagId'] = $notic ['tagid'];
             $noticTemp ['status'] = $notic ['status'];
-            $noticTemp ['tagName'] = $tagListNew [$noticTemp ['tagId']] ['title'];
+            $noticTemp ['tagName'] = $tagListNew [$noticTemp ['tagId']];
             $noticTemp ['sort'] = $notic ['sort'];
             $noticTemp ['pdf'] = $notic ['pdf'];
             $noticTemp ['pic'] = $notic ['pic'];
@@ -98,7 +107,8 @@ class Convertor_GroupNotice extends Convertor_Base {
      *            集团通知详情
      * @return array
      */
-    public function getNoticDetailConvertor($list) {
+    public function getNoticDetailConvertor($list)
+    {
         $data = array();
         $data ['id'] = $list ['id'];
         $data ['title'] = $list['title'];
@@ -118,7 +128,8 @@ class Convertor_GroupNotice extends Convertor_Base {
      *            集团通知详情
      * @return array
      */
-    public function getAdminNoticDetailConvertor($list) {
+    public function getAdminNoticDetailConvertor($list)
+    {
         $data = array();
         $data ['id'] = $list ['id'];
         $data ['title'] = $list ['title'];

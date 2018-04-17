@@ -4,7 +4,8 @@
  * 集团通知控制器类
  *
  */
-class GroupNoticeController extends \BaseController {
+class GroupNoticeController extends \BaseController
+{
 
     /**
      * @var GroupNoticeModel
@@ -16,7 +17,8 @@ class GroupNoticeController extends \BaseController {
      */
     private $convertor;
 
-    public function init() {
+    public function init()
+    {
         parent::init();
         $this->model = new GroupNoticeModel ();
         $this->convertor = new Convertor_GroupNotice ();
@@ -27,19 +29,23 @@ class GroupNoticeController extends \BaseController {
      *
      * @return Json
      */
-    public function getNoticListAction() {
+    public function getNoticListAction()
+    {
         $param = array();
-        $param ['groupid'] = intval($this->getParamList('groupid'));
-        $param ['tagid'] = intval($this->getParamList('tagid'));
-        $param ['id'] = intval($this->getParamList('id'));
-        $param ['status'] = $this->getParamList('status');
-        $param ['title'] = $this->getParamList('title');
+        $param['groupid'] = intval($this->getParamList('groupid'));
+        $param['tagid'] = intval($this->getParamList('tagid'));
+        $param['id'] = intval($this->getParamList('id'));
+        $param['status'] = $this->getParamList('status');
+        $param['title_lang1'] = $this->getParamList('title_lang1');
+        $param['title_lang2'] = $this->getParamList('title_lang2');
+        $param['title_lang3'] = $this->getParamList('title_lang3');
+        $param['lang'] = trim($this->getParamList('lang', Enum_Lang::CHINESE));
         $this->getPageParam($param);
         $list = $this->model->getNoticList($param);
         $count = $this->model->getNoticCount($param);
         $tagModel = new GroupNoticeTagModel();
         $tagList = $tagModel->getNoticeTagList($param);
-        Enum_System::notAdminPackage($this->package) ? $data = $this->convertor->getNoticListConvertor($list, $tagList, $count, $param) : $data = $this->convertor->getAdminNoticListConvertor($list, $tagList, $count, $param);
+        $data = Enum_System::notAdminPackage($this->package) ? $this->convertor->getNoticListConvertor($list, $tagList, $count, $param) : $this->convertor->getAdminNoticListConvertor($list, $tagList, $count, $param);
         $this->echoSuccessData($data);
     }
 
@@ -50,7 +56,8 @@ class GroupNoticeController extends \BaseController {
      *            int id 获取详情信息的id
      * @return Json
      */
-    public function getNoticDetailAction() {
+    public function getNoticDetailAction()
+    {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $data = $this->model->getNoticDetail($id);
@@ -70,14 +77,19 @@ class GroupNoticeController extends \BaseController {
      *            array param 需要更新的字段
      * @return Json
      */
-    public function updateNoticByIdAction() {
+    public function updateNoticByIdAction()
+    {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
             $param ['groupid'] = $this->getParamList('groupid');
             $param ['status'] = $this->getParamList('status');
-            $param ['title'] = $this->getParamList('title');
-            $param ['article'] = $this->getParamList('article');
+            $param ['title_lang1'] = $this->getParamList('title_lang1');
+            $param ['title_lang2'] = $this->getParamList('title_lang2');
+            $param ['title_lang3'] = $this->getParamList('title_lang3');
+            $param ['article_lang1'] = $this->getParamList('article_lang1');
+            $param ['article_lang2'] = $this->getParamList('article_lang2');
+            $param ['article_lang3'] = $this->getParamList('article_lang3');
             $param ['tagid'] = $this->getParamList('tagid');
             $param ['sort'] = $this->getParamList('sort');
             $param ['pdf'] = $this->getParamList('pdf');
@@ -99,11 +111,14 @@ class GroupNoticeController extends \BaseController {
      *            array param 需要新增的信息
      * @return Json
      */
-    public function addNoticAction() {
+    public function addNoticAction()
+    {
         $param = array();
         $param ['groupid'] = $this->getParamList('groupid');
         $param ['status'] = $this->getParamList('status');
-        $param ['title'] = $this->getParamList('title');
+        $param ['title_lang1'] = $this->getParamList('title_lang1');
+        $param ['title_lang2'] = $this->getParamList('title_lang2');
+        $param ['title_lang3'] = $this->getParamList('title_lang3');
         $param ['tagid'] = $this->getParamList('tagid');
         $param ['sort'] = intval($this->getParamList('sort'));
         $param ['pdf'] = trim($this->getParamList('pdf'));

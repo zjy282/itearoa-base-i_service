@@ -1,0 +1,11 @@
+{
+    "name": "frank/i_service",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Frank Li",
+            "email": "franklee65535@gmail.com"
+        }
+    ],
+    "require": {}
+}

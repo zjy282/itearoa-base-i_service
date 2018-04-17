@@ -69,6 +69,9 @@ class Log_File extends \Yaf_Controller_Abstract {
             $txt .= "browser: " . Util_Http::getBrowserInfo(true) . "\r\n";
             $txt .= "http url : " . $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"] . "\r\n";
         }
+        if (!empty($msg) && is_array($msg)) {
+            $msg = json_encode($msg);
+        }
         $txt .= empty($msg) ? "" : $msg . "\r\n";
         return $txt;
     }

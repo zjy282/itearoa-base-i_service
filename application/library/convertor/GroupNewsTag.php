@@ -3,9 +3,11 @@
 /**
  * 集团新闻标签转换器类
  */
-class Convertor_GroupNewsTag extends Convertor_Base {
+class Convertor_GroupNewsTag extends Convertor_Base
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
@@ -20,14 +22,18 @@ class Convertor_GroupNewsTag extends Convertor_Base {
      *            扩展参数
      * @return array
      */
-    public function getAdminTagListConvertor($list, $count, $param) {
+    public function getAdminTagListConvertor($list, $count, $param)
+    {
         $data = array();
         $data ['list'] = array();
         foreach ($list as $type) {
             $typeTemp = array();
-            $typeTemp ['id'] = $type ['id'];
-            $typeTemp ['title'] = $type ['title'];
-            $data ['list'] [] = $typeTemp;
+            $typeTemp['id'] = $type['id'];
+            $typeTemp['title'] = $type ['title_lang' . Enum_Lang::getLangIndex($param['lang'])];
+            $typeTemp['titleLang1'] = $type['title_lang1'];
+            $typeTemp['titleLang2'] = $type['title_lang2'];
+
+            $data['list'][] = $typeTemp;
         }
         $data ['total'] = $count;
         $data ['page'] = $param ['page'];
@@ -47,13 +53,17 @@ class Convertor_GroupNewsTag extends Convertor_Base {
      *            扩展参数
      * @return array
      */
-    public function getTagListConvertor($list, $count, $param) {
+    public function getTagListConvertor($list, $count, $param)
+    {
         $data = array();
         $data ['list'] = array();
         foreach ($list as $type) {
             $typeTemp = array();
             $typeTemp ['id'] = $type ['id'];
-            $typeTemp ['title'] = $type ['title'];
+            $typeTemp ['title'] = $type ['title_lang' . Enum_Lang::getLangIndex($param['lang'])];
+            $typeTemp['titleLang1'] = $type['title_lang1'];
+            $typeTemp['titleLang2'] = $type['title_lang2'];
+
             $data ['list'] [] = $typeTemp;
         }
         $data ['total'] = $count;
@@ -64,13 +74,13 @@ class Convertor_GroupNewsTag extends Convertor_Base {
      * 新闻标签详情
      *
      * @param array $detail
-     *            新闻标签详情
-     * @return multitype:unknown
+     * @return array
      */
-    public function getTagDetailConvertor($detail) {
+    public function getTagDetailConvertor($detail, $param)
+    {
         $data = array();
-        $data ['id'] = $detail ['id'];
-        $data ['title'] = $detail ['title'];
+        $data['id'] = $detail['id'];
+        $data['title'] = $detail['title_lang' . Enum_Lang::getLangIndex($param['lang'])];
         return $data;
     }
 }
