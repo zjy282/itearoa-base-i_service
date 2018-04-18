@@ -36,6 +36,7 @@ class HotelListController extends \BaseController {
         $param ['id'] = intval($this->getParamList('id'));
         $param ['name'] = trim($this->getParamList('name'));
         $param ['groupid'] = intval($this->getParamList('groupid'));
+        $param ['propertyinterfid'] = $this->getParamList('propertyinterfid');
         $param ['status'] = $this->getParamList('status');
         if (is_null($param ['status'])) {
             unset ($param ['status']);

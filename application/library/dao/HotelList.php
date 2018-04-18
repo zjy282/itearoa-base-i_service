@@ -63,6 +63,10 @@ class Dao_HotelList extends Dao_Base {
             $whereSql[] = 'groupid = ?';
             $whereCase[] = $param['groupid'];
         }
+        if (isset($param['propertyinterfid'])) {
+            $whereSql[] = 'propertyinterfid = ?';
+            $whereCase[] = $param['propertyinterfid'];
+        }
         if (isset($param['status'])) {
             $whereSql[] = 'status = ?';
             $whereCase[] = $param['status'];

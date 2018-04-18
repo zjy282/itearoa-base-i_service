@@ -24,6 +24,7 @@ class HotelListModel extends \BaseModel {
         $param['id'] ? $paramList['id'] = $param['id'] : false;
         $param['name'] ? $paramList['name'] = intval($param['name']) : false;
         $param['groupid'] ? $paramList['groupid'] = intval($param['groupid']) : false;
+        !is_null($param['propertyinterfid']) ? $paramList['propertyinterfid'] = intval($param['propertyinterfid']) : false;
         isset($param['status']) ? $paramList['status'] = intval($param['status']) : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
