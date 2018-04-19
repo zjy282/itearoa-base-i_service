@@ -270,6 +270,9 @@ class UserModel extends \BaseModel
             'msg' => 'success'
         );
         $dao = new Dao_Sign();
+        $hotelModel = new HotelListModel();
+        $hotelInfo = $hotelModel->getHotelListDetail($params['hotelid']);
+        $params['groupid'] = intval($hotelInfo['groupid']);
         try {
             $oIdInfo = $this->getOIdInfo($params);
             if (empty($oIdInfo['oId']) || $oIdInfo['oId'] < 0) {
