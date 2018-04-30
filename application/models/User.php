@@ -326,4 +326,64 @@ class UserModel extends \BaseModel
 
         return $result;
     }
+
+    /**
+     * Magic method for get token
+     *
+     * @param $params
+     * @return mixed
+     */
+    public function getToken($params)
+    {
+        $method = __FUNCTION__ . ucfirst($params['type']);
+        if ($params['userid'] <= 0) {
+            $this->throwException('Token expired, please login before get token', Enum_Login::EXCEPTION_CODE_EXPIRED);
+        }
+        if (empty($params['type']) || !method_exists($this, $method)) {
+            $this->throwException('Type not support' . "[${params['type']}]", 1);
+        } else {
+            return call_user_func(array($this, $method), $params);
+        }
+    }
+
+
+    /**
+     * Sub method for getToken
+     *
+     * @param $params
+     * @return string
+     */
+    protected function getTokenBreakfast($params)
+    {
+        $seedConfig = Yaf_Registry::get('sysConfig')['token']['seed'][$params['type']];
+        $userDao = new Dao_User();
+        $hotelDao = new Dao_HotelList();
+
+        $userDetail = $userDao->getUserDetail($params['userid']);
+        $hotelid = intval($userDetail['hotelid']);
+        if ($hotelid <= 0) {
+            $this->throwException('User not login', 1);
+        }
+
+        $hotelDetail = $hotelDao->getHotelListDetail($hotelid);
+        $propertyId = intval($hotelDetail['propertyinterfid']);
+        if ($propertyId <= 0) {
+            $this->throwException('Property ID not configured for hotel:' . $hotelid, 1);
+        }
+
+
+        if (isset($seedConfig[$hotelid])) {
+            $seed = $seedConfig[$hotelid];
+        } else {
+            $seed = $seedConfig['default'];
+        }
+        $date = date('Y-m-d', time());
+        $string = sprintf("PorpertyID=%s&Room=%s&OID=%s&Time=%s&VerifyCode=%s",
+            $propertyId, $userDetail['room_no'], $userDetail['oid'], $date,
+            md5($propertyId . $userDetail['room_no'] . $userDetail['oid'] . $date . $seed));
+
+        return $string;
+
+    }
+    
 }

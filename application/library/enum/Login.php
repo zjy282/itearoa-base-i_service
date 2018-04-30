@@ -12,6 +12,8 @@ class Enum_Login {
 
     const LOGIN_INFO_COOKIE_KEY_SID = 'iHotelSid';
 
+    const EXCEPTION_CODE_EXPIRED = 2;
+
     /**
      * 加密密码
      * ---

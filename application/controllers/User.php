@@ -215,4 +215,32 @@ class UserController extends \BaseController {
         $this->echoJson($result);
     }
 
+
+    public function getTokenAction()
+    {
+        $params = array();
+        $token = trim($this->getParamList('token'));
+        $params['type'] = strtolower(trim($this->getParamList('type')));
+
+        try {
+            $params['userid'] = intval(Auth_Login::getToken($token));
+            $result = $this->model->getToken($params);
+            $result = array(
+                'code' => 0,
+                'msg' => 'success',
+                'data' => $result
+            );
+        } catch (Exception $e) {
+            Log_File::writeLog('Token', $e->getMessage() . "\n" . $e->getTraceAsString());
+            $msg = $e->getMessage();
+            $result = array(
+                'code' => $e->getCode(),
+                'msg' => $msg,
+                'data' => array()
+            );
+        }
+
+        $this->echoJson($result);
+    }
+
 }
