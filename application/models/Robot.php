@@ -233,6 +233,91 @@ class RobotModel extends \BaseModel
     }
 
     /**
+     * User call robot to his room to send items
+     *
+     * @param array $params
+     * @return array
+     * @throws Exception
+     */
+    public function getItem(array $params)
+    {
+        if (empty($params['userid']) || empty($params['to'])) {
+            $this->throwException('Lack of param', 1);
+        }
+
+        $userDao = new Dao_User();
+        $userDetail = $userDao->getUserDetail($params['userid']);
+        $roomNo = $userDetail['room_no'];
+        if (empty($roomNo) || empty($userDetail['hotelid'])) {
+            throw new Exception(Enum_Robot::EXCEPTION_CANNOT_FIND_YOUR_ROOM, Enum_Robot::EXCEPTION_OUTPUT_NUM);
+        }
+        $params['hotelid'] = intval($userDetail['hotelid']);
+        $roomPosition = $this->dao->getPositionList(array(
+            'position' => $roomNo,
+            'hotelid' => $params['hotelid'],
+            'limit' => 1
+        ));
+        $from = strval($roomPosition[0]['robot_position']);
+        if (count($roomPosition) != 1 || empty($from)) {
+            throw new Exception(Enum_Robot::EXCEPTION_ROOM_NOT_TAGGED, Enum_Robot::EXCEPTION_OUTPUT_NUM);
+        }
+
+        $toPosition = $this->dao->getPositionList(array(
+            'position' => $params['to'],
+            'hotelid' => intval($userDetail['hotelid']),
+            'limit' => 1
+        ));
+        $to = $toPosition[0]['robot_position'];
+        if (count($toPosition) != 1 || empty($to)) {
+            throw new Exception(Enum_Robot::EXCEPTION_ROOM_NOT_TAGGED . "(${params['to']})", Enum_Robot::EXCEPTION_OUTPUT_NUM);
+        }
+
+        $daoRobotTask = new Dao_RobotTask();
+        try {
+            $this->dao->beginTransaction();
+            $item = array(
+                'userid' => $params['userid'],
+                'orders' => '',
+                'status' => Enum_Robot::ROBOT_BEGIN,
+            );
+            $robotTaskId = $daoRobotTask->addTask($item);
+
+            $apiParamArray = array(
+                'robottaskid' => $robotTaskId,
+                'from' => $from,
+                'to' => $to,
+                'hotelid' => $params['hotelid'],
+            );
+
+            $rpcObject = Rpc_Robot::getInstance();
+            $rpcJson = $rpcObject->send(Rpc_Robot::GETITEM, $apiParamArray);
+            if (is_null($rpcJson)) {
+                $this->throwException('Error occurred when deal with robot api', 1);
+            }
+            $info['robot_detail'] = json_encode($rpcJson);
+            $flag = $daoRobotTask->updateTask($info, $robotTaskId);
+            if (!$flag || $rpcJson['errcode'] != 0) {
+                throw new Exception(json_encode($rpcJson['data']), $rpcJson['errcode']);
+            }
+            $this->dao->commit();
+            $result = array(
+                'code' => 0,
+                'msg' => 'success',
+                'data' => array(
+                    'serviceId' => $robotTaskId,
+                    'robotId' => $rpcJson['data']['taskId']
+                )
+            );
+            return $result;
+        } catch (Exception $e) {
+            $this->dao->rollback();
+            throw $e;
+
+        }
+
+    }
+
+    /**
      * Send robot back to charging point
      *
      * @param $params

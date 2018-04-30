@@ -85,6 +85,35 @@ class ServiceController extends \BaseController
     }
 
     /**
+     * Action for guest sending item
+     */
+    public function robotSendAction()
+    {
+        $params = array();
+        $token = trim($this->getParamList('token'));
+        $params['to'] = trim($this->getParamList('to', '洗衣房'));
+        $params['userid'] = Auth_Login::getToken($token);
+
+        try {
+            $result = $this->_model->getItem($params);
+        } catch (Exception $e) {
+            Log_File::writeLog('robotAction', $e->getMessage() . "\n" . $e->getTraceAsString());
+            if ($e->getCode() == Enum_Robot::EXCEPTION_OUTPUT_NUM) {
+                $msg = $e->getMessage();
+            } else {
+                $msg = Enum_System::MSG_SYSTEM_ERROR;
+            }
+            $result = array(
+                'code' => 1,
+                'msg' => $msg,
+                'data' => array()
+            );
+        }
+
+        $this->echoJson($result);
+    }
+
+    /**
      * Action for robot callback
      */
     public function robotCallbackAction()

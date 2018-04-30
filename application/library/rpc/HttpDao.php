@@ -219,7 +219,6 @@ class Rpc_HttpDao {
             foreach ($interfaceConfig['param'] as $paramKey => $paramConfig) {
                 $paramValue = $this->formatParamValue($params[$paramKey], $paramConfig);
                 if ((isset($params[$paramKey]) && ! is_null($paramValue)) || isset($paramConfig['value'])) {
-                    // TODO 临时测试用
                     $paramValue = (empty($paramValue) && isset($paramConfig['value'])) ? $paramConfig['value'] : $paramValue;
                     $paramPart[$paramKey] = $paramValue;
                 } elseif ($paramConfig['required'] == true) {

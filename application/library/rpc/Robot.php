@@ -9,6 +9,7 @@ class Rpc_Robot
     const SCHEDULE = '/openapi/v1/robot/schedule';
     const BACK = '/openapi/v1/robot/back';
     const CANCELL = '/openapi/v1/robot/schedule/cancel';
+    const GETITEM = '/openapi/v1/robot/schedule/getitem';
 
     const CALLBACK_URI = "/service/robotCallback";
 
@@ -23,12 +24,18 @@ class Rpc_Robot
     private $_domain;
     private $_callbackDomain;
 
+    /**
+     * @var Dao_RobotTask
+     */
+    private $_robotTaskDao;
+
     public static $callbackArray = array(
         'gotoStartCallback' => array(
             'action' => 'gotoStartCallback',
             'status' => Enum_ShoppingOrder::ROBOT_GOING,
             'orderStatus' => Enum_ShoppingOrder::ORDER_STATUS_WAIT,
             'notice' => self::NOTICE_STAFF,
+            'sendNotice' => self::NOTICE_GUEST
         ),
 
         'arriveStartCallback' => array(
@@ -36,6 +43,7 @@ class Rpc_Robot
             'status' => Enum_ShoppingOrder::ROBOT_GOING,
             'orderStatus' => Enum_ShoppingOrder::ORDER_STATUS_WAIT,
             'notice' => self::NOTICE_STAFF,
+            'sendNotice' => self::NOTICE_GUEST
         ),
 
         'gotoTargetCallback' => array(
@@ -43,6 +51,7 @@ class Rpc_Robot
             'status' => Enum_ShoppingOrder::ROBOT_GOING,
             'orderStatus' => Enum_ShoppingOrder::ORDER_STATUS_SERVICE,
             'notice' => self::NOTICE_BOTH,
+            'sendNotice' => self::NOTICE_NONE
         ),
 
         'arriveTargetCallback' => array(
@@ -50,6 +59,7 @@ class Rpc_Robot
             'status' => Enum_ShoppingOrder::ROBOT_ARRIVED,
             'orderStatus' => Enum_ShoppingOrder::ORDER_STATUS_SERVICE,
             'notice' => self::NOTICE_BOTH,
+            'sendNotice' => self::NOTICE_GUEST
         ),
 
         'successCallback' => array(
@@ -57,12 +67,15 @@ class Rpc_Robot
             'status' => Enum_ShoppingOrder::ROBOT_FINISHED,
             'orderStatus' => Enum_ShoppingOrder::ORDER_STATUS_COMPLETE,
             'notice' => self::NOTICE_BOTH,
+            'sendNotice' => self::NOTICE_GUEST
+
         ),
         'failCallback' => array(
             'action' => 'failCallback',
             'status' => Enum_ShoppingOrder::ROBOT_GUEST_NOT_FETCH,
             'orderStatus' => Enum_ShoppingOrder::ORDER_STATUS_SERVICE,
             'notice' => self::NOTICE_BOTH,
+            'sendNotice' => self::NOTICE_NONE
         ),
     );
 
@@ -74,6 +87,7 @@ class Rpc_Robot
         $this->_placeId = $robotConfig['placeId'];
         $this->_domain = $robotConfig['domain'];
         $this->_callbackDomain = $robotConfig['callbackdomain'];
+        $this->_robotTaskDao = new Dao_RobotTask();
 
     }
 
@@ -169,15 +183,14 @@ class Rpc_Robot
      * Update order status through callback method
      *
      * @param string $action
-     * @param int $taskId
+     * @param array $taskInfo
      * @throws Exception
      */
-    public function callback(string $action, int $taskId)
+    private function _sendCallback(string $action, array $taskInfo)
     {
-        $robotTaskDao = new Dao_RobotTask();
         $shoppingOrderDao = new Dao_ShoppingOrder();
         $staffDao = new Dao_Staff();
-        $taskInfo = $robotTaskDao->getRobotTaskDetail($taskId);
+
         $orderIdArray = json_decode($taskInfo['orders'], true);
         if (is_array(Rpc_Robot::$callbackArray[$action])) {
             $taskUpdate['status'] = Rpc_Robot::$callbackArray[$action]['status'];
@@ -209,7 +222,7 @@ class Rpc_Robot
             $pushParams['en_value'] = $enContent;
             $pushParams['type'] = Enum_Push::PUSH_TYPE_USER;
             $pushParams['contentType'] = Enum_Push::PUSH_CONTENT_TYPE_SHOPPING_ORDER;
-            $pushParams['contentValue'] = $taskId;
+            $pushParams['contentValue'] = $taskInfo['id'];
             $pushParams['dataid'] = $orderList[0]['id']; // user id
 
             $pushModel->addPushOne($pushParams);
@@ -230,7 +243,7 @@ class Rpc_Robot
             $pushParams['en_value'] = $enContent;
             $pushParams['type'] = Enum_Push::PUSH_TYPE_STAFF;
             $pushParams['contentType'] = Enum_Push::PUSH_CONTENT_TYPE_SHOPPING_ORDER;
-            $pushParams['contentValue'] = $taskId;
+            $pushParams['contentValue'] = $taskInfo['id'];
 
             $staffList = $staffDao->getStaffList(array('hotelid' => $orderList[0]['hotelid']));
             foreach ($staffList as $staffInfo) {
@@ -246,9 +259,63 @@ class Rpc_Robot
 
 
         //update robot task and order status
-        $robotTaskDao->updateTask($taskUpdate, $taskId);
+        $this->_robotTaskDao->updateTask($taskUpdate, $taskInfo['id']);
         foreach ($orderIdArray as $orderId) {
             $shoppingOrderDao->updateShoppingOrderById($orderUpdate, $orderId);
+        }
+    }
+
+    /**
+     * Callback for get item
+     *
+     * @param string $action
+     * @param array $taskInfo
+     * @throws Exception
+     */
+    private function _getCallback(string $action, array $taskInfo)
+    {
+        if (is_array(Rpc_Robot::$callbackArray[$action])) {
+            $taskUpdate['status'] = Rpc_Robot::$callbackArray[$action]['status'];
+        } else {
+            throw new Exception("参数错误");
+        }
+
+        $notice = Rpc_Robot::$callbackArray[$action]['sendNotice'];
+        $pushModel = new PushModel();
+        //push MSG to guest
+        if ($notice == Rpc_Robot::NOTICE_BOTH || $notice == Rpc_Robot::NOTICE_GUEST) {
+            $content = Enum_Robot::getRobotStatusNameListForGuest()[$taskUpdate['status']];
+            $enContent = Enum_Robot::getRobotStatusNameListForGuest(Enum_Lang::ENGLISH)[$taskUpdate['status']];
+            $title = $content;
+            $enTitle = $enContent;
+            $pushParams = array();
+
+            $pushParams['cn_title'] = $title;
+            $pushParams['cn_value'] = $content;
+            $pushParams['en_title'] = $enTitle;
+            $pushParams['en_value'] = $enContent;
+            $pushParams['type'] = Enum_Push::PUSH_TYPE_USER;
+            $pushParams['contentType'] = Enum_Push::PUSH_CONTENT_TYPE_SHOPPING_ORDER;
+            $pushParams['contentValue'] = $taskInfo['id'];
+            $pushParams['dataid'] = $taskInfo['userid']; // user id
+
+            $pushModel->addPushOne($pushParams);
+        }
+        //update robot task status
+        $this->_robotTaskDao->updateTask($taskUpdate, $taskInfo['id']);
+    }
+
+    public function callback(string $action, int $taskId)
+    {
+        $taskInfo = $this->_robotTaskDao->getRobotTaskDetail($taskId);
+        $orderIdArray = json_decode($taskInfo['orders'], true);
+        if (!is_array(Rpc_Robot::$callbackArray[$action])) {
+            throw new Exception("参数错误");
+        }
+        if (count($orderIdArray) == 0) {
+            $this->_getCallback($action, $taskInfo);
+        } else {
+            $this->_sendCallback($action, $taskInfo);
         }
     }
 }
