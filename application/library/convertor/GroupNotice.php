@@ -29,7 +29,6 @@ class Convertor_GroupNotice extends Convertor_Base
         $tagListNew = array();
         foreach ($tagList as $tag) {
             $tagListNew [$tag ['id']] = $tag['title_lang' . Enum_Lang::getLangIndex($param['lang'])];
-            $tagListNew [$tag ['id']] = 'test';
         }
         $data = array('list' => array());
         foreach ($noticList as $notic) {
