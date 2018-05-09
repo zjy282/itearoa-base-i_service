@@ -6,6 +6,7 @@
 class RobotModel extends \BaseModel
 {
     const ROBOT_GUIDE = 'guide';
+    const ROBOT_TASK_GETITEM = 'getitem';
 
     private $dao;
 
@@ -189,6 +190,7 @@ class RobotModel extends \BaseModel
                 'userid' => $params['userid'],
                 'orders' => json_encode($params['itemlist']),
                 'status' => Enum_ShoppingOrder::ROBOT_BEGIN,
+                'createtime' => time(),
             );
             $orderUpdate = array(
                 'robot_status' => Enum_ShoppingOrder::ROBOT_BEGIN,
@@ -241,35 +243,57 @@ class RobotModel extends \BaseModel
      */
     public function getItem(array $params)
     {
-        if (empty($params['userid']) || empty($params['to'])) {
-            $this->throwException('Lack of param', 1);
+        $userDao = new Dao_User();
+        $userDetail = array();
+        if (!empty($params['start']) && !empty($params['dest'])) {
+            $roomPosition = $this->dao->getRobotPositionDetail($params['start']);
+            if ($roomPosition['position']) {
+                $userList = $userDao->getUserList(array(
+                    'room_no' => $roomPosition['position'],
+                    'limit' => 1
+                ));
+                if (count($userList) == 1) {
+                    $userDetail = $userList[0];
+                    $params['userid'] = $userDetail['id'];
+                    $from = $params['start'];
+                    $to = $params['dest'];
+                }
+            }
         }
 
-        $userDao = new Dao_User();
-        $userDetail = $userDao->getUserDetail($params['userid']);
+        if (empty($params['userid']) || (empty($params['to']) && empty($params['dest']))) {
+            $this->throwException('Lack of param', Enum_Robot::EXCEPTION_OUTPUT_NUM);
+        }
+        if (empty($userDetail)) {
+            $userDetail = $userDao->getUserDetail($params['userid']);
+        }
         $roomNo = $userDetail['room_no'];
         if (empty($roomNo) || empty($userDetail['hotelid'])) {
             throw new Exception(Enum_Robot::EXCEPTION_CANNOT_FIND_YOUR_ROOM, Enum_Robot::EXCEPTION_OUTPUT_NUM);
         }
         $params['hotelid'] = intval($userDetail['hotelid']);
-        $roomPosition = $this->dao->getPositionList(array(
-            'position' => $roomNo,
-            'hotelid' => $params['hotelid'],
-            'limit' => 1
-        ));
-        $from = strval($roomPosition[0]['robot_position']);
-        if (count($roomPosition) != 1 || empty($from)) {
-            throw new Exception(Enum_Robot::EXCEPTION_ROOM_NOT_TAGGED, Enum_Robot::EXCEPTION_OUTPUT_NUM);
+        if (empty($from)) {
+            $roomPosition = $this->dao->getPositionList(array(
+                'position' => $roomNo,
+                'hotelid' => $params['hotelid'],
+                'limit' => 1
+            ));
+            $from = strval($roomPosition[0]['robot_position']);
+            if (count($roomPosition) != 1 || empty($from)) {
+                throw new Exception(Enum_Robot::EXCEPTION_ROOM_NOT_TAGGED, Enum_Robot::EXCEPTION_OUTPUT_NUM);
+            }
         }
 
-        $toPosition = $this->dao->getPositionList(array(
-            'position' => $params['to'],
-            'hotelid' => intval($userDetail['hotelid']),
-            'limit' => 1
-        ));
-        $to = $toPosition[0]['robot_position'];
-        if (count($toPosition) != 1 || empty($to)) {
-            throw new Exception(Enum_Robot::EXCEPTION_ROOM_NOT_TAGGED . "(${params['to']})", Enum_Robot::EXCEPTION_OUTPUT_NUM);
+        if (empty($to)) {
+            $toPosition = $this->dao->getPositionList(array(
+                'position' => $params['to'],
+                'hotelid' => intval($userDetail['hotelid']),
+                'limit' => 1
+            ));
+            $to = $toPosition[0]['robot_position'];
+            if (count($toPosition) != 1 || empty($to)) {
+                throw new Exception(Enum_Robot::EXCEPTION_POSITION_NOT_FOUND . "(${params['to']})", Enum_Robot::EXCEPTION_OUTPUT_NUM);
+            }
         }
 
         $daoRobotTask = new Dao_RobotTask();
@@ -277,8 +301,9 @@ class RobotModel extends \BaseModel
             $this->dao->beginTransaction();
             $item = array(
                 'userid' => $params['userid'],
-                'orders' => '',
+                'orders' => self::ROBOT_TASK_GETITEM,
                 'status' => Enum_Robot::ROBOT_BEGIN,
+                'createtime' => time(),
             );
             $robotTaskId = $daoRobotTask->addTask($item);
 
@@ -292,7 +317,7 @@ class RobotModel extends \BaseModel
             $rpcObject = Rpc_Robot::getInstance();
             $rpcJson = $rpcObject->send(Rpc_Robot::GETITEM, $apiParamArray);
             if (is_null($rpcJson)) {
-                $this->throwException('Error occurred when deal with robot api', 1);
+                $this->throwException('Error occurred when deal with robot api', Enum_Robot::EXCEPTION_OUTPUT_NUM);
             }
             $info['robot_detail'] = json_encode($rpcJson);
             $flag = $daoRobotTask->updateTask($info, $robotTaskId);
@@ -343,6 +368,34 @@ class RobotModel extends \BaseModel
             $this->throwException($rpcJson['errmsg'], $rpcJson['errcode']);
         }
         return $rpcJson;
+    }
+
+    public function getItemList($params)
+    {
+
+        $params['id'] ? $paramList['id'] = intval($params['id']) : false;
+        $params['hotelid'] ? $paramList['hotelid'] = intval($params['hotelid']) : false;
+        $params['userid'] ? $paramList['userid'] = intval($params['userid']) : false;
+        $params['status'] ? $paramList['status'] = trim($params['status']) : false;
+        $params['orders'] ? $paramList['orders'] = trim($params['orders']) : false;
+
+        $paramList['limit'] = $params['limit'];
+        $paramList['page'] = $params['page'];
+
+        $dao = new Dao_RobotTask();
+        return $dao->getRobotTaskList($params);
+    }
+
+    public function getItemListCount($params)
+    {
+        $params['id'] ? $paramList['id'] = intval($params['id']) : false;
+        $params['hotelid'] ? $paramList['hotelid'] = intval($params['hotelid']) : false;
+        $params['userid'] ? $paramList['userid'] = intval($params['userid']) : false;
+        $params['status'] ? $paramList['status'] = trim($params['status']) : false;
+        $params['orders'] ? $paramList['orders'] = trim($params['orders']) : false;
+
+        $dao = new Dao_RobotTask();
+        return $dao->getRobotTaskListCount($params);
     }
 
 }

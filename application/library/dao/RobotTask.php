@@ -79,4 +79,85 @@ class Dao_RobotTask extends Dao_Base
         }
         return is_array($result) ? $result : array();
     }
+
+    /**
+     * @param array $param
+     * @return array
+     */
+    public function getRobotTaskList(array $param): array
+    {
+        $limit = $param['limit'] ? intval($param['limit']) : 0;
+        $page = $this->getStart($param['page'], $limit);
+
+        $paramSql = $this->handlerListParams($param);
+        $sql = "SELECT robot_task.id, robot_task.userid, robot_task.status, robot_task.createtime, 
+                hotel_user.hotelid, hotel_user.room_no 
+                FROM robot_task  JOIN hotel_user 
+                ON robot_task.userid = hotel_user.id {$paramSql['sql']} ORDER BY id DESC";
+        if ($limit) {
+            $sql .= " limit {$page},{$limit}";
+        }
+        $result = $this->db->fetchAll($sql, $paramSql['case']);
+        return is_array($result) ? $result : array();
+    }
+
+    /**
+     * @param array $param
+     * @return int
+     */
+    public function getRobotTaskListCount(array $param): int
+    {
+        $paramSql = $this->handlerListParams($param);
+        $sql = "SELECT COUNT(1) AS count
+                FROM robot_task  JOIN hotel_user 
+                ON robot_task.userid = hotel_user.id {$paramSql['sql']}";
+        $result = $this->db->fetchAssoc($sql, $paramSql['case']);
+        return intval($result['count']);
+    }
+
+    /**
+     * Common param pre-process
+     *
+     * @param $param
+     * @return array
+     */
+    private function handlerListParams($param)
+    {
+        $whereSql = array();
+        $whereCase = array();
+        if (isset($param['id'])) {
+            if (is_array($param['id'])) {
+                $whereSql[] = 'robot_task.id in (' . implode(',', $param['id']) . ')';
+            } else {
+                $whereSql[] = 'robot_task.id = ?';
+                $whereCase[] = $param['id'];
+            }
+        }
+        if (isset($param['hotelid'])) {
+            $whereSql[] = 'hotel_user.hotelid = ?';
+            $whereCase[] = $param['hotelid'];
+        }
+
+        if (isset($param['userid'])) {
+            $whereSql[] = 'userid = ?';
+            $whereCase[] = $param['userid'];
+        }
+
+        if (isset($param['status'])) {
+            $whereSql[] = 'robot_task.status = ?';
+            $whereCase[] = $param['status'];
+        }
+
+        if ($param['orders'] == RobotModel::ROBOT_TASK_GETITEM) {
+            $whereSql[] = 'robot_task.orders = ?';
+            $whereCase[] = $param['orders'];
+        }
+
+
+        $whereSql = $whereSql ? ' where ' . implode(' and ', $whereSql) : '';
+        return array(
+            'sql' => $whereSql,
+            'case' => $whereCase
+        );
+    }
 }

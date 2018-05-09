@@ -69,15 +69,6 @@ class Enum_Robot
     const EXCEPTION_POSITION_NOT_FOUND = 'Position not found';
 
     /**
-     * @return array
-     */
-    public static function getRobotStatusNameListForStaff(): array
-    {
-        return self::$robotStatusNameListForStaff;
-    }
-
-
-    /**
      * Get status name for staff
      *
      * @param string $language

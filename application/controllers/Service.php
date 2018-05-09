@@ -92,7 +92,12 @@ class ServiceController extends \BaseController
         $params = array();
         $token = trim($this->getParamList('token'));
         $params['to'] = trim($this->getParamList('to', '洗衣房'));
-        $params['userid'] = Auth_Login::getToken($token);
+        $params['userid'] = intval(Auth_Login::getToken($token));
+        $params['start'] = intval($this->getParamList('start'));
+        $params['dest'] = intval($this->getParamList('dest'));
+        if ($params['userid'] <= 0) {
+            $params['userid'] = intval($this->getParamList('userid'));
+        }
 
         try {
             $result = $this->_model->getItem($params);
@@ -111,6 +116,22 @@ class ServiceController extends \BaseController
         }
 
         $this->echoJson($result);
+    }
+
+    public function getRobotSendListAction(){
+        $params = array();
+        $params['id'] = $this->getParamList('id');
+        $params['hotelid'] = $this->getParamList('hotelid');
+        $params['userid'] = $this->getParamList('userid');
+        $params['status'] = $this->getParamList('status');
+        $params['page'] = $this->getParamList('page');
+        $params['limit'] = $this->getParamList('limit');
+        $params['orders'] = RobotModel::ROBOT_TASK_GETITEM;
+
+        $data = $this->_model->getItemList($params);
+        $count = $this->_model->getItemListCount($params);
+        $data = $this->convertor->getRobotSendListConvertor($data, $count, $params);
+        $this->echoSuccessData($data);
     }
 
     /**
