@@ -204,16 +204,16 @@ class RobotModel extends \BaseModel
 
             $apiParamArray = array(
                 'robottaskid' => $robotTaskId,
-                'start' => $start,
-                'target' => $target,
+                'from' => $start,
+                'to' => $target,
                 'hotelid' => $params['hotelid'],
             );
 
             $rpcObject = Rpc_Robot::getInstance();
-            $rpcJson = $rpcObject->send(Rpc_Robot::SCHEDULE, $apiParamArray);
+            $rpcJson = $rpcObject->send(Rpc_Robot::SENDITEM, $apiParamArray);
             $info['robot_detail'] = json_encode($rpcJson);
             $flag = $daoRobotTask->updateTask($info, $robotTaskId);
-            if (!$flag || $rpcJson['errcode'] != 0) {
+            if (!$flag || !$rpcJson || $rpcJson['errcode'] != 0) {
                 throw new Exception(json_encode($rpcJson['data']), $rpcJson['errcode']);
             }
             $daoBase->commit();
@@ -247,16 +247,18 @@ class RobotModel extends \BaseModel
         $userDetail = array();
         if (!empty($params['start']) && !empty($params['dest'])) {
             $roomPosition = $this->dao->getRobotPositionDetail($params['start']);
+            $toPosition = $this->dao->getRobotPositionDetail($params['dest']);
             if ($roomPosition['position']) {
                 $userList = $userDao->getUserList(array(
                     'room_no' => $roomPosition['position'],
+                    'hotelid' => $roomPosition['hotelid'],
                     'limit' => 1
                 ));
                 if (count($userList) == 1) {
                     $userDetail = $userList[0];
                     $params['userid'] = $userDetail['id'];
-                    $from = $params['start'];
-                    $to = $params['dest'];
+                    $from = $roomPosition['robot_position'];
+                    $to = $toPosition['robot_position'];
                 }
             }
         }

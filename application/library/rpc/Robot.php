@@ -10,6 +10,7 @@ class Rpc_Robot
     const BACK = '/openapi/v1/robot/back';
     const CANCELL = '/openapi/v1/robot/schedule/cancel';
     const GETITEM = '/openapi/v1/robot/schedule/getitem';
+    const SENDITEM = '/openapi/v1/robot/schedule/transport';
 
     const CALLBACK_URI = "/service/robotCallback";
 
@@ -228,6 +229,12 @@ class Rpc_Robot
             $pushModel->addPushOne($pushParams);
         }
 
+        //update robot task and order status
+        $this->_robotTaskDao->updateTask($taskUpdate, $taskInfo['id']);
+        foreach ($orderIdArray as $orderId) {
+            $shoppingOrderDao->updateShoppingOrderById($orderUpdate, $orderId);
+        }
+
         //push MSG to staff
         if ($notice == Rpc_Robot::NOTICE_BOTH || $notice == Rpc_Robot::NOTICE_STAFF) {
             $count = 0;
@@ -255,13 +262,6 @@ class Rpc_Robot
             if ($count == 0) {
                 throw new Exception(PushModel::MESSAGE_NOT_RECEIVED);
             }
-        }
-
-
-        //update robot task and order status
-        $this->_robotTaskDao->updateTask($taskUpdate, $taskInfo['id']);
-        foreach ($orderIdArray as $orderId) {
-            $shoppingOrderDao->updateShoppingOrderById($orderUpdate, $orderId);
         }
     }
 

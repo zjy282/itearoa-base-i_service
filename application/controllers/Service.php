@@ -155,6 +155,7 @@ class ServiceController extends \BaseController
             $rpcRobot->callback($action, $taskId);
 
         } catch (Exception $e) {
+            Log_File::writeLog('RobotDeliver', $e->getTraceAsString());
             $result['code'] = $e->getCode();
             $result['msg'] = $e->getMessage();
 
