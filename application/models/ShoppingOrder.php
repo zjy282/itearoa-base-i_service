@@ -189,7 +189,7 @@ class ShoppingOrderModel extends \BaseModel {
             }
         }
 
-        $to = $this->_getEmailArray($info['hotelid']);
+        $to = $this->getEmailArray($info['hotelid']);
         if (($type == self::ORDER_NOTIFY_EMAIL || $type == self::ORDER_NOTIFY_BOTH) && !empty($to)) {
             //send email message to staff
             $smtp = Mail_Email::getInstance();
@@ -205,7 +205,7 @@ class ShoppingOrderModel extends \BaseModel {
      * @param $hotelId
      * @return array|null
      */
-    private function _getEmailArray($hotelId)
+    public function getEmailArray($hotelId)
     {
         $data = array(
             1 => array(
@@ -224,7 +224,11 @@ class ShoppingOrderModel extends \BaseModel {
                 'bobo.wu@the-ascott.com' => '伍宝琴',
                 'jennifer.wang@the-ascott.com' => '王奋',
                 'frontoffice.aifcg@the-ascott.com' => '前台',
-            )
+            ),
+            26 => array(
+                'fangzhou@liheinfo.com' => 'Fangzhou',
+                'frank@itearoa.co.nz' => 'frank'
+            ),
         );
 
         return $data[$hotelId];

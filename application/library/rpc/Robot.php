@@ -36,7 +36,7 @@ class Rpc_Robot
             'status' => Enum_ShoppingOrder::ROBOT_GOING,
             'orderStatus' => Enum_ShoppingOrder::ORDER_STATUS_WAIT,
             'notice' => self::NOTICE_STAFF,
-            'sendNotice' => self::NOTICE_GUEST
+            'sendNotice' => self::NOTICE_NONE
         ),
 
         'arriveStartCallback' => array(
@@ -76,7 +76,7 @@ class Rpc_Robot
             'status' => Enum_ShoppingOrder::ROBOT_GUEST_NOT_FETCH,
             'orderStatus' => Enum_ShoppingOrder::ORDER_STATUS_SERVICE,
             'notice' => self::NOTICE_BOTH,
-            'sendNotice' => self::NOTICE_NONE
+            'sendNotice' => self::NOTICE_GUEST
         ),
     );
 
@@ -308,11 +308,10 @@ class Rpc_Robot
     public function callback(string $action, int $taskId)
     {
         $taskInfo = $this->_robotTaskDao->getRobotTaskDetail($taskId);
-        $orderIdArray = json_decode($taskInfo['orders'], true);
         if (!is_array(Rpc_Robot::$callbackArray[$action])) {
             throw new Exception("参数错误");
         }
-        if (count($orderIdArray) == 0) {
+        if ($taskInfo['orders'] == RobotModel::ROBOT_TASK_GETITEM) {
             $this->_getCallback($action, $taskInfo);
         } else {
             $this->_sendCallback($action, $taskInfo);

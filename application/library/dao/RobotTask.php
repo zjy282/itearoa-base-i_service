@@ -90,10 +90,7 @@ class Dao_RobotTask extends Dao_Base
         $page = $this->getStart($param['page'], $limit);
 
         $paramSql = $this->handlerListParams($param);
-        $sql = "SELECT robot_task.id, robot_task.userid, robot_task.status, robot_task.createtime, 
-                hotel_user.hotelid, hotel_user.room_no 
-                FROM robot_task  JOIN hotel_user 
-                ON robot_task.userid = hotel_user.id {$paramSql['sql']} ORDER BY id DESC";
+        $sql = "SELECT *  FROM robot_task {$paramSql['sql']} ORDER BY id DESC";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }
@@ -108,9 +105,7 @@ class Dao_RobotTask extends Dao_Base
     public function getRobotTaskListCount(array $param): int
     {
         $paramSql = $this->handlerListParams($param);
-        $sql = "SELECT COUNT(1) AS count
-                FROM robot_task  JOIN hotel_user 
-                ON robot_task.userid = hotel_user.id {$paramSql['sql']}";
+        $sql = "SELECT COUNT(1) AS count FROM robot_task {$paramSql['sql']}";
         $result = $this->db->fetchAssoc($sql, $paramSql['case']);
         return intval($result['count']);
     }
@@ -127,14 +122,14 @@ class Dao_RobotTask extends Dao_Base
         $whereCase = array();
         if (isset($param['id'])) {
             if (is_array($param['id'])) {
-                $whereSql[] = 'robot_task.id in (' . implode(',', $param['id']) . ')';
+                $whereSql[] = 'id in (' . implode(',', $param['id']) . ')';
             } else {
-                $whereSql[] = 'robot_task.id = ?';
+                $whereSql[] = 'id = ?';
                 $whereCase[] = $param['id'];
             }
         }
         if (isset($param['hotelid'])) {
-            $whereSql[] = 'hotel_user.hotelid = ?';
+            $whereSql[] = 'hotelid = ?';
             $whereCase[] = $param['hotelid'];
         }
 
@@ -144,12 +139,12 @@ class Dao_RobotTask extends Dao_Base
         }
 
         if (isset($param['status'])) {
-            $whereSql[] = 'robot_task.status = ?';
+            $whereSql[] = 'status = ?';
             $whereCase[] = $param['status'];
         }
 
         if ($param['orders'] == RobotModel::ROBOT_TASK_GETITEM) {
-            $whereSql[] = 'robot_task.orders = ?';
+            $whereSql[] = 'orders = ?';
             $whereCase[] = $param['orders'];
         }
 

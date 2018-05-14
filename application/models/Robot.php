@@ -274,6 +274,7 @@ class RobotModel extends \BaseModel
             throw new Exception(Enum_Robot::EXCEPTION_CANNOT_FIND_YOUR_ROOM, Enum_Robot::EXCEPTION_OUTPUT_NUM);
         }
         $params['hotelid'] = intval($userDetail['hotelid']);
+        $params['room_no'] = $userDetail['room_no'];
         if (empty($from)) {
             $roomPosition = $this->dao->getPositionList(array(
                 'position' => $roomNo,
@@ -306,6 +307,8 @@ class RobotModel extends \BaseModel
                 'orders' => self::ROBOT_TASK_GETITEM,
                 'status' => Enum_Robot::ROBOT_BEGIN,
                 'createtime' => time(),
+                'room_no' => $params['room_no'],
+                'hotelid' => $params['hotelid'],
             );
             $robotTaskId = $daoRobotTask->addTask($item);
 
@@ -377,7 +380,7 @@ class RobotModel extends \BaseModel
 
         $params['id'] ? $paramList['id'] = intval($params['id']) : false;
         $params['hotelid'] ? $paramList['hotelid'] = intval($params['hotelid']) : false;
-        $params['userid'] ? $paramList['userid'] = intval($params['userid']) : false;
+        $params['room_no'] ? $paramList['room_no'] = intval($params['room_no']) : false;
         $params['status'] ? $paramList['status'] = trim($params['status']) : false;
         $params['orders'] ? $paramList['orders'] = trim($params['orders']) : false;
 
@@ -392,12 +395,53 @@ class RobotModel extends \BaseModel
     {
         $params['id'] ? $paramList['id'] = intval($params['id']) : false;
         $params['hotelid'] ? $paramList['hotelid'] = intval($params['hotelid']) : false;
-        $params['userid'] ? $paramList['userid'] = intval($params['userid']) : false;
+        $params['room_no'] ? $paramList['room_no'] = intval($params['room_no']) : false;
         $params['status'] ? $paramList['status'] = trim($params['status']) : false;
         $params['orders'] ? $paramList['orders'] = trim($params['orders']) : false;
 
         $dao = new Dao_RobotTask();
         return $dao->getRobotTaskListCount($params);
+    }
+
+    /**
+     * Send the detail of the order to manager
+     *
+     * @param int $taskId
+     * @return bool
+     */
+    public function sendRobotTaskMsg(int $taskId)
+    {
+        $daoRobot = new Dao_RobotTask();
+        $daoUser = new Dao_User();
+        $modelShoppingOrder = new ShoppingOrderModel();
+
+        $taskInfo = $daoRobot->getRobotTaskDetail($taskId);
+        $userInfo = $daoUser->getUserDetail($taskInfo['userid']);
+
+        $mailTemplate = "
+        <head>
+            <meta charset=\"UTF-8\">
+        </head>
+           <p>客房：%s</p> 
+           <p>房客：%s</p> 
+           <p>定单：召唤机器人取物</p> 
+           <p>下单时间： %s</p>
+        </body>
+        ";
+
+        $mailContent = sprintf($mailTemplate, $taskInfo['room_no'], $userInfo['fullname'],
+            date("Y-m-d H:i:s", $taskInfo['createtime'])
+        );
+        $subject = "机器人取物定单${taskId}：" . $taskInfo['room_no'] . " - " . date('Y-m-d H:i:s', $taskInfo['createtime']);
+
+        $to = $modelShoppingOrder->getEmailArray($taskInfo['hotelid']);
+        if (!empty($to)) {
+            $smtp = Mail_Email::getInstance();
+            $smtp->addCc('iservice@liheinfo.com');
+            $smtp->send($to, $subject, $mailContent);
+        }
+
+        return true;
     }
 
 }

@@ -101,6 +101,9 @@ class ServiceController extends \BaseController
 
         try {
             $result = $this->_model->getItem($params);
+            if ($result['code'] == 0) {
+                $this->_model->sendRobotTaskMsg($result['data']['serviceId']);
+            }
         } catch (Exception $e) {
             Log_File::writeLog('robotAction', $e->getMessage() . "\n" . $e->getTraceAsString());
             if ($e->getCode() == Enum_Robot::EXCEPTION_OUTPUT_NUM) {
@@ -122,7 +125,7 @@ class ServiceController extends \BaseController
         $params = array();
         $params['id'] = $this->getParamList('id');
         $params['hotelid'] = $this->getParamList('hotelid');
-        $params['userid'] = $this->getParamList('userid');
+        $params['room_no'] = $this->getParamList('room_no');
         $params['status'] = $this->getParamList('status');
         $params['page'] = $this->getParamList('page');
         $params['limit'] = $this->getParamList('limit');
