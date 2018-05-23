@@ -106,25 +106,28 @@ class Auth_Login {
     /**
      * 根据token获取memberid
      *
-     * @param string $resultToken            
-     * @return Ambigous <对应key的数据, mixed>
+     * @param $resultToken
+     * @param int $type
+     * @param bool $isMulti allow multiple point login
+     * @return int
      */
-    public static function getToken($resultToken, $type = 1) {
+    public static function getToken($resultToken, $type = 1, $isMulti = true)
+    {
         $memberId = 0;
-        if (! empty($resultToken)) {
+        if (!empty($resultToken)) {
             $redis = Cache_Redis::getInstance();
             $loginToken = $redis->get($resultToken);
             if ($loginToken) {
                 $loginInfo = $redis->get($loginToken);
                 if ($loginInfo) {
                     $loginInfo = json_decode($loginInfo, true);
-                    if ($loginInfo['token'] == $resultToken && $loginInfo['type'] == $type) {
+                    if (($loginInfo['token'] == $resultToken || $isMulti) && $loginInfo['type'] == $type) {
                         $memberId = $loginInfo['memberId'];
                     }
                 }
             }
         }
-        
+
         return $memberId;
     }
 
