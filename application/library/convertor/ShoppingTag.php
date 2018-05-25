@@ -20,21 +20,42 @@ class Convertor_ShoppingTag extends Convertor_Base {
      *            扩展参数
      * @return array
      */
-    public function getShoppingTagListConvertor($list, $count, $param) {
+    public function getShoppingTagListConvertor($list, $param) {
         $data = array('list' => array());
-        $hotelIdList = array_column($list, 'hotelid');
+        $hotelIdList = $hotelIdList = array_unique(array_column($list['data'], 'hotelid'));
         $hotelModel = new HotelListModel ();
         $hotelInfoList = $hotelModel->getHotelListList(array('id' => $hotelIdList));
         $hotelNameList = array_column($hotelInfoList, 'name_lang1', 'id');
-        foreach ($list as $key => $value) {
+
+        if ($param['limit'] > 0) {
+            $dataArray = $list['data'];
+        } else {
+            $dataArray = $list;
+        }
+        foreach ($dataArray as $value) {
             $oneTemp = array();
             $oneTemp ['id'] = $value ['id'];
             $oneTemp ['title'] = $this->handlerMultiLang('title', $value);
+            $oneTemp['title_lang1'] = $value['title_lang1'];
+            $oneTemp['title_lang2'] = $value['title_lang2'];
+            $oneTemp['title_lang3'] = $value['title_lang3'];
+            $oneTemp['pic'] = Enum_Img::getPathByKeyAndType($value['pic']);
             $oneTemp ['hotelId'] = $value ['hotelid'];
             $oneTemp ['hotelName'] = $hotelNameList [$value ['hotelid']];
+            $oneTemp['parentid'] = $value['parentid'];
+            $oneTemp['status'] = $value['status'];
+            $oneTemp['is_robot'] = $value['is_robot'];
+            if ($param['withChild']) {
+                $oneTemp['children'] = array();
+                foreach ($value['children'] as $child) {
+                    $child['pic'] = Enum_Img::getPathByKeyAndType($child['pic']);
+                    array_push($oneTemp['children'], $child);
+                }
+                $oneTemp['children'] = $value['children'];
+            }
             $data ['list'] [] = $oneTemp;
         }
-        $data ['total'] = $count;
+        $data ['total'] = $list['total'];
         $data ['page'] = $param ['page'];
         $data ['limit'] = $param ['limit'];
         $data ['nextPage'] = Util_Tools::getNextPage($data ['page'], $data ['limit'], $data ['total']);
@@ -42,36 +63,18 @@ class Convertor_ShoppingTag extends Convertor_Base {
     }
 
     /**
-     * 后台体验购物标签数据转换器
+     * Parse img url
      *
-     * @param array $list
-     *            体验购物标签
-     * @param int $count
-     *            体验购物标签总数
-     * @param array $param
-     *            扩展参数
-     * @return array
+     * @param $list
+     * @return mixed
      */
-    public function getAdminShoppingTagListConvertor($list, $count, $param) {
-        $data = array('list' => array());
-        $hotelIdList = array_column($list, 'hotelid');
-        $hotelModel = new HotelListModel ();
-        $hotelInfoList = $hotelModel->getHotelListList(array('id' => $hotelIdList));
-        $hotelNameList = array_column($hotelInfoList, 'name_lang1', 'id');
-        foreach ($list as $key => $value) {
-            $oneTemp = array();
-            $oneTemp ['id'] = $value ['id'];
-            $oneTemp ['title_lang1'] = $value ['title_lang1'];
-            $oneTemp ['title_lang2'] = $value ['title_lang2'];
-            $oneTemp ['title_lang3'] = $value ['title_lang3'];
-            $oneTemp ['hotelId'] = $value ['hotelid'];
-            $oneTemp ['hotelName'] = $hotelNameList [$value ['hotelid']];
-            $data ['list'] [] = $oneTemp;
+    public function getShoppingTagDetailConvertor($list)
+    {
+        $result = $list;
+        $result['pic'] = Enum_Img::getPathByKeyAndType($list['pic']);
+        foreach ($result['children'] as &$child) {
+            $child['pic'] = Enum_Img::getPathByKeyAndType($child['pic']);
         }
-        $data ['total'] = $count;
-        $data ['page'] = $param ['page'];
-        $data ['limit'] = $param ['limit'];
-        $data ['nextPage'] = Util_Tools::getNextPage($data ['page'], $data ['limit'], $data ['total']);
-        return $data;
+        return $result;
     }
 }

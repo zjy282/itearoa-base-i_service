@@ -35,9 +35,13 @@ class ShoppingModel extends \BaseModel {
     /**
      * 获取Shopping数量
      *
-     * @param
-     *            array param 查询条件
-     * @return array
+     * @param array
+     * @return int
+     */
+
+    /**
+     * @param array $param
+     * @return array|int
      */
     public function getShoppingCount(array $param) {
         $paramList = array();

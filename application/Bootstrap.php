@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Database\Capsule\Manager;
 
 /**
  * @name Bootstrap
@@ -10,10 +11,12 @@
  */
 class Bootstrap extends Yaf_Bootstrap_Abstract {
 
+    private $config;
+
     public function _initConfig() {
         // 把配置保存起来
-        $arrConfig = Yaf_Application::app()->getConfig();
-        Yaf_Registry::set('sysConfig', $arrConfig);
+        $this->config = Yaf_Application::app()->getConfig();;
+        Yaf_Registry::set('sysConfig', $this->config);
     }
 
     public function _initPlugin(Yaf_Dispatcher $dispatcher) {
@@ -42,5 +45,15 @@ class Bootstrap extends Yaf_Bootstrap_Abstract {
     public function _initView(Yaf_Dispatcher $dispatcher) {
         // 在这里注册自己的view控制器，例如smarty,firekylin
         Yaf_Dispatcher::getInstance()->autoRender(false);
+    }
+
+    /**
+     * Init eloquent
+     */
+    public function _initEloquent()
+    {
+        $capsule = new Manager;
+        $capsule->addConnection($this->config->database->toArray());
+        $capsule->bootEloquent();
     }
 }

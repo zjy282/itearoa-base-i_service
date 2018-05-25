@@ -74,7 +74,7 @@ class Convertor_Shopping extends Convertor_Base {
         $tagidList = array_column($list, 'tagid');
         if ($tagidList) {
             $shoppingTagModel = new ShoppingTagModel ();
-            $shoppingTagList = $shoppingTagModel->getshoppingTagList(array('id' => $tagidList));
+            $shoppingTagList = $shoppingTagModel->getshoppingTagList(array('hotelid' => $hotelIdlist[0]));
             $shoppingTagNameList = array_column($shoppingTagList, 'title_lang1', 'id');
         }
         foreach ($list as $key => $value) {

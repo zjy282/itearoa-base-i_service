@@ -1,4 +1,5 @@
 <?php
+use Frankli\Itearoa\Models\ShoppingCategory;
 
 /**
  * Class ShoppingTagModel
@@ -16,31 +17,38 @@ class ShoppingTagModel extends \BaseModel {
     /**
      * 获取ShoppingTag列表信息
      *
-     * @param
-     *            array param 查询条件
+     * @param array $param
      * @return array
      */
-    public function getShoppingTagList(array $param) {
+    public function getShoppingTagList(array $param)
+    {
         $paramList = array();
         $param['id'] ? $paramList['id'] = $param['id'] : false;
         $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
-        $paramList['limit'] = $param['limit'];
-        $paramList['page'] = $param['page'];
-        return $this->dao->getShoppingTagList($paramList);
+        !is_null($param['parentid']) ? $paramList['parentid'] = intval($param['parentid']) : false;
+        !is_null($param['status']) ? $paramList['status'] = intval($param['status']) : false;
+
+        $query = ShoppingCategory::where($paramList);
+        if ($param['withChild']) {
+            $query = $query->with('children');
+        }
+        if ($param['limit']) {
+            return $query->paginate($param['limit'], ['*'], 'page', $param['page'])->toArray();
+        } else {
+            return $query->get()->toArray();
+        }
     }
 
     /**
-     * 获取ShoppingTag数量
+     * Get count of ShoppingTag
      *
-     * @param
-     *            array param 查询条件
-     * @return array
+     * @param array $param
+     * @return int
      */
     public function getShoppingTagCount(array $param) {
-        $paramList = array();
         $param['id'] ? $paramList['id'] = intval($param['id']) : false;
         $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
-        return $this->dao->getShoppingTagCount($paramList);
+        return ShoppingCategory::where($paramList)->count();
     }
 
     /**
@@ -53,7 +61,7 @@ class ShoppingTagModel extends \BaseModel {
     public function getShoppingTagDetail($id) {
         $result = array();
         if ($id) {
-            $result = $this->dao->getShoppingTagDetail($id);
+            $result = ShoppingCategory::with('children')->findOrFail($id)->toArray();
         }
         return $result;
     }
@@ -67,29 +75,30 @@ class ShoppingTagModel extends \BaseModel {
      *            int id 主键
      * @return array
      */
-    public function updateShoppingTagById($param, $id) {
+    public function updateShoppingTagById($param, $id)
+    {
         $result = false;
         if ($id) {
-            $info['title_lang1'] = strval($param['title_lang1']);
-            $info['title_lang2'] = strval($param['title_lang2']);
-            $info['title_lang3'] = strval($param['title_lang3']);
-            $result = $this->dao->updateShoppingTagById($info, $id);
+            $shoppingTag = ShoppingCategory::find($id);
+            if (!is_null($shoppingTag)) {
+                !is_null($param['title_lang1']) ? $shoppingTag->title_lang1 = trim($param['title_lang1']) : false;
+                !is_null($param['title_lang2']) ? $shoppingTag->title_lang2 = trim($param['title_lang2']) : false;
+                !is_null($param['title_lang3']) ? $shoppingTag->title_lang3 = trim($param['title_lang3']) : false;
+                !is_null($param['pic']) ? $shoppingTag->pic = trim($param['pic']) : false;
+                !is_null($param['parentid']) ? $shoppingTag->parentid = intval($param['parentid']) : false;
+                !is_null($param['status']) ? $shoppingTag->status = intval($param['status']) : false;
+                !is_null($param['is_robot']) ? $shoppingTag->is_robot = intval($param['is_robot']) : false;
+                $result = $shoppingTag->save();
+            }
         }
         return $result;
     }
 
     /**
-     * ShoppingTag新增信息
-     *
-     * @param
-     *            array param 需要增加的信息
-     * @return array
+     * @param array $params
      */
-    public function addShoppingTag($param) {
-        $info['hotelid'] = intval($param['hotelid']);
-        $info['title_lang1'] = strval($param['title_lang1']);
-        $info['title_lang2'] = strval($param['title_lang2']);
-        $info['title_lang3'] = strval($param['title_lang3']);
-        return $this->dao->addShoppingTag($info);
+    public function addShoppingTag(array $params) {
+        $shoppingTag = ShoppingCategory::create($params);
+        return $shoppingTag->id;
     }
 }

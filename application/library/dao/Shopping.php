@@ -32,9 +32,8 @@ class Dao_Shopping extends Dao_Base {
     /**
      * 查询hotel_news数量
      *
-     * @param
-     *            array 入参
-     * @return array
+     * @param array $param
+     * @return int
      */
     public function getShoppingCount(array $param): int {
         $paramSql = $this->handlerShoppingListParams($param);

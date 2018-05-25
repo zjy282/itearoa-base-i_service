@@ -3,7 +3,8 @@
 /**
  * 体验购物标签控制器类
  */
-class ShoppingTagController extends \BaseController {
+class ShoppingTagController extends \BaseController
+{
 
     /**
      *
@@ -17,7 +18,8 @@ class ShoppingTagController extends \BaseController {
      */
     private $convertor;
 
-    public function init() {
+    public function init()
+    {
         parent::init();
         $this->model = new ShoppingTagModel ();
         $this->convertor = new Convertor_ShoppingTag ();
@@ -26,25 +28,27 @@ class ShoppingTagController extends \BaseController {
     /**
      * 获取体验购物标签列表
      *
-     * @return Json
      */
-    public function getShoppingTagListAction() {
+    public function getShoppingTagListAction()
+    {
         $param = array();
-        $param ['page'] = intval($this->getParamList('page', 1));
-        $param ['limit'] = intval($this->getParamList('limit', 5));
-        $param ['id'] = intval($this->getParamList('id'));
-        $param ['hotelid'] = intval($this->getParamList('hotelid'));
-        $param ['status'] = $this->getParamList('status');
-        if (is_null($param ['status'])) {
-            unset ($param ['status']);
+        $param['page'] = intval($this->getParamList('page', 1));
+        $param['limit'] = intval($this->getParamList('limit', 0));
+        $param['id'] = intval($this->getParamList('id'));
+        $param['hotelid'] = intval($this->getParamList('hotelid'));
+        $param['status'] = $this->getParamList('status', 0);
+        $param['parentid'] = $this->getParamList('parentid', 0);
+        $param['withChild'] = boolval($this->getParamList('withchild', false));
+
+        if ($param['status'] === 'all') {
+            unset($param['status']);
         }
+        if ($param['parentid'] === 'all') {
+            unset($param['parentid']);
+        }
+
         $data = $this->model->getShoppingTagList($param);
-        $count = $this->model->getShoppingTagCount($param);
-        if (Enum_System::notAdminPackage($this->package)) {
-            $data = $this->convertor->getShoppingTagListConvertor($data, $count, $param);
-        } else {
-            $data = $this->convertor->getAdminShoppingTagListConvertor($data, $count, $param);
-        }
+        $data = $this->convertor->getShoppingTagListConvertor($data, $param);
         $this->echoSuccessData($data);
     }
 
@@ -53,17 +57,17 @@ class ShoppingTagController extends \BaseController {
      *
      * @param
      *            int id 获取详情信息的id
-     * @return Json
      */
-    public function getShoppingTagDetailAction() {
+    public function getShoppingTagDetailAction()
+    {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $data = $this->model->getShoppingTagDetail($id);
-            $data = $this->convertor->getShoppingTagDetail($data);
+            $data = $this->convertor->getShoppingTagDetailConvertor($data);
+            $this->echoSuccessData($data);
         } else {
             $this->throwException(1, '查询条件错误，id不能为空');
         }
-        $this->echoSuccessData($data);
     }
 
     /**
@@ -73,21 +77,26 @@ class ShoppingTagController extends \BaseController {
      *            int id 获取详情信息的id
      * @param
      *            array param 需要更新的字段
-     * @return Json
      */
-    public function updateShoppingTagByIdAction() {
+    public function updateShoppingTagByIdAction()
+    {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
-            $param ['title_lang1'] = trim($this->getParamList('title_lang1'));
-            $param ['title_lang2'] = trim($this->getParamList('title_lang2'));
-            $param ['title_lang3'] = trim($this->getParamList('title_lang3'));
+            $param['title_lang1'] = $this->getParamList('title_lang1');
+            $param['title_lang2'] = $this->getParamList('title_lang2');
+            $param['title_lang3'] = $this->getParamList('title_lang3');
+            $param['pic'] = $this->getParamList('pic');
+            $param['parentid'] = $this->getParamList('parentid');
+            $param['status'] = $this->getParamList('status');
+            $param['is_robot'] = $this->getParamList('is_robot');
+
             $data = $this->model->updateShoppingTagById($param, $id);
             $data = $this->convertor->statusConvertor($data);
+            $this->echoSuccessData($data);
         } else {
             $this->throwException(1, 'id不能为空');
         }
-        $this->echoSuccessData($data);
     }
 
     /**
@@ -95,14 +104,19 @@ class ShoppingTagController extends \BaseController {
      *
      * @param
      *            array param 需要新增的信息
-     * @return Json
      */
-    public function addShoppingTagAction() {
+    public function addShoppingTagAction()
+    {
         $param = array();
         $param ['hotelid'] = intval($this->getParamList('hotelid'));
         $param ['title_lang1'] = trim($this->getParamList('title_lang1'));
         $param ['title_lang2'] = trim($this->getParamList('title_lang2'));
         $param ['title_lang3'] = trim($this->getParamList('title_lang3'));
+        $param['pic'] = trim($this->getParamList('pic'));
+        $param['parentid'] = intval($this->getParamList('parentid'));
+        $param['status'] = intval($this->getParamList('status'));
+        $param['is_robot'] = intval($this->getParamList('is_robot'));
+
         $data = $this->model->addShoppingTag($param);
         $data = $this->convertor->statusConvertor(array('id' => $data));
         $this->echoSuccessData($data);
