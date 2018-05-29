@@ -30,18 +30,21 @@ class Convertor_Shopping extends Convertor_Base {
         $data = array('list' => array());
         foreach ($shoppingList as $shopping) {
             $shoppingTemp = array();
-            $shoppingTemp ['id'] = $shopping ['id'];
-            $shoppingTemp ['title'] = $this->handlerMultiLang('title', $shopping);
-            $shoppingTemp ['introduct'] = $this->handlerMultiLang('introduct', $shopping);
-            $shoppingTemp ['detail'] = Enum_Img::getPathByKeyAndType($this->handlerMultiLang('detail', $shopping));
-            $shoppingTemp ['pic'] = Enum_Img::getPathByKeyAndType($shopping ['pic'], Enum_Img::PIC_TYPE_KEY_WIDTH750);
-            $shoppingTemp ['pdf'] = $shopping['pdf'] ? Enum_Img::getPathByKeyAndType($shopping['pdf']) : '';
-            $shoppingTemp ['video'] = $shopping['video'] ? Enum_Img::getPathByKeyAndType($shopping['video']) : '';
-            $shoppingTemp ['tagId'] = $shopping ['tagid'];
-            $shoppingTemp ['price'] = $shopping ['price'];
-            $shoppingTemp ['tagName'] = $tagListNew [$shoppingTemp ['tagId']];
-            $shoppingTemp ['createtime'] = $shopping ['createtime'];
-            $shoppingTemp ['updatetime'] = $shopping ['updatetime'];
+            $shoppingTemp['id'] = $shopping['id'];
+            $shoppingTemp['title'] = $this->handlerMultiLang('title', $shopping);
+            $shoppingTemp['title_lang1'] = $shopping['title_lang1'];
+            $shoppingTemp['title_lang2'] = $shopping['title_lang2'];
+            $shoppingTemp['title_lang3'] = $shopping['title_lang3'];
+            $shoppingTemp['introduct'] = $this->handlerMultiLang('introduct', $shopping);
+            $shoppingTemp['detail'] = Enum_Img::getPathByKeyAndType($this->handlerMultiLang('detail', $shopping));
+            $shoppingTemp['pic'] = Enum_Img::getPathByKeyAndType($shopping['pic'], Enum_Img::PIC_TYPE_KEY_WIDTH750);
+            $shoppingTemp['pdf'] = $shopping['pdf'] ? Enum_Img::getPathByKeyAndType($shopping['pdf']) : '';
+            $shoppingTemp['video'] = $shopping['video'] ? Enum_Img::getPathByKeyAndType($shopping['video']) : '';
+            $shoppingTemp['tagId'] = $shopping['tagid'];
+            $shoppingTemp['price'] = $shopping['price'];
+            $shoppingTemp['tagName'] = $tagListNew[$shoppingTemp ['tagId']];
+            $shoppingTemp['createtime'] = $shopping['createtime'];
+            $shoppingTemp['updatetime'] = $shopping['updatetime'];
             $data ['list'] [] = $shoppingTemp;
         }
         $data ['total'] = $shoppingCount;
