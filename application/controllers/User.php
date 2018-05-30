@@ -198,10 +198,11 @@ class UserController extends \BaseController {
     public function signFacilitiesAction()
     {
         $param = array();
-        $param ['room_no'] = trim($this->getParamList('room_no'));
-        $param ['fullname'] = trim($this->getParamList('lastname'));
-        $param ['hotelid'] = intval($this->getParamList('hotelid'));
-        $param ['groupid'] = intval($this->getParamList('groupid'));
+        $param['room_no'] = trim($this->getParamList('room_no'));
+        $param['fullname'] = trim($this->getParamList('lastname'));
+        $param['hotelid'] = intval($this->getParamList('hotelid'));
+        $param['propertyid'] = $this->getParamList('propertyid');
+        $param['groupid'] = intval($this->getParamList('groupid'));
 
         $param ['num'] = intval($this->getParamList('num'));
         $param['lock_no'] = trim($this->getParamList('lock_no'));

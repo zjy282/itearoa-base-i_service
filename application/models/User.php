@@ -141,20 +141,25 @@ class UserModel extends \BaseModel
     /**
      * 获取用Oid信息，跟gsm接口交互
      *
-     * @param
-     *            array param 需要增加的信息
+     * @param $param
      * @return array
      */
     public function getOIdInfo($param)
     {
-        $hotelModel = new HotelListModel();
-        $hotelInfo = $hotelModel->getHotelListDetail($param['hotelid']);
         $paramList = array();
-        $paramList['PropertyInterfID'] = $hotelInfo['propertyinterfid'];
+        if (is_null($param['propertyid']) || is_null($param['groupid'])) {
+            $hotelModel = new HotelListModel();
+            $hotelInfo = $hotelModel->getHotelListDetail($param['hotelid']);
+            $paramList['PropertyInterfID'] = $hotelInfo['propertyinterfid'];
+            $param['groupid'] = intval($hotelInfo['groupid']);
+        } else {
+            $paramList['PropertyInterfID'] = $param['propertyid'];
+        }
+
         $paramList['Room'] = $param['room_no'];
         $paramList['LastName'] = $param['fullname'];
         $paramList = Enum_Gsm::genEncryptGsmParams($paramList);
-        $gsmResult = Rpc_Gsm::send(Enum_Gsm::getUserLoginUrl($hotelInfo['groupid']), $paramList);
+        $gsmResult = Rpc_Gsm::send(Enum_Gsm::getUserLoginUrl($param['groupid']), $paramList);
         return array(
             'oId' => $gsmResult['OID'],
             'room' => $gsmResult['Room'],
@@ -317,6 +322,11 @@ class UserModel extends \BaseModel
                 'end_time' => $params['end_time'],
                 'created_at' => date('Y-m-d H:i:s', $params['time']),
             );
+            if (!is_null($params['propertyid'])) {
+                $info['propertyid'] = intval($params['propertyid']);
+            } else {
+                $info['propertyid'] = intval($hotelInfo['propertyinterfid']);
+            }
             $lastInsertId = $dao->addSign($info);
             $result['msg'] = $lastInsertId;
         } catch (Exception $e) {
