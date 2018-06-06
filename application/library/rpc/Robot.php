@@ -1,5 +1,9 @@
 <?php
 
+use Frankli\Itearoa\Models\ShoppingOrder;
+use Frankli\Itearoa\Models\Staff;
+use Illuminate\Database\Capsule\Manager as DB;
+
 class Rpc_Robot
 {
 
@@ -189,30 +193,29 @@ class Rpc_Robot
      */
     private function _sendCallback(string $action, array $taskInfo)
     {
-        $shoppingOrderDao = new Dao_ShoppingOrder();
-        $staffDao = new Dao_Staff();
+        $ordersProductsIdArray = json_decode($taskInfo['orders'], true);
+        $orderProducts = DB::table('orders_products')->whereIn('id', $ordersProductsIdArray)->get();
+        $orderIdArray = array_unique(array_column($orderProducts->toArray(), 'order_id'));
+        $orders = ShoppingOrder::with('user', 'products')->whereIn('id', $orderIdArray)->get();
 
-        $orderIdArray = json_decode($taskInfo['orders'], true);
+
         if (is_array(Rpc_Robot::$callbackArray[$action])) {
-            $taskUpdate['status'] = Rpc_Robot::$callbackArray[$action]['status'];
-            $orderUpdate['robot_status'] = Rpc_Robot::$callbackArray[$action]['status'];
-            $orderUpdate['status'] = Rpc_Robot::$callbackArray[$action]['orderStatus'];
+            $taskStatus = Rpc_Robot::$callbackArray[$action]['status'];
+            $robotStatus = Rpc_Robot::$callbackArray[$action]['status'];
+            $orderStatus = Rpc_Robot::$callbackArray[$action]['orderStatus'];
         } else {
             throw new Exception("参数错误");
         }
-        if (count($orderIdArray) == 0) {
+        if (count($orders) == 0) {
             throw new Exception("参数错误");
         }
-        $orderList = $shoppingOrderDao->getShoppingOrderInfo($orderIdArray);
-        if (count($orderList) == 0) {
-            throw new Exception("参数错误");
-        }
+
         $notice = Rpc_Robot::$callbackArray[$action]['notice'];
         $pushModel = new PushModel();
         //push MSG to guest
         if ($notice == Rpc_Robot::NOTICE_BOTH || $notice == Rpc_Robot::NOTICE_GUEST) {
-            $content = Enum_ShoppingOrder::getRobotStatusNameListForGuest()[$taskUpdate['status']];
-            $enContent = Enum_ShoppingOrder::getRobotStatusNameListForGuest(Enum_Lang::ENGLISH)[$taskUpdate['status']];
+            $content = Enum_ShoppingOrder::getRobotStatusNameListForGuest()[$taskStatus];
+            $enContent = Enum_ShoppingOrder::getRobotStatusNameListForGuest(Enum_Lang::ENGLISH)[$taskStatus];
             $title = $content;
             $enTitle = $enContent;
             $pushParams = array();
@@ -224,22 +227,25 @@ class Rpc_Robot
             $pushParams['type'] = Enum_Push::PUSH_TYPE_USER;
             $pushParams['contentType'] = Enum_Push::PUSH_CONTENT_TYPE_SHOPPING_ORDER;
             $pushParams['contentValue'] = $taskInfo['id'];
-            $pushParams['dataid'] = $orderList[0]['id']; // user id
-
+            $pushParams['dataid'] = $orders[0]->user->id; //user id
             $pushModel->addPushOne($pushParams);
         }
 
         //update robot task and order status
-        $this->_robotTaskDao->updateTask($taskUpdate, $taskInfo['id']);
-        foreach ($orderIdArray as $orderId) {
-            $shoppingOrderDao->updateShoppingOrderById($orderUpdate, $orderId);
-        }
+        $this->_robotTaskDao->updateTask(array(
+            'status' => $taskStatus
+        ), $taskInfo['id']);
+        DB::table('orders_products')->whereIn('id', $ordersProductsIdArray)->update(array(
+            'status' => $orderStatus,
+            'robot_status' => $robotStatus
+        ));
+        ShoppingOrder::syncOrder($orderIdArray);
 
         //push MSG to staff
         if ($notice == Rpc_Robot::NOTICE_BOTH || $notice == Rpc_Robot::NOTICE_STAFF) {
             $count = 0;
-            $content = Enum_ShoppingOrder::getRobotStatusNameList()[$taskUpdate['status']];
-            $enContent = Enum_ShoppingOrder::getRobotStatusNameList(Enum_Lang::ENGLISH)[$taskUpdate['status']];
+            $content = Enum_ShoppingOrder::getRobotStatusNameList()[$taskStatus];
+            $enContent = Enum_ShoppingOrder::getRobotStatusNameList(Enum_Lang::ENGLISH)[$taskStatus];
             $title = $content;
             $enTitle = $enContent;
 
@@ -252,15 +258,12 @@ class Rpc_Robot
             $pushParams['contentType'] = Enum_Push::PUSH_CONTENT_TYPE_SHOPPING_ORDER;
             $pushParams['contentValue'] = $taskInfo['id'];
 
-            $staffList = $staffDao->getStaffList(array('hotelid' => $orderList[0]['hotelid']));
-            foreach ($staffList as $staffInfo) {
-                $pushParams['dataid'] = $staffInfo['id'];
+            $staffList = Staff::where('hotelid', '=', $orders[0]->user->hotelid)->get();
+            foreach ($staffList as $staff) {
+                $pushParams['dataid'] = $staff->id;
                 $pushModel->addPushOne($pushParams);
                 $count++;
 
-            }
-            if ($count == 0) {
-                throw new Exception(PushModel::MESSAGE_NOT_RECEIVED);
             }
         }
     }

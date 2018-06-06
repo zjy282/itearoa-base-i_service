@@ -202,7 +202,6 @@ class PushModel extends \BaseModel {
                 break;
         }
 
-        //新政推送记录
         $pushResult = $this->_pushMsg($pushParams, $platform);
         $info['createtime'] = time();
         $info['result'] = $pushResult['code'];

@@ -1,4 +1,7 @@
 <?php
+use Frankli\Itearoa\Models\ShoppingOrder;
+use Frankli\Itearoa\Models\Position;
+use Illuminate\Database\Capsule\Manager as DB;
 
 /**
  * Class RobotModel
@@ -162,45 +165,47 @@ class RobotModel extends \BaseModel
     public function robotDeliver($params)
     {
         $daoRobotTask = new Dao_RobotTask();
-        $daoBase = new Dao_Base();
-        $daoShoppingOrder = new Dao_ShoppingOrder();
-        $robotModel = new RobotModel();
 
-        $orderArray = $daoShoppingOrder->getShoppingOrderInfo($params['itemlist']);
-        $daoRobotTask->hasSameRoomNo($orderArray);
+        $orderProducts = DB::table('orders_products')->whereIn('id', $params['itemlist'])->get();
+        $orderIdArray = array_unique(array_column($orderProducts->toArray(), 'order_id'));
+        $orders = ShoppingOrder::with('user')->whereIn('id', $orderIdArray)->get();
+        $roomNo = $daoRobotTask->checkRoomNo($orders->toArray());
+
+        //get position of start and target
         if ($params['dest'] == 0) {
-            $positionArray = $robotModel->getPositionList(array(
-                'position' => $orderArray[0]['room_no']
-            ));
-            $target = $positionArray[0]['robot_position'];
+            $position = Position::where(array(
+                'position' => $roomNo,
+                'hotelid' => $params['hotelid']
+            ))->firstOrFail();
         } else {
-            $position = $robotModel->getPositionDetail($params['dest']);
-            $target = $position['robot_position'];
+            $position = Position::findOrFail($params['dest']);
         }
-        if (empty($target)) {
-            throw new Exception(Enum_ShoppingOrder::EXCEPTION_HAVE_NO_DEST, Enum_ShoppingOrder::ORDERS_POSITION_NOT_EXIST);
-        }
-        $startPosition = $robotModel->getPositionDetail($params['start']);
-        $start = $startPosition['robot_position'];
+        $target = $position->robot_position;
+        $startPosition = Position::findOrFail($params['start']);
+        $start = $startPosition->robot_position;
 
-
+        //send item to guest's room
         try {
-            $daoBase->beginTransaction();
+            DB::beginTransaction();
             $item = array(
                 'userid' => $params['userid'],
                 'orders' => json_encode($params['itemlist']),
                 'status' => Enum_ShoppingOrder::ROBOT_BEGIN,
+                'hotelid' => $params['hotelid'],
                 'createtime' => time(),
             );
-            $orderUpdate = array(
-                'robot_status' => Enum_ShoppingOrder::ROBOT_BEGIN,
+            $robotTaskId = $daoRobotTask->addTask($item);
+
+
+            DB::table('shopping_orders')->whereIn('id', $orderIdArray)->update(array(
                 'status' => Enum_ShoppingOrder::ORDER_STATUS_SERVICE,
                 'adminid' => $params['userid']
-            );
-            $robotTaskId = $daoRobotTask->addTask($item);
-            foreach ($params['itemlist'] as $orderId) {
-                $daoShoppingOrder->updateShoppingOrderById($orderUpdate, $orderId);
-            }
+            ));
+            DB::table('orders_products')->whereIn('id', $params['itemlist'])->update(array(
+                'status' => Enum_ShoppingOrder::ORDER_STATUS_SERVICE,
+                'robot_status' => Enum_ShoppingOrder::ROBOT_BEGIN,
+                'robot_taskid' => $robotTaskId
+            ));
 
             $apiParamArray = array(
                 'robottaskid' => $robotTaskId,
@@ -208,15 +213,16 @@ class RobotModel extends \BaseModel
                 'to' => $target,
                 'hotelid' => $params['hotelid'],
             );
-
             $rpcObject = Rpc_Robot::getInstance();
             $rpcJson = $rpcObject->send(Rpc_Robot::SENDITEM, $apiParamArray);
             $info['robot_detail'] = json_encode($rpcJson);
             $flag = $daoRobotTask->updateTask($info, $robotTaskId);
-            if (!$flag || !$rpcJson || $rpcJson['errcode'] != 0) {
-                throw new Exception(json_encode($rpcJson['data']), $rpcJson['errcode']);
+            if (!$flag || is_null($rpcJson) || $rpcJson['errcode'] != 0) {
+                $errNo = intval($rpcJson['errcode']);
+                $errNo = $errNo != 0 ? $errNo : 1;
+                throw new Exception(json_encode($rpcJson['data']), $errNo);
             }
-            $daoBase->commit();
+            DB::commit();
             $result = array(
                 'code' => 0,
                 'msg' => 'success',
@@ -227,9 +233,8 @@ class RobotModel extends \BaseModel
             );
             return $result;
         } catch (Exception $e) {
-            $daoBase->rollback();
+            DB::rollback();
             throw $e;
-
         }
 
     }

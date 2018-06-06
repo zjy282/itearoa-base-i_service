@@ -1,10 +1,13 @@
 <?php
 
+use Frankli\Itearoa\Models\ShoppingOrder;
+
 /**
  * 体验购物订单控制器类
  *
  */
-class ShoppingOrderController extends \BaseController {
+class ShoppingOrderController extends \BaseController
+{
 
     /**
      *
@@ -18,7 +21,8 @@ class ShoppingOrderController extends \BaseController {
      */
     private $convertor;
 
-    public function init() {
+    public function init()
+    {
         parent::init();
         $this->model = new ShoppingOrderModel ();
         $this->convertor = new Convertor_ShoppingOrder ();
@@ -29,7 +33,8 @@ class ShoppingOrderController extends \BaseController {
      *
      * @return Json
      */
-    public function getShoppingOrderListAction() {
+    public function getShoppingOrderListAction()
+    {
         $param = array();
         $param ['hotelid'] = intval($this->getParamList('hotelid'));
         $adminId = Auth_Login::getToken($this->getParamList('token'), 2);
@@ -59,7 +64,8 @@ class ShoppingOrderController extends \BaseController {
      *
      * @return json
      */
-    public function getOrderListAction() {
+    public function getOrderListAction()
+    {
         $param = array();
         $param ['page'] = intval($this->getParamList('page'));
         $param ['limit'] = intval($this->getParamList('limit', 5));
@@ -77,11 +83,12 @@ class ShoppingOrderController extends \BaseController {
     /**
      * Output json for filter of the order list
      */
-    public function getOrderFilterListAction(){
+    public function getOrderFilterListAction()
+    {
         $param = array();
         $param ['hotelid'] = intval($this->getParamList('hotelid'));
         $usersList = $this->model->getShoppingOrderFilterList($param);
-        $usersList = array_column($usersList, 'room_no','userid');
+        $usersList = array_column($usersList, 'room_no', 'userid');
         $statusList = Enum_ShoppingOrder::getStatusNameList();
 
         $data['userlist'] = $usersList;
@@ -97,7 +104,8 @@ class ShoppingOrderController extends \BaseController {
      *            int id 获取详情信息的id
      * @return Json
      */
-    public function getShoppingOrderDetailAction() {
+    public function getShoppingOrderDetailAction()
+    {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $data = $this->model->getShoppingOrderDetail($id);
@@ -113,7 +121,8 @@ class ShoppingOrderController extends \BaseController {
      *
      * @return  echoJson
      */
-    public function updateShoppingOrderByIdAction() {
+    public function updateShoppingOrderByIdAction()
+    {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
@@ -136,45 +145,106 @@ class ShoppingOrderController extends \BaseController {
     }
 
     /**
-     * 添加体验购物订单信息
-     *
-     * @param
-     *            array param 需要新增的信息
-     * @return Json
+     * Action for staff update orders_products manually
      */
-    public function addShoppingOrderAction() {
+    public function updateOrderProductByIdAction()
+    {
+        $id = intval($this->getParamList('id'));
+        if ($id) {
+            $param = array();
+            $param['status'] = intval($this->getParamList('status'));
+            $param['memo'] = trim($this->getParamList('memo'));
+            // status or memo need to be set
+            if ($param['status'] == 0 && empty($param['memo'])) {
+                $this->throwException(1, 'Param lack');
+            }
+            $data = $this->model->updateOrderProductById($param, $id);
+            if ($data) {
+                $this->echoSuccessData($data);
+            } else {
+                $this->throwException(1, 'DB fail');
+            }
+        } else {
+            $this->throwException(1, 'id不能为空');
+        }
+    }
+
+    /**
+     * New action for submit shopping cart
+     */
+    public function addShoppingCartAction()
+    {
         $param = array();
-        $param ['count'] = trim($this->getParamList('count'));
-        $param ['shoppingid'] = intval($this->getParamList('shoppingid'));
-        $param ['hotelid'] = intval($this->getParamList('hotelid'));
-        if (empty ($param ['count']) || empty ($param ['shoppingid']) || empty ($param ['hotelid'])) {
+        $token = trim($this->getParamList('token'));
+        $param['userid'] = Auth_Login::getToken($token);
+        $products = trim($this->getParamList('products'));
+        $param['products'] = json_decode($products, true);
+        $param['hotelid'] = intval($this->getParamList('hotelid'));
+
+        if (empty($param ['userid'])) {
+            $this->throwException(3, '登录验证失败，请重新登录');
+        }
+
+        if (empty($param ['products']) || empty($param ['hotelid'])) {
             $this->throwException(2, '入参错误');
         }
-        $token = trim($this->getParamList('token'));
-        $param['creattime'] = time();
-        $param ['userid'] = Auth_Login::getToken($token);
-        if (empty ($param ['userid'])) {
-            $this->throwException(3, '登录验证失败');
-        }
-        //        $checkOrder = $this->model->getShoppingOrderList(array('shoppingid' => $param ['shoppingid'], 'hotelid' => $param ['hotelid'], 'userid' => $param ['userid'], 'status' => array(Enum_ShoppingOrder::ORDER_STATUS_WAIT, Enum_ShoppingOrder::ORDER_STATUS_SERVICE)));
-        //        if (count($checkOrder) > 0) {
-        //            $this->throwException(4, '已经存在有效订单，请不要重复提交');
-        //        }
-        $orderId = $this->model->addShoppingOrder($param);
-        if (!$orderId) {
+
+        $order = $this->model->addShoppingCart($param);
+        if (!$order) {
             $this->throwException(5, '提交失败');
         } else {
-            $param['id'] = $orderId;
             //send message to the hotel staff
-            $this->model->sendOrderMsg($param, ShoppingOrderModel::ORDER_NOTIFY_BOTH);
+            $this->model->sendMsg($order, $param['userid'], ShoppingOrderModel::ORDER_NOTIFY_BOTH);
         }
-        $this->echoSuccessData(array('orderId' => $orderId));
+        $this->echoSuccessData(array('orderId' => $order->id));
+    }
+
+    public function getUserOrderListAction()
+    {
+        $token = trim($this->getParamList('token'));
+        $limit = intval($this->getParamList('limit', 10));
+        $userid = Auth_Login::getToken($token);
+        $hotelid = intval($this->getParamList('hotelid'));
+        if (empty($userid)) {
+            $this->throwException(3, '登录验证失败，请重新登录');
+        }
+        if (empty($hotelid)) {
+            $this->throwException(3, '参数错误，hotelid');
+        }
+        $orderList = ShoppingOrder::with('products')
+            ->where('userid', '=', $userid)
+            ->where('hotelid', '=', $hotelid)
+            ->orderBy('id', 'desc')
+            ->take($limit)
+            ->get();
+
+        $data = $this->convertor->appShoppingOrderList($orderList);
+        $this->echoSuccessData($data);
+    }
+
+    public function getHotelOrderListAction()
+    {
+        $params = array();
+        $params['id'] = intval($this->getParamList('id'));
+        $params['hotelid'] = intval($this->getParamList('hotelid'));
+        $params['userid'] = intval($this->getParamList('userid'));
+        $params['shoppingid'] = intval($this->getParamList('shoppingid'));
+        $params['status'] = intval($this->getParamList('status'));
+        $params['limit'] = intval($this->getParamList('limit'));
+        $params['page'] = intval($this->getParamList('page'));
+
+        $orderList = $this->model->getHotelShoppingOrderList($params);
+
+        $data = $this->convertor->staffShoppingOrderList($orderList, $params['limit'], $params['page']);
+        $this->echoSuccessData($data);
+
     }
 
     /**
      * 修改订单状态
      */
-    public function changeOrderStatusAction() {
+    public function changeOrderStatusAction()
+    {
         $param = array();
         $param ['id'] = intval($this->getParamList('orderid'));
         $param ['status'] = intval($this->getParamList('status'));
@@ -204,5 +274,5 @@ class ShoppingOrderController extends \BaseController {
         $orderInfo ['adminid'] = $param ['userid'];
         $this->echoSuccessData($orderInfo);
     }
-    
+
 }

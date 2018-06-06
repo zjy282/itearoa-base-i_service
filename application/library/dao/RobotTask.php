@@ -41,24 +41,24 @@ class Dao_RobotTask extends Dao_Base
     }
 
     /**
-     * Check if the the order have same room_no
+     * Check if the the order have same room_no, if yes then return the room no
      *
      * @param $orderArray
-     * @return bool
+     * @return string
      * @throws Exception
      */
-    public function hasSameRoomNo($orderArray)
+    public function checkRoomNo($orderArray)
     {
-
         if (count($orderArray) <= 0) {
             throw new Exception("Order not exist");
         }
-        $roomNo = $orderArray[0]['room_no'];
+        $roomNo = strval($orderArray[0]['user']['room_no']);
         foreach ($orderArray as $order) {
-            if ($order['room_no'] != $roomNo) {
+            if ($order['user']['room_no'] != $roomNo) {
                 throw new Exception(Enum_ShoppingOrder::EXCEPTION_DIFFERENT_ROOM, Enum_ShoppingOrder::ORDERS_ROOM_DIFFERENT);
             }
         }
+        return $roomNo;
     }
 
     /**

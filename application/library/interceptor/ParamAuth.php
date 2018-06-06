@@ -207,5 +207,3 @@ class Interceptor_ParamAuth extends \Interceptor_Base {
         return $result;
     }
 }
-
-?>

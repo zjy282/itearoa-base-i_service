@@ -61,6 +61,26 @@ class Convertor_Base {
         $value = $data[$dataLangKey] ? $data[$dataLangKey] : $data[$dataKey . '_lang1'];
         return $value;
     }
-}
 
-?>
+    /**
+     * Get lang config from parameter lang
+     *
+     * @param bool $isIndex
+     * @return int
+     */
+    public static function getLang($isIndex = true)
+    {
+        $result = Yaf_Registry::get('hotelLangInfo');
+        $index = $result['langIndex'];
+        if (!$index) {
+            $index = 1;
+        }
+        $result = $index;
+
+        if (!$isIndex) {
+            $array = array_flip(Enum_Lang::getLangIndexList());
+            $result = $array[$result];
+        }
+        return $result;
+    }
+}

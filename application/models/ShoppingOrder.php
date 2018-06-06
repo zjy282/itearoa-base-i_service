@@ -1,10 +1,14 @@
 <?php
 
+use Frankli\Itearoa\Models\ShoppingOrder;
+use Illuminate\Database\Capsule\Manager as DB;
+
 /**
  * Class ShoppingOrderModel
  * 购物订单管理Model
  */
-class ShoppingOrderModel extends \BaseModel {
+class ShoppingOrderModel extends \BaseModel
+{
 
     const ORDER_NOTIFY_EMAIL = 1;
     const ORDER_NOTIFY_MSG = 2;
@@ -16,7 +20,8 @@ class ShoppingOrderModel extends \BaseModel {
 
     private $dao;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->dao = new Dao_ShoppingOrder();
     }
@@ -28,7 +33,8 @@ class ShoppingOrderModel extends \BaseModel {
      *            array param 查询条件
      * @return array
      */
-    public function getShoppingOrderList(array $param) {
+    public function getShoppingOrderList(array $param)
+    {
         $paramList = array();
         $param['shoppingid'] ? $paramList['shoppingid'] = strval($param['shoppingid']) : false;
         $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
@@ -46,7 +52,8 @@ class ShoppingOrderModel extends \BaseModel {
      * @param array $param
      * @return array
      */
-    public function getShoppingOrderFilterList(array $param):array {
+    public function getShoppingOrderFilterList(array $param): array
+    {
         $paramList = array();
         $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
         return $this->dao->getShoppingOrderFilter($paramList);
@@ -59,7 +66,8 @@ class ShoppingOrderModel extends \BaseModel {
      *            array param 查询条件
      * @return array
      */
-    public function getShoppingOrderCount(array $param) {
+    public function getShoppingOrderCount(array $param)
+    {
         $paramList = array();
         $param['shoppingid'] ? $paramList['shoppingid'] = strval($param['shoppingid']) : false;
         $param['hotelid'] ? $paramList['hotelid'] = intval($param['hotelid']) : false;
@@ -75,7 +83,8 @@ class ShoppingOrderModel extends \BaseModel {
      *            int id 查询的主键
      * @return array
      */
-    public function getShoppingOrderDetail($id) {
+    public function getShoppingOrderDetail($id)
+    {
         $result = array();
         if ($id) {
             $result = $this->dao->getShoppingOrderDetail($id);
@@ -92,11 +101,12 @@ class ShoppingOrderModel extends \BaseModel {
      *            int id 主键
      * @return array
      */
-    public function updateShoppingOrderById($param, $id) {
+    public function updateShoppingOrderById($param, $id)
+    {
         $result = false;
         if ($id) {
             $info = array();
-            $param['status'] ?  $info['status'] = $param['status'] : false;
+            $param['status'] ? $info['status'] = $param['status'] : false;
             $param['adminid'] ? $info['adminid'] = $param['adminid'] : false;
             $param['memo'] ? $info['memo'] = $param['memo'] : false;
             $result = $this->dao->updateShoppingOrderById($info, $id);
@@ -105,29 +115,177 @@ class ShoppingOrderModel extends \BaseModel {
     }
 
     /**
-     * Create a new shopping order
-     *
      * @param array $param
-     * @throws Exception
-     * @return int
+     * @param int $id
+     * @return bool|int
      */
-    public function addShoppingOrder(array $param)
+    public function updateOrderProductById(array $param, int $id)
     {
-        $info['count'] = intval($param['count']);
-        $info['shoppingid'] = intval($param['shoppingid']);
-        $info['hotelid'] = intval($param['hotelid']);
-        $info['userid'] = intval($param['userid']);
-        $userDao = new Dao_User();
-        $userDetail = $userDao->getUserDetail($info['userid']);
-        if (empty($userDetail) || $userDetail['hotelid'] != $info['hotelid']) {
-            $this->throwException(self::ERROR_SHOPPING_PERMISSION_MSG, self::ERROR_SHOPPING_PERMISSION);
-        }
-        $info['creattime'] = intval($param['creattime']);
-        $info['status'] = Enum_ShowingOrder::ORDER_STATUS_WAIT;
+        $result = false;
+        if ($id) {
+            $info = array();
+            $param['status'] ? $info['status'] = $param['status'] : false;
+            $param['memo'] ? $info['memo'] = $param['memo'] : false;
+            $result = DB::table('orders_products')->where('id', '=', $id)->update($info);
+            $orderProduct = DB::table('orders_products')->find($id);
+            if ($orderProduct->order_id) {
+                ShoppingOrder::syncOrder(array($orderProduct->order_id));
 
-        return $this->dao->addShoppingOrder($info);
+            }
+        }
+        return $result;
     }
 
+    /**
+     * @param array $param
+     * @return ShoppingOrder
+     * @throws Exception
+     */
+    public function addShoppingCart(array $param)
+    {
+        $this->verifyRequest($param);
+        $userDao = new Dao_User();
+        $userDetail = $userDao->getUserDetail($param['userid']);
+        if (empty($userDetail) || $userDetail['hotelid'] != $param['hotelid']) {
+            $this->throwException(self::ERROR_SHOPPING_PERMISSION_MSG, self::ERROR_SHOPPING_PERMISSION);
+        }
+
+
+        $orderArray = array();
+        $orderArray['userid'] = $param['userid'];
+        $orderArray['hotelid'] = $param['hotelid'];
+        $orderArray['created_at'] = time();
+        $orderArray['status'] = Enum_ShoppingOrder::ORDER_STATUS_WAIT;
+        try {
+            DB::beginTransaction();
+            $order = ShoppingOrder::create($orderArray);
+
+            $orderProductArray = array();
+            foreach ($param['products'] as $product) {
+                $orderProduct = array();
+                $orderProduct['order_id'] = $order->id;
+                $orderProduct['product_id'] = $product['id'];
+                $orderProduct['count'] = $product['num'];
+                $orderProduct['status'] = Enum_ShoppingOrder::ORDER_STATUS_WAIT;
+                $orderProduct['robot_status'] = Enum_ShoppingOrder::ROBOT_WAITING;
+                $orderProduct['updated_at'] = $orderArray['created_at'];
+                array_push($orderProductArray, $orderProduct);
+            }
+            ShoppingOrder::addProducts($orderProductArray);
+            DB::commit();
+            return $order;
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+
+    }
+
+    public function sendMsg(ShoppingOrder $order, int $userid, $type = self::ORDER_NOTIFY_EMAIL)
+    {
+        $userDao = new Dao_User();
+        $userDetail = $userDao->getUserDetail($userid);
+        $shoppingContent = '';
+        $totalPrice = 0;
+        foreach ($order->products as $product) {
+            $name = $product->title_lang1;
+            $price = floatval($product->price);
+            $count = intval($product->pivot->count);
+            $shoppingContent = $shoppingContent . sprintf("<p>定单：%s X %s</p>", $name, $count);
+            $totalPrice += ($price * $count);
+        }
+
+        $mailTemplate = "
+        <head>
+            <meta charset=\"UTF-8\">
+        </head>
+           <p>客房：%s</p> 
+           <p>房客：%s</p> 
+           %s
+           <p>下单时间： %s</p>
+           <p>总价：%.2f</p>
+           <br>
+           <a href='https://staff.easyiservice.com/shopping/order'>处理订单</a>
+        </body>
+        ";
+
+        $mailContent = sprintf($mailTemplate, $userDetail['room_no'], $userDetail['fullname'],
+            $shoppingContent,
+            date("Y-m-d H:i:s", $order->created_at),
+            $totalPrice
+        );
+        $subject = "体验购物定单：" . $userDetail['room_no'] . " - 定单号：" . $order->id;
+        $enSubject = "Shopping Order: " . $userDetail['room_no'] . " - Order No.: " . $order->id;
+
+        if ($type == self::ORDER_NOTIFY_MSG || $type == self::ORDER_NOTIFY_BOTH) {
+            //send app message to staff
+            $pushParams['cn_title'] = $subject;
+            $pushParams['cn_value'] = '点击查看订单详情';
+            $pushParams['en_title'] = $enSubject;
+            $pushParams['en_value'] = 'Click to check the order';
+            $pushParams['type'] = Enum_Push::PUSH_TYPE_STAFF;
+            $pushParams['contentType'] = Enum_Push::PUSH_CONTENT_TYPE_SHOPPING_ORDER;
+            $pushParams['contentValue'] = $order->id;
+            $pushModel = new PushModel();
+            $staffModel = new StaffModel();
+            $pushStaffIds = $staffModel->getStaffList(array(
+                'hotelid' => $userDetail['hotelid']
+            ));
+
+            if ($pushStaffIds) {
+                foreach ($pushStaffIds as $staff) {
+                    $pushParams['dataid'] = $staff['id'];
+                    $pushModel->addPushOne($pushParams);
+                }
+            }
+        }
+
+        $to = $this->getEmailArray($userDetail['hotelid']);
+        if (($type == self::ORDER_NOTIFY_EMAIL || $type == self::ORDER_NOTIFY_BOTH) && !empty($to)) {
+            //send email message to staff
+            $smtp = Mail_Email::getInstance();
+            $smtp->addCc('iservice@liheinfo.com');
+            $smtp->send($to, $subject, $mailContent);
+        }
+
+        return true;
+    }
+
+    public function getHotelShoppingOrderList(array $params)
+    {
+        $paramList = array();
+        $params['id'] ? $paramList['id'] = $params['id'] : false;
+        $params['hotelid'] ? $paramList['hotelid'] = $params['hotelid'] : false;
+        $params['userid'] ? $paramList['userid'] = $params['userid'] : false;
+        $params['status'] ? $paramList['status'] = $params['status'] : false;
+
+
+        $withArray = array('user', 'staff');
+        $productId = $params['shoppingid'] ? intval($params['shoppingid']) : false;
+        if ($productId) {
+            $callback = function ($query) use ($productId) {
+                $query->where('product_id', '=', $productId);
+            };
+            $withArray['products'] = $callback;
+        } else {
+            $callback = null;
+            array_push($withArray, 'products');
+        }
+        $query = ShoppingOrder::with($withArray);
+        $query->whereHas('products', $callback);
+
+        if (!empty($paramList)) {
+            $query->where($paramList);
+        }
+
+        $query->orderBy('id', 'desc');
+
+        if ($params['limit'] > 0) {
+            return $query->paginate($params['limit'], ['*'], 'page', $params['page']);
+        } else {
+            return $query->get();
+        }
+    }
 
     /**
      * Send the detail of the order to manager
@@ -217,7 +375,7 @@ class ShoppingOrderModel extends \BaseModel {
             ),
             6 => array(
                 'fangzhou@liheinfo.com' => 'Fangzhou',
-                'frank@itearoa.co.nz' => 'frank'
+                'frank@itearoa.co.nz' => 'Frank'
             ),
             7 => array(
                 'summer.li@the-ascott.com' => '李云云',
@@ -232,6 +390,29 @@ class ShoppingOrderModel extends \BaseModel {
         );
 
         return $data[$hotelId];
+    }
+
+    /**
+     * Verify the interval of the request
+     *
+     * @param array $request
+     * @param int $timeout
+     */
+    private function verifyRequest(array $request, int $timeout = 5)
+    {
+        $errNo = 1;
+        $value = 1;
+        if ($timeout <= 0) {
+            $this->throwException("timeout must be larger than 0", $errNo);
+        }
+        $redis = Cache_Redis::getInstance();
+        $key = json_encode($request);
+        $key = md5($key);
+        if ($redis->get($key) == $value) {
+            $this->throwException("equest too frequent, wait $timeout second", $errNo);
+        } else {
+            $redis->set($key, $value, $timeout);
+        }
     }
 
 }

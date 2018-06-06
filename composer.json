@@ -1,5 +1,5 @@
 {
     "require": {
-        "frankli/itearoa": "^1.0"
+        "frankli/itearoa": "^1.0.2"
     }
 }

@@ -44,6 +44,11 @@ class Enum_Lang
         return self::$langNameList;
     }
 
+    public static function getLangIndexList()
+    {
+        return self::$_langIndexList;
+    }
+
     /**
      * 获取酒店语言列表cache key
      *

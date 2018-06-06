@@ -81,5 +81,3 @@ class ErrorPlugin extends \Yaf_Plugin_Abstract {
         }
     }
 }
-
-?>

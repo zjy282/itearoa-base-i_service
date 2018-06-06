@@ -54,6 +54,7 @@ class Bootstrap extends Yaf_Bootstrap_Abstract {
     {
         $capsule = new Manager;
         $capsule->addConnection($this->config->database->toArray());
+        $capsule->setAsGlobal();
         $capsule->bootEloquent();
     }
 }

@@ -33,9 +33,16 @@ class Enum_ShoppingOrder
     );
 
     private static $statsNameList = array(
-        self::ORDER_STATUS_WAIT => '待处理',
-        self::ORDER_STATUS_SERVICE => '处理中',
-        self::ORDER_STATUS_COMPLETE => '已完成'
+        Enum_Lang::CHINESE => array(
+            self::ORDER_STATUS_WAIT => '待处理',
+            self::ORDER_STATUS_SERVICE => '处理中',
+            self::ORDER_STATUS_COMPLETE => '已完成'
+        ),
+        Enum_Lang::ENGLISH => array(
+            self::ORDER_STATUS_WAIT => 'Wait to process',
+            self::ORDER_STATUS_SERVICE => 'Processing',
+            self::ORDER_STATUS_COMPLETE => 'Finished'
+        )
     );
 
     private static $robotStatusNameListForStaff = array(
@@ -78,13 +85,16 @@ class Enum_ShoppingOrder
             self::ROBOT_FINISHED => 'The items you ordered have been delivered',
             self::ROBOT_GUEST_NOT_FETCH => 'You didn\'t take the product in time, the robot returned to warehouse',
             self::ROBOT_CANCELLED => 'Your order is cancelled',
-            self::ROBOT_BEGIN => '任务派发'),
+            self::ROBOT_BEGIN => 'Processing'),
 
     );
 
-    public static function getStatusNameList()
+    public static function getStatusNameList($lang = 'zh')
     {
-        return self::$statsNameList;
+        if (!in_array($lang, self::LANGUAGE_LIST)) {
+            $lang = Enum_Lang::CHINESE;
+        }
+        return self::$statsNameList[$lang];
     }
 
     /**

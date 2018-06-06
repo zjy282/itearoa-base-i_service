@@ -1,5 +1,7 @@
 <?php
 
+use Frankli\Itearoa\Models\ShoppingOrder;
+
 /**
  * 体验购物订单转换器
  */
@@ -190,5 +192,96 @@ class Convertor_ShoppingOrder extends Convertor_Base {
             'price' => floatval($shoppingInfo['price'])
         );
         return $result;
+    }
+
+    /**
+     * For webview display of APP
+     *
+     * @param $orderList
+     * @return array
+     */
+    public function appShoppingOrderList($orderList): array
+    {
+        $result = array();
+        $statusNameList = Enum_ShoppingOrder::getStatusNameList(self::getLang(false));
+        /**
+         * @var ShoppingOrder $order
+         */
+        foreach ($orderList as $order) {
+            $item = array();
+            $item['id'] = $order->id;
+            $item['status'] = $statusNameList[$order->status];
+            $item['num'] = count($order->products);
+            $item['created_at'] = $order->created_at;
+            $price = 0;
+            $products = array();
+            foreach ($order->products as $product) {
+                $tmpProduct = array();
+                $tmpProduct['title'] = $this->handlerMultiLang('title', $product);
+                $tmpProduct['num'] = $product->pivot->count;
+                $tmpProduct['price'] = floatval($product->price) * $product->pivot->count;
+                $tmpProduct['status'] = $statusNameList[$product->status];
+                $price += $tmpProduct['price'];
+                $products[] = $tmpProduct;
+            }
+            $item['products'] = $products;
+            $item['price'] = $price;
+            $result[] = $item;
+        }
+        return $result;
+    }
+
+    /**
+     * For staff admin website
+     *
+     * @param $orderList
+     * @param $limit
+     * @param $page
+     * @return array
+     */
+    public function staffShoppingOrderList($orderList, $limit, $page): array
+    {
+        $result = array();
+        $langIndex = self::getLang();
+        $statusNameList = Enum_ShoppingOrder::getStatusNameList(self::getLang(false));
+        $robotStatusNameList = Enum_ShoppingOrder::getRobotStatusNameList(self::getLang(false));
+        $data = array();
+        foreach ($orderList as $order) {
+            $item = array();
+            $item['id'] = $order->id;
+            $item['userid'] = $order->userid;
+            $item['userInfo'] = array(
+                'name' => $order->user->fullname,
+                'room' => $order->user->room_no
+            );
+            $item['adminName'] = $order->staff->lname;
+            $item['adminid'] = $order->adminid;
+            $item['createtime'] = $order->created_at;
+            $item['status'] = $order->status;
+            $item['statusName'] = $statusNameList[$item['status']];
+
+            foreach ($order->products as $product) {
+                $item['orders_products_id'] = $product->pivot->id;
+                $item['memo'] = $product->pivot->memo;
+                $key = 'title_lang' . $langIndex;
+                $item['shoppingName'] = $product->{$key};
+                $item['productStatus'] = $product->pivot->status;
+                $item['productStatusName'] = $statusNameList[$item['productStatus']];
+                $item['robotStatus'] = $product->pivot->robot_status;
+                $item['robotStatusName'] = $robotStatusNameList[$item['robotStatus']];
+                $item['count'] = $product->pivot->count;
+                $data[] = $item;
+            }
+        }
+        $result['list'] = $data;
+
+        if ($limit > 0) {
+            $result['total'] = $orderList->total();
+            $result['limit'] = $limit;
+            $result['page'] = $page;
+            $result['nextPage'] = Util_Tools::getNextPage($result['page'], $limit, $result['total']);
+        }
+        return $result;
+
     }
 }
