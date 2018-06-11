@@ -161,6 +161,7 @@ class ShoppingOrderController extends \BaseController
             $data = $this->model->updateOrderProductById($param, $id);
             if ($data) {
                 $this->echoSuccessData($data);
+                $this->model->notifyOrderProductStatus($id, $param['status']);
             } else {
                 $this->throwException(1, 'DB fail');
             }

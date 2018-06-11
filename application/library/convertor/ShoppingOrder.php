@@ -220,7 +220,7 @@ class Convertor_ShoppingOrder extends Convertor_Base {
                 $tmpProduct['title'] = $this->handlerMultiLang('title', $product);
                 $tmpProduct['num'] = $product->pivot->count;
                 $tmpProduct['price'] = floatval($product->price) * $product->pivot->count;
-                $tmpProduct['status'] = $statusNameList[$product->status];
+                $tmpProduct['status'] = $statusNameList[$product->pivot->status];
                 $price += $tmpProduct['price'];
                 $products[] = $tmpProduct;
             }

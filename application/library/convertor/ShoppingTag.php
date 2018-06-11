@@ -51,7 +51,6 @@ class Convertor_ShoppingTag extends Convertor_Base {
                     $child['pic'] = Enum_Img::getPathByKeyAndType($child['pic']);
                     array_push($oneTemp['children'], $child);
                 }
-                $oneTemp['children'] = $value['children'];
             }
             $data ['list'] [] = $oneTemp;
         }

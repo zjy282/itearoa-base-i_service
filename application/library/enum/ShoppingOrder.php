@@ -97,6 +97,15 @@ class Enum_ShoppingOrder
         return self::$statsNameList[$lang];
     }
 
+    public static function getStatusName($status, $lang = 'zh')
+    {
+        if (!in_array($lang, self::LANGUAGE_LIST)) {
+            $lang = Enum_Lang::CHINESE;
+        }
+        $array = self::$statsNameList[$lang];
+        return $array[$status];
+    }
+
     /**
      * Get status name for staff
      *

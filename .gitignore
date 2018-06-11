@@ -11,3 +11,4 @@ env/
 
 /vendor/
 composer.lock
+.realsync

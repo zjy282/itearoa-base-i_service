@@ -116,7 +116,8 @@ class HotelListController extends \BaseController {
             $param['flighturl'] = $this->getParamList('flighturl');
             $param['surveyurl'] = $this->getParamList('surveyurl');
             $param['robot_pic'] = $this->getParamList('robot_pic');
-            $param ['invoice_id'] = $this->getParamList('invoice_id');
+            $param['washing_machine'] = $this->getParamList('washing_machine');
+            $param['invoice_id'] = $this->getParamList('invoice_id');
             $data = $this->model->updateHotelListById($param, $id);
             $data = $this->convertor->statusConvertor(array('id' => $data));
         } else {

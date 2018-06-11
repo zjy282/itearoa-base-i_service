@@ -1,6 +1,7 @@
 <?php
 
 use Frankli\Itearoa\Models\ShoppingOrder;
+use Frankli\Itearoa\Models\ShoppingProduct;
 use Illuminate\Database\Capsule\Manager as DB;
 
 /**
@@ -137,6 +138,34 @@ class ShoppingOrderModel extends \BaseModel
     }
 
     /**
+     * Send app notice to user for the order status update
+     *
+     * @param int $orderProductId
+     * @param int $status
+     */
+    public function notifyOrderProductStatus(int $orderProductId, int $status)
+    {
+        $pushModel = new PushModel();
+        $orderProduct = DB::table('orders_products')->find($orderProductId);
+        $order = ShoppingOrder::findOrFail($orderProduct->order_id);
+        $product = ShoppingProduct::findOrFail($orderProduct->product_id);
+
+        $subject = "订单状态更新：" . $product->title_lang1 . " -> " . Enum_ShoppingOrder::getStatusName($status, Enum_Lang::CHINESE);
+        $enSubject = "Shopping Order Status Update: " . $product->title_lang2 . " -> " . Enum_ShoppingOrder::getStatusName($status, Enum_Lang::ENGLISH);
+
+        $pushParams['cn_title'] = $subject;
+        $pushParams['cn_value'] = '点击查看订单详情';
+        $pushParams['en_title'] = $enSubject;
+        $pushParams['en_value'] = 'Click to check the order';
+        $pushParams['type'] = Enum_Push::PUSH_TYPE_USER;
+        $pushParams['contentType'] = Enum_Push::PUSH_CONTENT_TYPE_SHOPPING_ORDER;
+        $pushParams['contentValue'] = $order->id;
+        $pushParams['dataid'] = $order->userid;
+
+        $pushModel->addPushOne($pushParams);
+    }
+
+    /**
      * @param array $param
      * @return ShoppingOrder
      * @throws Exception
@@ -178,7 +207,6 @@ class ShoppingOrderModel extends \BaseModel
             DB::rollBack();
             throw $e;
         }
-
     }
 
     public function sendMsg(ShoppingOrder $order, int $userid, $type = self::ORDER_NOTIFY_EMAIL)

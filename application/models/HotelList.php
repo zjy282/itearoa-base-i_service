@@ -89,6 +89,7 @@ class HotelListModel extends \BaseModel {
     public function updateHotelListById($param, $id) {
         $result = false;
         if ($id) {
+            $info = array();
             !is_null($param['groupid']) ? $info['groupid'] = $param['groupid'] : false;
             !is_null($param['propertyinterfid']) ? $info['propertyinterfid'] = $param['propertyinterfid'] : false;
             !is_null($param['localpic']) ? $info['localpic'] = $param['localpic'] : false;
@@ -119,10 +120,13 @@ class HotelListModel extends \BaseModel {
             !is_null($param['flighturl']) ? $info['flighturl'] = $param['flighturl'] : false;
             !is_null($param['surveyurl']) ? $info['surveyurl'] = $param['surveyurl'] : false;
             !is_null($param['robot_pic']) ? $info['robot_pic'] = $param['robot_pic'] : false;
+            !is_null($param['washing_machine']) ? $info['washing_machine'] = $param['washing_machine'] : false;
             !is_null($param['invoice_id']) ? $info['invoice_id'] = trim($param['invoice_id']) : false;
             !is_null($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
             isset($param['rss']) ? $info['rss'] = $param['rss'] : false;
-            $result = $this->dao->updateHotelListById($info, $id);
+            if (!empty($info)) {
+                $result = $this->dao->updateHotelListById($info, $id);
+            }
         }
         return $result;
     }
