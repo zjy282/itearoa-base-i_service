@@ -14,6 +14,10 @@ class Enum_System {
 
     const MSG_SYSTEM_ERROR = "系统错误";
 
+    const COMMA_SEPARATOR = ',';
+
+    const PIN_LENGTH = 6;
+
     public static function notAdminPackage($package) {
         return ($package != self::IAM_PACKAGE && $package != self::GROUP_PACKAGE);
     }

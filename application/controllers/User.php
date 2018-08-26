@@ -119,15 +119,18 @@ class UserController extends \BaseController {
      *            string lang 语言
      * @return Json
      */
-    public function loginAction() {
+    public function loginAction()
+    {
         $param = array();
-        $param ['room_no'] = trim($this->getParamList('room_no'));
-        $param ['fullname'] = trim($this->getParamList('fullname'));
-        $param ['hotelid'] = intval($this->getParamList('hotelid'));
-        $param ['groupid'] = intval($this->getParamList('groupid'));
-        $param ['platform'] = intval($this->getParamList('platform'));
-        $param ['identity'] = trim($this->getParamList('identity'));
-        $param ['lang'] = trim($this->getParamList('lang'));
+        $param['token'] = trim($this->getParamList('token'));
+        $param['room_no'] = trim($this->getParamList('room_no'));
+        $param['fullname'] = trim($this->getParamList('fullname'));
+        $param['hotelid'] = intval($this->getParamList('hotelid'));
+        $param['propertyid'] = intval($this->getParamList('propertyinterfId'));
+        $param['groupid'] = intval($this->getParamList('groupid'));
+        $param['platform'] = intval($this->getParamList('platform'));
+        $param['identity'] = trim($this->getParamList('identity'));
+        $param['lang'] = trim($this->getParamList('lang'));
         $result = $this->model->loginAction($param);
         $result = $this->convertor->userInfoConvertor($result);
         $this->echoSuccessData($result);
@@ -143,13 +146,44 @@ class UserController extends \BaseController {
     public function getUserInfoByTokenAction() {
         $token = trim($this->getParamList('token'));
         $userId = Auth_Login::getToken($token);
-        if (empty ($userId)) {
+        if (empty($userId)) {
             $this->throwException(2, 'token验证失败');
         }
         $userInfo = $this->model->getUserDetail($userId);
         $userInfo['token'] = $token;
         $result = $this->convertor->userInfoConvertor($userInfo);
         $this->echoSuccessData($result);
+    }
+
+    /**
+     * Action for check if pin code already exist
+     */
+    public function hasPinAction()
+    {
+        $token = trim($this->getParamList('token'));
+        $data = $this->model->checkPin($token);
+
+        $this->echoSuccessData($data);
+    }
+
+
+    public function setPinAction() {
+        $params = array();
+        $params['token'] = trim($this->getParamList('token'));
+        $params['pin'] = trim($this->getParamList('pin'));
+        $params['old_pin'] = trim($this->getParamList('old_pin'));
+
+        $data = $this->model->setPin($params);
+        $this->echoSuccessData($data);
+    }
+
+    public function checkPinAction() {
+        $params = array();
+        $params['token'] = trim($this->getParamList('token'));
+        $params['pin'] = trim($this->getParamList('pin'));
+
+        $data = $this->model->validatePin($params);
+        $this->echoSuccessData($data);
     }
 
     /**

@@ -71,11 +71,31 @@ class Convertor_Push extends Convertor_Base {
         foreach ($list as $key => $value) {
             $oneTemp = array();
             $oneTemp ['id'] = $value ['id'];
-            $oneTemp ['userId'] = $value ['dataid'];
             $oneTemp ['title'] = $langInfo['lang'] == 'zh' ? $value ['cn_title'] : $value ['en_title'];
             $oneTemp ['value'] = $langInfo['lang'] == 'zh' ? $value ['cn_value'] : $value ['en_value'];
             $oneTemp ['url'] = $value ['content_value'];
-            $oneTemp ['createtime'] = $value ['createtime'];
+            $oneTemp ['createtime'] = date('Y-m-d H:i:s', $value['createtime']);
+            $data ['list'] [] = $oneTemp;
+        }
+        $data ['total'] = $count;
+        $data ['page'] = $param ['page'];
+        $data ['limit'] = $param ['limit'];
+        $data ['nextPage'] = Util_Tools::getNextPage($data ['page'], $data ['limit'], $data ['total']);
+        return $data;
+    }
+
+
+    public function userAppMsgListConvertor($list, $count, $param):array {
+        $data = array('list' => array());
+        foreach ($list as $key => $value) {
+            $oneTemp = array();
+            $oneTemp ['id'] = $value ['id'];
+            $oneTemp ['title_lang1'] = $value ['cn_title'];
+            $oneTemp ['value_lang1'] = $value ['cn_value'];
+            $oneTemp ['title_lang2'] = $value ['en_title'];
+            $oneTemp ['value_lang2'] = $value ['en_value'];
+            $oneTemp ['url'] = $value['content_value'];
+            $oneTemp ['createtime'] = date('Y-m-d H:i:s', $value['createtime']);
             $data ['list'] [] = $oneTemp;
         }
         $data ['total'] = $count;

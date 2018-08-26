@@ -88,6 +88,7 @@ class ShoppingTagModel extends \BaseModel {
                 !is_null($param['parentid']) ? $shoppingTag->parentid = intval($param['parentid']) : false;
                 !is_null($param['status']) ? $shoppingTag->status = intval($param['status']) : false;
                 !is_null($param['is_robot']) ? $shoppingTag->is_robot = intval($param['is_robot']) : false;
+                !is_null($param['staff_list']) ? $shoppingTag->staff_list = trim($param['staff_list']) : false;
                 $result = $shoppingTag->save();
             }
         }

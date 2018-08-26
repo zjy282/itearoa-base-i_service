@@ -9,6 +9,8 @@ class Enum_ShoppingOrder
 
     const ORDER_STATUS_COMPLETE = 3;
 
+    const ORDER_STATUS_CANCEL = 4;
+
     const ROBOT_WAITING = 1;
     const ROBOT_GOING = 2;
     const ROBOT_ARRIVED = 3;
@@ -21,11 +23,16 @@ class Enum_ShoppingOrder
     const ORDERS_ROOM_DIFFERENT = 1;
     const ORDERS_POSITION_NOT_EXIST = 2;
 
+    const ORDER_NOT_DELETE = 0;
+    const ORDER_MARK_DELETE = 1;
+
     const EXCEPTION_DIFFERENT_ROOM = "订单属于不同房间";
     const EXCEPTION_HAVE_NO_DEST = "目标点位不存在";
+    const EXCEPTION_ERROR_OUTPUT = 999;
 
 
     const PUSH_MSG_CONTENT = "机器人购物信息";
+    const USER_ROBOT = '机器人';
 
     const LANGUAGE_LIST = array(
         Enum_Lang::CHINESE,
@@ -36,12 +43,14 @@ class Enum_ShoppingOrder
         Enum_Lang::CHINESE => array(
             self::ORDER_STATUS_WAIT => '待处理',
             self::ORDER_STATUS_SERVICE => '处理中',
-            self::ORDER_STATUS_COMPLETE => '已完成'
+            self::ORDER_STATUS_COMPLETE => '已完成',
+            self::ORDER_STATUS_CANCEL => '已取消',
         ),
         Enum_Lang::ENGLISH => array(
             self::ORDER_STATUS_WAIT => 'Wait to process',
             self::ORDER_STATUS_SERVICE => 'Processing',
-            self::ORDER_STATUS_COMPLETE => 'Finished'
+            self::ORDER_STATUS_COMPLETE => 'Finished',
+            self::ORDER_STATUS_CANCEL => 'Cancelled'
         )
     );
 
@@ -66,6 +75,11 @@ class Enum_ShoppingOrder
             self::ROBOT_BEGIN => 'Send task to robot',
         ),
 
+    );
+
+    private static $robotStatusTitle = array(
+        Enum_Lang::CHINESE => '机器人送物',
+        Enum_Lang::ENGLISH => 'Robot Delivery',
     );
 
     private static $robotStatusNameListForGuest = array(
@@ -132,6 +146,17 @@ class Enum_ShoppingOrder
             $language = Enum_Lang::CHINESE;
         }
         return self::$robotStatusNameListForGuest[$language];
+    }
+
+    /**
+     * @param string $language
+     * @return string
+     */
+    public static function getRobotStatusTitle($language = 'zh'):string {
+        if(!in_array($language, self::LANGUAGE_LIST)){
+            $language = Enum_Lang::CHINESE;
+        }
+        return self::$robotStatusTitle[$language];
     }
 
 

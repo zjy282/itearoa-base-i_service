@@ -7,6 +7,8 @@ use Frankli\Itearoa\Models\ShoppingOrder;
  */
 class Convertor_ShoppingOrder extends Convertor_Base {
 
+    const SEPARATOR = 'A';
+
     public function __construct() {
         parent::__construct();
     }
@@ -200,7 +202,7 @@ class Convertor_ShoppingOrder extends Convertor_Base {
      * @param $orderList
      * @return array
      */
-    public function appShoppingOrderList($orderList): array
+    public function appShoppingOrderList($orderList, $hotelDetail): array
     {
         $result = array();
         $statusNameList = Enum_ShoppingOrder::getStatusNameList(self::getLang(false));
@@ -210,6 +212,7 @@ class Convertor_ShoppingOrder extends Convertor_Base {
         foreach ($orderList as $order) {
             $item = array();
             $item['id'] = $order->id;
+            $item['id_show'] = self::encodeId($order->id, $hotelDetail['id'], $hotelDetail['propertyinterfid']);
             $item['status'] = $statusNameList[$order->status];
             $item['num'] = count($order->products);
             $item['created_at'] = $order->created_at;
@@ -218,8 +221,13 @@ class Convertor_ShoppingOrder extends Convertor_Base {
             foreach ($order->products as $product) {
                 $tmpProduct = array();
                 $tmpProduct['title'] = $this->handlerMultiLang('title', $product);
+                $tmpProduct['pic'] = Enum_Img::getPathByKeyAndType($product->pic);
                 $tmpProduct['num'] = $product->pivot->count;
-                $tmpProduct['price'] = floatval($product->price) * $product->pivot->count;
+                if ($product->pivot->status == Enum_ShoppingOrder::ORDER_STATUS_CANCEL) {
+                    $tmpProduct['price'] = 0;
+                } else {
+                    $tmpProduct['price'] = floatval($product->price) * $product->pivot->count;
+                }
                 $tmpProduct['status'] = $statusNameList[$product->pivot->status];
                 $price += $tmpProduct['price'];
                 $products[] = $tmpProduct;
@@ -227,6 +235,63 @@ class Convertor_ShoppingOrder extends Convertor_Base {
             $item['products'] = $products;
             $item['price'] = $price;
             $result[] = $item;
+        }
+        return $result;
+    }
+
+
+    /**
+     * For webview display of staff order list
+     *
+     * @param $orderList
+     * @param $limit
+     * @param $page
+     * @return array
+     */
+    public function appStaffShoppingOrderList($orderList, $limit, $page, $hotelDetail): array
+    {
+        $result = array();
+        $data = array();
+        $statusNameList = Enum_ShoppingOrder::getStatusNameList(self::getLang(false));
+        /**
+         * @var ShoppingOrder $order
+         */
+        foreach ($orderList as $order) {
+            $item = array();
+            $item['id'] = $order->id;
+            $item['room_no'] = $order->user->room_no;
+            $item['id_show'] = self::encodeId($order->id, $hotelDetail['id'], $hotelDetail['propertyinterfid']);
+            $item['status'] = $statusNameList[$order->status];
+            $item['num'] = count($order->products);
+            $item['created_at'] = $order->created_at;
+            $price = 0;
+            $products = array();
+            foreach ($order->products as $product) {
+                $tmpProduct = array();
+                $tmpProduct['orders_products_id'] = $product->pivot->id;
+                $tmpProduct['title'] = $this->handlerMultiLang('title', $product);
+                $tmpProduct['pic'] = Enum_Img::getPathByKeyAndType($product->pic);
+                $tmpProduct['num'] = $product->pivot->count;
+                if ($product->pivot->status == Enum_ShoppingOrder::ORDER_STATUS_CANCEL) {
+                    $tmpProduct['price'] = 0;
+                } else {
+                    $tmpProduct['price'] = floatval($product->price) * $product->pivot->count;
+                }
+                $tmpProduct['status'] = $statusNameList[$product->pivot->status];
+                $tmpProduct['productStatus'] = $product->pivot->status;
+                $price += $tmpProduct['price'];
+                $products[] = $tmpProduct;
+            }
+            $item['products'] = $products;
+            $item['price'] = $price;
+            $data[] = $item;
+        }
+        $result['list'] = $data;
+        if ($limit > 0) {
+            $result['total'] = $orderList->total();
+            $result['limit'] = $limit;
+            $result['page'] = $page;
+            $result['nextPage'] = Util_Tools::getNextPage($result['page'], $limit, $result['total']);
         }
         return $result;
     }
@@ -239,7 +304,7 @@ class Convertor_ShoppingOrder extends Convertor_Base {
      * @param $page
      * @return array
      */
-    public function staffShoppingOrderList($orderList, $limit, $page): array
+    public function staffShoppingOrderList($orderList, $limit, $page, $hotelDetail): array
     {
         $result = array();
         $langIndex = self::getLang();
@@ -248,6 +313,7 @@ class Convertor_ShoppingOrder extends Convertor_Base {
         $data = array();
         foreach ($orderList as $order) {
             $item = array();
+            $item['idShow'] = self::encodeId($order->id, $hotelDetail['id'], $hotelDetail['propertyinterfid']);
             $item['id'] = $order->id;
             $item['userid'] = $order->userid;
             $item['userInfo'] = array(
@@ -270,6 +336,11 @@ class Convertor_ShoppingOrder extends Convertor_Base {
                 $item['robotStatus'] = $product->pivot->robot_status;
                 $item['robotStatusName'] = $robotStatusNameList[$item['robotStatus']];
                 $item['count'] = $product->pivot->count;
+                if ($product->pivot->status == Enum_ShoppingOrder::ORDER_STATUS_CANCEL) {
+                    $item['price'] = 0;
+                } else {
+                    $item['price'] = floatval($product->price) * $product->pivot->count;
+                }
                 $data[] = $item;
             }
         }
@@ -283,5 +354,26 @@ class Convertor_ShoppingOrder extends Convertor_Base {
         }
         return $result;
 
+    }
+
+    /**
+     * @param int $id
+     * @param int $hotelid
+     * @param int $propertyId
+     * @return string
+     */
+    public static function encodeId(int $id, int $hotelid, int $propertyId): string
+    {
+        return $hotelid . $propertyId . self::SEPARATOR . $id;
+    }
+
+    /**
+     * @param string $mark
+     * @return int
+     */
+    public static function decodeId(string $mark): int
+    {
+        $pos = strpos($mark, self::SEPARATOR);
+        return intval(substr($mark, $pos + 1));
     }
 }

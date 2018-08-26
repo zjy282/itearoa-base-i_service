@@ -56,10 +56,10 @@ class Convertor_Room extends Convertor_Base {
             $oneTemp ['lastUser'] = $userInfoList[$value['room']];
             $data ['list'] [] = $oneTemp;
         }
-        $data ['total'] = $count;
-        $data ['page'] = $param ['page'];
-        $data ['limit'] = $param ['limit'];
-        $data ['nextPage'] = Util_Tools::getNextPage($data ['page'], $data ['limit'], $data ['total']);
+        $data['total'] = $count;
+        $data['page'] = $param ['page'];
+        $data['limit'] = $param ['limit'];
+        $data['nextPage'] = Util_Tools::getNextPage($data['page'], $data['limit'], $data['total']);
         return $data;
     }
 }

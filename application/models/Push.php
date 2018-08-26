@@ -143,7 +143,7 @@ class PushModel extends \BaseModel {
                 $userModel = new UserModel();
                 $userInfo = $userModel->getUserDetail($info['dataid']);
                 if (empty($userInfo['platform'])) {
-                    break;
+                    $this->throwException('找不到用户登录设备信息', 4);
                 }
                 $info['platform'] = $pushParams['phoneType'] = $userInfo['platform'];
                 $pushParams['dataid'] = $userInfo['id'];
@@ -421,5 +421,14 @@ class PushModel extends \BaseModel {
 
         }
         return $sendSuccessIdList;
+    }
+
+    public static function checkSchedule($schedule, $time = null)
+    {
+        if (is_null($time)) {
+            $time = time();
+        }
+        $result = strpos($schedule, date('NH', $time));
+        return $result !== false;
     }
 }

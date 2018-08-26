@@ -92,10 +92,15 @@ class StaffModel extends \BaseModel
             intval($param['groupid']) ? $info['groupid'] = intval($param['groupid']) : false;
             $info['lastlogintime'] = time();
             $info['lastloginip'] = Util_Tools::ipton(Util_Http::getIP());
-            intval($param['platform']) ? $info['platform'] = intval($param['platform']) : false;
+            isset($param['platform']) ? $info['platform'] = intval($param['platform']) : false;
             $param['identity'] ? $info['identity'] = $param['identity'] : false;
             $param['staff_web_hotel_id'] ? $info['staff_web_hotel_id'] = intval($param['staff_web_hotel_id']) : false;
             $param['admin_id'] ? $info['admin_id'] = intval($param['admin_id']) : false;
+            if (!is_null($param['schedule'])) {
+                $info['schedule'] = trim($param['schedule']);
+                unset($info['lastlogintime']);
+                unset($info['lastloginip']);
+            }
             $result = $this->dao->updateStaffById($info, $id);
         }
         return $result;
@@ -174,11 +179,8 @@ class StaffModel extends \BaseModel
         if (empty($param['lname']) || empty($param['pwd'])) {
             $this->throwException('登录信息不正确', 2);
         }
-        if (empty($param['hotelid']) || empty($param['groupid'])) {
-            //hotel and group are not necessary when login from staff web
-            if ($param['identity'] != self::STAFF_WEB_IDENTIFY) {
-                $this->throwException('酒店集团信息不正确', 3);
-            }
+        if (empty($param['groupid'])) {
+            $this->throwException('缺少集团参数', 3);
         }
 
         // 获取Oid
@@ -192,16 +194,17 @@ class StaffModel extends \BaseModel
         $userId = $getStaffInfo['id'];
 
         $newStaffInfo = array(
-            'hotelid' => $param['hotelid'],
             'groupid' => $param['groupid'],
             'lname' => $param['lname'],
-            'platform' => intval($param['platform']),
             'identity' => trim($param['identity'])
         );
+        if (!empty($param['hotelid'])) {
+            $newStaffInfo['hotelid'] = intval($param['hotelid']);
+        }
 
-        $isStaffWeb = ($newStaffInfo['identity'] == self::STAFF_WEB_IDENTIFY);
-        if ($isStaffWeb) {
-            $newStaffInfo['platform'] = $getStaffInfo['platform'];
+        //don't change platform when login from web
+        if ($newStaffInfo['identity'] != self::STAFF_WEB_IDENTIFY) {
+            $newStaffInfo['platform'] = intval($param['platform']);
         }
         $newStaffInfo['admin_id'] = $this->getAdminId(intval($newStaffInfo['groupid']), $staffIdInfo['staffId']);
         if ($userId) {
@@ -218,9 +221,19 @@ class StaffModel extends \BaseModel
             }
         }
         $userInfo = $this->getStaffDetail($userId);
-        if (!$isStaffWeb) {
-            $userInfo['token'] = Auth_Login::makeToken($userId, 2);
+        $userInfo['hotel_list'] = explode(',', $userInfo['hotel_list']);
+        $hotelModel = new HotelListModel();
+        $hotelList = $hotelModel->getHotelListList(array('id' => $userInfo['hotel_list']));
+        foreach ($hotelList as $hotel) {
+            $detail = array(
+                'id' => $hotel['id'],
+                'name_lang1' => $hotel['name_lang1'],
+                'name_lang2' => $hotel['name_lang2'],
+                'name_lang3' => $hotel['name_lang3'],
+            );
+            $userInfo['hotel_list_detail'][] = $detail;
         }
+        $userInfo['token'] = Auth_Login::makeToken($userId, Auth_Login::STAFF_MARK, 7 * 24 * 3600);
         return $userInfo;
     }
 

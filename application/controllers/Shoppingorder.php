@@ -154,6 +154,16 @@ class ShoppingOrderController extends \BaseController
             $param = array();
             $param['status'] = intval($this->getParamList('status'));
             $param['memo'] = trim($this->getParamList('memo'));
+            $param['adminid'] = intval($this->getParamList('adminid'));
+            $param['token'] = trim($this->getParamList('token'));
+
+            if ($param['adminid'] <= 0) {
+                $param['adminid'] = intval(Auth_Login::getToken($param['token'], 2));
+                if ($param['adminid'] <= 0) {
+                    $this->throwException(3, 'token已过期，请重新登录');
+                }
+            }
+
             // status or memo need to be set
             if ($param['status'] == 0 && empty($param['memo'])) {
                 $this->throwException(1, 'Param lack');
@@ -215,11 +225,45 @@ class ShoppingOrderController extends \BaseController
         $orderList = ShoppingOrder::with('products')
             ->where('userid', '=', $userid)
             ->where('hotelid', '=', $hotelid)
+            ->where('is_delete', '=', Enum_ShoppingOrder::ORDER_NOT_DELETE)
             ->orderBy('id', 'desc')
             ->take($limit)
             ->get();
+        $hotelModel = new HotelListModel();
+        $hotelDetail = $hotelModel->getHotelListDetail($hotelid);
+        $data = $this->convertor->appShoppingOrderList($orderList, $hotelDetail);
+        $this->echoSuccessData($data);
+    }
 
-        $data = $this->convertor->appShoppingOrderList($orderList);
+    public function getStaffOrderListAction()
+    {
+        $token = trim($this->getParamList('token'));
+        $params['page'] = intval($this->getParamList('page', 1));
+        $params['limit'] = intval($this->getParamList('limit', 10));
+        $staffId = Auth_Login::getToken($token, 2);
+        $hotelid = intval($this->getParamList('hotelid'));
+        if (empty($staffId)) {
+            $this->throwException(3, '登录验证失败，请重新登录');
+        }
+        if (empty($hotelid)) {
+            $this->throwException(1, '参数错误，hotelid');
+        }
+        $staffModel = new StaffModel();
+        $staffDetail = $staffModel->getStaffDetail($staffId);
+        if (!in_array($hotelid, explode(Enum_System::COMMA_SEPARATOR, $staffDetail['hotel_list']))) {
+            $this->throwException(3, '没有权限查看该物业');
+        }
+        $query = ShoppingOrder::with('products')
+            ->where('hotelid', '=', $hotelid)
+            ->orderBy('id', 'desc');
+        if ($params['limit'] > 0) {
+            $orderList = $query->paginate($params['limit'], ['*'], 'page', $params['page']);
+        } else {
+            $orderList = $query->get();
+        }
+        $hotelModel = new HotelListModel();
+        $hotelDetail = $hotelModel->getHotelListDetail($hotelid);
+        $data = $this->convertor->appStaffShoppingOrderList($orderList, $params['limit'], $params['page'], $hotelDetail);
         $this->echoSuccessData($data);
     }
 
@@ -235,8 +279,9 @@ class ShoppingOrderController extends \BaseController
         $params['page'] = intval($this->getParamList('page'));
 
         $orderList = $this->model->getHotelShoppingOrderList($params);
-
-        $data = $this->convertor->staffShoppingOrderList($orderList, $params['limit'], $params['page']);
+        $hotelModel = new HotelListModel();
+        $hotelDetail = $hotelModel->getHotelListDetail($params['hotelid']);
+        $data = $this->convertor->staffShoppingOrderList($orderList, $params['limit'], $params['page'], $hotelDetail);
         $this->echoSuccessData($data);
 
     }
@@ -274,6 +319,46 @@ class ShoppingOrderController extends \BaseController
         $orderInfo ['status'] = $param ['status'];
         $orderInfo ['adminid'] = $param ['userid'];
         $this->echoSuccessData($orderInfo);
+    }
+
+    /**
+     * Action for user to delete shopping order from app
+     */
+    public function deleteOrderAction()
+    {
+        $param = array();
+        $param['id'] = intval($this->getParamList('orderid'));
+        $param['userid'] = Auth_Login::getToken($this->getParamList('token'));
+        if (empty($param['id'])) {
+            $this->throwException(2, '订单ID错误');
+        }
+        if (empty($param['userid'])) {
+            $this->throwException(3, 'token验证失败');
+        }
+
+        $order = $this->model->getShoppingOrder($param['id']);
+        if ($order->userid != $param['userid']) {
+            $this->throwException(4, '订单信息错误');
+        }
+
+        $order->is_delete = Enum_ShoppingOrder::ORDER_MARK_DELETE;
+        $order->save();
+        $this->echoSuccessData($order->toArray());
+    }
+
+    /**
+     * Action for get shopping hotel list
+     */
+    public function getShoppingHotelListAction() {
+        $token = trim($this->getParamList('token'));
+        $userId = Auth_Login::getToken($token);
+        if (empty($userId)) {
+            $this->throwException(3, 'token验证失败');
+        }
+
+        $result = $this->model->getShoppingHotelList($userId);
+        $this->echoSuccessData($result);
+
     }
 
 }

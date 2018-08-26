@@ -33,13 +33,14 @@ class Convertor_Staff extends Convertor_Base
         $data ['platformName'] = $platformNameList [$list ['platform']];
         $data ['identity'] = $list ['identity'];
         $data ['token'] = $list ['token'];
-        $data['hotel_list'] = explode(',', $list['hotel_list']);
         $data['staff_web_hotel_id'] = $list['staff_web_hotel_id'];
         $staffModel = new StaffModel();
         $data ['serviceUrl'] = $staffModel->getGsmRedirect(array(
             'StaffID' => $data['staffid']
         ));
         $data['lname'] = $list['lname'];
+        $data['hotel_list'] = $list['hotel_list'];
+        $data['hotel_list_detail'] = $list['hotel_list_detail'];
         return $data;
     }
 
@@ -47,7 +48,7 @@ class Convertor_Staff extends Convertor_Base
      * @param $list
      * @return mixed
      */
-    public function getStaffListConvertor($list)
+    public function getStaffListConvertor($list, $param, $count)
     {
         $data = array();
         $tmp = array();
@@ -58,6 +59,10 @@ class Convertor_Staff extends Convertor_Base
             $tmp[] = $item;
         }
         $data['list'] = $tmp;
+        $data['total'] = $count;
+        $data['page'] = $param['page'];
+        $data['limit'] = $param['limit'];
+        $data['nextPage'] = Util_Tools::getNextPage($data['page'], $data['limit'], $data['total']);
         return $data;
     }
 

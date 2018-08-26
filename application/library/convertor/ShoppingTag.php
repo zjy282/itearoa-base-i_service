@@ -43,6 +43,7 @@ class Convertor_ShoppingTag extends Convertor_Base {
             $oneTemp ['hotelId'] = $value ['hotelid'];
             $oneTemp ['hotelName'] = $hotelNameList [$value ['hotelid']];
             $oneTemp['parentid'] = $value['parentid'];
+            $oneTemp['staff_list'] = explode(Enum_System::COMMA_SEPARATOR, $value['staff_list']);
             $oneTemp['status'] = $value['status'];
             $oneTemp['is_robot'] = $value['is_robot'];
             if ($param['withChild']) {

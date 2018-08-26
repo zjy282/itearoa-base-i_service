@@ -18,6 +18,9 @@ class Rpc_Curl
             curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($handle, CURLOPT_SSL_VERIFYHOST, false);
         }
+        if ($method == 'GET') {
+            $url = $url . '?' . http_build_query($postData);
+        }
         curl_setopt($handle, CURLOPT_URL, $url);
         curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($handle, CURLOPT_USERAGENT, Enum_System::RPC_REQUEST_UA);

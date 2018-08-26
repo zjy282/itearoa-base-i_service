@@ -2,6 +2,8 @@
 
 use Frankli\Itearoa\Models\ShoppingOrder;
 use Frankli\Itearoa\Models\ShoppingProduct;
+use Frankli\Itearoa\Models\Staff;
+use Frankli\Itearoa\Models\ShoppingCategory;
 use Illuminate\Database\Capsule\Manager as DB;
 
 /**
@@ -94,6 +96,41 @@ class ShoppingOrderModel extends \BaseModel
     }
 
     /**
+     * @param $id
+     * @return ShoppingOrder
+     */
+    public function getShoppingOrder($id)
+    {
+        $shoppingOrder = ShoppingOrder::findOrFail($id);
+        return $shoppingOrder;
+    }
+
+    /**
+     * Get all the hotel list where the user has purchased
+     *
+     * @param int $userid
+     * @return array
+     */
+    public function getShoppingHotelList(int $userid): array
+    {
+        $orderList = ShoppingOrder::where('userid', '=', $userid)->get()->toArray();
+        $hotelIdArray = array_unique(array_column($orderList, 'hotelid'));
+        $hotelDao = new Dao_HotelList();
+        $hotelList = $hotelDao->getHotelListList(array('id' => $hotelIdArray));
+
+        $result = array();
+        foreach ($hotelList as $hotel) {
+            $tmpHotel = array();
+            $tmpHotel['id'] = $hotel['id'];
+            $tmpHotel['name_lang1'] = $hotel['name_lang1'];
+            $tmpHotel['name_lang2'] = $hotel['name_lang2'];
+            $tmpHotel['name_lang3'] = $hotel['name_lang3'];
+            $result[] = $tmpHotel;
+        }
+        return $result;
+    }
+
+    /**
      * 根据id更新ShoppingOrder信息
      *
      * @param
@@ -126,11 +163,19 @@ class ShoppingOrderModel extends \BaseModel
         if ($id) {
             $info = array();
             $param['status'] ? $info['status'] = $param['status'] : false;
-            $param['memo'] ? $info['memo'] = $param['memo'] : false;
+            $param['adminid'] ? $info['adminid'] = $param['adminid'] : false;
+            if (empty($param['memo'])) {
+                $staff = Staff::find($param['adminid']);
+                if ($staff) {
+                    $info['memo'] = $staff->lname;
+                }
+            } else {
+                $info['memo'] = $param['memo'];
+            }
             $result = DB::table('orders_products')->where('id', '=', $id)->update($info);
             $orderProduct = DB::table('orders_products')->find($id);
             if ($orderProduct->order_id) {
-                ShoppingOrder::syncOrder(array($orderProduct->order_id));
+                ShoppingOrderModel::syncOrder(array($orderProduct->order_id));
 
             }
         }
@@ -150,16 +195,16 @@ class ShoppingOrderModel extends \BaseModel
         $order = ShoppingOrder::findOrFail($orderProduct->order_id);
         $product = ShoppingProduct::findOrFail($orderProduct->product_id);
 
-        $subject = "订单状态更新：" . $product->title_lang1 . " -> " . Enum_ShoppingOrder::getStatusName($status, Enum_Lang::CHINESE);
-        $enSubject = "Shopping Order Status Update: " . $product->title_lang2 . " -> " . Enum_ShoppingOrder::getStatusName($status, Enum_Lang::ENGLISH);
+        $content = "订单状态更新：" . $product->title_lang1 . " -> " . Enum_ShoppingOrder::getStatusName($status, Enum_Lang::CHINESE);
+        $enContent = "Shopping Order Status Update: " . $product->title_lang2 . " -> " . Enum_ShoppingOrder::getStatusName($status, Enum_Lang::ENGLISH);
 
-        $pushParams['cn_title'] = $subject;
-        $pushParams['cn_value'] = '点击查看订单详情';
-        $pushParams['en_title'] = $enSubject;
-        $pushParams['en_value'] = 'Click to check the order';
+        $pushParams['cn_title'] = Enum_Push::PUSH_SHOPPING_ORDER_TITLE_ZH;
+        $pushParams['cn_value'] = $content;
+        $pushParams['en_title'] = Enum_Push::PUSH_SHOPPING_ORDER_TITLE_EN;
+        $pushParams['en_value'] = $enContent;
         $pushParams['type'] = Enum_Push::PUSH_TYPE_USER;
         $pushParams['contentType'] = Enum_Push::PUSH_CONTENT_TYPE_SHOPPING_ORDER;
-        $pushParams['contentValue'] = $order->id;
+        $pushParams['contentValue'] = $orderProductId;
         $pushParams['dataid'] = $order->userid;
 
         $pushModel->addPushOne($pushParams);
@@ -245,6 +290,8 @@ class ShoppingOrderModel extends \BaseModel
         $subject = "体验购物定单：" . $userDetail['room_no'] . " - 定单号：" . $order->id;
         $enSubject = "Shopping Order: " . $userDetail['room_no'] . " - Order No.: " . $order->id;
 
+        $staffIdList = ShoppingOrderModel::getOrderStaffList(array($order->id));
+        $staffArray = Staff::whereIn('id', $staffIdList)->get();
         if ($type == self::ORDER_NOTIFY_MSG || $type == self::ORDER_NOTIFY_BOTH) {
             //send app message to staff
             $pushParams['cn_title'] = $subject;
@@ -255,20 +302,23 @@ class ShoppingOrderModel extends \BaseModel
             $pushParams['contentType'] = Enum_Push::PUSH_CONTENT_TYPE_SHOPPING_ORDER;
             $pushParams['contentValue'] = $order->id;
             $pushModel = new PushModel();
-            $staffModel = new StaffModel();
-            $pushStaffIds = $staffModel->getStaffList(array(
-                'hotelid' => $userDetail['hotelid']
-            ));
 
-            if ($pushStaffIds) {
-                foreach ($pushStaffIds as $staff) {
-                    $pushParams['dataid'] = $staff['id'];
-                    $pushModel->addPushOne($pushParams);
+            if (count($staffArray) > 0) {
+                foreach ($staffArray as $staff) {
+                    if (PushModel::checkSchedule($staff->schedule, time())) {
+                        $pushParams['dataid'] = $staff['id'];
+                        $pushModel->addPushOne($pushParams);
+                    }
                 }
             }
         }
 
-        $to = $this->getEmailArray($userDetail['hotelid']);
+        $to = array();
+        foreach ($staffArray as $staff) {
+            if (PushModel::checkSchedule($staff->schedule, time())) {
+                $to[] = $staff->email;
+            }
+        }
         if (($type == self::ORDER_NOTIFY_EMAIL || $type == self::ORDER_NOTIFY_BOTH) && !empty($to)) {
             //send email message to staff
             $smtp = Mail_Email::getInstance();
@@ -316,111 +366,6 @@ class ShoppingOrderModel extends \BaseModel
     }
 
     /**
-     * Send the detail of the order to manager
-     *
-     * @param array $info
-     * @return bool
-     */
-    public function sendOrderMsg($info, $type = self::ORDER_NOTIFY_EMAIL)
-    {
-        $shoppingDao = new Dao_Shopping();
-        $userDao = new Dao_User();
-        $userDetail = $userDao->getUserDetail($info['userid']);
-        $shoppingDetail = $shoppingDao->getShoppingDetail($info['shoppingid']);
-        $shoppingDetail['url'] = Enum_Img::getPathByKeyAndType($shoppingDetail ['pic'], Enum_Img::PIC_TYPE_KEY_WIDTH750);
-
-        $mailTemplate = "
-        <head>
-            <meta charset=\"UTF-8\">
-        </head>
-           <p>客房：%s</p> 
-           <p>房客：%s</p> 
-           <p>定单：%s X %s</p> 
-           <p>下单时间： %s</p>
-           <p>价格：%s</p>
-           <p><img src='%s'/></p>
-           
-        </body>
-        ";
-
-        $mailContent = sprintf($mailTemplate, $userDetail['room_no'], $userDetail['fullname'],
-            $shoppingDetail['title_lang1'], $info['count'],
-            date("Y-m-d H:i:s", $info['creattime']),
-            $shoppingDetail['price'],
-            $shoppingDetail['url']
-        );
-        $subject = "体验购物定单：" . $userDetail['room_no'] . " - " . $shoppingDetail['title_lang1'] . " X " . $info['count'];
-        $enSubject = "Shopping Order: " . $userDetail['room_no'] . " - " . $shoppingDetail['title_lang2'] . " X " . $info['count'];
-
-        if ($type == self::ORDER_NOTIFY_MSG || $type == self::ORDER_NOTIFY_BOTH) {
-            //send app message to staff
-            $pushParams['cn_title'] = $subject;
-            $pushParams['cn_value'] = '点击查看订单详情';
-            $pushParams['en_title'] = $enSubject;
-            $pushParams['en_value'] = 'Click to check the order';
-            $pushParams['type'] = Enum_Push::PUSH_TYPE_STAFF;
-            $pushParams['contentType'] = Enum_Push::PUSH_CONTENT_TYPE_SHOPPING_ORDER;
-            $pushParams['contentValue'] = $info['id'];
-            $pushModel = new PushModel();
-            $staffModel = new StaffModel();
-            $pushStaffIds = $staffModel->getStaffList(array(
-                'hotelid' => $info['hotelid']
-            ));
-
-            if ($pushStaffIds) {
-                foreach ($pushStaffIds as $staff) {
-                    $pushParams['dataid'] = $staff['id'];
-                    $pushModel->addPushOne($pushParams);
-                }
-            }
-        }
-
-        $to = $this->getEmailArray($info['hotelid']);
-        if (($type == self::ORDER_NOTIFY_EMAIL || $type == self::ORDER_NOTIFY_BOTH) && !empty($to)) {
-            //send email message to staff
-            $smtp = Mail_Email::getInstance();
-            $smtp->addCc('iservice@liheinfo.com');
-            $smtp->send($to, $subject, $mailContent);
-        }
-
-        return true;
-    }
-
-
-    /**
-     * @param $hotelId
-     * @return array|null
-     */
-    public function getEmailArray($hotelId)
-    {
-        $data = array(
-            1 => array(
-                'amanda.li@the-ascott.com' => 'amanda.li',
-                'frontoffice.arcb@the-ascott.com' => 'rontoffice.arcb',
-                'lewis.liu@the-ascott.com' => 'lewis.liu',
-                'miki.wu@the-ascott.com' => 'miki.wu',
-                'tracy.han@the-ascott.com' => 'tracy.han',
-            ),
-            6 => array(
-                'fangzhou@liheinfo.com' => 'Fangzhou',
-                'frank@itearoa.co.nz' => 'Frank'
-            ),
-            7 => array(
-                'summer.li@the-ascott.com' => '李云云',
-                'bobo.wu@the-ascott.com' => '伍宝琴',
-                'jennifer.wang@the-ascott.com' => '王奋',
-                'frontoffice.aifcg@the-ascott.com' => '前台',
-            ),
-            26 => array(
-                'fangzhou@liheinfo.com' => 'Fangzhou',
-                'frank@itearoa.co.nz' => 'frank'
-            ),
-        );
-
-        return $data[$hotelId];
-    }
-
-    /**
      * Verify the interval of the request
      *
      * @param array $request
@@ -441,6 +386,68 @@ class ShoppingOrderModel extends \BaseModel
         } else {
             $redis->set($key, $value, $timeout);
         }
+    }
+
+    /**
+     * Update the order status when all products have the same status
+     *
+     * @param array $orderIdArray
+     */
+    public static function syncOrder(array $orderIdArray)
+    {
+        $orders = ShoppingOrder::with('user', 'products')->whereIn('id', $orderIdArray)->get();
+        foreach ($orders as $order) {
+            $flag = true;
+            $status = null;
+            foreach ($order->products as $product) {
+                if ($product->pivot->status == Enum_ShoppingOrder::ORDER_STATUS_CANCEL) {
+                    continue;
+                }
+                if (is_null($status)) {
+                    $status = $product->pivot->status;
+                    continue;
+                }
+                if ($status != $product->pivot->status) {
+                    $flag = false;
+                    break;
+                }
+            }
+
+            if ($flag) {
+                if (is_null($status)) {
+                    //mark as complete if all items are cancelled
+                    $status = Enum_ShoppingOrder::ORDER_STATUS_COMPLETE;
+                }
+                $order->status = $status;
+                $order->save();
+            }
+        }
+    }
+
+    /**
+     * @param array $orderId
+     * @return array
+     */
+    public static function getOrderStaffList(array $orderIdArray): array {
+        $result = array();
+        $orderArray = ShoppingOrder::whereIn('id', $orderIdArray)->get();
+        if (count($orderArray) == 0) {
+            return $result;
+        }
+        $tagIdArray = array();
+        foreach ($orderArray as $order){
+            foreach ($order->products as $product){
+                $tagIdArray[] = $product->tagid;
+            }
+        }
+        $tagIdArray = array_unique($tagIdArray);
+        $tagArray = ShoppingCategory::whereIn('id', $tagIdArray)->get();
+        foreach ($tagArray as $tag) {
+            if (!empty($tag->staff_list)) {
+                $result = array_merge($result, explode(Enum_System::COMMA_SEPARATOR, $tag->staff_list));
+            }
+        }
+        return $result;
     }
 
 }

@@ -7,6 +7,9 @@
  */
 class Auth_Login {
 
+    const USER_MARK = 1;
+    const STAFF_MARK = 2;
+
     private static $memKeyPrefix = "login";
 
     /**
@@ -67,12 +70,14 @@ class Auth_Login {
     }
 
     /**
-     * 生成Token
+     * Generate token and store it in redis
      *
-     * @param int $memberId            
-     * @return boolean|string
+     * @param $memberId
+     * @param int $type
+     * @param int $timeout
+     * @return bool|string
      */
-    public static function makeToken($memberId, $type = 1) {
+    public static function makeToken($memberId, $type = self::USER_MARK, int $timeout = 0) {
         $resultToken = false;
         if ($memberId) {
             $sysConfig = Yaf_Registry::get('sysConfig');
@@ -83,10 +88,14 @@ class Auth_Login {
                 'token' => $resultToken,
                 'type' => $type
             ));
+
+            if ($timeout <= 0) {
+                $timeout = $sysConfig->auth->timeout;
+            }
             
             $redis = Cache_Redis::getInstance();
-            $redis->set($loginToken, $loginInfo, $sysConfig->auth->timeout);
-            $redis->set($resultToken, $loginToken, $sysConfig->auth->timeout);
+            $redis->set($loginToken, $loginInfo, $timeout);
+            $redis->set($resultToken, $loginToken, $timeout);
         }
         return $resultToken;
     }
@@ -111,7 +120,7 @@ class Auth_Login {
      * @param bool $isMulti allow multiple point login
      * @return int
      */
-    public static function getToken($resultToken, $type = 1, $isMulti = true)
+    public static function getToken($resultToken, $type = self::USER_MARK, $isMulti = true)
     {
         $memberId = 0;
         if (!empty($resultToken)) {

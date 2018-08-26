@@ -69,7 +69,9 @@ class ServiceController extends \BaseController
             $result = $this->_model->robotDeliver($params);
         } catch (Exception $e) {
             Log_File::writeLog('robotShopping', $e->getMessage() . "\n" . $e->getTraceAsString());
-            if ($e->getMessage() == Enum_ShoppingOrder::EXCEPTION_DIFFERENT_ROOM || $e->getMessage() == Enum_ShoppingOrder::EXCEPTION_HAVE_NO_DEST) {
+            if ($e->getMessage() == Enum_ShoppingOrder::EXCEPTION_DIFFERENT_ROOM
+                || $e->getMessage() == Enum_ShoppingOrder::EXCEPTION_HAVE_NO_DEST
+                || $e->getCode() == Enum_ShoppingOrder::EXCEPTION_ERROR_OUTPUT) {
                 $msg = $e->getMessage();
             } else {
                 $msg = Enum_System::MSG_SYSTEM_ERROR;

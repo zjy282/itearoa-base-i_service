@@ -1,5 +1,5 @@
 <?php
-
+use Frankli\Itearoa\Models\Staff;
 /**
  * 物业员工控制器类
  *
@@ -33,8 +33,11 @@ class StaffController extends \BaseController {
         $param = array();
         $param ['name'] = trim($this->getParamList('name'));
         $param['hotelid'] = intval($this->getParamList('hotelid'));
+        $param['limit'] = $this->getParamList('limit');
+        $param['page'] = $this->getParamList('page');
         $data = $this->model->getStaffList($param);
-        $data = $this->convertor->getStaffListConvertor($data);
+        $count = Staff::where('hotelid', '=', $param['hotelid'])->count();
+        $data = $this->convertor->getStaffListConvertor($data, $param, $count);
         $this->echoSuccessData($data);
     }
 
@@ -63,7 +66,8 @@ class StaffController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
-            $param ['staff_web_hotel_id'] = intval($this->getParamList('staff_web_hotel_id'));
+            $param['staff_web_hotel_id'] = intval($this->getParamList('staff_web_hotel_id'));
+            $param['schedule'] = $this->getParamList('schedule');
             $data = $this->model->updateStaffById($param, $id);
             if ($data) {
                 $this->echoSuccessData($data);
@@ -137,6 +141,19 @@ class StaffController extends \BaseController {
         $userInfo = $this->model->getStaffDetail($userId);
         $userInfo ['token'] = $token;
         $result = $this->convertor->userInfoConvertor($userInfo);
+        $this->echoSuccessData($result);
+    }
+
+    /**
+     * Action for staff help user reset pin code
+     */
+    public function resetUserPinAction()
+    {
+        $params = array();
+        $params['token'] = trim($this->getParamList('token'));
+        $params['userid'] = intval($this->getParamList('userid'));
+        $model = new UserModel();
+        $result = $model->staffResetPin($params);
         $this->echoSuccessData($result);
     }
 

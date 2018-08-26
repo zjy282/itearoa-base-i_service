@@ -23,6 +23,9 @@ class Enum_Push {
     const PUSH_CONTENT_TYPE_URL = 'url';
     const PUSH_CONTENT_TYPE_SHOPPING_ORDER = 'shopping_order';
 
+    const PUSH_SHOPPING_ORDER_TITLE_ZH = '订单消息';
+    const PUSH_SHOPPING_ORDER_TITLE_EN = 'Shopping Order Message';
+
     const PLATFORM = 'umeng';
 
     private static $_config;
@@ -62,5 +65,22 @@ class Enum_Push {
         } else {
             return $msgConfig;
         }
+    }
+
+    /**
+     * @return string
+     * @throws Exception
+     */
+    public static function getContentUrl(): string
+    {
+        if (empty(self::$_config)) {
+            self::$_config = Yaf_Registry::get('sysConfig');
+        }
+        $result = trim(self::$_config['web']['webview_url']);
+        if (empty($result)) {
+            throw new Exception('Config webview_url is null', 1);
+        }
+        return $result;
+
     }
 }

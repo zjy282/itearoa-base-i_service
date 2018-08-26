@@ -1,5 +1,7 @@
 <?php
 
+use Frankli\Itearoa\Models\User;
+
 /**
  * Class UserModel
  * APP用户管理
@@ -147,7 +149,7 @@ class UserModel extends \BaseModel
     public function getOIdInfo($param)
     {
         $paramList = array();
-        if (is_null($param['propertyid']) || is_null($param['groupid'])) {
+        if ($param['propertyid'] <= 0 || is_null($param['groupid'])) {
             $hotelModel = new HotelListModel();
             $hotelInfo = $hotelModel->getHotelListDetail($param['hotelid']);
             $paramList['PropertyInterfID'] = $hotelInfo['propertyinterfid'];
@@ -195,6 +197,18 @@ class UserModel extends \BaseModel
      */
     public function loginAction($param)
     {
+        //check if token is expired
+        if (!empty($param['token'])) {
+            $userId = Auth_Login::getToken($param['token']);
+            if ($userId > 0) {
+                $userInfo = $this->getUserDetail($userId);
+                $userInfo['token'] = $param['token'];
+                $userInfo['room_response'] = $userInfo['room'];
+                $userInfo['lastname_response'] = $userInfo['fullName'];
+                return $userInfo;
+            }
+        }
+
         if (empty($param['room_no']) || empty($param['fullname'])) {
             $this->throwException('登录信息不正确', 2);
         }
@@ -224,10 +238,14 @@ class UserModel extends \BaseModel
             'groupid' => $param['groupid'],
             'room_no' => $param['room_no'],
             'fullname' => $param['fullname'],
-            'platform' => intval($param['platform']),
             'identity' => trim($param['identity']),
             'language' => trim($param['lang'])
         );
+
+        if ($param['platform'] > 0) {
+            // update the platform only it come from mobile
+            $newUserInfo['platform'] = intval($param['platform']);
+        }
 
         // 入住记录数据
         $userHistoryModel = new UserHistoryModel();
@@ -395,5 +413,140 @@ class UserModel extends \BaseModel
         return $string;
 
     }
-    
+
+    /**
+     * Check if pin is set
+     *
+     * @param $token
+     * @throws Exception
+     */
+    public function checkPin($token)
+    {
+        $userId = Auth_Login::getToken($token);
+        if (empty($userId)) {
+            $this->throwException('token expired', 2);
+        }
+        $user = User::find($userId);
+        if (is_null($user)) {
+            $this->throwException('token expired', 2);
+        }
+        if (empty($user->pin_code)) {
+            $this->throwException('pin is empty', 1);
+        }
+    }
+
+    /**
+     * User set or reset pin
+     *
+     * @param array $params
+     * @throws Exception
+     * @return int
+     */
+    public function setPin(array $params): int
+    {
+        $userId = Auth_Login::getToken($params['token']);
+        if (empty($userId)) {
+            $this->throwException('token验证失败', 1);
+        }
+
+        if (!preg_match('/^[0-9]{6}$/', $params['pin'])) {
+            $this->throwException('Pin should be 6 digit', 2);
+        }
+
+        $user = User::find($userId);
+        if (is_null($user)) {
+            $this->throwException('token验证失败', 2);
+        }
+        if (!empty($user->pin_code)) {
+            if (empty($params['old_pin'])) {
+                $this->throwException('密码已设置，重置密码请联系前台', 3);
+            }
+            //pass old_pin if reset
+            if (self::encodePwd($params['old_pin']) != $user->pin_code) {
+                $this->throwException('密码输入错误，忘记密码请联系前台重置', 4);
+            }
+        }
+
+        $pinCode = self::encodePwd($params['pin']);
+        $user->pin_code = $pinCode;
+        $saved = $user->save();
+        if (!$saved) {
+            $this->throwException('系统错误，请重试', 5);
+        }
+        return $user->id;
+    }
+
+    /**
+     * Staff help user reset the pin code
+     *
+     * @param array $params
+     * @throws Exception
+     * @return bool
+     */
+    public function staffResetPin(array $params): bool
+    {
+        $staffId = Auth_Login::getToken($params['token'], 2);
+        if ($staffId <= 0) {
+            $this->throwException('员工登录过期，请重新登录', 1);
+        }
+        $staffDao = new Dao_Staff();
+        $staffInfo = $staffDao->getStaffDetail($staffId);
+        $user = User::find($params['userid']);
+        if (empty($staffInfo) || !$user || ($user->hotelid != $staffInfo['hotelid'])) {
+            $this->throwException('Staff not match with userid', 2);
+        }
+
+        if (!empty($user->pin_code)) {
+            $user->pin_code = '';
+            $saved = $user->save();
+        } else {
+            $saved = true;
+        }
+
+        if (!$saved) {
+            $this->throwException('系统错误，请重试', 3);
+        }
+        return true;
+    }
+
+    public function notifyResetPin(int $userId, int $staff) {
+
+    }
+
+
+    /**
+     * @param array $params
+     * @return bool
+     */
+    public function validatePin(array $params): bool
+    {
+        $userId = Auth_Login::getToken($params['token']);
+        if (empty($userId)) {
+            $this->throwException('token验证失败', 1);
+        }
+        $user = User::find($userId);
+        if (is_null($user)) {
+            $this->throwException('token验证失败', 1);
+        }
+        if (empty($user->pin_code)) {
+            $this->throwException('Pin is empty', 3);
+        }
+        if ($user->pin_code != self::encodePwd($params['pin'])) {
+            $this->throwException('Pin incorrect', 2);
+        }
+        return $user->id;
+    }
+
+    /**
+     * Encode pin code with salt
+     *
+     * @param string $pin
+     * @return string
+     */
+    public static function encodePwd(string $pin): string
+    {
+        $sysConfig = Yaf_Registry::get('sysConfig');
+        return md5($sysConfig->service->salt . strval($pin));
+    }
+
 }

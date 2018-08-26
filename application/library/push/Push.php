@@ -80,11 +80,17 @@ class Push_Push {
             $customizedcast->setPredefinedKeyValue("appkey", $this->androidKey);
         } else {
             $customizedcast = new Push_Umeng_IOSCustomizedcast();
-            $customizedcast->setPredefinedKeyValue("alert", $data['title']);
+            $alertArray = array(
+                'title' => $data['title'],
+                'body' => $data['value']
+            );
+            $customizedcast->setPredefinedKeyValue("alert", $alertArray);
             $customizedcast->setPredefinedKeyValue("badge", 0);
             $customizedcast->setPredefinedKeyValue("sound", "chime");
-            $customizedcast->setCustomizedField("type", $data['contentType']);
-            $customizedcast->setCustomizedField("value", $data['contentValue']);
+//            $customizedcast->setCustomizedField("type", $data['contentType']);
+            if ($data['contentType'] == Enum_Push::PUSH_CONTENT_TYPE_URL) {
+                $customizedcast->setCustomizedField("value", $data['contentValue']);
+            }
             $customizedcast->setAppMasterSecret($this->iosMasterSecret);
             $customizedcast->setPredefinedKeyValue("appkey", $this->iosKey);
         }

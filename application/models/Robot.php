@@ -1,6 +1,8 @@
 <?php
 use Frankli\Itearoa\Models\ShoppingOrder;
 use Frankli\Itearoa\Models\Position;
+use Frankli\Itearoa\Models\RobotTask;
+use Frankli\Itearoa\Models\Staff;
 use Illuminate\Database\Capsule\Manager as DB;
 
 /**
@@ -10,6 +12,7 @@ class RobotModel extends \BaseModel
 {
     const ROBOT_GUIDE = 'guide';
     const ROBOT_TASK_GETITEM = 'getitem';
+    const SQL_BATCH = 100;
 
     private $dao;
 
@@ -166,20 +169,29 @@ class RobotModel extends \BaseModel
     {
         $daoRobotTask = new Dao_RobotTask();
 
-        $orderProducts = DB::table('orders_products')->whereIn('id', $params['itemlist'])->get();
-        $orderIdArray = array_unique(array_column($orderProducts->toArray(), 'order_id'));
-        $orders = ShoppingOrder::with('user')->whereIn('id', $orderIdArray)->get();
-        $roomNo = $daoRobotTask->checkRoomNo($orders->toArray());
-
-        //get position of start and target
-        if ($params['dest'] == 0) {
-            $position = Position::where(array(
-                'position' => $roomNo,
-                'hotelid' => $params['hotelid']
-            ))->firstOrFail();
+        if (is_array($params['itemlist']) && count($params['itemlist']) != 0) {
+            $orderProducts = DB::table('orders_products')->whereIn('id', $params['itemlist'])->get();
+            $orderIdArray = array_unique(array_column($orderProducts->toArray(), 'order_id'));
+            $orders = ShoppingOrder::with('user')->whereIn('id', $orderIdArray)->get();
+            $roomNo = $daoRobotTask->checkRoomNo($orders->toArray());
+            //get position of start and target
+            if ($params['dest'] == 0) {
+                $position = Position::where(array(
+                    'position' => $roomNo,
+                    'hotelid' => $params['hotelid']
+                ))->firstOrFail();
+            } else {
+                $position = Position::findOrFail($params['dest']);
+            }
         } else {
-            $position = Position::findOrFail($params['dest']);
+            if ($params['dest'] == 0) {
+                throw new Exception("Destination cannot be empty", 1);
+            } else {
+                $position = Position::findOrFail($params['dest']);
+                $roomNo = $position->position;
+            }
         }
+
         $target = $position->robot_position;
         $startPosition = Position::findOrFail($params['start']);
         $start = $startPosition->robot_position;
@@ -187,25 +199,29 @@ class RobotModel extends \BaseModel
         //send item to guest's room
         try {
             DB::beginTransaction();
-            $item = array(
-                'userid' => $params['userid'],
-                'orders' => json_encode($params['itemlist']),
-                'status' => Enum_ShoppingOrder::ROBOT_BEGIN,
-                'hotelid' => $params['hotelid'],
-                'createtime' => time(),
-            );
-            $robotTaskId = $daoRobotTask->addTask($item);
+            $robotTask = new RobotTask();
+            $robotTask->userid = $params['userid'];
+            $robotTask->orders = json_encode($params['itemlist']);
+            $robotTask->status = Enum_ShoppingOrder::ROBOT_BEGIN;
+            $robotTask->hotelid = $params['hotelid'];
+            $robotTask->room_no = $roomNo;
+            $robotTask->createtime = time();
+            $robotTask->save();
+            //todo use eloquent or the transaction won't work on this class
+            $robotTaskId = $robotTask->id;
 
-
-            DB::table('shopping_orders')->whereIn('id', $orderIdArray)->update(array(
-                'status' => Enum_ShoppingOrder::ORDER_STATUS_SERVICE,
-                'adminid' => $params['userid']
-            ));
-            DB::table('orders_products')->whereIn('id', $params['itemlist'])->update(array(
-                'status' => Enum_ShoppingOrder::ORDER_STATUS_SERVICE,
-                'robot_status' => Enum_ShoppingOrder::ROBOT_BEGIN,
-                'robot_taskid' => $robotTaskId
-            ));
+            if (!empty($orderIdArray)) {
+                DB::table('shopping_orders')->whereIn('id', $orderIdArray)->update(array(
+                    'status' => Enum_ShoppingOrder::ORDER_STATUS_SERVICE,
+                    'adminid' => $params['userid']
+                ));
+                DB::table('orders_products')->whereIn('id', $params['itemlist'])->update(array(
+                    'status' => Enum_ShoppingOrder::ORDER_STATUS_SERVICE,
+                    'robot_status' => Enum_ShoppingOrder::ROBOT_BEGIN,
+                    'memo' => Enum_ShoppingOrder::USER_ROBOT,
+                    'robot_taskid' => $robotTaskId
+                ));
+            }
 
             $apiParamArray = array(
                 'robottaskid' => $robotTaskId,
@@ -215,12 +231,14 @@ class RobotModel extends \BaseModel
             );
             $rpcObject = Rpc_Robot::getInstance();
             $rpcJson = $rpcObject->send(Rpc_Robot::SENDITEM, $apiParamArray);
-            $info['robot_detail'] = json_encode($rpcJson);
-            $flag = $daoRobotTask->updateTask($info, $robotTaskId);
+            $robotTask->robot_detail = trim(json_encode($rpcJson));
+            $flag = $robotTask->save();
             if (!$flag || is_null($rpcJson) || $rpcJson['errcode'] != 0) {
-                $errNo = intval($rpcJson['errcode']);
-                $errNo = $errNo != 0 ? $errNo : 1;
-                throw new Exception(json_encode($rpcJson['data']), $errNo);
+                if (!is_string($rpcJson['errmsg'])) {
+                    $rpcJson['errmsg'] = json_encode($rpcJson['errmsg']);
+                }
+                Log_File::writeLog('Robot-API', 'Robot API error:' . $robotTask->robot_detail);
+                throw new Exception($rpcJson['errmsg'], Enum_ShoppingOrder::EXCEPTION_ERROR_OUTPUT);
             }
             DB::commit();
             $result = array(
@@ -249,7 +267,11 @@ class RobotModel extends \BaseModel
     public function getItem(array $params)
     {
         $userDao = new Dao_User();
-        $userDetail = array();
+        $userId = $params['userid'];
+        $from = '';
+        $to = '';
+        $roomNo = '';
+        $hotelid = '';
         if (!empty($params['start']) && !empty($params['dest'])) {
             $roomPosition = $this->dao->getRobotPositionDetail($params['start']);
             $toPosition = $this->dao->getRobotPositionDetail($params['dest']);
@@ -260,60 +282,64 @@ class RobotModel extends \BaseModel
                     'limit' => 1
                 ));
                 if (count($userList) == 1) {
-                    $userDetail = $userList[0];
-                    $params['userid'] = $userDetail['id'];
-                    $from = $roomPosition['robot_position'];
-                    $to = $toPosition['robot_position'];
+                    $userId = $userList[0]['id'];
                 }
+                $from = $roomPosition['robot_position'];
+                $roomNo = $roomPosition['position'];
+                $hotelid = $roomPosition['hotelid'];
+            } else {
+                $this->throwException(Enum_Robot::EXCEPTION_POSITION_NOT_FOUND . "(${params['start']})", Enum_Robot::EXCEPTION_OUTPUT_NUM);
             }
-        }
 
-        if (empty($params['userid']) || (empty($params['to']) && empty($params['dest']))) {
-            $this->throwException('Lack of param', Enum_Robot::EXCEPTION_OUTPUT_NUM);
-        }
-        if (empty($userDetail)) {
+            if (!empty($toPosition)) {
+                $to = $toPosition['robot_position'];
+            } else {
+                $this->throwException(Enum_Robot::EXCEPTION_POSITION_NOT_FOUND . "(${params['dest']})", Enum_Robot::EXCEPTION_OUTPUT_NUM);
+            }
+        } elseif (!empty($params['to']) && $params['userid'] > 0){
+            $userId = $params['userid'];
             $userDetail = $userDao->getUserDetail($params['userid']);
-        }
-        $roomNo = $userDetail['room_no'];
-        if (empty($roomNo) || empty($userDetail['hotelid'])) {
-            throw new Exception(Enum_Robot::EXCEPTION_CANNOT_FIND_YOUR_ROOM, Enum_Robot::EXCEPTION_OUTPUT_NUM);
-        }
-        $params['hotelid'] = intval($userDetail['hotelid']);
-        $params['room_no'] = $userDetail['room_no'];
-        if (empty($from)) {
+            $roomNo = $userDetail['room_no'];
+            $hotelid = $userDetail['hotelid'];
+            if (empty($roomNo) || empty($userDetail['hotelid'])) {
+                throw new Exception(Enum_Robot::EXCEPTION_CANNOT_FIND_YOUR_ROOM, Enum_Robot::EXCEPTION_OUTPUT_NUM);
+            }
             $roomPosition = $this->dao->getPositionList(array(
                 'position' => $roomNo,
-                'hotelid' => $params['hotelid'],
+                'hotelid' => $hotelid,
                 'limit' => 1
             ));
-            $from = strval($roomPosition[0]['robot_position']);
-            if (count($roomPosition) != 1 || empty($from)) {
-                throw new Exception(Enum_Robot::EXCEPTION_ROOM_NOT_TAGGED, Enum_Robot::EXCEPTION_OUTPUT_NUM);
+            if (count($roomPosition) != 1) {
+                throw new Exception(Enum_Robot::EXCEPTION_ROOM_NOT_TAGGED . ': ' . $roomNo, Enum_Robot::EXCEPTION_OUTPUT_NUM);
+            } else {
+                $from = strval($roomPosition[0]['robot_position']);
             }
-        }
-
-        if (empty($to)) {
             $toPosition = $this->dao->getPositionList(array(
                 'position' => $params['to'],
-                'hotelid' => intval($userDetail['hotelid']),
+                'hotelid' => $hotelid,
                 'limit' => 1
             ));
-            $to = $toPosition[0]['robot_position'];
-            if (count($toPosition) != 1 || empty($to)) {
+            if (count($toPosition) != 1) {
                 throw new Exception(Enum_Robot::EXCEPTION_POSITION_NOT_FOUND . "(${params['to']})", Enum_Robot::EXCEPTION_OUTPUT_NUM);
+            } else {
+                $to = strval($toPosition[0]['robot_position']);
             }
+
+        } else {
+            $this->throwException('Lack of param', Enum_Robot::EXCEPTION_OUTPUT_NUM);
         }
 
+        //DB process
         $daoRobotTask = new Dao_RobotTask();
         try {
             $this->dao->beginTransaction();
             $item = array(
-                'userid' => $params['userid'],
+                'userid' => $userId,
                 'orders' => self::ROBOT_TASK_GETITEM,
                 'status' => Enum_Robot::ROBOT_BEGIN,
                 'createtime' => time(),
-                'room_no' => $params['room_no'],
-                'hotelid' => $params['hotelid'],
+                'room_no' => $roomNo,
+                'hotelid' => $hotelid,
             );
             $robotTaskId = $daoRobotTask->addTask($item);
 
@@ -321,7 +347,7 @@ class RobotModel extends \BaseModel
                 'robottaskid' => $robotTaskId,
                 'from' => $from,
                 'to' => $to,
-                'hotelid' => $params['hotelid'],
+                'hotelid' => $hotelid,
             );
 
             $rpcObject = Rpc_Robot::getInstance();
@@ -418,7 +444,6 @@ class RobotModel extends \BaseModel
     {
         $daoRobot = new Dao_RobotTask();
         $daoUser = new Dao_User();
-        $modelShoppingOrder = new ShoppingOrderModel();
 
         $taskInfo = $daoRobot->getRobotTaskDetail($taskId);
         $userInfo = $daoUser->getUserDetail($taskInfo['userid']);
@@ -439,7 +464,13 @@ class RobotModel extends \BaseModel
         );
         $subject = "机器人取物定单${taskId}：" . $taskInfo['room_no'] . " - " . date('Y-m-d H:i:s', $taskInfo['createtime']);
 
-        $to = $modelShoppingOrder->getEmailArray($taskInfo['hotelid']);
+        $to = array();
+        $staffArray = Staff::where('hotelid', $taskInfo['hotelid'])->get();
+        foreach ($staffArray as $staff) {
+            if (PushModel::checkSchedule($staff->schedule, time())) {
+                $to[] = $staff->email;
+            }
+        }
         if (!empty($to)) {
             $smtp = Mail_Email::getInstance();
             $smtp->addCc('iservice@liheinfo.com');
@@ -447,6 +478,51 @@ class RobotModel extends \BaseModel
         }
 
         return true;
+    }
+
+    public function sourcePosition(int $hotelid) {
+        $param['hotelid'] = $hotelid;
+        $rpcObject = Rpc_Robot::getInstance();
+        $rpcJson = $rpcObject->send(Rpc_Robot::POSITION, $param, false, 'GET');
+        return $rpcJson;
+
+    }
+
+    public function updatePosition(int $hotelid){
+        $result = array();
+        $newPositionArray = $this->sourcePosition($hotelid);
+        if ($newPositionArray['errcode'] == 0) {
+            $index = 0;
+            $sql = '';
+            foreach ($newPositionArray['data'] as $position) {
+                if ($index % self::SQL_BATCH == 0) {
+                    if ($sql != '') {
+                        $result[] = substr($sql, 0, -2) . ";";
+                    }
+                    $sql = "INSERT INTO robot_position(hotelid, userid, position, robot_position, type) VALUES ";
+                }
+                $index++;
+                if (preg_match("/^[0-9]+$/", $position['name'])) {
+                    $position['type'] = 1;
+                    if(strlen($position['name']) < 4){
+                        $position['name'] = str_pad($position['name'], 4, '0', STR_PAD_LEFT);
+                    }
+                } elseif (preg_match("/_[0-9]+_/", $position['name'])) {
+                    $position['type'] = 2;
+                } else {
+                    $position['type'] = 3;
+                }
+                $sql .= sprintf("(%s, %s, \"%s\", \"%s\", %s), ", $hotelid, 64, $position['name'], $position['name'], $position['type']);
+            }
+
+            if ($index % self::SQL_BATCH != 0) {
+                if ($sql != '') {
+                    $result[] = substr($sql, 0, -2) . ";";
+                }
+            }
+        }
+        return $result;
+
     }
 
 }

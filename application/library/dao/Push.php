@@ -20,6 +20,7 @@ class Dao_Push extends Dao_Base {
 
         $paramSql = $this->handlerListParams($param);
         $sql = "select * from iservice_push {$paramSql['sql']}";
+        $sql .= ' ORDER BY id DESC';
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }

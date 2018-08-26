@@ -90,6 +90,7 @@ class ShoppingTagController extends \BaseController
             $param['parentid'] = $this->getParamList('parentid');
             $param['status'] = $this->getParamList('status');
             $param['is_robot'] = $this->getParamList('is_robot');
+            $param['staff_list'] = $this->getParamList('staff_list');
 
             $data = $this->model->updateShoppingTagById($param, $id);
             $data = $this->convertor->statusConvertor($data);

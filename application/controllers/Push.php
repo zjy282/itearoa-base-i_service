@@ -158,4 +158,50 @@ class PushController extends \BaseController {
         $data = $this->convertor->userMsgListConvertor($data, $count, $param);
         $this->echoSuccessData($data);
     }
+
+
+    /**
+     * Get user's history message
+     */
+    public function getUserAppMsgListAction() {
+        $token = trim($this->getParamList('token'));
+        $userId = Auth_Login::getToken($token);
+        if (empty ($userId)) {
+            $this->throwException(2, 'token验证失败');
+        }
+
+        $param = array();
+        $param ['page'] = intval($this->getParamList('page', 1));
+        $param ['limit'] = intval($this->getParamList('limit', 20));
+        $param ['type'] = Enum_Push::PUSH_TYPE_USER;
+        $param ['dataid'] = $userId;
+        $param ['result'] = 0;
+        $data = $this->model->getPushList($param);
+        $count = $this->model->getPushCount($param);
+        $data = $this->convertor->userAppMsgListConvertor($data, $count, $param);
+        $this->echoSuccessData($data);
+    }
+
+
+    /**
+     * Get staff's history message
+     */
+    public function getStaffAppMsgListAction() {
+        $token = trim($this->getParamList('token'));
+        $staffId = Auth_Login::getToken($token, Auth_Login::STAFF_MARK);
+        if (empty ($staffId)) {
+            $this->throwException(2, 'token验证失败');
+        }
+
+        $param = array();
+        $param ['page'] = intval($this->getParamList('page', 1));
+        $param ['limit'] = intval($this->getParamList('limit', 20));
+        $param ['type'] = Enum_Push::PUSH_TYPE_STAFF;
+        $param ['dataid'] = $staffId;
+        $param ['result'] = 0;
+        $data = $this->model->getPushList($param);
+        $count = $this->model->getPushCount($param);
+        $data = $this->convertor->userAppMsgListConvertor($data, $count, $param);
+        $this->echoSuccessData($data);
+    }
 }
