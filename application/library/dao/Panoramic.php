@@ -21,7 +21,7 @@ class Dao_Panoramic extends Dao_Base {
         $page = $this->getStart($param['page'], $limit);
 
         $paramSql = $this->handlerListParams($param);
-        $sql = "select * from hotel_Panoramic {$paramSql['sql']}";
+        $sql = "select * from hotel_panoramic {$paramSql['sql']}";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }
@@ -38,7 +38,7 @@ class Dao_Panoramic extends Dao_Base {
      */
     public function getPanoramicCount(array $param): int {
         $paramSql = $this->handlerListParams($param);
-        $sql = "select count(1) as count from hotel_Panoramic {$paramSql['sql']}";
+        $sql = "select count(1) as count from hotel_panoramic {$paramSql['sql']}";
         $result = $this->db->fetchAssoc($sql, $paramSql['case']);
         return intval($result['count']);
     }
@@ -91,7 +91,7 @@ class Dao_Panoramic extends Dao_Base {
         $result = array();
 
         if ($id) {
-            $sql = "select * from hotel_Panoramic where id=?";
+            $sql = "select * from hotel_panoramic where id=?";
             $result = $this->db->fetchAssoc($sql, array(
                 $id
             ));

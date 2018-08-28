@@ -52,7 +52,7 @@ class Dao_HotelList extends Dao_Base {
         $whereSql = array();
         $whereCase = array();
         if (isset($param['id'])) {
-            if (is_array($param['id'])) {
+            if (is_array($param['id']) && count($param['id']) > 0) {
                 $whereSql[] = 'id in (' . implode(',', $param['id']) . ')';
             } else {
                 $whereSql[] = 'id = ?';

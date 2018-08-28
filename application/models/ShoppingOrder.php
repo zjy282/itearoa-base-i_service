@@ -233,7 +233,6 @@ class ShoppingOrderModel extends \BaseModel
         try {
             DB::beginTransaction();
             $order = ShoppingOrder::create($orderArray);
-
             $orderProductArray = array();
             foreach ($param['products'] as $product) {
                 $orderProduct = array();
@@ -316,7 +315,9 @@ class ShoppingOrderModel extends \BaseModel
         $to = array();
         foreach ($staffArray as $staff) {
             if (PushModel::checkSchedule($staff->schedule, time())) {
-                $to[] = $staff->email;
+                if (!empty($staff->email)) {
+                    $to[$staff->email] = $staff->lname;
+                }
             }
         }
         if (($type == self::ORDER_NOTIFY_EMAIL || $type == self::ORDER_NOTIFY_BOTH) && !empty($to)) {

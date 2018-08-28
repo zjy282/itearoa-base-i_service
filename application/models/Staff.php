@@ -221,7 +221,11 @@ class StaffModel extends \BaseModel
             }
         }
         $userInfo = $this->getStaffDetail($userId);
-        $userInfo['hotel_list'] = explode(',', $userInfo['hotel_list']);
+        if (!empty($userInfo['hotel_list'])) {
+            $userInfo['hotel_list'] = explode(',', $userInfo['hotel_list']);
+        } else {
+            $userInfo['hotel_list'] = array();
+        }
         $hotelModel = new HotelListModel();
         $hotelList = $hotelModel->getHotelListList(array('id' => $userInfo['hotel_list']));
         foreach ($hotelList as $hotel) {

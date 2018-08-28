@@ -104,7 +104,7 @@ class Dao_User extends Dao_Base {
      *            int id
      * @return array
      */
-    public function getUserDetail(int $id): array {
+    public function getUserDetail(int $id) {
         $result = array();
 
         if ($id) {

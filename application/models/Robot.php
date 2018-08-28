@@ -468,7 +468,9 @@ class RobotModel extends \BaseModel
         $staffArray = Staff::where('hotelid', $taskInfo['hotelid'])->get();
         foreach ($staffArray as $staff) {
             if (PushModel::checkSchedule($staff->schedule, time())) {
-                $to[] = $staff->email;
+                if (!empty($staff->email)) {
+                    $to[$staff->email] = $staff->lname;
+                }
             }
         }
         if (!empty($to)) {
