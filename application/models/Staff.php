@@ -223,11 +223,13 @@ class StaffModel extends \BaseModel
         $userInfo = $this->getStaffDetail($userId);
         if (!empty($userInfo['hotel_list'])) {
             $userInfo['hotel_list'] = explode(',', $userInfo['hotel_list']);
+            $hotelModel = new HotelListModel();
+            $hotelList = $hotelModel->getHotelListList(array('id' => $userInfo['hotel_list']));
         } else {
             $userInfo['hotel_list'] = array();
+            $hotelList = array();
         }
-        $hotelModel = new HotelListModel();
-        $hotelList = $hotelModel->getHotelListList(array('id' => $userInfo['hotel_list']));
+        $userInfo['hotel_list_detail'] = array();
         foreach ($hotelList as $hotel) {
             $detail = array(
                 'id' => $hotel['id'],
