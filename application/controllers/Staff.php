@@ -68,6 +68,7 @@ class StaffController extends \BaseController {
             $param = array();
             $param['staff_web_hotel_id'] = intval($this->getParamList('staff_web_hotel_id'));
             $param['schedule'] = $this->getParamList('schedule');
+            $param['washing_push'] = $this->getParamList('washing_push');
             $data = $this->model->updateStaffById($param, $id);
             if ($data) {
                 $this->echoSuccessData($data);

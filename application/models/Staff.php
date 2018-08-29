@@ -101,6 +101,11 @@ class StaffModel extends \BaseModel
                 unset($info['lastlogintime']);
                 unset($info['lastloginip']);
             }
+            if (!is_null($param['washing_push'])) {
+                $info['washing_push'] = intval($param['washing_push']);
+                unset($info['lastlogintime']);
+                unset($info['lastloginip']);
+            }
             $result = $this->dao->updateStaffById($info, $id);
         }
         return $result;

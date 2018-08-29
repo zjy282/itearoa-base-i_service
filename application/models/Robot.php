@@ -465,7 +465,9 @@ class RobotModel extends \BaseModel
         $subject = "机器人取物定单${taskId}：" . $taskInfo['room_no'] . " - " . date('Y-m-d H:i:s', $taskInfo['createtime']);
 
         $to = array();
-        $staffArray = Staff::where('hotelid', $taskInfo['hotelid'])->get();
+        $staffArray = Staff::where('hotelid', $taskInfo['hotelid'])
+            ->where('washing_push', 1)
+            ->get();
         foreach ($staffArray as $staff) {
             if (PushModel::checkSchedule($staff->schedule, time())) {
                 if (!empty($staff->email)) {
