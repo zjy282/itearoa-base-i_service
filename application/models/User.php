@@ -273,7 +273,7 @@ class UserModel extends \BaseModel
             $userHistoryModel->addUserHistory($historyInfo);
         }
         $userInfo = $this->getUserDetail($userId);
-        $userInfo['token'] = Auth_Login::makeToken($userId);
+        $userInfo['token'] = Auth_Login::makeToken($userId, Auth_Login::USER_MARK, 3600);
         $userInfo['room_response'] = $oIdInfo['room'];
         $userInfo['lastname_response'] = $oIdInfo['fullName'];
         return $userInfo;
