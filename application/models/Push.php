@@ -210,6 +210,7 @@ class PushModel extends \BaseModel {
         $info['response'] = $pushResult['result'];
         $info['content_type'] = $info['contentType'];
         $info['content_value'] = $info['contentValue'];
+        $param['message_type'] ? $info['message_type'] = $param['message_type'] : false;
         unset($info['contentType'], $info['contentValue']);
         return $this->dao->addPush($info);
     }

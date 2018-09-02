@@ -234,6 +234,7 @@ class Rpc_Robot
             $pushParams['type'] = Enum_Push::PUSH_TYPE_USER;
             $pushParams['contentType'] = Enum_Push::PUSH_CONTENT_TYPE_SHOPPING_ORDER;
             $pushParams['contentValue'] = $taskInfo['id'];
+            $pushParams['message_type'] = Enum_Push::PUSH_MESSAGE_TYPE_SHOPPING;
             $pushParams['dataid'] = $userId;
             $pushModel->addPushOne($pushParams);
         }
@@ -312,6 +313,7 @@ class Rpc_Robot
             $pushParams['type'] = Enum_Push::PUSH_TYPE_USER;
             $pushParams['contentType'] = Enum_Push::PUSH_CONTENT_TYPE_SHOPPING_ORDER;
             $pushParams['contentValue'] = $taskInfo['id'];
+            $pushParams['message_type'] = Enum_Push::PUSH_MESSAGE_TYPE_SHOPPING;
             $pushParams['dataid'] = $taskInfo['userid']; // user id
 
             $pushModel->addPushOne($pushParams);

@@ -65,22 +65,24 @@ class Convertor_Push extends Convertor_Base {
      *            扩展参数
      * @return array
      */
-    public function userMsgListConvertor($list, $count, $param) {
+    public function userMsgListConvertor($list, $count, $param)
+    {
         $data = array('list' => array());
         $langInfo = Yaf_Registry::get('hotelLangInfo');
         foreach ($list as $key => $value) {
             $oneTemp = array();
-            $oneTemp ['id'] = $value ['id'];
-            $oneTemp ['title'] = $langInfo['lang'] == 'zh' ? $value ['cn_title'] : $value ['en_title'];
-            $oneTemp ['value'] = $langInfo['lang'] == 'zh' ? $value ['cn_value'] : $value ['en_value'];
-            $oneTemp ['url'] = $value ['content_value'];
-            $oneTemp ['createtime'] = date('Y-m-d H:i:s', $value['createtime']);
-            $data ['list'] [] = $oneTemp;
+            $oneTemp['id'] = $value ['id'];
+            $oneTemp['title'] = $langInfo['lang'] == 'zh' ? $value['cn_title'] : $value['en_title'];
+            $oneTemp['value'] = $langInfo['lang'] == 'zh' ? $value['cn_value'] : $value['en_value'];
+            $oneTemp['url'] = $value ['content_value'];
+            $oneTemp['createtime'] = date('Y-m-d H:i:s', $value['createtime']);
+            $oneTemp['icon'] = $this->getMessageIcon($value['message_type']);
+            $data['list'][] = $oneTemp;
         }
-        $data ['total'] = $count;
-        $data ['page'] = $param ['page'];
-        $data ['limit'] = $param ['limit'];
-        $data ['nextPage'] = Util_Tools::getNextPage($data ['page'], $data ['limit'], $data ['total']);
+        $data['total'] = $count;
+        $data['page'] = $param['page'];
+        $data['limit'] = $param['limit'];
+        $data['nextPage'] = Util_Tools::getNextPage($data['page'], $data['limit'], $data['total']);
         return $data;
     }
 
@@ -103,5 +105,20 @@ class Convertor_Push extends Convertor_Base {
         $data ['limit'] = $param ['limit'];
         $data ['nextPage'] = Util_Tools::getNextPage($data ['page'], $data ['limit'], $data ['total']);
         return $data;
+    }
+
+    public function getMessageIcon($type)
+    {
+        switch ($type) {
+            case Enum_Push::PUSH_MESSAGE_TYPE_SHOPPING:
+                $result = Enum_Img::getPathByKeyAndType(Enum_Img::MESSAGE_SHOPPING_ICON);
+                break;
+            case Enum_Push::PUSH_MESSAGE_TYPE_BILL:
+                $result = Enum_Img::getPathByKeyAndType(Enum_Img::MESSAGE_BILL_ICON);
+                break;
+            default:
+                $result = Enum_Img::getPathByKeyAndType(Enum_Img::MESSAGE_NOTIFICATION_ICON);
+        }
+        return $result;
     }
 }

@@ -7,6 +7,10 @@ class Enum_Img {
 
     const PIC_TYPE_KEY_WIDTH750 = 'width_750';
 
+    const MESSAGE_BILL_ICON = 'iservicev2_img_manual_bill.png';
+    const MESSAGE_SHOPPING_ICON = 'iservicev2_img_manual_shopping.png';
+    const MESSAGE_NOTIFICATION_ICON = 'iservicev2_img_manual_notification.png';
+
 
     /**
      * 根据key和类型获取图片路径

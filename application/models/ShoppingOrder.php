@@ -205,6 +205,7 @@ class ShoppingOrderModel extends \BaseModel
         $pushParams['type'] = Enum_Push::PUSH_TYPE_USER;
         $pushParams['contentType'] = Enum_Push::PUSH_CONTENT_TYPE_SHOPPING_ORDER;
         $pushParams['contentValue'] = $orderProductId;
+        $pushParams['message_type'] = Enum_Push::PUSH_MESSAGE_TYPE_SHOPPING;
         $pushParams['dataid'] = $order->userid;
 
         $pushModel->addPushOne($pushParams);

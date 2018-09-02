@@ -20,6 +20,10 @@ class Enum_Push {
     const PUSH_ALIAS_USER_PREFIX = 'user';//用户别名前缀
     const PUSH_ALIAS_STAFF_PREFIX = 'staff';//员工别名前缀
 
+    const PUSH_MESSAGE_TYPE_BILL = 'bill';
+    const PUSH_MESSAGE_TYPE_SHOPPING = 'shopping';
+    const PUSH_MESSAGE_TYPE_NOTIFICATION = 'notification';
+
     const PUSH_CONTENT_TYPE_URL = 'url';
     const PUSH_CONTENT_TYPE_SHOPPING_ORDER = 'shopping_order';
 
