@@ -198,16 +198,16 @@ class UserModel extends \BaseModel
     public function loginAction($param)
     {
         //check if token is expired
-        if (!empty($param['token'])) {
-            $userId = Auth_Login::getToken($param['token']);
-            if ($userId > 0) {
-                $userInfo = $this->getUserDetail($userId);
-                $userInfo['token'] = $param['token'];
-                $userInfo['room_response'] = $userInfo['room'];
-                $userInfo['lastname_response'] = $userInfo['fullName'];
-                return $userInfo;
-            }
-        }
+//        if (!empty($param['token'])) {
+//            $userId = Auth_Login::getToken($param['token']);
+//            if ($userId > 0) {
+//                $userInfo = $this->getUserDetail($userId);
+//                $userInfo['token'] = $param['token'];
+//                $userInfo['room_response'] = $userInfo['room'];
+//                $userInfo['lastname_response'] = $userInfo['fullName'];
+//                return $userInfo;
+//            }
+//        }
 
         if (empty($param['room_no']) || empty($param['fullname'])) {
             $this->throwException('登录信息不正确', 2);
