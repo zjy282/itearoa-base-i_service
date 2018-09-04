@@ -400,7 +400,7 @@ class UserModel extends \BaseModel
         }
 
 
-        if (isset($seedConfig[$hotelid])) {
+        if (!empty(trim($seedConfig[$hotelid]))) {
             $seed = $seedConfig[$hotelid];
         } else {
             $seed = $seedConfig['default'];
