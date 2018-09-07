@@ -278,4 +278,32 @@ class UserController extends \BaseController {
         $this->echoJson($result);
     }
 
+    /**
+     * Action for shopping box token generation
+     */
+    public function getShoppingBoxDetailAction()
+    {
+        $token = trim($this->getParamList('token'));
+
+        try {
+            $userid = intval(Auth_Login::getToken($token));
+            $result = $this->model->getShoppingBoxToken($userid);
+            $result = array(
+                'code' => 0,
+                'msg' => 'success',
+                'data' => $result
+            );
+        } catch (Exception $e) {
+            Log_File::writeLog('Token', $e->getMessage() . "\n" . $e->getTraceAsString());
+            $msg = $e->getMessage();
+            $result = array(
+                'code' => $e->getCode(),
+                'msg' => $msg,
+                'data' => array()
+            );
+        }
+
+        $this->echoJson($result);
+    }
+
 }

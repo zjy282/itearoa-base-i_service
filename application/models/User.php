@@ -1,6 +1,7 @@
 <?php
 
 use Frankli\Itearoa\Models\User;
+use Frankli\Itearoa\Models\Config;
 
 /**
  * Class UserModel
@@ -547,6 +548,45 @@ class UserModel extends \BaseModel
     {
         $sysConfig = Yaf_Registry::get('sysConfig');
         return md5($sysConfig->service->salt . strval($pin));
+    }
+
+    /**
+     * Get shopping box token
+     *
+     * @param int $userid
+     * @return array
+     */
+    public function getShoppingBoxToken(int $userid): array
+    {
+        if ($userid <= 0) {
+            $this->throwException('Token验证失败，请重新登录', Enum_Login::EXCEPTION_CODE_EXPIRED);
+        }
+        $user = User::find($userid);
+        if (is_null($user)) {
+            $this->throwException('token验证失败，请重新登录', Enum_Login::EXCEPTION_CODE_EXPIRED);
+        }
+        $names = ['shopping_box_storid', 'shopping_box_accountid', 'shopping_box_salt'];
+        $items = Config::where('hotelid', $user->hotelid)->whereIn('name', $names)->get();
+        if (count($items) != count($names)) {
+            $this->throwException('参数不全' . json_encode($names), 1);
+        }
+        $config = array();
+        foreach ($items as $item) {
+            $config[$item->name] = $item->value;
+        }
+        $result = array(
+            'storeId' => $config['shopping_box_storid'],
+            'roomId' => ltrim($user->room_no, '0'),
+            'name' => $user->fullname,
+            'date' => date('Y-m-d')
+        );
+        if (!empty($config['shopping_box_accountid'])) {
+            $result['accountsId'] = $config['shopping_box_accountid'];
+        }
+        $result['verifyCode'] = md5($result['storeId'] . $result['roomId'] .
+            $result['name'] . $result['date'] . $config['shopping_box_salt']);
+        return $result;
+
     }
 
 }
