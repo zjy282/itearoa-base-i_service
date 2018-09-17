@@ -31,12 +31,19 @@ class StaffController extends \BaseController {
      */
     public function getStaffListAction() {
         $param = array();
-        $param ['name'] = trim($this->getParamList('name'));
+        $param['name'] = trim($this->getParamList('name'));
         $param['hotelid'] = intval($this->getParamList('hotelid'));
+        $param['id'] = intval($this->getParamList('id'));
         $param['limit'] = $this->getParamList('limit');
         $param['page'] = $this->getParamList('page');
         $data = $this->model->getStaffList($param);
-        $count = Staff::where('hotelid', '=', $param['hotelid'])->count();
+        if ($param['id'] > 0) {
+            $count = Staff::where('hotelid', '=', $param['hotelid'])
+                ->where('id', $param['id'])
+                ->count();
+        } else {
+            $count = Staff::where('hotelid', '=', $param['hotelid'])->count();
+        }
         $data = $this->convertor->getStaffListConvertor($data, $param, $count);
         $this->echoSuccessData($data);
     }

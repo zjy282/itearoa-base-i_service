@@ -287,7 +287,12 @@ class UserController extends \BaseController {
 
         try {
             $userid = intval(Auth_Login::getToken($token));
-            $result = $this->model->getShoppingBoxToken($userid);
+            if ($userid <= 0) {
+                $staffId = intval(Auth_Login::getToken($token, Auth_Login::STAFF_MARK));
+                $result = $this->model->getShoppingBoxTokenStaff($staffId);
+            } else {
+                $result = $this->model->getShoppingBoxToken($userid);
+            }
             $result = array(
                 'code' => 0,
                 'msg' => 'success',

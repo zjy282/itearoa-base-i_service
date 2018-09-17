@@ -1,6 +1,7 @@
 <?php
 
 use Frankli\Itearoa\Models\User;
+use Frankli\Itearoa\Models\Staff;
 use Frankli\Itearoa\Models\Config;
 
 /**
@@ -9,6 +10,8 @@ use Frankli\Itearoa\Models\Config;
  */
 class UserModel extends \BaseModel
 {
+
+    const STAFF_ROOM_ID = '001';
 
     private $dao;
 
@@ -274,7 +277,8 @@ class UserModel extends \BaseModel
             $userHistoryModel->addUserHistory($historyInfo);
         }
         $userInfo = $this->getUserDetail($userId);
-        $userInfo['token'] = Auth_Login::makeToken($userId, Auth_Login::USER_MARK, 3600);
+        $timeout = intval(Yaf_Registry::get('sysConfig')['auth.timeout']) > 0 ? intval(Yaf_Registry::get('sysConfig')['auth.timeout']) : 3600;
+        $userInfo['token'] = Auth_Login::makeToken($userId, Auth_Login::USER_MARK, $timeout);
         $userInfo['room_response'] = $oIdInfo['room'];
         $userInfo['lastname_response'] = $oIdInfo['fullName'];
         return $userInfo;
@@ -578,6 +582,45 @@ class UserModel extends \BaseModel
             'storeId' => $config['shopping_box_storid'],
             'roomId' => ltrim($user->room_no, '0'),
             'name' => $user->fullname,
+            'date' => date('Y-m-d')
+        );
+        if (!empty($config['shopping_box_accountid'])) {
+            $result['accountsId'] = $config['shopping_box_accountid'];
+        }
+        $result['verifyCode'] = md5($result['storeId'] . $result['roomId'] .
+            $result['name'] . $result['date'] . $config['shopping_box_salt']);
+        return $result;
+
+    }
+
+    /**
+     * Get shopping box token for staff
+     *
+     * @param int $userid
+     * @return array
+     */
+    public function getShoppingBoxTokenStaff(int $staffId): array
+    {
+        if ($staffId <= 0) {
+            $this->throwException('Token验证失败，请重新登录', Enum_Login::EXCEPTION_CODE_EXPIRED);
+        }
+        $staff = Staff::find($staffId);
+        if (is_null($staff)) {
+            $this->throwException('token验证失败，请重新登录', Enum_Login::EXCEPTION_CODE_EXPIRED);
+        }
+        $names = ['shopping_box_storid', 'shopping_box_accountid', 'shopping_box_salt'];
+        $items = Config::where('hotelid', $staff->hotelid)->whereIn('name', $names)->get();
+        if (count($items) != count($names)) {
+            $this->throwException('参数不全' . json_encode($names), 1);
+        }
+        $config = array();
+        foreach ($items as $item) {
+            $config[$item->name] = $item->value;
+        }
+        $result = array(
+            'storeId' => $config['shopping_box_storid'],
+            'roomId' => self::STAFF_ROOM_ID,
+            'name' => $staff->lname,
             'date' => date('Y-m-d')
         );
         if (!empty($config['shopping_box_accountid'])) {
