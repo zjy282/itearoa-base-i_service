@@ -41,14 +41,16 @@ class Rpc_Robot
             'action' => 'gotoStartCallback',
             'status' => Enum_ShoppingOrder::ROBOT_GOING,
             'orderStatus' => Enum_ShoppingOrder::ORDER_STATUS_WAIT,
+            'sendStatus' => Enum_ShoppingOrder::ROBOT_GOING,
             'notice' => self::NOTICE_STAFF,
-            'sendNotice' => self::NOTICE_NONE
+            'sendNotice' => self::NOTICE_GUEST
         ),
 
         'arriveStartCallback' => array(
             'action' => 'arriveStartCallback',
             'status' => Enum_ShoppingOrder::ROBOT_GOING,
             'orderStatus' => Enum_ShoppingOrder::ORDER_STATUS_WAIT,
+            'sendStatus' => Enum_ShoppingOrder::ROBOT_ARRIVED,
             'notice' => self::NOTICE_STAFF,
             'sendNotice' => self::NOTICE_GUEST
         ),
@@ -57,6 +59,7 @@ class Rpc_Robot
             'action' => 'gotoTargetCallback',
             'status' => Enum_ShoppingOrder::ROBOT_GOING,
             'orderStatus' => Enum_ShoppingOrder::ORDER_STATUS_SERVICE,
+            'sendStatus' => Enum_ShoppingOrder::ROBOT_ARRIVED,
             'notice' => self::NOTICE_BOTH,
             'sendNotice' => self::NOTICE_NONE
         ),
@@ -65,8 +68,9 @@ class Rpc_Robot
             'action' => 'arriveTargetCallback',
             'status' => Enum_ShoppingOrder::ROBOT_ARRIVED,
             'orderStatus' => Enum_ShoppingOrder::ORDER_STATUS_SERVICE,
+            'sendStatus' => Enum_ShoppingOrder::ROBOT_ARRIVED,
             'notice' => self::NOTICE_BOTH,
-            'sendNotice' => self::NOTICE_GUEST
+            'sendNotice' => self::NOTICE_NONE
         ),
 
         'successCallback' => array(
@@ -291,7 +295,7 @@ class Rpc_Robot
     private function _getCallback(string $action, array $taskInfo)
     {
         if (is_array(Rpc_Robot::$callbackArray[$action])) {
-            $taskUpdate['status'] = Rpc_Robot::$callbackArray[$action]['status'];
+            $taskUpdate['status'] = Rpc_Robot::$callbackArray[$action]['sendStatus'];
         } else {
             throw new Exception("参数错误");
         }

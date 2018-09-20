@@ -151,7 +151,6 @@ class PushController extends \BaseController {
         $param ['limit'] = intval($this->getParamList('limit', 10));
         $param ['type'] = Enum_Push::PUSH_TYPE_USER;
         $param ['dataid'] = $userId;
-        $param['content_type'] = Enum_Push::PUSH_CONTENT_TYPE_URL;
         $param ['result'] = 0;
         $data = $this->model->getPushList($param);
         $count = $this->model->getPushCount($param);

@@ -485,5 +485,3 @@ class Util_Tools {
         return $nextPage;
     }
 }
-
-?>
