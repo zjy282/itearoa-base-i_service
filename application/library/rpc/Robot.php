@@ -77,6 +77,7 @@ class Rpc_Robot
             'action' => 'successCallback',
             'status' => Enum_ShoppingOrder::ROBOT_FINISHED,
             'orderStatus' => Enum_ShoppingOrder::ORDER_STATUS_COMPLETE,
+            'sendStatus' => Enum_ShoppingOrder::ROBOT_FINISHED,
             'notice' => self::NOTICE_BOTH,
             'sendNotice' => self::NOTICE_GUEST
 
@@ -85,6 +86,7 @@ class Rpc_Robot
             'action' => 'failCallback',
             'status' => Enum_ShoppingOrder::ROBOT_GUEST_NOT_FETCH,
             'orderStatus' => Enum_ShoppingOrder::ORDER_STATUS_SERVICE,
+            'sendStatus' => Enum_ShoppingOrder::ROBOT_GUEST_NOT_FETCH,
             'notice' => self::NOTICE_BOTH,
             'sendNotice' => self::NOTICE_GUEST
         ),
