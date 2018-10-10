@@ -6,6 +6,12 @@
  */
 class AppstartMsgModel extends \BaseModel {
 
+    const TYPE_HOTEL = 1;
+
+    const TYPE_GROUP = 2;
+
+    const STATUS_ENABLE = 1;
+
     private $dao;
 
     public function __construct() {

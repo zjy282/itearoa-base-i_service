@@ -22,9 +22,9 @@ class Convertor_AppstartMsg extends Convertor_Base {
         $msgList = array_column($msgList, null, 'id');
         $effectiveMsgList = array_diff_key($msgList, array_flip($msgLogHistoryMsgId));
         krsort($effectiveMsgList);
-        $effectiveMsg = current($effectiveMsgList);
+
         $data = array('list' => array());
-        if ($effectiveMsg) {
+        foreach ($effectiveMsgList as $effectiveMsg) {
             $dataTemp ['msgId'] = $effectiveMsg ['id'];
             $dataTemp ['pic'] = Enum_Img::getPathByKeyAndType($effectiveMsg ['pic'], Enum_Img::PIC_TYPE_KEY_WIDTH750);
             $dataTemp ['msg'] = $effectiveMsg ['msg'];
