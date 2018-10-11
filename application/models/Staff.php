@@ -244,7 +244,7 @@ class StaffModel extends \BaseModel
             );
             $userInfo['hotel_list_detail'][] = $detail;
         }
-        $userInfo['token'] = Auth_Login::makeToken($userId, Auth_Login::STAFF_MARK, 7 * 24 * 3600);
+        $userInfo['token'] = Auth_Login::makeToken($userId, Auth_Login::STAFF_MARK, 30 * 24 * 3600);
         return $userInfo;
     }
 

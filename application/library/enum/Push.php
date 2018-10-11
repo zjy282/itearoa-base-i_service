@@ -23,6 +23,7 @@ class Enum_Push {
     const PUSH_MESSAGE_TYPE_BILL = 'bill';
     const PUSH_MESSAGE_TYPE_SHOPPING = 'shopping';
     const PUSH_MESSAGE_TYPE_NOTIFICATION = 'notification';
+    const PUSH_MESSAGE_TYPE_SHOPPING_BOX = 'shopping_box';
 
     const PUSH_CONTENT_TYPE_URL = 'url';
     const PUSH_CONTENT_TYPE_SHOPPING_ORDER = 'shopping_order';

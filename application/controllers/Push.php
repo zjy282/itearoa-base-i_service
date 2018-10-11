@@ -203,4 +203,31 @@ class PushController extends \BaseController {
         $data = $this->convertor->userAppMsgListConvertor($data, $count, $param);
         $this->echoSuccessData($data);
     }
+
+    /**
+     * 购物柜推送消息API
+     */
+    public function shoppingPushMsgAction()
+    {
+        $param = array();
+        $param['type'] = intval($this->getParamList('user_type', Enum_Push::PUSH_TYPE_USER));
+        $param['dataid'] = intval($this->getParamList('user_id'));
+        $param['platform'] = intval($this->getParamList('platform', Enum_Push::PHONE_TYPE_ANDROID));
+
+        $param['cn_title'] = trim($this->getParamList('cn_title'));
+        $param['cn_value'] = trim($this->getParamList('cn_value'));
+        $param['en_title'] = trim($this->getParamList('en_title'));
+        $param['en_value'] = trim($this->getParamList('en_value'));
+
+        $param['contentType'] = Enum_Push::PUSH_CONTENT_TYPE_URL;
+        $param['contentValue'] = trim($this->getParamList('url'));
+
+        $param['message_type'] = Enum_Push::PUSH_MESSAGE_TYPE_SHOPPING_BOX;
+
+        $result = $this->model->addPushOne($param);
+        $data = $this->convertor->shoppingMsgConvertor($result);
+        $logInfo = array('params' => json_encode($this->getParamList()), 'result' => json_encode($data));
+        Log_File::writeLog('shoppingboxPushMsg', implode("\n", $logInfo));
+        $this->echoSuccessData($data);
+    }
 }

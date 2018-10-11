@@ -20,6 +20,16 @@ class Convertor_Push extends Convertor_Base {
         return array('result' => $pushResult);
     }
 
+
+    public function shoppingMsgConvertor($result)
+    {
+        if ($result) {
+            return array('code' => 0, 'msg' => 'success');
+        } else {
+            return array('code' => 1, 'msg' => 'fail');
+        }
+    }
+
     /**
      * 推送结果列表
      *

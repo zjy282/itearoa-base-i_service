@@ -92,9 +92,9 @@ class PushModel extends \BaseModel {
     /**
      * Push新增信息
      *
-     * @param
-     *            array param 需要增加的信息
-     * @return array
+     * @param $param
+     * @param int $platform
+     * @return int
      */
     public function addPushOne($param, $platform = self::APP_YSG_GROUP_ID) {
         // 判断参数错误
