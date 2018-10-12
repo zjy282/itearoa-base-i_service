@@ -54,6 +54,29 @@ class BaseModel {
     protected function throwException($name, $code) {
         throw new Exception($name, $code);
     }
-}
 
-?>
+    /**
+     * Format input params
+     *
+     * @param array $params
+     * @param callable|null $function
+     * @return array
+     */
+    protected function filterParam(array $params, callable $function = null): array
+    {
+        $result = [];
+        foreach ($params as $key => $value) {
+            if (is_null($function)) {
+                if (!is_null($value)) {
+                    $result[$key] = $value;
+                    continue;
+                }
+            }
+            if (call_user_func($function, $value)) {
+                $result[$key] = $value;
+                continue;
+            }
+        }
+        return $result;
+    }
+}
