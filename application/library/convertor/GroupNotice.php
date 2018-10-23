@@ -35,7 +35,7 @@ class Convertor_GroupNotice extends Convertor_Base
             $newTemp = array();
             $newTemp ['id'] = $notic ['id'];
             $newTemp ['title'] = $notic['title_lang' . Enum_Lang::getLangIndex($param['lang'])];
-            $newTemp ['article'] = Enum_Img::getPathByKeyAndType($notic['article_title' . Enum_Lang::getLangIndex($param['lang'])]);
+            $newTemp ['article'] = Enum_Img::getPathByKeyAndType($notic['article_lang' . Enum_Lang::getLangIndex($param['lang'])]);
             $newTemp ['pdf'] = $notic['pdf'] ? Enum_Img::getPathByKeyAndType($notic['pdf']) : '';
             $newTemp ['video'] = $notic['video'] ? Enum_Img::getPathByKeyAndType($notic['video']) : '';
             $newTemp ['tagId'] = $notic ['tagid'];
