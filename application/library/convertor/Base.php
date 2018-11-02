@@ -46,18 +46,21 @@ class Convertor_Base {
     }
 
     /**
-     * 获取多语言数据
+     * Process language
      *
-     * @param string $dataKey
-     *            数据xxx_langx中的_前半部分
-     * @param array $data
-     *            包含三种语言的数据数组
-     * @return string 对应访问语言的数据
+     * @param $dataKey
+     * @param $data
+     * @param bool $force  force use lang from $_REQUEST
+     * @return mixed
      */
-    protected function handlerMultiLang($dataKey, $data) {
-        $langInfo = Yaf_Registry::get('hotelLangInfo');
-        
-        $dataLangKey = $dataKey . '_lang' . $langInfo['langIndex'];
+    protected function handlerMultiLang($dataKey, $data, $force = false) {
+        if ($force) {
+            $lang = trim($_REQUEST['lang']);
+            $dataLangKey = $dataKey . '_lang' . Enum_Lang::getLangIndex($lang, Enum_Lang::CHINESE);
+        } else {
+            $langInfo = Yaf_Registry::get('hotelLangInfo');
+            $dataLangKey = $dataKey . '_lang' . $langInfo['langIndex'];
+        }
         $value = $data[$dataLangKey] ? $data[$dataLangKey] : $data[$dataKey . '_lang1'];
         return $value;
     }

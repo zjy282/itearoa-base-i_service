@@ -78,6 +78,9 @@ class GroupNewsModel extends \BaseModel {
             isset($param ['status']) ? $info ['status'] = $param ['status'] : false;
             $param ['title_lang1'] ? $info ['title_lang1'] = $param ['title_lang1'] : false;
             $param ['title_lang2'] ? $info ['title_lang2'] = $param ['title_lang2'] : false;
+            $info['link_lang1'] = trim($param['link_lang1']);
+            $info['link_lang2'] = trim($param['link_lang2']);
+            $info['link_lang3'] = trim($param['link_lang3']);
             isset($param ['article_lang1']) ? $info ['article_lang1'] = $param ['article_lang1'] : false;
             isset($param ['article_lang2']) ? $info ['article_lang2'] = $param ['article_lang2'] : false;
             isset($param ['tagid']) ? $info ['tagid'] = $param ['tagid'] : false;

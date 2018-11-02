@@ -89,6 +89,9 @@ class GroupNewsController extends \BaseController
             $param ['status'] = $this->getParamList('status');
             $param ['title_lang1'] = $this->getParamList('title_lang1');
             $param ['title_lang2'] = $this->getParamList('title_lang2');
+            $param ['link_lang1'] = $this->getParamList('link_lang1');
+            $param ['link_lang2'] = $this->getParamList('link_lang2');
+            $param ['link_lang3'] = $this->getParamList('link_lang3');
             $param ['article_lang1'] = $this->getParamList('article_lang1');
             $param ['article_lang2'] = $this->getParamList('article_lang2');
             $param ['tagid'] = $this->getParamList('tagid');
@@ -119,6 +122,9 @@ class GroupNewsController extends \BaseController
         $param ['status'] = $this->getParamList('status');
         $param ['title_lang1'] = $this->getParamList('title_lang1');
         $param ['title_lang2'] = $this->getParamList('title_lang2');
+        $param ['link_lang1'] = $this->getParamList('link_lang1');
+        $param ['link_lang2'] = $this->getParamList('link_lang2');
+        $param ['link_lang3'] = $this->getParamList('link_lang3');
         $param ['tagid'] = $this->getParamList('tagid');
         $param ['updatetime'] = time();
         $param ['createtime'] = time();

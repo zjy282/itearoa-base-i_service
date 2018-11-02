@@ -137,9 +137,9 @@ class PushController extends \BaseController {
     /**
      * 用户获取推送服务列表
      *
-     * @return Json
      */
-    public function getUserMsgListAction() {
+    public function getUserMsgListAction()
+    {
         $token = trim($this->getParamList('token'));
         $userId = Auth_Login::getToken($token);
         if (empty ($userId)) {
@@ -151,6 +151,29 @@ class PushController extends \BaseController {
         $param ['limit'] = intval($this->getParamList('limit', 10));
         $param ['type'] = Enum_Push::PUSH_TYPE_USER;
         $param ['dataid'] = $userId;
+        $param ['result'] = 0;
+        $data = $this->model->getPushList($param);
+        $count = $this->model->getPushCount($param);
+        $data = $this->convertor->userMsgListConvertor($data, $count, $param);
+        $this->echoSuccessData($data);
+    }
+
+    /**
+     * 员工获取推送服务列表
+     */
+    public function getStaffMsgListAction()
+    {
+        $token = trim($this->getParamList('token'));
+        $staffId = Auth_Login::getToken($token, Auth_Login::STAFF_MARK);
+
+        if (empty ($staffId)) {
+            $this->throwException(2, 'token验证失败');
+        }
+        $param = array();
+        $param ['page'] = intval($this->getParamList('page', 1));
+        $param ['limit'] = intval($this->getParamList('limit', 10));
+        $param ['type'] = Enum_Push::PUSH_TYPE_STAFF;
+        $param ['dataid'] = $staffId;
         $param ['result'] = 0;
         $data = $this->model->getPushList($param);
         $count = $this->model->getPushCount($param);

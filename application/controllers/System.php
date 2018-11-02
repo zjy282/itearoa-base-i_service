@@ -72,4 +72,13 @@ class SystemController extends \BaseController {
 	public function getPlatformListAction() {
 		$this->echoSuccessData ( array ('list' => Enum_Platform::getPlatformNameList () ) );
 	}
+
+
+	public function testAction(){
+        $p = new RobotModel();
+        $result = $p->updatePosition(30);
+        foreach ($result as $one){
+            echo $one . "</br></br>";
+        }
+    }
 }

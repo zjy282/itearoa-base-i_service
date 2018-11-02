@@ -43,6 +43,7 @@ class Convertor_GroupNews extends Convertor_Base
             $newTemp ['tagName'] = $tagListNew[$newTemp['tagId']];
             $newTemp ['createtime'] = $news ['createtime'];
             $newTemp ['updatetime'] = $news ['updatetime'];
+            $newTemp['outLink'] = $this->handlerMultiLang('link', $news, true);
             $data ['list'] [] = $newTemp;
         }
         $data ['total'] = $newsCount;
@@ -81,6 +82,11 @@ class Convertor_GroupNews extends Convertor_Base
 
             $newTemp ['article_lang1'] = $news ['article_lang1'];
             $newTemp ['article_lang2'] = $news ['article_lang2'];
+
+            $newTemp['link_lang1'] = $news['link_lang1'];
+            $newTemp['link_lang2'] = $news['link_lang2'];
+            $newTemp['link_lang3'] = $news['link_lang3'];
+
             $newTemp ['status'] = $news ['status'];
             $newTemp ['tagId'] = $news ['tagid'];
             $newTemp ['tagName'] = $tagListNew [$newTemp ['tagId']];

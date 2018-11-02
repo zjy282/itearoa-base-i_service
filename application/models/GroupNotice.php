@@ -86,6 +86,10 @@ class GroupNoticeModel extends \BaseModel {
             isset ($param ['article_lang1']) ? $info ['article_lang1'] = $param ['article_lang1'] : false;
             isset ($param ['article_lang2']) ? $info ['article_lang2'] = $param ['article_lang2'] : false;
             isset ($param ['article_lang3']) ? $info ['article_lang3'] = $param ['article_lang3'] : false;
+            $info['link_lang1'] = trim($param['link_lang1']);
+            $info['link_lang2'] = trim($param['link_lang2']);
+            $info['link_lang3'] = trim($param['link_lang3']);
+
             isset ($param ['tagid']) ? $info ['tagid'] = $param ['tagid'] : false;
             isset ($param ['updatetime']) ? $info ['updatetime'] = $param ['updatetime'] : false;
             isset($param['sort']) ? $info['sort'] = $param['sort'] : false;

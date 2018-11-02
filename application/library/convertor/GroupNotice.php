@@ -36,6 +36,7 @@ class Convertor_GroupNotice extends Convertor_Base
             $newTemp ['id'] = $notic ['id'];
             $newTemp ['title'] = $notic['title_lang' . Enum_Lang::getLangIndex($param['lang'])];
             $newTemp ['article'] = Enum_Img::getPathByKeyAndType($notic['article_lang' . Enum_Lang::getLangIndex($param['lang'])]);
+            $newTemp['outLink'] = $this->handlerMultiLang('link', $notic, true);
             $newTemp ['pdf'] = $notic['pdf'] ? Enum_Img::getPathByKeyAndType($notic['pdf']) : '';
             $newTemp ['video'] = $notic['video'] ? Enum_Img::getPathByKeyAndType($notic['video']) : '';
             $newTemp ['tagId'] = $notic ['tagid'];
@@ -81,6 +82,10 @@ class Convertor_GroupNotice extends Convertor_Base
             $noticTemp ['article_lang1'] = $notic ['article_lang1'];
             $noticTemp ['article_lang2'] = $notic ['article_lang2'];
             $noticTemp ['article_lang3'] = $notic ['article_lang3'];
+            $noticTemp ['link_lang1'] = $notic ['link_lang1'];
+            $noticTemp ['link_lang2'] = $notic ['link_lang2'];
+            $noticTemp ['link_lang3'] = $notic ['link_lang3'];
+
             $noticTemp ['tagId'] = $notic ['tagid'];
             $noticTemp ['status'] = $notic ['status'];
             $noticTemp ['tagName'] = $tagListNew [$noticTemp ['tagId']];
