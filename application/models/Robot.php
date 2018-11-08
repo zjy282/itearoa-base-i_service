@@ -153,7 +153,10 @@ class RobotModel extends \BaseModel
         );
         $robotActionModel = new Dao_RobotAction();
         $robotActionModel->addRobotAction($info);
-        if ($rpcJson['errcode'] != 0) {
+        if (is_null($rpcJson)) {
+            $this->throwException("[RobotApi Error]", 1);
+        }
+        if ($rpcJson['errcode'] != 0 ) {
             throw new Exception($rpcJson['errmsg'], $rpcJson['errcode']);
         }
         return $rpcJson;
@@ -506,17 +509,18 @@ class RobotModel extends \BaseModel
                     $sql = "INSERT INTO robot_position(hotelid, userid, position, robot_position, type) VALUES ";
                 }
                 $index++;
+                $position['display_name'] = $position['name'];
                 if (preg_match("/^[0-9]+$/", $position['name'])) {
                     $position['type'] = 1;
                     if(strlen($position['name']) < 4){
-                        $position['name'] = str_pad($position['name'], 4, '0', STR_PAD_LEFT);
+                        $position['display_name'] = str_pad($position['name'], 4, '0', STR_PAD_LEFT);
                     }
                 } elseif (preg_match("/_[0-9]+_/", $position['name'])) {
                     $position['type'] = 2;
                 } else {
                     $position['type'] = 3;
                 }
-                $sql .= sprintf("(%s, %s, \"%s\", \"%s\", %s), ", $hotelid, 64, $position['name'], $position['name'], $position['type']);
+                $sql .= sprintf("(%s, %s, \"%s\", \"%s\", %s), ", $hotelid, 64, $position['display_name'], $position['name'], $position['type']);
             }
 
             if ($index % self::SQL_BATCH != 0) {

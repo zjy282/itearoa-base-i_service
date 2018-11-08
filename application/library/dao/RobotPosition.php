@@ -24,7 +24,7 @@ class Dao_RobotPosition extends Dao_Base
         $page = $this->getStart($param['page'], $limit);
 
         $paramSql = $this->handlerListParams($param);
-        $sql = "select * from robot_position {$paramSql['sql']}";
+        $sql = "select * from robot_position {$paramSql['sql']} ORDER  BY position";
         if ($limit) {
             $sql .= " limit {$page},{$limit}";
         }
