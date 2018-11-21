@@ -106,6 +106,11 @@ class StaffModel extends \BaseModel
                 unset($info['lastlogintime']);
                 unset($info['lastloginip']);
             }
+            if (!is_null($param['permission'])) {
+                $info['permission'] = trim($param['permission']);
+                unset($info['lastlogintime']);
+                unset($info['lastloginip']);
+            }
             $result = $this->dao->updateStaffById($info, $id);
         }
         return $result;
@@ -179,7 +184,7 @@ class StaffModel extends \BaseModel
      * @param array $param
      * @return array
      */
-    public function loginAction($param)
+    public function login($param)
     {
         if (empty($param['lname']) || empty($param['pwd'])) {
             $this->throwException('登录信息不正确', 2);
@@ -244,6 +249,13 @@ class StaffModel extends \BaseModel
             );
             $userInfo['hotel_list_detail'][] = $detail;
         }
+
+        if (empty($userInfo['permission'])) {
+            $userInfo['permission'] = array();
+        } else {
+            $userInfo['permission'] = explode(',', $userInfo['permission']);
+        }
+
         $userInfo['token'] = Auth_Login::makeToken($userId, Auth_Login::STAFF_MARK, 30 * 24 * 3600);
         return $userInfo;
     }

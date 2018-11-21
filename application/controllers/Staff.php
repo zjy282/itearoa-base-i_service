@@ -76,6 +76,7 @@ class StaffController extends \BaseController {
             $param['staff_web_hotel_id'] = intval($this->getParamList('staff_web_hotel_id'));
             $param['schedule'] = $this->getParamList('schedule');
             $param['washing_push'] = $this->getParamList('washing_push');
+            $param['permission'] = $this->getParamList('permission');
             $data = $this->model->updateStaffById($param, $id);
             if ($data) {
                 $this->echoSuccessData($data);
@@ -128,7 +129,7 @@ class StaffController extends \BaseController {
         $param ['platform'] = intval($this->getParamList('platform'));
         $param ['identity'] = trim($this->getParamList('identity'));
         $param ['isAd'] = intval($this->getParamList('ad'));
-        $result = $this->model->loginAction($param);
+        $result = $this->model->login($param);
         $result = $this->convertor->userInfoConvertor($result);
         $this->echoSuccessData($result);
     }
