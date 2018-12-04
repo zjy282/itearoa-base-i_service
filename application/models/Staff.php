@@ -234,7 +234,10 @@ class StaffModel extends \BaseModel
         if (!empty($userInfo['hotel_list'])) {
             $userInfo['hotel_list'] = explode(',', $userInfo['hotel_list']);
             $hotelModel = new HotelListModel();
-            $hotelList = $hotelModel->getHotelListList(array('id' => $userInfo['hotel_list']));
+            $hotelList = $hotelModel->getHotelListList(array(
+                'id' => $userInfo['hotel_list'],
+                'groupid' => $param['groupid'],
+            ));
         } else {
             $userInfo['hotel_list'] = array();
             $hotelList = array();
