@@ -2,7 +2,11 @@
 
 class Convertor_Base {
 
-    public function __construct() {
+    private $isAdmin = false;
+
+    public function __construct($isAdmin = false)
+    {
+        $this->isAdmin = $isAdmin;
     }
 
     public function commonConvertor(array $result) {

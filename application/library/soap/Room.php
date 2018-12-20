@@ -90,19 +90,36 @@ class Soap_Room
         return sprintf(self::GET_ROOM_XML, $bipCode, $procId, $processTime, $sign);
     }
 
+    /**
+     * Unlock the door
+     *
+     * @param $cusCode
+     * @param $idCode
+     * @param $lockCode
+     * @return mixed
+     */
+    public function unLock($cusCode, $idCode, $lockCode)
+    {
+        $param = $this->getLockData($cusCode, $idCode, $lockCode);
+        $result = $this->soapClient->BWHISOPIF($param);
+        return $result;
+    }
+
 
     public function output()
     {
-
-        $param = $this->getLockData('BAC37B30', '2345', '010101');
-        $result = $this->soapClient->BWHISOPIF($param);
-
-
-        var_dump($param);
+        $result = $this->unLock('B56976DD', '', '010101');
         var_dump($result);
+
+        $result = $this->sourceRoomLockInfo();
+
+        echo json_encode($result);
+        var_dump($result);
+
+
     }
 
-    public function sourceRoomLockInfo($hoteid){
+    public function sourceRoomLockInfo(){
         $param = $this->getRoomListParam();
         $xmlResult = $this->soapClient->BWHISOPIF($param);
 
@@ -116,12 +133,11 @@ class Soap_Room
                     $lockCode = $room['LOCKCODE'];
                 }
             }
+            return $result;
         } catch (Exception $e) {
             echo $xmlResult;
             throw $e;
         }
-
-
 
 
     }

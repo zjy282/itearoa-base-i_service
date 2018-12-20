@@ -20,8 +20,8 @@ class StaffController extends \BaseController {
 
     public function init() {
         parent::init();
-        $this->model = new StaffModel ();
-        $this->convertor = new Convertor_Staff ();
+        $this->model = new StaffModel();
+        $this->convertor = new Convertor_Staff();
     }
 
     /**
@@ -33,16 +33,16 @@ class StaffController extends \BaseController {
         $param = array();
         $param['name'] = trim($this->getParamList('name'));
         $param['hotelid'] = intval($this->getParamList('hotelid'));
+        $param['groupid'] = intval($this->getParamList('groupid'));
+        $param['staffid'] = intval($this->getParamList('staffid'));
         $param['id'] = intval($this->getParamList('id'));
         $param['limit'] = $this->getParamList('limit');
         $param['page'] = $this->getParamList('page');
         $data = $this->model->getStaffList($param);
         if ($param['id'] > 0) {
-            $count = Staff::where('hotelid', '=', $param['hotelid'])
-                ->where('id', $param['id'])
-                ->count();
+            $count = 1;
         } else {
-            $count = Staff::where('hotelid', '=', $param['hotelid'])->count();
+            $count = $this->model->getStaffListCount($param);
         }
         $data = $this->convertor->getStaffListConvertor($data, $param, $count);
         $this->echoSuccessData($data);
@@ -73,6 +73,9 @@ class StaffController extends \BaseController {
         $id = intval($this->getParamList('id'));
         if ($id) {
             $param = array();
+            $param['lname'] = trim($this->getParamList('lname'));
+            $param['staffid'] = intval($this->getParamList('staffid'));
+            $param['hotel_list'] = trim($this->getParamList('hotel_list'));
             $param['staff_web_hotel_id'] = intval($this->getParamList('staff_web_hotel_id'));
             $param['schedule'] = $this->getParamList('schedule');
             $param['washing_push'] = $this->getParamList('washing_push');
@@ -91,16 +94,16 @@ class StaffController extends \BaseController {
     /**
      * 添加物业员工信息
      *
-     * @param
-     *            array param 需要新增的信息
-     * @return Json
      */
     public function addStaffAction() {
         $param = array();
-        $param ['name'] = trim($this->getParamList('name'));
+        $param['lname'] = trim($this->getParamList('lname'));
+        $param['staffid'] = intval($this->getParamList('staffid'));
+        $param['groupid'] = trim($this->getParamList('groupid'));
+        $param['identity'] = trim($this->getParamList('identity'));
         $data = $this->model->addStaff($param);
-        $data = $this->convertor->commonConvertor($data);
-        $this->echoJson($data);
+        $data = $this->convertor->statusConvertor(array('id' => $data));
+        $this->echoSuccessData($data);
     }
 
     /**
