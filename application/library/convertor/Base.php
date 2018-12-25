@@ -2,7 +2,7 @@
 
 class Convertor_Base {
 
-    private $isAdmin = false;
+    protected $isAdmin = false;
 
     public function __construct($isAdmin = false)
     {
