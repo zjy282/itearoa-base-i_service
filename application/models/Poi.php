@@ -100,6 +100,11 @@ class PoiModel extends \BaseModel {
             isset($param['pdf']) ? $info['pdf'] = $param['pdf'] : false;
             isset($param['video']) ? $info['video'] = $param['video'] : false;
             isset($param['pic']) ? $info['pic'] = $param['pic'] : false;
+
+            isset($param['homeShow']) ? $info['homeShow'] = $param['homeShow'] : false;
+            isset($param['startTime']) ? $info['startTime'] = $param['startTime'] : false;
+            isset($param['endTime']) ? $info['endTime'] = $param['endTime'] : false;
+
             $info ['updatetime'] = time();
             $result = $this->dao->updatePoiById($info, $id);
         }
@@ -116,5 +121,16 @@ class PoiModel extends \BaseModel {
     public function addPoi($param) {
         $info = $param;
         return $this->dao->addPoi($info);
+    }
+
+    /**
+     * 获取首页广告列表
+     *
+     * @return Json
+     */
+    public function getHomeAdv(array $param) {
+        isset ($param ['hotelid']) ? $paramList ['hotelid'] = $param ['hotelid'] : false;
+        $paramList ['today'] = $param ['today'];
+        return $this->dao->getHomeAdv($paramList);
     }
 }

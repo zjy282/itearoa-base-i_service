@@ -105,6 +105,11 @@ class PoiController extends \BaseController {
             $param ['pic'] = $this->getParamList('pic');
             $param ['updatetime'] = time();
             $param ['status'] = $this->getParamList('status');
+
+            $param ['homeShow'] = trim($this->getParamList('homeShow'));
+            $param ['startTime'] = trim($this->getParamList('startTime'));
+            $param ['endTime'] = trim($this->getParamList('endTime'));
+
             $data = $this->model->updatePoiById($param, $id);
             $data = $this->convertor->statusConvertor($data);
         } else {
@@ -144,8 +149,31 @@ class PoiController extends \BaseController {
         $param ['pdf'] = trim($this->getParamList('pdf'));
         $param ['video'] = trim($this->getParamList('video'));
         $param ['pic'] = trim($this->getParamList('pic'));
+
+        $param ['homeShow'] = trim($this->getParamList('homeShow'));
+        $param ['startTime'] = trim($this->getParamList('startTime'));
+        $param ['endTime'] = trim($this->getParamList('endTime'));
+
         $data = $this->model->addPoi($param);
         $data = $this->convertor->statusConvertor(array('id' => $data));
+        $this->echoSuccessData($data);
+    }
+
+    /**
+     * 获取首页广告列表
+     *
+     * @return Json
+     */
+    public function getHomeAdvAction() {
+        $param = array();
+        $param ['hotelid'] = intval($this->getParamList('hotelid'));
+        $param ['today'] = time();
+        $this->getPageParam($param);
+        if (empty ($param ['hotelid'])) {
+            $this->throwException(2, '入参错误');
+        }
+        $data = $this->model->getHomeAdv($param);
+        $data = $this->convertor->getHomeAdvConvertor($data);
         $this->echoSuccessData($data);
     }
 }
