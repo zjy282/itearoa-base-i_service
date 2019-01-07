@@ -132,4 +132,20 @@ class Dao_Poi extends Dao_Base {
         $this->db->insert('hotel_poi', $info);
         return $this->db->lastInsertId();
     }
+
+    /**
+     * 获取首页广告列表
+     *
+     * @return Json
+     */
+    public function getHomeAdv(array $param): array {
+		$sql = "select * from hotel_poi where hotelid=? and homeShow = 1 and startTime <=? and endTime >=?";
+		$result = $this->db->fetchAll ( $sql, array(
+            $param['hotelid'],
+            $param['today'],
+            $param['today']
+        ));
+		return is_array ( $result ) ? $result : array ();
+    }
+    
 }
