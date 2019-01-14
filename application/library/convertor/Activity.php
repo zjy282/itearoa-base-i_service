@@ -163,9 +163,19 @@ class Convertor_Activity extends Convertor_Base {
         $result = array();
         $result['id'] = $data['id'];
         $result['title'] = $this->handlerMultiLang('title', $data);
-        $result['article'] = $this->handlerMultiLang('article', $data);
-        $result['header'] = $this->handlerMultiLang('header', $data);
-        $result['footer'] = $this->handlerMultiLang('footer', $data);
+        $result['article'] = Enum_Img::getPathByKeyAndType($this->handlerMultiLang('article', $data));
+
+        if(!empty($this->handlerMultiLang('header', $data))){
+            $result['header'] = file_get_contents(Enum_Img::getPathByKeyAndType($this->handlerMultiLang('header', $data)));
+        } else {
+            $result['header'] = null;
+        }
+        if(!empty($this->handlerMultiLang('footer', $data))){
+            $result['footer'] = file_get_contents(Enum_Img::getPathByKeyAndType($this->handlerMultiLang('footer', $data)));
+        } else {
+            $result['footer'] = null;
+        }
+
         $result['status'] = $data['status'];
 
         $result['createtime'] = date("Y-m-d H:i:s", $data['createtime']);
