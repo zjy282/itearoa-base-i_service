@@ -135,9 +135,6 @@ class PromotionController extends \BaseController {
         $param['enable_lang1'] = $this->getParamList('enable_lang1');
         $param['enable_lang2'] = $this->getParamList('enable_lang2');
         $param['enable_lang3'] = $this->getParamList('enable_lang3');
-
-        $param ['homeShow'] = trim($this->getParamList('homeShow'));
-        $param ['startTime'] = trim($this->getParamList('startTime'));
         $param ['endTime'] = trim($this->getParamList('endTime'));
 
         $data = $this->model->addPromotion($param);

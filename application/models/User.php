@@ -8,15 +8,13 @@ use Frankli\Itearoa\Models\Config;
  * Class UserModel
  * APP用户管理
  */
-class UserModel extends \BaseModel
-{
+class UserModel extends \BaseModel {
 
     const STAFF_ROOM_ID = '001';
 
     private $dao;
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->dao = new Dao_User();
     }
@@ -28,8 +26,7 @@ class UserModel extends \BaseModel
      *            array param 查询条件
      * @return array
      */
-    public function getUserList(array $param)
-    {
+    public function getUserList(array $param) {
         $param['oid'] ? $paramList['oid'] = $param['oid'] : false;
         $param['id'] ? $paramList['id'] = $param['id'] : false;
         $param['room_no'] ? $paramList['room_no'] = $param['room_no'] : false;
@@ -48,8 +45,7 @@ class UserModel extends \BaseModel
      *            array param 查询条件
      * @return array
      */
-    public function getUserCount(array $param)
-    {
+    public function getUserCount(array $param) {
         $paramList = array();
         isset($param['oid']) ? $paramList['oid'] = trim($param['oid']) : false;
         $param['id'] ? $paramList['id'] = $param['id'] : false;
@@ -67,8 +63,7 @@ class UserModel extends \BaseModel
      *            int id 查询的主键
      * @return array
      */
-    public function getUserDetail($id)
-    {
+    public function getUserDetail($id) {
         $result = array();
         if ($id) {
             $result = $this->dao->getUserDetail($id);
@@ -83,8 +78,7 @@ class UserModel extends \BaseModel
      *            int id 查询的主键
      * @return array
      */
-    public function getUserDetailByOId($oid)
-    {
+    public function getUserDetailByOId($oid) {
         $result = array();
         if ($oid) {
             $result = $this->dao->getUserDetailByOId($oid);
@@ -101,8 +95,7 @@ class UserModel extends \BaseModel
      *            int id 主键
      * @return array
      */
-    public function updateUserById($param, $id)
-    {
+    public function updateUserById($param, $id) {
         $result = false;
         // 自行添加要更新的字段,以下是age字段是样例
         if ($id) {
@@ -128,8 +121,7 @@ class UserModel extends \BaseModel
      *            array param 需要增加的信息
      * @return array
      */
-    public function addUser($param)
-    {
+    public function addUser($param) {
         $info['room_no'] = $param['room_no'];
         $info['hotelid'] = intval($param['hotelid']);
         $info['groupid'] = intval($param['groupid']);
@@ -150,8 +142,7 @@ class UserModel extends \BaseModel
      * @param $param
      * @return array
      */
-    public function getOIdInfo($param)
-    {
+    public function getOIdInfo($param) {
         $paramList = array();
         if ($param['propertyid'] <= 0 || is_null($param['groupid'])) {
             $hotelModel = new HotelListModel();
@@ -178,8 +169,7 @@ class UserModel extends \BaseModel
      * @param $param
      * @return string
      */
-    public function getGsmRedirect($param)
-    {
+    public function getGsmRedirect($param) {
         $paramList = array();
         $paramList['PropertyInterfID'] = $param['PropertyInterfID'];
         $paramList['CustomerID'] = $param['CustomerID'];
@@ -199,19 +189,18 @@ class UserModel extends \BaseModel
      * @param array $param
      * @return array
      */
-    public function loginAction($param)
-    {
+    public function loginAction($param) {
         //check if token is expired
-//        if (!empty($param['token'])) {
-//            $userId = Auth_Login::getToken($param['token']);
-//            if ($userId > 0) {
-//                $userInfo = $this->getUserDetail($userId);
-//                $userInfo['token'] = $param['token'];
-//                $userInfo['room_response'] = $userInfo['room'];
-//                $userInfo['lastname_response'] = $userInfo['fullName'];
-//                return $userInfo;
-//            }
-//        }
+        //        if (!empty($param['token'])) {
+        //            $userId = Auth_Login::getToken($param['token']);
+        //            if ($userId > 0) {
+        //                $userInfo = $this->getUserDetail($userId);
+        //                $userInfo['token'] = $param['token'];
+        //                $userInfo['room_response'] = $userInfo['room'];
+        //                $userInfo['lastname_response'] = $userInfo['fullName'];
+        //                return $userInfo;
+        //            }
+        //        }
 
         if (empty($param['room_no']) || empty($param['fullname'])) {
             $this->throwException('登录信息不正确', 2);
@@ -281,6 +270,12 @@ class UserModel extends \BaseModel
         $userInfo['token'] = Auth_Login::makeToken($userId, Auth_Login::USER_MARK, $timeout);
         $userInfo['room_response'] = $oIdInfo['room'];
         $userInfo['lastname_response'] = $oIdInfo['fullName'];
+
+        $ntesModel = new NtesModel();
+        $ntesUserInfo = $ntesModel->userLogin($userId);
+        if ($ntesUserInfo["code"]) {
+            $this->throwException('网易云信注册失败', 6);
+        }
         return $userInfo;
     }
 
@@ -291,8 +286,7 @@ class UserModel extends \BaseModel
      * @param array $params
      * @return array
      */
-    public function signFacilities(array $params)
-    {
+    public function signFacilities(array $params) {
         $result = array(
             'code' => 0,
             'msg' => 'success'
@@ -366,8 +360,7 @@ class UserModel extends \BaseModel
      * @param $params
      * @return mixed
      */
-    public function getToken($params)
-    {
+    public function getToken($params) {
         $method = __FUNCTION__ . ucfirst($params['type']);
         if ($params['userid'] <= 0) {
             $this->throwException('Token expired, please login before get token', Enum_Login::EXCEPTION_CODE_EXPIRED);
@@ -386,8 +379,7 @@ class UserModel extends \BaseModel
      * @param $params
      * @return string
      */
-    protected function getTokenBreakfast($params)
-    {
+    protected function getTokenBreakfast($params) {
         $seedConfig = Yaf_Registry::get('sysConfig')['token']['seed'][$params['type']];
         $userDao = new Dao_User();
         $hotelDao = new Dao_HotelList();
@@ -428,8 +420,7 @@ class UserModel extends \BaseModel
      * @param $token
      * @throws Exception
      */
-    public function checkPin($token)
-    {
+    public function checkPin($token) {
         $userId = Auth_Login::getToken($token);
         if (empty($userId)) {
             $this->throwException('token expired', 2);
@@ -447,11 +438,10 @@ class UserModel extends \BaseModel
      * User set or reset pin
      *
      * @param array $params
-     * @throws Exception
      * @return int
+     * @throws Exception
      */
-    public function setPin(array $params): int
-    {
+    public function setPin(array $params): int {
         $userId = Auth_Login::getToken($params['token']);
         if (empty($userId)) {
             $this->throwException('token验证失败', 1);
@@ -488,11 +478,10 @@ class UserModel extends \BaseModel
      * Staff help user reset the pin code
      *
      * @param array $params
-     * @throws Exception
      * @return bool
+     * @throws Exception
      */
-    public function staffResetPin(array $params): bool
-    {
+    public function staffResetPin(array $params): bool {
         $staffId = Auth_Login::getToken($params['token'], 2);
         if ($staffId <= 0) {
             $this->throwException('员工登录过期，请重新登录', 1);
@@ -526,8 +515,7 @@ class UserModel extends \BaseModel
      * @param array $params
      * @return bool
      */
-    public function validatePin(array $params): bool
-    {
+    public function validatePin(array $params): bool {
         $userId = Auth_Login::getToken($params['token']);
         if (empty($userId)) {
             $this->throwException('token验证失败', 1);
@@ -551,8 +539,7 @@ class UserModel extends \BaseModel
      * @param string $pin
      * @return string
      */
-    public static function encodePwd(string $pin): string
-    {
+    public static function encodePwd(string $pin): string {
         $sysConfig = Yaf_Registry::get('sysConfig');
         return md5($sysConfig->service->salt . strval($pin));
     }
@@ -563,8 +550,7 @@ class UserModel extends \BaseModel
      * @param int $userid
      * @return array
      */
-    public function getShoppingBoxToken(int $userid): array
-    {
+    public function getShoppingBoxToken(int $userid): array {
         if ($userid <= 0) {
             $this->throwException('Token验证失败，请重新登录', Enum_Login::EXCEPTION_CODE_EXPIRED);
         }
@@ -602,8 +588,7 @@ class UserModel extends \BaseModel
      * @param int $userid
      * @return array
      */
-    public function getShoppingBoxTokenStaff(int $staffId): array
-    {
+    public function getShoppingBoxTokenStaff(int $staffId): array {
         if ($staffId <= 0) {
             $this->throwException('Token验证失败，请重新登录', Enum_Login::EXCEPTION_CODE_EXPIRED);
         }
