@@ -119,8 +119,7 @@ class UserController extends \BaseController {
      *            string lang 语言
      * @return Json
      */
-    public function loginAction()
-    {
+    public function loginAction() {
         $param = array();
         $param['token'] = trim($this->getParamList('token'));
         $param['room_no'] = trim($this->getParamList('room_no'));
@@ -158,8 +157,7 @@ class UserController extends \BaseController {
     /**
      * Action for check if pin code already exist
      */
-    public function hasPinAction()
-    {
+    public function hasPinAction() {
         $token = trim($this->getParamList('token'));
         $data = $this->model->checkPin($token);
 
@@ -229,8 +227,7 @@ class UserController extends \BaseController {
     /**
      * Action for sign facilities
      */
-    public function signFacilitiesAction()
-    {
+    public function signFacilitiesAction() {
         $param = array();
         $param['room_no'] = trim($this->getParamList('room_no'));
         $param['fullname'] = trim($this->getParamList('lastname'));
@@ -251,8 +248,7 @@ class UserController extends \BaseController {
     }
 
 
-    public function getTokenAction()
-    {
+    public function getTokenAction() {
         $params = array();
         $token = trim($this->getParamList('token'));
         $params['type'] = strtolower(trim($this->getParamList('type')));
@@ -281,8 +277,7 @@ class UserController extends \BaseController {
     /**
      * Action for shopping box token generation
      */
-    public function getShoppingBoxDetailAction()
-    {
+    public function getShoppingBoxDetailAction() {
         $token = trim($this->getParamList('token'));
 
         try {

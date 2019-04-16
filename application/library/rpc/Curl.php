@@ -1,7 +1,6 @@
 <?php
 
-class Rpc_Curl
-{
+class Rpc_Curl {
     /**
      *
      * @param string $url
@@ -10,8 +9,7 @@ class Rpc_Curl
      * @param int $timeOut
      * @return mixed
      */
-    public static function request($url, $method = 'GET', $postData = '', $isJsonDecode = false, $timeOut = 10)
-    {
+    public static function request($url, $method = 'GET', $postData = '', $isJsonDecode = false, $timeOut = 10, $customizeHeader = array()) {
         $handle = curl_init();
         //https request
         if (strlen($url) > 5 && strtolower(substr($url, 0, 5)) == "https") {
@@ -30,6 +28,9 @@ class Rpc_Curl
         if (!empty ($postData)) {
             curl_setopt($handle, CURLOPT_POSTFIELDS, $postData);
         }
+        if (!empty($customizeHeader)) {
+            curl_setopt($handle, CURLOPT_HTTPHEADER, $customizeHeader);
+        }
         $result['response'] = curl_exec($handle);
         $result['httpStatus'] = curl_getinfo($handle, CURLINFO_HTTP_CODE);
         $result['fullInfo'] = curl_getinfo($handle);
@@ -45,8 +46,7 @@ class Rpc_Curl
      * @param bool $isJsonDecode
      * @return bool|mixed
      */
-    public static function stripResult($httpRet, $isJsonDecode = false)
-    {
+    public static function stripResult($httpRet, $isJsonDecode = false) {
         $responseResult = false;
         if ($httpRet['httpStatus']) {
             $responseRaw = $httpRet['response'];
