@@ -34,6 +34,10 @@ class PromotionController extends \BaseController {
         if(Enum_System::notAdminPackage($this->package)){
             $param ['status'] = 1;
         }
+        if (!empty($this->getParamList('lang'))) {
+            $langEnable = PromotionModel::ENABLE_LANG . Enum_Lang::getLangIndex($this->getParamList('lang'), Enum_Lang::CHINESE);
+            $param[$langEnable] = PromotionModel::ENABLE;
+        }
         $param ['title'] = $this->getParamList('title');
         $this->getPageParam($param);
         $promotionList = $this->model->getPromotionList($param);
@@ -89,7 +93,15 @@ class PromotionController extends \BaseController {
             $param ['pdf'] = $this->getParamList('pdf');
             $param ['video'] = $this->getParamList('video');
             $param ['pic'] = $this->getParamList('pic');
+            $param['enable_lang1'] = $this->getParamList('enable_lang1');
+            $param['enable_lang2'] = $this->getParamList('enable_lang2');
+            $param['enable_lang3'] = $this->getParamList('enable_lang3');
             $param ['updatetime'] = time();
+
+            $param ['homeShow'] = trim($this->getParamList('homeShow'));
+            $param ['startTime'] = trim($this->getParamList('startTime'));
+            $param ['endTime'] = trim($this->getParamList('endTime'));
+
             $data = $this->model->updatePromotionById($param, $id);
             $data = $this->convertor->statusConvertor($data);
         } else {
@@ -120,6 +132,14 @@ class PromotionController extends \BaseController {
         $param ['pdf'] = trim($this->getParamList('pdf'));
         $param ['video'] = trim($this->getParamList('video'));
         $param ['pic'] = trim($this->getParamList('pic'));
+        $param['enable_lang1'] = $this->getParamList('enable_lang1');
+        $param['enable_lang2'] = $this->getParamList('enable_lang2');
+        $param['enable_lang3'] = $this->getParamList('enable_lang3');
+
+        $param ['homeShow'] = trim($this->getParamList('homeShow'));
+        $param ['startTime'] = trim($this->getParamList('startTime'));
+        $param ['endTime'] = trim($this->getParamList('endTime'));
+
         $data = $this->model->addPromotion($param);
         $data = $this->convertor->statusConvertor(array('id' => $data));
         $this->echoSuccessData($data);

@@ -100,6 +100,11 @@ class Convertor_Poi extends Convertor_Base {
             $poiTemp ['pic'] = $poi ['pic'];
             $poiTemp ['createTime'] = $poi ['createtime'];
             $poiTemp ['updateTime'] = $poi ['updatetime'];
+
+            $poiTemp ['homeShow'] = $poi ['homeShow'];
+            $poiTemp ['startTime'] = date('Y-m-d H:i:s', $poi ['startTime']);
+            $poiTemp ['endTime'] = date('Y-m-d H:i:s', $poi ['endTime']);
+
             $data ['list'] [] = $poiTemp;
         }
         $data ['total'] = $poiCount;
@@ -160,6 +165,22 @@ class Convertor_Poi extends Convertor_Base {
         $data ['createTime'] = $poi ['createtime'];
         $data ['updateTime'] = $poi ['updatetime'];
         $data ['status'] = $poi ['status'];
+        return $data;
+    }
+
+
+    /**
+     * 获取首页广告列表
+     * @param array $poiList 列表
+     * @return array
+     */
+    public function getHomeAdvConvertor($poiList) {
+        $data = array('list' => array());
+        foreach ($poiList as $pois) {
+            $pois ['pic'] = $pois['pic'] ? Enum_Img::getPathByKeyAndType($pois['pic'], Enum_Img::PIC_TYPE_KEY_WIDTH750) : '';
+            $pois ['updatetime'] = $pois['updatetime'] ? date('Y-m-d H:i:s', $pois['updatetime']) : '';
+            $data ['list'] [] = $pois;
+        }
         return $data;
     }
 }

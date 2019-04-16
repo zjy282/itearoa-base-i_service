@@ -4,8 +4,6 @@
  * 集团信息控制器类
  */
 class TestController extends \BaseController {
-
-
     public function init() {
         parent::init();
     }
@@ -16,7 +14,7 @@ class TestController extends \BaseController {
      * @return Json
      */
     public function testAction() {
-        //echo phpinfo();
+$this->echoJson(phpinfo()); 
     }
 
 }

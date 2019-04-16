@@ -35,11 +35,28 @@ class StaffModel extends \BaseModel
         $param['id'] ? $paramList['id'] = $param['id'] : false;
         $param['staffid'] ? $paramList['staffid'] = $param['staffid'] : false;
         $param['hotelid'] ? $paramList['hotelid'] = $param['hotelid'] : false;
+        $param['groupid'] ? $paramList['groupid'] = $param['groupid'] : false;
+        $param['name'] ? $paramList['name'] = $param['name'] : false;
         $param['department_id'] ? $paramList['department_id'] = $param['department_id'] : false;
         isset($param['level']) ? $paramList['level'] = $param['level'] : false;
         $paramList['limit'] = $param['limit'];
         $paramList['page'] = $param['page'];
         return $this->dao->getStaffList($paramList);
+    }
+
+
+    public function getStaffListCount(array $param)
+    {
+        $param['id'] ? $paramList['id'] = $param['id'] : false;
+        $param['staffid'] ? $paramList['staffid'] = $param['staffid'] : false;
+        $param['hotelid'] ? $paramList['hotelid'] = $param['hotelid'] : false;
+        $param['groupid'] ? $paramList['groupid'] = $param['groupid'] : false;
+        $param['name'] ? $paramList['name'] = $param['name'] : false;
+        $param['department_id'] ? $paramList['department_id'] = $param['department_id'] : false;
+        isset($param['level']) ? $paramList['level'] = $param['level'] : false;
+        $paramList['limit'] = $param['limit'];
+        $paramList['page'] = $param['page'];
+        return $this->dao->getStaffListCount($paramList);
     }
 
     /**
@@ -88,6 +105,7 @@ class StaffModel extends \BaseModel
         $result = false;
         if ($id) {
             $param['lname'] ? $info['lname'] = $param['lname'] : false;
+            intval($param['staffid']) ? $info['staffid'] = intval($param['staffid']) : false;
             intval($param['hotelid']) ? $info['hotelid'] = intval($param['hotelid']) : false;
             intval($param['groupid']) ? $info['groupid'] = intval($param['groupid']) : false;
             $info['lastlogintime'] = time();
@@ -96,6 +114,7 @@ class StaffModel extends \BaseModel
             $param['identity'] ? $info['identity'] = $param['identity'] : false;
             $param['staff_web_hotel_id'] ? $info['staff_web_hotel_id'] = intval($param['staff_web_hotel_id']) : false;
             $param['admin_id'] ? $info['admin_id'] = intval($param['admin_id']) : false;
+            $param['hotel_list'] ? $info['hotel_list'] = trim($param['hotel_list']) : false;
             if (!is_null($param['schedule'])) {
                 $info['schedule'] = trim($param['schedule']);
                 unset($info['lastlogintime']);
@@ -103,6 +122,11 @@ class StaffModel extends \BaseModel
             }
             if (!is_null($param['washing_push'])) {
                 $info['washing_push'] = intval($param['washing_push']);
+                unset($info['lastlogintime']);
+                unset($info['lastloginip']);
+            }
+            if (!is_null($param['permission'])) {
+                $info['permission'] = trim($param['permission']);
                 unset($info['lastlogintime']);
                 unset($info['lastloginip']);
             }
@@ -121,7 +145,6 @@ class StaffModel extends \BaseModel
     public function addStaff($param)
     {
         $info['lname'] = $param['lname'];
-        $info['hotelid'] = intval($param['hotelid']);
         $info['groupid'] = intval($param['groupid']);
         $info['staffid'] = strval($param['staffid']);
         $info['createtime'] = time();
@@ -179,7 +202,7 @@ class StaffModel extends \BaseModel
      * @param array $param
      * @return array
      */
-    public function loginAction($param)
+    public function login($param)
     {
         if (empty($param['lname']) || empty($param['pwd'])) {
             $this->throwException('登录信息不正确', 2);
@@ -197,6 +220,15 @@ class StaffModel extends \BaseModel
         // 获取用户信息
         $getStaffInfo = $this->getStaffDetailByStaffId($staffIdInfo['staffId']);
         $userId = $getStaffInfo['id'];
+        if (empty($userId)) {
+            $this->throwException('员工未配置，请联系管理员添加', 5);
+        } else {
+            //先暂时屏蔽员工物业权限判断
+            // $hotelList = explode(",", $getStaffInfo['hotel_list']);
+            // if (!empty($param['hotelid']) && !in_array($param['hotelid'], $hotelList)) {
+            //     $this->throwException('员工无对应物业权限，请选择有权限的物业', 5);
+            // }
+        }
 
         $newStaffInfo = array(
             'groupid' => $param['groupid'],
@@ -212,24 +244,18 @@ class StaffModel extends \BaseModel
             $newStaffInfo['platform'] = intval($param['platform']);
         }
         $newStaffInfo['admin_id'] = $this->getAdminId(intval($newStaffInfo['groupid']), $staffIdInfo['staffId']);
-        if ($userId) {
-            // 更新用户数据
-            if (!$this->updateStaffById($newStaffInfo, $userId)) {
-                $this->throwException('登录失败，请重试', 5);
-            }
-        } else {
-            // 新建用户
-            $newStaffInfo['staffid'] = $staffIdInfo['staffId'];
-            $userId = $this->addStaff($newStaffInfo);
-            if (!$userId) {
-                $this->throwException('登录失败，请重试', 5);
-            }
+        if (!$this->updateStaffById($newStaffInfo, $userId)) {
+            $this->throwException('登录失败，请重试', 5);
         }
+
         $userInfo = $this->getStaffDetail($userId);
         if (!empty($userInfo['hotel_list'])) {
             $userInfo['hotel_list'] = explode(',', $userInfo['hotel_list']);
             $hotelModel = new HotelListModel();
-            $hotelList = $hotelModel->getHotelListList(array('id' => $userInfo['hotel_list']));
+            $hotelList = $hotelModel->getHotelListList(array(
+                'id' => $userInfo['hotel_list'],
+                'groupid' => $param['groupid'],
+            ));
         } else {
             $userInfo['hotel_list'] = array();
             $hotelList = array();
@@ -244,6 +270,13 @@ class StaffModel extends \BaseModel
             );
             $userInfo['hotel_list_detail'][] = $detail;
         }
+
+        if (empty($userInfo['permission'])) {
+            $userInfo['permission'] = array();
+        } else {
+            $userInfo['permission'] = explode(',', $userInfo['permission']);
+        }
+
         $userInfo['token'] = Auth_Login::makeToken($userId, Auth_Login::STAFF_MARK, 30 * 24 * 3600);
         return $userInfo;
     }

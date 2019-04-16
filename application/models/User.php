@@ -411,6 +411,9 @@ class UserModel extends \BaseModel
             $seed = $seedConfig['default'];
         }
         $date = date('Y-m-d', time());
+        if($propertyId==2){
+            $seed = 'arcc';
+        }
         $string = sprintf("PorpertyID=%s&Room=%s&OID=%s&Time=%s&VerifyCode=%s",
             $propertyId, $userDetail['room_no'], $userDetail['oid'], $date,
             md5($propertyId . $userDetail['room_no'] . $userDetail['oid'] . $date . $seed));

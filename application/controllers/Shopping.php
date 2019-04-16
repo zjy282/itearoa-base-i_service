@@ -104,9 +104,9 @@ class ShoppingController extends \BaseController {
             $param ['title_lang1'] = $this->getParamList('title_lang1');
             $param ['title_lang2'] = $this->getParamList('title_lang2');
             $param ['title_lang3'] = $this->getParamList('title_lang3');
-            $param ['introduct_lang1'] = $this->getParamList('introduct_lang1');
-            $param ['introduct_lang2'] = $this->getParamList('introduct_lang2');
-            $param ['introduct_lang3'] = $this->getParamList('introduct_lang3');
+            $param ['introduct_lang1'] = $this->getParamList('introduct_lang1').' ';
+            $param ['introduct_lang2'] = $this->getParamList('introduct_lang2').' ';
+            $param ['introduct_lang3'] = $this->getParamList('introduct_lang3').' ';
             $param ['tagid'] = $this->getParamList('tagid');
             $param ['price'] = $this->getParamList('price');
             $param ['pic'] = $this->getParamList('pic');
