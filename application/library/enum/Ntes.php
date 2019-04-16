@@ -15,7 +15,8 @@ class Enum_Ntes {
     const UNBLOCK_RPC = "https://api.netease.im/nimserver/user/unblock.action";
 
     public static function makeAccId($type, $userId) {
-        return md5($type . "_" . $userId);
+        $sysConfig = Yaf_Registry::get('sysConfig');
+        return md5($sysConfig->ntes->register->prefix . $type . "_" . $userId);
     }
 
 }
